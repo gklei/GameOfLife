@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E99B29B182BFE1600C7AEDB /* SparkParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B299182BFE1600C7AEDB /* SparkParticle.sks */; };
+		8E99B29C182BFE1600C7AEDB /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B29A182BFE1600C7AEDB /* spark.png */; };
+		8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B29E182BFE7600C7AEDB /* GLGridScene.m */; };
+		8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A1182C013D00C7AEDB /* GLTileNode.m */; };
 		8ECA8984182371AE009D906F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8983182371AE009D906F /* Foundation.framework */; };
 		8ECA8986182371AE009D906F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8985182371AE009D906F /* CoreGraphics.framework */; };
 		8ECA8988182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
@@ -37,6 +41,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8E99B299182BFE1600C7AEDB /* SparkParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SparkParticle.sks; sourceTree = "<group>"; };
+		8E99B29A182BFE1600C7AEDB /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		8E99B29D182BFE7600C7AEDB /* GLGridScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGridScene.h; sourceTree = "<group>"; };
+		8E99B29E182BFE7600C7AEDB /* GLGridScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLGridScene.m; sourceTree = "<group>"; };
+		8E99B2A0182C013D00C7AEDB /* GLTileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTileNode.h; sourceTree = "<group>"; };
+		8E99B2A1182C013D00C7AEDB /* GLTileNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLTileNode.m; sourceTree = "<group>"; };
 		8ECA8980182371AE009D906F /* GameOfLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ECA8983182371AE009D906F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8ECA8985182371AE009D906F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -128,6 +138,12 @@
 				8ECA899B182371AE009D906F /* GLViewController.m */,
 				8ECA899D182371AE009D906F /* GLMyScene.h */,
 				8ECA899E182371AE009D906F /* GLMyScene.m */,
+				8E99B29D182BFE7600C7AEDB /* GLGridScene.h */,
+				8E99B29E182BFE7600C7AEDB /* GLGridScene.m */,
+				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
+				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
+				8E99B299182BFE1600C7AEDB /* SparkParticle.sks */,
+				8E99B29A182BFE1600C7AEDB /* spark.png */,
 				8ECA89A0182371AE009D906F /* Spaceship.png */,
 				8ECA89A2182371AE009D906F /* Images.xcassets */,
 				8ECA898C182371AE009D906F /* Supporting Files */,
@@ -242,9 +258,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				8ECA8990182371AE009D906F /* InfoPlist.strings in Resources */,
+				8E99B29C182BFE1600C7AEDB /* spark.png in Resources */,
 				8ECA89A3182371AE009D906F /* Images.xcassets in Resources */,
 				8ECA89A1182371AE009D906F /* Spaceship.png in Resources */,
 				8ECA8999182371AE009D906F /* Main.storyboard in Resources */,
+				8E99B29B182BFE1600C7AEDB /* SparkParticle.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,7 +281,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */,
 				8ECA8992182371AE009D906F /* main.m in Sources */,
+				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,
 				8ECA899F182371AE009D906F /* GLMyScene.m in Sources */,
 				8ECA899C182371AE009D906F /* GLViewController.m in Sources */,
 				8ECA8996182371AE009D906F /* GLAppDelegate.m in Sources */,
@@ -477,6 +497,7 @@
 				8ECA89BB182371AE009D906F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8ECA89BC182371AE009D906F /* Build configuration list for PBXNativeTarget "GameOfLifeTests" */ = {
 			isa = XCConfigurationList;
@@ -485,6 +506,7 @@
 				8ECA89BE182371AE009D906F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
