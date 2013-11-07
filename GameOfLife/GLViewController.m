@@ -24,7 +24,6 @@
     // Create and configure the scene.
     SKScene * scene = [GLGridScene sceneWithSize:skView.bounds.size];
     scene.scaleMode = SKSceneScaleModeAspectFill;
-    
     // Present the scene.
     [skView presentScene:scene];
 }

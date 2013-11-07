@@ -19,15 +19,26 @@
    tile.anchorPoint = CGPointZero;
    tile.position = rect.origin;
    tile.isLiving = NO;
+   tile.color = [SKColor crayolaCoconutColor];
 
    return tile;
 }
 
 - (void)setIsLiving:(BOOL)living
 {
+   if (_isLiving == living)
+      return;
+
    _isLiving = living;
-   self.color = (_isLiving) ? [SKColor crayolaSpringFrostColor] :
-                              [SKColor crayolaCoconutColor];
+   float duration = (_isLiving) ? _birthingDuration : _dyingDuration;
+
+   SKColor *newColor = (_isLiving) ? [SKColor crayolaSpringFrostColor] :
+                                     [SKColor crayolaCoconutColor];
+
+   SKAction *changeColor = [SKAction colorizeWithColor:newColor
+                                      colorBlendFactor:0.0
+                                              duration:duration];
+   [self runAction:changeColor];
 }
 
 @end

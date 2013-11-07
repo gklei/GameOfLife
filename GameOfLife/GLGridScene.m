@@ -52,11 +52,27 @@
    return self;
 }
 
+- (void)setTilesBirthingDuration:(float)bDuration
+                   dyingDuration:(float)dDuration
+{
+   for (GLTileNode *tile in _tiles)
+   {
+      tile.birthingDuration = bDuration;
+      tile.dyingDuration = dDuration;
+   }
+}
+
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
    if (touches.count > 1)
+   {
+      float duration = (_running) ? .15 : .55;
+      [self setTilesBirthingDuration:duration
+                       dyingDuration:duration];
+
       _running = !_running;
+   }
 
    if (!_running)
       for (UITouch *touch in touches)
@@ -109,7 +125,6 @@
    if (neighborIndex /_gridDimensions.columns > index / _gridDimensions.columns)
       neighborIndex -= _gridDimensions.columns;
    tile = [_tiles objectAtIndex:neighborIndex];
-//   tile.color = [SKColor crayolaMulberryColor];
    if (tile.isLiving)
       ++liveCount;
 
@@ -120,7 +135,6 @@
    if (neighborIndex < 0 || neighborIndex /_gridDimensions.columns < index / _gridDimensions.columns)
       neighborIndex += _gridDimensions.columns;
    tile = [_tiles objectAtIndex:neighborIndex];
-//   tile.color = [SKColor crayolaMulberryColor];
    if (tile.isLiving)
       ++liveCount;
 

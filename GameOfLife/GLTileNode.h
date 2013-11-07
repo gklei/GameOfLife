@@ -11,7 +11,10 @@
 @interface GLTileNode : SKSpriteNode
 
 + (id)tileWithRect:(CGRect)rect;
+- (void)setIsLiving:(BOOL)living;
 
 @property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
+@property (nonatomic, assign) float birthingDuration;
+@property (nonatomic, assign) float dyingDuration;
 
 @end
