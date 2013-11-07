@@ -94,16 +94,6 @@
 - (void)touchesMoved:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-   if (touches.count > 1)
-   {
-      float duration = (_running) ? .15 : .35;
-      [self setTilesBirthingDuration:duration
-                       dyingDuration:duration];
-
-      _running = !_running;
-      return;
-   }
-
    if (!_running)
    {
       UITouch *touch = [[touches allObjects] lastObject];
