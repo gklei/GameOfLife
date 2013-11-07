@@ -8,15 +8,10 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-typedef enum {
-   TLS_DEAD,
-   TLS_ALIVE
-} TileLifeState;
-
 @interface GLTileNode : SKSpriteNode
 
 + (id)tileWithRect:(CGRect)rect;
 
-@property (nonatomic, assign, setter = setLifeState:) TileLifeState lifeState;
+@property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
 
 @end

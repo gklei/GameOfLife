@@ -45,7 +45,7 @@
 		8E99B299182BFE1600C7AEDB /* SparkParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SparkParticle.sks; sourceTree = "<group>"; };
 		8E99B29A182BFE1600C7AEDB /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		8E99B29D182BFE7600C7AEDB /* GLGridScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGridScene.h; sourceTree = "<group>"; };
-		8E99B29E182BFE7600C7AEDB /* GLGridScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLGridScene.m; sourceTree = "<group>"; };
+		8E99B29E182BFE7600C7AEDB /* GLGridScene.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLGridScene.m; sourceTree = "<group>"; };
 		8E99B2A0182C013D00C7AEDB /* GLTileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTileNode.h; sourceTree = "<group>"; };
 		8E99B2A1182C013D00C7AEDB /* GLTileNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLTileNode.m; sourceTree = "<group>"; };
 		8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Crayola.h"; sourceTree = "<group>"; };

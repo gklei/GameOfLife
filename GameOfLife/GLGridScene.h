@@ -10,4 +10,9 @@
 
 @interface GLGridScene : SKScene
 
+typedef struct {
+   int rows;
+   int columns;
+} GridDimensions;
+
 @end

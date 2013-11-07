@@ -18,16 +18,16 @@
    tile.size = rect.size;
    tile.anchorPoint = CGPointZero;
    tile.position = rect.origin;
-   tile.lifeState = TLS_DEAD;
+   tile.isLiving = NO;
 
    return tile;
 }
 
-- (void)setLifeState:(TileLifeState)lifeState
+- (void)setIsLiving:(BOOL)living
 {
-   _lifeState = lifeState;
-   self.color = (_lifeState == TLS_ALIVE) ? [SKColor crayolaSpringFrostColor] :
-                                            [SKColor crayolaCoconutColor];
+   _isLiving = living;
+   self.color = (_isLiving) ? [SKColor crayolaSpringFrostColor] :
+                              [SKColor crayolaCoconutColor];
 }
 
 @end
