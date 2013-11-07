@@ -43,7 +43,8 @@
    _tiles = [NSArray arrayWithArray:self.children];
 }
 
--(id)initWithSize:(CGSize)size {
+-(id)initWithSize:(CGSize)size
+{
    if (self = [super initWithSize:size])
    {
       [self setupGridWithSize:size];
@@ -67,7 +68,7 @@
 {
    if (touches.count > 1)
    {
-      float duration = (_running) ? .15 : .55;
+      float duration = (_running) ? .15 : .35;
       [self setTilesBirthingDuration:duration
                        dyingDuration:duration];
 
@@ -122,7 +123,7 @@
 
    // east
    neighborIndex = index + 1;
-   if (neighborIndex /_gridDimensions.columns > index / _gridDimensions.columns)
+   if (neighborIndex / _gridDimensions.columns > index / _gridDimensions.columns)
       neighborIndex -= _gridDimensions.columns;
    tile = [_tiles objectAtIndex:neighborIndex];
    if (tile.isLiving)
@@ -132,7 +133,8 @@
 
    // west
    neighborIndex = index - 1;
-   if (neighborIndex < 0 || neighborIndex /_gridDimensions.columns < index / _gridDimensions.columns)
+   if (neighborIndex < 0 ||
+       neighborIndex / _gridDimensions.columns < index / _gridDimensions.columns)
       neighborIndex += _gridDimensions.columns;
    tile = [_tiles objectAtIndex:neighborIndex];
    if (tile.isLiving)
@@ -156,9 +158,7 @@
 {
    _lastGenerationTime = currentTime;
    for (int i = 0; i < _tiles.count; ++i)
-   {
       _nextGenerationTileStates[i] = [self getStateForTileAtIndex:i];
-   }
 
    for (int i = 0; i < _tiles.count; ++i)
    {

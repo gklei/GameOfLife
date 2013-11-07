@@ -32,12 +32,13 @@
    _isLiving = living;
    float duration = (_isLiving) ? _birthingDuration : _dyingDuration;
 
-   SKColor *newColor = (_isLiving) ? [SKColor crayolaSpringFrostColor] :
+   SKColor *newColor = (_isLiving) ? [SKColor crayolaMulberryColor] :
                                      [SKColor crayolaCoconutColor];
 
    SKAction *changeColor = [SKAction colorizeWithColor:newColor
                                       colorBlendFactor:0.0
                                               duration:duration];
+   changeColor.timingMode = SKActionTimingEaseInEaseOut;
    [self runAction:changeColor];
 }
 
