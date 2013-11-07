@@ -22,6 +22,7 @@
 
    std::vector<BOOL> _nextGenerationTileStates;
    BOOL _running;
+   GLTileNode *_currentTileBeingTouched;
 }
 @end
 
@@ -73,6 +74,7 @@
                        dyingDuration:duration];
 
       _running = !_running;
+      return;
    }
 
    if (!_running)
@@ -85,7 +87,44 @@
 
          GLTileNode *tile = [_tiles objectAtIndex:arrayIndex];
          tile.isLiving = !tile.isLiving;
+         _currentTileBeingTouched = tile;
       }
+}
+
+- (void)touchesMoved:(NSSet *)touches
+           withEvent:(UIEvent *)event
+{
+   if (touches.count > 1)
+   {
+      float duration = (_running) ? .15 : .35;
+      [self setTilesBirthingDuration:duration
+                       dyingDuration:duration];
+
+      _running = !_running;
+      return;
+   }
+
+   if (!_running)
+   {
+      UITouch *touch = [[touches allObjects] lastObject];
+      CGPoint location = [touch locationInNode:self];
+      int row = location.y / TILESIZE.height;
+      int col = location.x / TILESIZE.width;
+      int arrayIndex = row*_gridDimensions.columns + col;
+
+      GLTileNode *tile = [_tiles objectAtIndex:arrayIndex];
+      if (_currentTileBeingTouched != tile)
+      {
+         _currentTileBeingTouched = tile;
+         tile.isLiving = !tile.isLiving;
+      }
+   }
+}
+
+- (void)touchesEnded:(NSSet *)touches
+           withEvent:(UIEvent *)event
+{
+   _currentTileBeingTouched = nil;
 }
 
 - (int)getNorthSouthLiveCountForTileAtIndex:(int)index
