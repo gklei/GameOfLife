@@ -7,6 +7,7 @@
 //
 
 #import "GLTileNode.h"
+#import "UIColor+Crayola.h"
 
 @implementation GLTileNode
 
@@ -25,10 +26,8 @@
 - (void)setLifeState:(TileLifeState)lifeState
 {
    _lifeState = lifeState;
-   self.color = (_lifeState == TLS_ALIVE) ? [UIColor colorWithRed:0.53
-                                                            green:1.00
-                                                             blue:0.16 alpha:1.0] :
-                                                [SKColor whiteColor];
+   self.color = (_lifeState == TLS_ALIVE) ? [SKColor crayolaSpringFrostColor] :
+                                            [SKColor crayolaCoconutColor];
 }
 
 @end

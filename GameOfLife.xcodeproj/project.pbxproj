@@ -11,6 +11,7 @@
 		8E99B29C182BFE1600C7AEDB /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B29A182BFE1600C7AEDB /* spark.png */; };
 		8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B29E182BFE7600C7AEDB /* GLGridScene.m */; };
 		8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A1182C013D00C7AEDB /* GLTileNode.m */; };
+		8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */; };
 		8ECA8984182371AE009D906F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8983182371AE009D906F /* Foundation.framework */; };
 		8ECA8986182371AE009D906F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8985182371AE009D906F /* CoreGraphics.framework */; };
 		8ECA8988182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
@@ -47,6 +48,8 @@
 		8E99B29E182BFE7600C7AEDB /* GLGridScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLGridScene.m; sourceTree = "<group>"; };
 		8E99B2A0182C013D00C7AEDB /* GLTileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTileNode.h; sourceTree = "<group>"; };
 		8E99B2A1182C013D00C7AEDB /* GLTileNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLTileNode.m; sourceTree = "<group>"; };
+		8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Crayola.h"; sourceTree = "<group>"; };
+		8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Crayola.m"; sourceTree = "<group>"; };
 		8ECA8980182371AE009D906F /* GameOfLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ECA8983182371AE009D906F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8ECA8985182371AE009D906F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -131,6 +134,8 @@
 		8ECA898B182371AE009D906F /* GameOfLife */ = {
 			isa = PBXGroup;
 			children = (
+				8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */,
+				8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */,
 				8ECA8994182371AE009D906F /* GLAppDelegate.h */,
 				8ECA8995182371AE009D906F /* GLAppDelegate.m */,
 				8ECA8997182371AE009D906F /* Main.storyboard */,
@@ -281,6 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */,
 				8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */,
 				8ECA8992182371AE009D906F /* main.m in Sources */,
 				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,
