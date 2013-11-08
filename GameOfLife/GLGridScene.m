@@ -148,37 +148,48 @@
    return liveCount;
 }
 
+- (int)getEastBlockLiveCountForTileAtIndex:(int)index
+{
+   int result = 0;
+   
+   int neighborIdx = index + 1;
+   if (neighborIdx / _gridDimensions.columns > index / _gridDimensions.columns)
+      neighborIdx -= _gridDimensions.columns;
+   
+   if (((GLTileNode *)[_tiles objectAtIndex:neighborIdx]).isLiving)
+      ++result;
+   
+   result += [self getNorthSouthLiveCountForTileAtIndex:neighborIdx];
+   
+   return result;
+}
+
+- (int)getWestBlockLiveCountForTileAtIndex:(int)index
+{
+   int result = 0;
+   
+   int neighborIdx = index - 1;
+   if (neighborIdx < 0 || neighborIdx / _gridDimensions.columns < index / _gridDimensions.columns)
+      neighborIdx += _gridDimensions.columns;
+   
+   if (((GLTileNode *)[_tiles objectAtIndex:neighborIdx]).isLiving)
+      ++result;
+   
+   result += [self getNorthSouthLiveCountForTileAtIndex:neighborIdx];
+   
+   return result;
+}
+
 - (BOOL)getIsLivingForNextGenerationAtIndex:(int)index
 {
    int liveCount = [self getNorthSouthLiveCountForTileAtIndex:index];
-   GLTileNode *tile;
-   
-   // east
-   int eastNeighborIndex = index + 1;
-   if (eastNeighborIndex / _gridDimensions.columns > index / _gridDimensions.columns)
-      eastNeighborIndex -= _gridDimensions.columns;
-   tile = [_tiles objectAtIndex:eastNeighborIndex];
-   if (tile.isLiving)
-      ++liveCount;
-   
-   liveCount += [self getNorthSouthLiveCountForTileAtIndex:eastNeighborIndex];
+   liveCount += [self getEastBlockLiveCountForTileAtIndex:index];
    
    if (liveCount > 3) return DEAD; // optimization - no need to check any further
    
-   // west
-   int westNeighborIndex = index - 1;
-   if (westNeighborIndex < 0 ||
-       westNeighborIndex / _gridDimensions.columns < index / _gridDimensions.columns)
-      westNeighborIndex += _gridDimensions.columns;
-   tile = [_tiles objectAtIndex:westNeighborIndex];
-   if (tile.isLiving)
-      ++liveCount;
+   liveCount += [self getWestBlockLiveCountForTileAtIndex:index];
    
-   if (liveCount > 3) return DEAD; // optimization - no need to check any further
-   
-   liveCount += [self getNorthSouthLiveCountForTileAtIndex:westNeighborIndex];
-   
-   tile = [_tiles objectAtIndex:index];
+   GLTileNode * tile = [_tiles objectAtIndex:index];
    
    // behold, the meaning of life (all in one statement)
    return ((tile.isLiving && liveCount == 2) || (liveCount == 3))? LIVING : DEAD;
@@ -191,10 +202,7 @@
       _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
 
    for (int i = 0; i < _tiles.count; ++i)
-   {
-      GLTileNode *tile = [_tiles objectAtIndex:i];
-      tile.isLiving = _nextGenerationTileStates[i];
-   }
+      ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
 }
 
 -(void)update:(CFTimeInterval)currentTime
