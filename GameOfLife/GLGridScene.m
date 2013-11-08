@@ -12,7 +12,10 @@
 
 #include <vector>
 
+// NOTE: both TILESIZE.width and TILESIZE.height must be greater than 1
 #define TILESIZE CGSizeMake(20, 20)
+#define LIVING YES
+#define DEAD   NO
 
 @interface GLGridScene()
 {
@@ -49,7 +52,7 @@
    {
       [self setupGridWithSize:size];
       _tiles = [NSArray arrayWithArray:self.children];
-      _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, NO);
+      _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    }
    return self;
 }
@@ -73,41 +76,38 @@
    _running = !_running;
 }
 
+- (GLTileNode *)tileAtTouch:(UITouch *)touch
+{
+   CGPoint location = [touch locationInNode:self];
+   int row = location.y / TILESIZE.height;
+   int col = location.x / TILESIZE.width;
+   int arrayIndex = row*_gridDimensions.columns + col;
+   return [_tiles objectAtIndex:arrayIndex];
+}
+
+- (void)toggleLivingForTileAtTouch:(UITouch *)touch
+{
+   GLTileNode *tile = [self tileAtTouch:touch];
+   if (_currentTileBeingTouched != tile)
+   {
+      _currentTileBeingTouched = tile;
+      tile.isLiving = !tile.isLiving;
+   }
+}
+
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
    if (!_running)
       for (UITouch *touch in touches)
-      {
-         CGPoint location = [touch locationInNode:self];
-         int row = location.y / TILESIZE.height;
-         int col = location.x / TILESIZE.width;
-         int arrayIndex = row*_gridDimensions.columns + col;
-
-         GLTileNode *tile = [_tiles objectAtIndex:arrayIndex];
-         tile.isLiving = !tile.isLiving;
-         _currentTileBeingTouched = tile;
-      }
+         [self toggleLivingForTileAtTouch:touch];
 }
 
 - (void)touchesMoved:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
    if (!_running)
-   {
-      UITouch *touch = [[touches allObjects] lastObject];
-      CGPoint location = [touch locationInNode:self];
-      int row = location.y / TILESIZE.height;
-      int col = location.x / TILESIZE.width;
-      int arrayIndex = row*_gridDimensions.columns + col;
-
-      GLTileNode *tile = [_tiles objectAtIndex:arrayIndex];
-      if (_currentTileBeingTouched != tile)
-      {
-         _currentTileBeingTouched = tile;
-         tile.isLiving = !tile.isLiving;
-      }
-   }
+      [self toggleLivingForTileAtTouch:[[touches allObjects] lastObject]];
 }
 
 - (void)touchesEnded:(NSSet *)touches
@@ -143,11 +143,11 @@
    return liveCount;
 }
 
-- (BOOL)getStateForTileAtIndex:(int)index
+- (BOOL)getIsLivingForNextGenerationAtIndex:(int)index
 {
    int liveCount = [self getNorthSouthLiveCountForTileAtIndex:index];
    GLTileNode *tile;
-
+   
    // east
    int eastNeighborIndex = index + 1;
    if (eastNeighborIndex / _gridDimensions.columns > index / _gridDimensions.columns)
@@ -155,9 +155,11 @@
    tile = [_tiles objectAtIndex:eastNeighborIndex];
    if (tile.isLiving)
       ++liveCount;
-
+   
    liveCount += [self getNorthSouthLiveCountForTileAtIndex:eastNeighborIndex];
-
+   
+   if (liveCount > 3) return DEAD; // optimization - no need to check any further
+   
    // west
    int westNeighborIndex = index - 1;
    if (westNeighborIndex < 0 ||
@@ -166,26 +168,22 @@
    tile = [_tiles objectAtIndex:westNeighborIndex];
    if (tile.isLiving)
       ++liveCount;
-
+   
+   if (liveCount > 3) return DEAD; // optimization - no need to check any further
+   
    liveCount += [self getNorthSouthLiveCountForTileAtIndex:westNeighborIndex];
-
+   
    tile = [_tiles objectAtIndex:index];
-
-   // behold, the meaning of life:
-   if (tile.isLiving)
-      if (liveCount == 2)
-         return YES;
-   if (liveCount == 3)
-      return YES;
-
-   return NO;
+   
+   // behold, the meaning of life (all in one statement)
+   return ((tile.isLiving && liveCount == 2) || (liveCount == 3))? LIVING : DEAD;
 }
 
 - (void)updateNextGeneration:(CFTimeInterval)currentTime
 {
    _lastGenerationTime = currentTime;
    for (int i = 0; i < _tiles.count; ++i)
-      _nextGenerationTileStates[i] = [self getStateForTileAtIndex:i];
+      _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
 
    for (int i = 0; i < _tiles.count; ++i)
    {
