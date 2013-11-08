@@ -1380,7 +1380,7 @@
 {
 	static NSCache *cache = nil;
 
-	if(!cache)
+	if (!cache)
 	{
 		cache = [NSCache new];
 
@@ -1391,7 +1391,7 @@
 
 	UIColor *color = [cache objectForKey:cacheKey];
 
-	if(!color)
+	if (!color)
 	{
 		color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 

@@ -26,6 +26,8 @@
    std::vector<BOOL> _nextGenerationTileStates;
    BOOL _running;
    GLTileNode *_currentTileBeingTouched;
+
+   SKNode *_hudLayer;
 }
 @end
 
@@ -51,6 +53,7 @@
    if (self = [super initWithSize:size])
    {
       [self setupGridWithSize:size];
+      [self setupHudWithSize:size];
       _tiles = [NSArray arrayWithArray:self.children];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    }
@@ -65,6 +68,21 @@
       tile.birthingDuration = bDuration;
       tile.dyingDuration = dDuration;
    }
+}
+
+- (void)setupHudWithSize:(CGSize)size
+{
+   _hudLayer = [SKNode new];
+
+   CGSize bgSize = CGSizeMake(size.width, size.height);
+   SKColor *backgroundColor = [SKColor crayolaBlackCoralPearlColor];
+
+   SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
+                                                              size:bgSize];
+
+   hudBackground.position = CGPointMake(0, size.height);
+   hudBackground.anchorPoint = CGPointZero;
+   [_hudLayer addChild:hudBackground];
 }
 
 - (void)toggleRunning
@@ -207,7 +225,7 @@
 
 -(void)update:(CFTimeInterval)currentTime
 {
-   if (_running && currentTime - _lastGenerationTime > .75)
+   if (_running && currentTime - _lastGenerationTime > .8)
       [self updateNextGeneration:currentTime];
 }
 
