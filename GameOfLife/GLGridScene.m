@@ -79,10 +79,15 @@
 - (GLTileNode *)tileAtTouch:(UITouch *)touch
 {
    CGPoint location = [touch locationInNode:self];
+   
    int row = location.y / TILESIZE.height;
    int col = location.x / TILESIZE.width;
    int arrayIndex = row*_gridDimensions.columns + col;
-   return [_tiles objectAtIndex:arrayIndex];
+   
+   if (arrayIndex >= 0 && arrayIndex < _tiles.count)
+      return [_tiles objectAtIndex:arrayIndex];
+   
+   return nil;
 }
 
 - (void)toggleLivingForTileAtTouch:(UITouch *)touch
