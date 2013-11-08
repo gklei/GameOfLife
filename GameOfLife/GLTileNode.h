@@ -7,6 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "UIColor+Crayola.h"
 
 @interface GLTileNode : SKSpriteNode
 
@@ -16,5 +17,7 @@
 @property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
 @property (nonatomic, assign) float birthingDuration;
 @property (nonatomic, assign) float dyingDuration;
+@property (nonatomic, assign) CrayolaColorName liveColorName;
+@property (nonatomic, assign) CrayolaColorName deadColorName;
 
 @end

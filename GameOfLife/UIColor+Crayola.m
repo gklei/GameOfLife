@@ -1406,4 +1406,864 @@
 	return [NSString stringWithFormat:@"%.2f%.2f%.2f%.2f", red, green, blue, alpha];
 }
 
++ (instancetype)colorForCrayolaColorName:(CrayolaColorName)colorName
+{
+   UIColor * result = nil;
+   switch (colorName)
+   {
+      case CCN_crayolaAbsoluteZeroColor:
+         result = [UIColor crayolaAbsoluteZeroColor];
+         break;
+      case CCN_crayolaAlienArmpitColor:
+         result = [UIColor crayolaAlienArmpitColor];
+         break;
+      case CCN_crayolaAlloyOrangeColor:
+         result = [UIColor crayolaAlloyOrangeColor];
+         break;
+      case CCN_crayolaAlmondColor:
+         result = [UIColor crayolaAlmondColor];
+         break;
+      case CCN_crayolaAmethystColor:
+         result = [UIColor crayolaAmethystColor];
+         break;
+      case CCN_crayolaAntiqueBrassColor:
+         result = [UIColor crayolaAntiqueBrassColor];
+         break;
+      case CCN_crayolaApricotColor:
+         result = [UIColor crayolaApricotColor];
+         break;
+      case CCN_crayolaAquaPearlColor:
+         result = [UIColor crayolaAquaPearlColor];
+         break;
+      case CCN_crayolaAquamarineColor:
+         result = [UIColor crayolaAquamarineColor];
+         break;
+      case CCN_crayolaAsparagusColor:
+         result = [UIColor crayolaAsparagusColor];
+         break;
+      case CCN_crayolaAtomicTangerineColor:
+         result = [UIColor crayolaAtomicTangerineColor];
+         break;
+      case CCN_crayolaAztecGoldColor:
+         result = [UIColor crayolaAztecGoldColor];
+         break;
+      case CCN_crayolaBabyPowderColor:
+         result = [UIColor crayolaBabyPowderColor];
+         break;
+      case CCN_crayolaBananaColor:
+         result = [UIColor crayolaBananaColor];
+         break;
+      case CCN_crayolaBananaManiaColor:
+         result = [UIColor crayolaBananaManiaColor];
+         break;
+      case CCN_crayolaBdazzledBlueColor:
+         result = [UIColor crayolaBdazzledBlueColor];
+         break;
+      case CCN_crayolaBeaverColor:
+         result = [UIColor crayolaBeaverColor];
+         break;
+      case CCN_crayolaBigDipORubyColor:
+         result = [UIColor crayolaBigDipORubyColor];
+         break;
+      case CCN_crayolaBigFootFeetColor:
+         result = [UIColor crayolaBigFootFeetColor];
+         break;
+      case CCN_crayolaBittersweetColor:
+         result = [UIColor crayolaBittersweetColor];
+         break;
+      case CCN_crayolaBittersweetShimmerColor:
+         result = [UIColor crayolaBittersweetShimmerColor];
+         break;
+      case CCN_crayolaBlackColor:
+         result = [UIColor crayolaBlackColor];
+         break;
+      case CCN_crayolaBlackCoralPearlColor:
+         result = [UIColor crayolaBlackCoralPearlColor];
+         break;
+      case CCN_crayolaBlackShadowsColor:
+         result = [UIColor crayolaBlackShadowsColor];
+         break;
+      case CCN_crayolaBlastOffBronzeColor:
+         result = [UIColor crayolaBlastOffBronzeColor];
+         break;
+      case CCN_crayolaBlizzardBlueColor:
+         result = [UIColor crayolaBlizzardBlueColor];
+         break;
+      case CCN_crayolaBlueColor:
+         result = [UIColor crayolaBlueColor];
+         break;
+      case CCN_crayolaBlueBellColor:
+         result = [UIColor crayolaBlueBellColor];
+         break;
+      case CCN_crayolaBlueGrayColor:
+         result = [UIColor crayolaBlueGrayColor];
+         break;
+      case CCN_crayolaBlueGreenColor:
+         result = [UIColor crayolaBlueGreenColor];
+         break;
+      case CCN_crayolaBlueJeansColor:
+         result = [UIColor crayolaBlueJeansColor];
+         break;
+      case CCN_crayolaBlueVioletColor:
+         result = [UIColor crayolaBlueVioletColor];
+         break;
+      case CCN_crayolaBlueberryColor:
+         result = [UIColor crayolaBlueberryColor];
+         break;
+      case CCN_crayolaBlushColor:
+         result = [UIColor crayolaBlushColor];
+         break;
+      case CCN_crayolaBoogerBusterColor:
+         result = [UIColor crayolaBoogerBusterColor];
+         break;
+      case CCN_crayolaBrickRedColor:
+         result = [UIColor crayolaBrickRedColor];
+         break;
+      case CCN_crayolaBrightYellowColor:
+         result = [UIColor crayolaBrightYellowColor];
+         break;
+      case CCN_crayolaBrownColor:
+         result = [UIColor crayolaBrownColor];
+         break;
+      case CCN_crayolaBrownSugarColor:
+         result = [UIColor crayolaBrownSugarColor];
+         break;
+      case CCN_crayolaBubbleGumColor:
+         result = [UIColor crayolaBubbleGumColor];
+         break;
+      case CCN_crayolaBurnishedBrownColor:
+         result = [UIColor crayolaBurnishedBrownColor];
+         break;
+      case CCN_crayolaBurntOrangeColor:
+         result = [UIColor crayolaBurntOrangeColor];
+         break;
+      case CCN_crayolaBurntSiennaColor:
+         result = [UIColor crayolaBurntSiennaColor];
+         break;
+      case CCN_crayolaCadetBlueColor:
+         result = [UIColor crayolaCadetBlueColor];
+         break;
+      case CCN_crayolaCanaryColor:
+         result = [UIColor crayolaCanaryColor];
+         break;
+      case CCN_crayolaCaribbeanGreenColor:
+         result = [UIColor crayolaCaribbeanGreenColor];
+         break;
+      case CCN_crayolaCaribbeanGreenPearlColor:
+         result = [UIColor crayolaCaribbeanGreenPearlColor];
+         break;
+      case CCN_crayolaCarnationPinkColor:
+         result = [UIColor crayolaCarnationPinkColor];
+         break;
+      case CCN_crayolaCedarChestColor:
+         result = [UIColor crayolaCedarChestColor];
+         break;
+      case CCN_crayolaCeriseColor:
+         result = [UIColor crayolaCeriseColor];
+         break;
+      case CCN_crayolaCeruleanColor:
+         result = [UIColor crayolaCeruleanColor];
+         break;
+      case CCN_crayolaCeruleanFrostColor:
+         result = [UIColor crayolaCeruleanFrostColor];
+         break;
+      case CCN_crayolaCherryColor:
+         result = [UIColor crayolaCherryColor];
+         break;
+      case CCN_crayolaChestnutColor:
+         result = [UIColor crayolaChestnutColor];
+         break;
+      case CCN_crayolaChocolateColor:
+         result = [UIColor crayolaChocolateColor];
+         break;
+      case CCN_crayolaCinnamonSatinColor:
+         result = [UIColor crayolaCinnamonSatinColor];
+         break;
+      case CCN_crayolaCitrineColor:
+         result = [UIColor crayolaCitrineColor];
+         break;
+      case CCN_crayolaCoconutColor:
+         result = [UIColor crayolaCoconutColor];
+         break;
+      case CCN_crayolaCopperColor:
+         result = [UIColor crayolaCopperColor];
+         break;
+      case CCN_crayolaCopperPennyColor:
+         result = [UIColor crayolaCopperPennyColor];
+         break;
+      case CCN_crayolaCornflowerColor:
+         result = [UIColor crayolaCornflowerColor];
+         break;
+      case CCN_crayolaCosmicCobaltColor:
+         result = [UIColor crayolaCosmicCobaltColor];
+         break;
+      case CCN_crayolaCottonCandyColor:
+         result = [UIColor crayolaCottonCandyColor];
+         break;
+      case CCN_crayolaCulturedPearlColor:
+         result = [UIColor crayolaCulturedPearlColor];
+         break;
+      case CCN_crayolaCyberGrapeColor:
+         result = [UIColor crayolaCyberGrapeColor];
+         break;
+      case CCN_crayolaDaffodilColor:
+         result = [UIColor crayolaDaffodilColor];
+         break;
+      case CCN_crayolaDandelionColor:
+         result = [UIColor crayolaDandelionColor];
+         break;
+      case CCN_crayolaDeepSpaceSparkleColor:
+         result = [UIColor crayolaDeepSpaceSparkleColor];
+         break;
+      case CCN_crayolaDenimColor:
+         result = [UIColor crayolaDenimColor];
+         break;
+      case CCN_crayolaDenimBlueColor:
+         result = [UIColor crayolaDenimBlueColor];
+         break;
+      case CCN_crayolaDesertSandColor:
+         result = [UIColor crayolaDesertSandColor];
+         break;
+      case CCN_crayolaDingyDungeonColor:
+         result = [UIColor crayolaDingyDungeonColor];
+         break;
+      case CCN_crayolaDirtColor:
+         result = [UIColor crayolaDirtColor];
+         break;
+      case CCN_crayolaEerieBlackColor:
+         result = [UIColor crayolaEerieBlackColor];
+         break;
+      case CCN_crayolaEggplantColor:
+         result = [UIColor crayolaEggplantColor];
+         break;
+      case CCN_crayolaElectricLimeColor:
+         result = [UIColor crayolaElectricLimeColor];
+         break;
+      case CCN_crayolaEmeraldColor:
+         result = [UIColor crayolaEmeraldColor];
+         break;
+      case CCN_crayolaEucalyptusColor:
+         result = [UIColor crayolaEucalyptusColor];
+         break;
+      case CCN_crayolaFernColor:
+         result = [UIColor crayolaFernColor];
+         break;
+      case CCN_crayolaFieryRoseColor:
+         result = [UIColor crayolaFieryRoseColor];
+         break;
+      case CCN_crayolaForestGreenColor:
+         result = [UIColor crayolaForestGreenColor];
+         break;
+      case CCN_crayolaFreshAirColor:
+         result = [UIColor crayolaFreshAirColor];
+         break;
+      case CCN_crayolaFrostbiteColor:
+         result = [UIColor crayolaFrostbiteColor];
+         break;
+      case CCN_crayolaFuchsiaColor:
+         result = [UIColor crayolaFuchsiaColor];
+         break;
+      case CCN_crayolaFuzzyWuzzyColor:
+         result = [UIColor crayolaFuzzyWuzzyColor];
+         break;
+      case CCN_crayolaGargoyleGasColor:
+         result = [UIColor crayolaGargoyleGasColor];
+         break;
+      case CCN_crayolaGiantsClubColor:
+         result = [UIColor crayolaGiantsClubColor];
+         break;
+      case CCN_crayolaGlossyGrapeColor:
+         result = [UIColor crayolaGlossyGrapeColor];
+         break;
+      case CCN_crayolaGoldColor:
+         result = [UIColor crayolaGoldColor];
+         break;
+      case CCN_crayolaGoldFusionColor:
+         result = [UIColor crayolaGoldFusionColor];
+         break;
+      case CCN_crayolaGoldenrodColor:
+         result = [UIColor crayolaGoldenrodColor];
+         break;
+      case CCN_crayolaGraniteGrayColor:
+         result = [UIColor crayolaGraniteGrayColor];
+         break;
+      case CCN_crayolaGrannySmithAppleColor:
+         result = [UIColor crayolaGrannySmithAppleColor];
+         break;
+      case CCN_crayolaGrapeColor:
+         result = [UIColor crayolaGrapeColor];
+         break;
+      case CCN_crayolaGrayColor:
+         result = [UIColor crayolaGrayColor];
+         break;
+      case CCN_crayolaGreenColor:
+         result = [UIColor crayolaGreenColor];
+         break;
+      case CCN_crayolaGreenBlueColor:
+         result = [UIColor crayolaGreenBlueColor];
+         break;
+      case CCN_crayolaGreenLizardColor:
+         result = [UIColor crayolaGreenLizardColor];
+         break;
+      case CCN_crayolaGreenSheenColor:
+         result = [UIColor crayolaGreenSheenColor];
+         break;
+      case CCN_crayolaGreenYellowColor:
+         result = [UIColor crayolaGreenYellowColor];
+         break;
+      case CCN_crayolaHeatWaveColor:
+         result = [UIColor crayolaHeatWaveColor];
+         break;
+      case CCN_crayolaHotMagentaColor:
+         result = [UIColor crayolaHotMagentaColor];
+         break;
+      case CCN_crayolaIlluminatingEmeraldColor:
+         result = [UIColor crayolaIlluminatingEmeraldColor];
+         break;
+      case CCN_crayolaInchwormColor:
+         result = [UIColor crayolaInchwormColor];
+         break;
+      case CCN_crayolaIndigoColor:
+         result = [UIColor crayolaIndigoColor];
+         break;
+      case CCN_crayolaJadeColor:
+         result = [UIColor crayolaJadeColor];
+         break;
+      case CCN_crayolaJasperColor:
+         result = [UIColor crayolaJasperColor];
+         break;
+      case CCN_crayolaJazzberryJamColor:
+         result = [UIColor crayolaJazzberryJamColor];
+         break;
+      case CCN_crayolaJellyBeanColor:
+         result = [UIColor crayolaJellyBeanColor];
+         break;
+      case CCN_crayolaJungleGreenColor:
+         result = [UIColor crayolaJungleGreenColor];
+         break;
+      case CCN_crayolaKeyLimePearlColor:
+         result = [UIColor crayolaKeyLimePearlColor];
+         break;
+      case CCN_crayolaLapisLazuliColor:
+         result = [UIColor crayolaLapisLazuliColor];
+         break;
+      case CCN_crayolaLaserLemonColor:
+         result = [UIColor crayolaLaserLemonColor];
+         break;
+      case CCN_crayolaLavenderColor:
+         result = [UIColor crayolaLavenderColor];
+         break;
+      case CCN_crayolaLeatherJacketColor:
+         result = [UIColor crayolaLeatherJacketColor];
+         break;
+      case CCN_crayolaLemonColor:
+         result = [UIColor crayolaLemonColor];
+         break;
+      case CCN_crayolaLemonGlacierColor:
+         result = [UIColor crayolaLemonGlacierColor];
+         break;
+      case CCN_crayolaLemonYellowColor:
+         result = [UIColor crayolaLemonYellowColor];
+         break;
+      case CCN_crayolaLicoriceColor:
+         result = [UIColor crayolaLicoriceColor];
+         break;
+      case CCN_crayolaLilacColor:
+         result = [UIColor crayolaLilacColor];
+         break;
+      case CCN_crayolaLilacLusterColor:
+         result = [UIColor crayolaLilacLusterColor];
+         break;
+      case CCN_crayolaLimeColor:
+         result = [UIColor crayolaLimeColor];
+         break;
+      case CCN_crayolaLumberColor:
+         result = [UIColor crayolaLumberColor];
+         break;
+      case CCN_crayolaMacaroniCheeseColor:
+         result = [UIColor crayolaMacaroniCheeseColor];
+         break;
+      case CCN_crayolaMagentaColor:
+         result = [UIColor crayolaMagentaColor];
+         break;
+      case CCN_crayolaMagicMintColor:
+         result = [UIColor crayolaMagicMintColor];
+         break;
+      case CCN_crayolaMagicPotionColor:
+         result = [UIColor crayolaMagicPotionColor];
+         break;
+      case CCN_crayolaMahoganyColor:
+         result = [UIColor crayolaMahoganyColor];
+         break;
+      case CCN_crayolaMaizeColor:
+         result = [UIColor crayolaMaizeColor];
+         break;
+      case CCN_crayolaMalachiteColor:
+         result = [UIColor crayolaMalachiteColor];
+         break;
+      case CCN_crayolaManateeColor:
+         result = [UIColor crayolaManateeColor];
+         break;
+      case CCN_crayolaMandarinPearlColor:
+         result = [UIColor crayolaMandarinPearlColor];
+         break;
+      case CCN_crayolaMangoTangoColor:
+         result = [UIColor crayolaMangoTangoColor];
+         break;
+      case CCN_crayolaMaroonColor:
+         result = [UIColor crayolaMaroonColor];
+         break;
+      case CCN_crayolaMauvelousColor:
+         result = [UIColor crayolaMauvelousColor];
+         break;
+      case CCN_crayolaMelonColor:
+         result = [UIColor crayolaMelonColor];
+         break;
+      case CCN_crayolaMetallicSeaweedColor:
+         result = [UIColor crayolaMetallicSeaweedColor];
+         break;
+      case CCN_crayolaMetallicSunburstColor:
+         result = [UIColor crayolaMetallicSunburstColor];
+         break;
+      case CCN_crayolaMidnightBlueColor:
+         result = [UIColor crayolaMidnightBlueColor];
+         break;
+      case CCN_crayolaMidnightPearlColor:
+         result = [UIColor crayolaMidnightPearlColor];
+         break;
+      case CCN_crayolaMistyMossColor:
+         result = [UIColor crayolaMistyMossColor];
+         break;
+      case CCN_crayolaMoonstoneColor:
+         result = [UIColor crayolaMoonstoneColor];
+         break;
+      case CCN_crayolaMountainMeadowColor:
+         result = [UIColor crayolaMountainMeadowColor];
+         break;
+      case CCN_crayolaMulberryColor:
+         result = [UIColor crayolaMulberryColor];
+         break;
+      case CCN_crayolaMummysTombColor:
+         result = [UIColor crayolaMummysTombColor];
+         break;
+      case CCN_crayolaMysticMaroonColor:
+         result = [UIColor crayolaMysticMaroonColor];
+         break;
+      case CCN_crayolaMysticPearlColor:
+         result = [UIColor crayolaMysticPearlColor];
+         break;
+      case CCN_crayolaNavyBlueColor:
+         result = [UIColor crayolaNavyBlueColor];
+         break;
+      case CCN_crayolaNeonCarrotColor:
+         result = [UIColor crayolaNeonCarrotColor];
+         break;
+      case CCN_crayolaNewCarColor:
+         result = [UIColor crayolaNewCarColor];
+         break;
+      case CCN_crayolaOceanBluePearlColor:
+         result = [UIColor crayolaOceanBluePearlColor];
+         break;
+      case CCN_crayolaOceanGreenPearlColor:
+         result = [UIColor crayolaOceanGreenPearlColor];
+         break;
+      case CCN_crayolaOgreOdorColor:
+         result = [UIColor crayolaOgreOdorColor];
+         break;
+      case CCN_crayolaOliveGreenColor:
+         result = [UIColor crayolaOliveGreenColor];
+         break;
+      case CCN_crayolaOnyxColor:
+         result = [UIColor crayolaOnyxColor];
+         break;
+      case CCN_crayolaOrangeColor:
+         result = [UIColor crayolaOrangeColor];
+         break;
+      case CCN_crayolaOrangeRedColor:
+         result = [UIColor crayolaOrangeRedColor];
+         break;
+      case CCN_crayolaOrangeSodaColor:
+         result = [UIColor crayolaOrangeSodaColor];
+         break;
+      case CCN_crayolaOrangeYellowColor:
+         result = [UIColor crayolaOrangeYellowColor];
+         break;
+      case CCN_crayolaOrchidColor:
+         result = [UIColor crayolaOrchidColor];
+         break;
+      case CCN_crayolaOrchidPearlColor:
+         result = [UIColor crayolaOrchidPearlColor];
+         break;
+      case CCN_crayolaOuterSpaceColor:
+         result = [UIColor crayolaOuterSpaceColor];
+         break;
+      case CCN_crayolaOutrageousOrangeColor:
+         result = [UIColor crayolaOutrageousOrangeColor];
+         break;
+      case CCN_crayolaPacificBlueColor:
+         result = [UIColor crayolaPacificBlueColor];
+         break;
+      case CCN_crayolaPeachColor:
+         result = [UIColor crayolaPeachColor];
+         break;
+      case CCN_crayolaPearlyPurpleColor:
+         result = [UIColor crayolaPearlyPurpleColor];
+         break;
+      case CCN_crayolaPeridotColor:
+         result = [UIColor crayolaPeridotColor];
+         break;
+      case CCN_crayolaPeriwinkleColor:
+         result = [UIColor crayolaPeriwinkleColor];
+         break;
+      case CCN_crayolaPewterBlueColor:
+         result = [UIColor crayolaPewterBlueColor];
+         break;
+      case CCN_crayolaPiggyPinkColor:
+         result = [UIColor crayolaPiggyPinkColor];
+         break;
+      case CCN_crayolaPineColor:
+         result = [UIColor crayolaPineColor];
+         break;
+      case CCN_crayolaPineGreenColor:
+         result = [UIColor crayolaPineGreenColor];
+         break;
+      case CCN_crayolaPinkFlamingoColor:
+         result = [UIColor crayolaPinkFlamingoColor];
+         break;
+      case CCN_crayolaPinkPearlColor:
+         result = [UIColor crayolaPinkPearlColor];
+         break;
+      case CCN_crayolaPinkSherbertColor:
+         result = [UIColor crayolaPinkSherbertColor];
+         break;
+      case CCN_crayolaPixiePowderColor:
+         result = [UIColor crayolaPixiePowderColor];
+         break;
+      case CCN_crayolaPlumColor:
+         result = [UIColor crayolaPlumColor];
+         break;
+      case CCN_crayolaPlumpPurpleColor:
+         result = [UIColor crayolaPlumpPurpleColor];
+         break;
+      case CCN_crayolaPolishedPineColor:
+         result = [UIColor crayolaPolishedPineColor];
+         break;
+      case CCN_crayolaPrincessPerfumeColor:
+         result = [UIColor crayolaPrincessPerfumeColor];
+         break;
+      case CCN_crayolaPurpleHeartColor:
+         result = [UIColor crayolaPurpleHeartColor];
+         break;
+      case CCN_crayolaPurpleMountainsMajestyColor:
+         result = [UIColor crayolaPurpleMountainsMajestyColor];
+         break;
+      case CCN_crayolaPurplePizzazzColor:
+         result = [UIColor crayolaPurplePizzazzColor];
+         break;
+      case CCN_crayolaPurplePlumColor:
+         result = [UIColor crayolaPurplePlumColor];
+         break;
+      case CCN_crayolaQuickSilverColor:
+         result = [UIColor crayolaQuickSilverColor];
+         break;
+      case CCN_crayolaRadicalRedColor:
+         result = [UIColor crayolaRadicalRedColor];
+         break;
+      case CCN_crayolaRawSiennaColor:
+         result = [UIColor crayolaRawSiennaColor];
+         break;
+      case CCN_crayolaRawUmberColor:
+         result = [UIColor crayolaRawUmberColor];
+         break;
+      case CCN_crayolaRazzleDazzleRoseColor:
+         result = [UIColor crayolaRazzleDazzleRoseColor];
+         break;
+      case CCN_crayolaRazzmatazzColor:
+         result = [UIColor crayolaRazzmatazzColor];
+         break;
+      case CCN_crayolaRazzmicBerryColor:
+         result = [UIColor crayolaRazzmicBerryColor];
+         break;
+      case CCN_crayolaRedColor:
+         result = [UIColor crayolaRedColor];
+         break;
+      case CCN_crayolaRedOrangeColor:
+         result = [UIColor crayolaRedOrangeColor];
+         break;
+      case CCN_crayolaRedSalsaColor:
+         result = [UIColor crayolaRedSalsaColor];
+         break;
+      case CCN_crayolaRedVioletColor:
+         result = [UIColor crayolaRedVioletColor];
+         break;
+      case CCN_crayolaRobinsEggBlueColor:
+         result = [UIColor crayolaRobinsEggBlueColor];
+         break;
+      case CCN_crayolaRoseColor:
+         result = [UIColor crayolaRoseColor];
+         break;
+      case CCN_crayolaRoseDustColor:
+         result = [UIColor crayolaRoseDustColor];
+         break;
+      case CCN_crayolaRosePearlColor:
+         result = [UIColor crayolaRosePearlColor];
+         break;
+      case CCN_crayolaRoseQuartzColor:
+         result = [UIColor crayolaRoseQuartzColor];
+         break;
+      case CCN_crayolaRoyalPurpleColor:
+         result = [UIColor crayolaRoyalPurpleColor];
+         break;
+      case CCN_crayolaRubyColor:
+         result = [UIColor crayolaRubyColor];
+         break;
+      case CCN_crayolaRustyRedColor:
+         result = [UIColor crayolaRustyRedColor];
+         break;
+      case CCN_crayolaSalmonColor:
+         result = [UIColor crayolaSalmonColor];
+         break;
+      case CCN_crayolaSalmonPearlColor:
+         result = [UIColor crayolaSalmonPearlColor];
+         break;
+      case CCN_crayolaSapphireColor:
+         result = [UIColor crayolaSapphireColor];
+         break;
+      case CCN_crayolaSasquatchSocksColor:
+         result = [UIColor crayolaSasquatchSocksColor];
+         break;
+      case CCN_crayolaScarletColor:
+         result = [UIColor crayolaScarletColor];
+         break;
+      case CCN_crayolaScreaminGreenColor:
+         result = [UIColor crayolaScreaminGreenColor];
+         break;
+      case CCN_crayolaSeaGreenColor:
+         result = [UIColor crayolaSeaGreenColor];
+         break;
+      case CCN_crayolaSeaSerpentColor:
+         result = [UIColor crayolaSeaSerpentColor];
+         break;
+      case CCN_crayolaSepiaColor:
+         result = [UIColor crayolaSepiaColor];
+         break;
+      case CCN_crayolaShadowColor:
+         result = [UIColor crayolaShadowColor];
+         break;
+      case CCN_crayolaShadowBlueColor:
+         result = [UIColor crayolaShadowBlueColor];
+         break;
+      case CCN_crayolaShampooColor:
+         result = [UIColor crayolaShampooColor];
+         break;
+      case CCN_crayolaShamrockColor:
+         result = [UIColor crayolaShamrockColor];
+         break;
+      case CCN_crayolaSheenGreenColor:
+         result = [UIColor crayolaSheenGreenColor];
+         break;
+      case CCN_crayolaShimmeringBlushColor:
+         result = [UIColor crayolaShimmeringBlushColor];
+         break;
+      case CCN_crayolaShinyShamrockColor:
+         result = [UIColor crayolaShinyShamrockColor];
+         break;
+      case CCN_crayolaShockingPinkColor:
+         result = [UIColor crayolaShockingPinkColor];
+         break;
+      case CCN_crayolaSilverColor:
+         result = [UIColor crayolaSilverColor];
+         break;
+      case CCN_crayolaSizzlingRedColor:
+         result = [UIColor crayolaSizzlingRedColor];
+         break;
+      case CCN_crayolaSizzlingSunriseColor:
+         result = [UIColor crayolaSizzlingSunriseColor];
+         break;
+      case CCN_crayolaSkyBlueColor:
+         result = [UIColor crayolaSkyBlueColor];
+         break;
+      case CCN_crayolaSlimyGreenColor:
+         result = [UIColor crayolaSlimyGreenColor];
+         break;
+      case CCN_crayolaSmashedPumpkinColor:
+         result = [UIColor crayolaSmashedPumpkinColor];
+         break;
+      case CCN_crayolaSmokeColor:
+         result = [UIColor crayolaSmokeColor];
+         break;
+      case CCN_crayolaSmokeyTopazColor:
+         result = [UIColor crayolaSmokeyTopazColor];
+         break;
+      case CCN_crayolaSoapColor:
+         result = [UIColor crayolaSoapColor];
+         break;
+      case CCN_crayolaSonicSilverColor:
+         result = [UIColor crayolaSonicSilverColor];
+         break;
+      case CCN_crayolaSpringFrostColor:
+         result = [UIColor crayolaSpringFrostColor];
+         break;
+      case CCN_crayolaSpringGreenColor:
+         result = [UIColor crayolaSpringGreenColor];
+         break;
+      case CCN_crayolaSteelBlueColor:
+         result = [UIColor crayolaSteelBlueColor];
+         break;
+      case CCN_crayolaSteelTealColor:
+         result = [UIColor crayolaSteelTealColor];
+         break;
+      case CCN_crayolaStrawberryColor:
+         result = [UIColor crayolaStrawberryColor];
+         break;
+      case CCN_crayolaSugarPlumColor:
+         result = [UIColor crayolaSugarPlumColor];
+         break;
+      case CCN_crayolaSunburntCyclopsColor:
+         result = [UIColor crayolaSunburntCyclopsColor];
+         break;
+      case CCN_crayolaSunglowColor:
+         result = [UIColor crayolaSunglowColor];
+         break;
+      case CCN_crayolaSunnyPearlColor:
+         result = [UIColor crayolaSunnyPearlColor];
+         break;
+      case CCN_crayolaSunsetOrangeColor:
+         result = [UIColor crayolaSunsetOrangeColor];
+         break;
+      case CCN_crayolaSunsetPearlColor:
+         result = [UIColor crayolaSunsetPearlColor];
+         break;
+      case CCN_crayolaSweetBrownColor:
+         result = [UIColor crayolaSweetBrownColor];
+         break;
+      case CCN_crayolaTanColor:
+         result = [UIColor crayolaTanColor];
+         break;
+      case CCN_crayolaTartOrangeColor:
+         result = [UIColor crayolaTartOrangeColor];
+         break;
+      case CCN_crayolaTealBlueColor:
+         result = [UIColor crayolaTealBlueColor];
+         break;
+      case CCN_crayolaThistleColor:
+         result = [UIColor crayolaThistleColor];
+         break;
+      case CCN_crayolaTickleMePinkColor:
+         result = [UIColor crayolaTickleMePinkColor];
+         break;
+      case CCN_crayolaTigersEyeColor:
+         result = [UIColor crayolaTigersEyeColor];
+         break;
+      case CCN_crayolaTimberwolfColor:
+         result = [UIColor crayolaTimberwolfColor];
+         break;
+      case CCN_crayolaTropicalRainForestColor:
+         result = [UIColor crayolaTropicalRainForestColor];
+         break;
+      case CCN_crayolaTulipColor:
+         result = [UIColor crayolaTulipColor];
+         break;
+      case CCN_crayolaTumbleweedColor:
+         result = [UIColor crayolaTumbleweedColor];
+         break;
+      case CCN_crayolaTurquoiseBlueColor:
+         result = [UIColor crayolaTurquoiseBlueColor];
+         break;
+      case CCN_crayolaTurquoisePearlColor:
+         result = [UIColor crayolaTurquoisePearlColor];
+         break;
+      case CCN_crayolaTwilightLavenderColor:
+         result = [UIColor crayolaTwilightLavenderColor];
+         break;
+      case CCN_crayolaUnmellowYellowColor:
+         result = [UIColor crayolaUnmellowYellowColor];
+         break;
+      case CCN_crayolaVioletBlueColor:
+         result = [UIColor crayolaVioletBlueColor];
+         break;
+      case CCN_crayolaVioletPurpleColor:
+         result = [UIColor crayolaVioletPurpleColor];
+         break;
+      case CCN_crayolaVioletRedColor:
+         result = [UIColor crayolaVioletRedColor];
+         break;
+      case CCN_crayolaVividTangerineColor:
+         result = [UIColor crayolaVividTangerineColor];
+         break;
+      case CCN_crayolaVividVioletColor:
+         result = [UIColor crayolaVividVioletColor];
+         break;
+      case CCN_crayolaWhiteColor:
+         result = [UIColor crayolaWhiteColor];
+         break;
+      case CCN_crayolaWildBlueYonderColor:
+         result = [UIColor crayolaWildBlueYonderColor];
+         break;
+      case CCN_crayolaWildStrawberryColor:
+         result = [UIColor crayolaWildStrawberryColor];
+         break;
+      case CCN_crayolaWildWatermelonColor:
+         result = [UIColor crayolaWildWatermelonColor];
+         break;
+      case CCN_crayolaWinterSkyColor:
+         result = [UIColor crayolaWinterSkyColor];
+         break;
+      case CCN_crayolaWinterWizardColor:
+         result = [UIColor crayolaWinterWizardColor];
+         break;
+      case CCN_crayolaWintergreenDreamColor:
+         result = [UIColor crayolaWintergreenDreamColor];
+         break;
+      case CCN_crayolaWisteriaColor:
+         result = [UIColor crayolaWisteriaColor];
+         break;
+      case CCN_crayolaYellowColor:
+         result = [UIColor crayolaYellowColor];
+         break;
+      case CCN_crayolaYellowGreenColor:
+         result = [UIColor crayolaYellowGreenColor];
+         break;
+      case CCN_crayolaYellowOrangeColor:
+         result = [UIColor crayolaYellowOrangeColor];
+         break;
+      case CCN_crayolaYellowSunshineColor:
+         result = [UIColor crayolaYellowSunshineColor];
+         break;
+      default:
+         result = [UIColor crayolaAbsoluteZeroColor];
+         break;
+   }
+   
+   return result;
+}
+
++ (CrayolaColorName)getPreviousColorName:(CrayolaColorName)colorName
+{
+   --colorName;
+   if (colorName > CCN_crayolaYellowSunshineColor)
+      colorName = CCN_crayolaYellowSunshineColor;
+   
+   return colorName;
+}
+
++ (CrayolaColorName)getNextColorName:(CrayolaColorName)colorName
+{
+   ++colorName;
+   if (colorName > CCN_crayolaYellowSunshineColor)
+      colorName = 0;
+   
+   return colorName;
+}
+
++ (instancetype)getPreviousColor:(CrayolaColorName)colorName
+{
+   return [UIColor colorForCrayolaColorName:[UIColor getPreviousColorName:colorName]];
+}
+
++ (instancetype)getNextColor:(CrayolaColorName)colorName
+{
+   return [UIColor colorForCrayolaColorName:[UIColor getNextColorName:colorName]];
+}
+
 @end

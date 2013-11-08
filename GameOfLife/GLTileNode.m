@@ -7,7 +7,7 @@
 //
 
 #import "GLTileNode.h"
-#import "UIColor+Crayola.h"
+
 
 @implementation GLTileNode
 
@@ -21,7 +21,19 @@
    tile.isLiving = NO;
    tile.color = [SKColor crayolaCoconutColor];
 
+   [tile setLiveColorName:CCN_crayolaMulberryColor - 1];
+   [tile setDeadColorName:CCN_crayolaCoconutColor];
+   
    return tile;
+}
+
+- (SKColor *)getNextColor:(CrayolaColorName *)colorName
+{
+   *colorName = [SKColor getNextColorName:*colorName];
+   if (*colorName == _deadColorName)
+      *colorName = [SKColor getNextColorName:*colorName];
+   
+   return [SKColor colorForCrayolaColorName:*colorName];
 }
 
 - (void)setIsLiving:(BOOL)living
@@ -30,11 +42,10 @@
       return;
 
    _isLiving = living;
-   float duration = (_isLiving) ? _birthingDuration :
-                                  _dyingDuration;
+   float duration = (_isLiving)? _birthingDuration : _dyingDuration;
 
-   SKColor *newColor = (_isLiving) ? [SKColor crayolaMulberryColor] :
-                                     [SKColor crayolaCoconutColor];
+   SKColor *newColor = (_isLiving)? [self getNextColor:&_liveColorName] :
+                                    [SKColor colorForCrayolaColorName:_deadColorName];
 
    SKAction *changeColor = [SKAction colorizeWithColor:newColor
                                       colorBlendFactor:0.0
