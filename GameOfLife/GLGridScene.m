@@ -100,12 +100,28 @@
    }
 }
 
+- (void)grabScreenShot
+{
+//   UIGraphicsBeginImageContext(self.view.window.frame.size);
+//      [BackView.layer renderInContext:UIGraphicsGetCurrentContext()];
+//   
+//   UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+//   UIGraphicsEndImageContext();
+//   UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+}
+
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-   if (!_running)
+   if (_running)
+   {
+      [self grabScreenShot];
+   }
+   else
+   {
       for (UITouch *touch in touches)
          [self toggleLivingForTileAtTouch:touch];
+   }
 }
 
 - (void)touchesMoved:(NSSet *)touches
