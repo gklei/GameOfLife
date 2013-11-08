@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8E99B29B182BFE1600C7AEDB /* SparkParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B299182BFE1600C7AEDB /* SparkParticle.sks */; };
-		8E99B29C182BFE1600C7AEDB /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B29A182BFE1600C7AEDB /* spark.png */; };
 		8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B29E182BFE7600C7AEDB /* GLGridScene.m */; };
 		8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A1182C013D00C7AEDB /* GLTileNode.m */; };
 		8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */; };
@@ -21,8 +19,6 @@
 		8ECA8996182371AE009D906F /* GLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECA8995182371AE009D906F /* GLAppDelegate.m */; };
 		8ECA8999182371AE009D906F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8ECA8997182371AE009D906F /* Main.storyboard */; };
 		8ECA899C182371AE009D906F /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECA899B182371AE009D906F /* GLViewController.m */; };
-		8ECA899F182371AE009D906F /* GLMyScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECA899E182371AE009D906F /* GLMyScene.m */; };
-		8ECA89A1182371AE009D906F /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ECA89A0182371AE009D906F /* Spaceship.png */; };
 		8ECA89A3182371AE009D906F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8ECA89A2182371AE009D906F /* Images.xcassets */; };
 		8ECA89AA182371AE009D906F /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA89A9182371AE009D906F /* XCTest.framework */; };
 		8ECA89AB182371AE009D906F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8983182371AE009D906F /* Foundation.framework */; };
@@ -42,8 +38,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8E99B299182BFE1600C7AEDB /* SparkParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SparkParticle.sks; sourceTree = "<group>"; };
-		8E99B29A182BFE1600C7AEDB /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		8E99B29D182BFE7600C7AEDB /* GLGridScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGridScene.h; sourceTree = "<group>"; };
 		8E99B29E182BFE7600C7AEDB /* GLGridScene.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLGridScene.m; sourceTree = "<group>"; };
 		8E99B2A0182C013D00C7AEDB /* GLTileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTileNode.h; sourceTree = "<group>"; };
@@ -64,9 +58,6 @@
 		8ECA8998182371AE009D906F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8ECA899A182371AE009D906F /* GLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLViewController.h; sourceTree = "<group>"; };
 		8ECA899B182371AE009D906F /* GLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLViewController.m; sourceTree = "<group>"; };
-		8ECA899D182371AE009D906F /* GLMyScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLMyScene.h; sourceTree = "<group>"; };
-		8ECA899E182371AE009D906F /* GLMyScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GLMyScene.m; sourceTree = "<group>"; };
-		8ECA89A0182371AE009D906F /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
 		8ECA89A2182371AE009D906F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		8ECA89A8182371AE009D906F /* GameOfLifeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GameOfLifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ECA89A9182371AE009D906F /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -141,15 +132,10 @@
 				8ECA8997182371AE009D906F /* Main.storyboard */,
 				8ECA899A182371AE009D906F /* GLViewController.h */,
 				8ECA899B182371AE009D906F /* GLViewController.m */,
-				8ECA899D182371AE009D906F /* GLMyScene.h */,
-				8ECA899E182371AE009D906F /* GLMyScene.m */,
 				8E99B29D182BFE7600C7AEDB /* GLGridScene.h */,
 				8E99B29E182BFE7600C7AEDB /* GLGridScene.m */,
 				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
 				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
-				8E99B299182BFE1600C7AEDB /* SparkParticle.sks */,
-				8E99B29A182BFE1600C7AEDB /* spark.png */,
-				8ECA89A0182371AE009D906F /* Spaceship.png */,
 				8ECA89A2182371AE009D906F /* Images.xcassets */,
 				8ECA898C182371AE009D906F /* Supporting Files */,
 			);
@@ -263,11 +249,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8ECA8990182371AE009D906F /* InfoPlist.strings in Resources */,
-				8E99B29C182BFE1600C7AEDB /* spark.png in Resources */,
 				8ECA89A3182371AE009D906F /* Images.xcassets in Resources */,
-				8ECA89A1182371AE009D906F /* Spaceship.png in Resources */,
 				8ECA8999182371AE009D906F /* Main.storyboard in Resources */,
-				8E99B29B182BFE1600C7AEDB /* SparkParticle.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,7 +273,6 @@
 				8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */,
 				8ECA8992182371AE009D906F /* main.m in Sources */,
 				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,
-				8ECA899F182371AE009D906F /* GLMyScene.m in Sources */,
 				8ECA899C182371AE009D906F /* GLViewController.m in Sources */,
 				8ECA8996182371AE009D906F /* GLAppDelegate.m in Sources */,
 			);

@@ -7,7 +7,6 @@
 //
 
 #import "GLViewController.h"
-#import "GLMyScene.h"
 #import "GLGridScene.h"
 
 @implementation GLViewController
