@@ -15,4 +15,6 @@ typedef struct {
    int columns;
 } GridDimensions;
 
+- (void)toggleRunning;
+
 @end

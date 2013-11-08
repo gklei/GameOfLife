@@ -35,13 +35,12 @@
    _gridDimensions.rows = size.height/TILESIZE.height;
    _gridDimensions.columns = size.width/TILESIZE.width;
 
-   for (int ypos = 0; ypos < size.height; ypos += TILESIZE.height)
-      for (int xpos = 0; xpos < size.width; xpos += TILESIZE.width)
-         [self addChild:[GLTileNode tileWithRect:CGRectMake(xpos + 0.5,
-                                                            ypos + 0.5,
+   for (int yPos = 0; yPos < size.height; yPos += TILESIZE.height)
+      for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
+         [self addChild:[GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
+                                                            yPos + 0.5,
                                                             TILESIZE.width - 1,
                                                             TILESIZE.height - 1)]];
-   _tiles = [NSArray arrayWithArray:self.children];
 }
 
 -(id)initWithSize:(CGSize)size
@@ -49,6 +48,7 @@
    if (self = [super initWithSize:size])
    {
       [self setupGridWithSize:size];
+      _tiles = [NSArray arrayWithArray:self.children];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, NO);
    }
    return self;
@@ -64,19 +64,18 @@
    }
 }
 
+- (void)toggleRunning
+{
+   float duration = (_running) ? .15 : .35;
+   [self setTilesBirthingDuration:duration
+                    dyingDuration:duration];
+
+   _running = !_running;
+}
+
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-   if (touches.count > 1)
-   {
-      float duration = (_running) ? .15 : .35;
-      [self setTilesBirthingDuration:duration
-                       dyingDuration:duration];
-
-      _running = !_running;
-      return;
-   }
-
    if (!_running)
       for (UITouch *touch in touches)
       {
@@ -146,30 +145,29 @@
 
 - (BOOL)getStateForTileAtIndex:(int)index
 {
-   int neighborIndex;
    int liveCount = [self getNorthSouthLiveCountForTileAtIndex:index];
    GLTileNode *tile;
 
    // east
-   neighborIndex = index + 1;
-   if (neighborIndex / _gridDimensions.columns > index / _gridDimensions.columns)
-      neighborIndex -= _gridDimensions.columns;
-   tile = [_tiles objectAtIndex:neighborIndex];
+   int eastNeighborIndex = index + 1;
+   if (eastNeighborIndex / _gridDimensions.columns > index / _gridDimensions.columns)
+      eastNeighborIndex -= _gridDimensions.columns;
+   tile = [_tiles objectAtIndex:eastNeighborIndex];
    if (tile.isLiving)
       ++liveCount;
 
-   liveCount += [self getNorthSouthLiveCountForTileAtIndex:neighborIndex];
+   liveCount += [self getNorthSouthLiveCountForTileAtIndex:eastNeighborIndex];
 
    // west
-   neighborIndex = index - 1;
-   if (neighborIndex < 0 ||
-       neighborIndex / _gridDimensions.columns < index / _gridDimensions.columns)
-      neighborIndex += _gridDimensions.columns;
-   tile = [_tiles objectAtIndex:neighborIndex];
+   int westNeighborIndex = index - 1;
+   if (westNeighborIndex < 0 ||
+       westNeighborIndex / _gridDimensions.columns < index / _gridDimensions.columns)
+      westNeighborIndex += _gridDimensions.columns;
+   tile = [_tiles objectAtIndex:westNeighborIndex];
    if (tile.isLiving)
       ++liveCount;
 
-   liveCount += [self getNorthSouthLiveCountForTileAtIndex:neighborIndex];
+   liveCount += [self getNorthSouthLiveCountForTileAtIndex:westNeighborIndex];
 
    tile = [_tiles objectAtIndex:index];
 

@@ -9,42 +9,71 @@
 #import "GLViewController.h"
 #import "GLGridScene.h"
 
+@interface GLViewController()
+{
+   GLGridScene *_gridScene;
+}
+@end
+
 @implementation GLViewController
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+   [super viewDidLoad];
 
-    // Configure the view.
-    SKView * skView = (SKView *)self.view;
-//    skView.showsFPS = YES;
-//    skView.showsNodeCount = YES;
+   // Configure the view.
+   SKView * skView = (SKView *)self.view;
+   //    skView.showsFPS = YES;
+   //    skView.showsNodeCount = YES;
 
-    // Create and configure the scene.
-    SKScene * scene = [GLGridScene sceneWithSize:skView.bounds.size];
-    scene.scaleMode = SKSceneScaleModeAspectFill;
-    // Present the scene.
-    [skView presentScene:scene];
+   // Create and configure the scene.
+   _gridScene = [GLGridScene sceneWithSize:skView.bounds.size];
+   _gridScene.scaleMode = SKSceneScaleModeAspectFill;
+   // Present the scene.
+   [skView presentScene:_gridScene];
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+   return YES;
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+   [super viewDidAppear:animated];
+   [self becomeFirstResponder];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+   [self resignFirstResponder];
+   [super viewWillDisappear:animated];
+}
+
+- (void)motionEnded:(UIEventSubtype)motion
+          withEvent:(UIEvent *)event
+{
+   if (motion == UIEventSubtypeMotionShake)
+      [_gridScene toggleRunning];
 }
 
 - (BOOL)shouldAutorotate
 {
-    return YES;
+   return YES;
 }
 
 - (NSUInteger)supportedInterfaceOrientations
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return UIInterfaceOrientationMaskAllButUpsideDown;
-    } else {
-        return UIInterfaceOrientationMaskAll;
-    }
+   if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+      return UIInterfaceOrientationMaskAllButUpsideDown;
+   else
+      return UIInterfaceOrientationMaskAll;
 }
 
 - (void)didReceiveMemoryWarning
 {
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
+   [super didReceiveMemoryWarning];
+   // Release any cached data, images, etc that aren't in use.
 }
 
 @end
