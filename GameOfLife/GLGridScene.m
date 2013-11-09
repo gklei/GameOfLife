@@ -84,7 +84,16 @@
    hudBackground.alpha = 0.5;
    hudBackground.position = HUD_POSITION_DEFAULT;
    hudBackground.anchorPoint = CGPointMake(0, 1);
+
+   SKTexture *gearTexture = [SKTexture textureWithImageNamed:@"gear.png"];
+   SKSpriteNode *gear = [SKSpriteNode spriteNodeWithTexture:gearTexture];
+   [gear setScale:.25];
+   gear.anchorPoint = CGPointMake(1,1);
+   gear.position = CGPointMake(size.width - 5, 48);
+   gear.userInteractionEnabled = YES;
+
    [_hudLayer addChild:hudBackground];
+   [_hudLayer addChild:gear];
    [self addChild:_hudLayer];
 }
 
@@ -104,10 +113,10 @@
    int row = location.y / TILESIZE.height;
    int col = location.x / TILESIZE.width;
    int arrayIndex = row*_gridDimensions.columns + col;
-   
+
    if (arrayIndex >= 0 && arrayIndex < _tiles.count)
       return [_tiles objectAtIndex:arrayIndex];
-   
+
    return nil;
 }
 
@@ -213,6 +222,14 @@
 //      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
 }
 
+- (void)handleTouch:(UITouch *)touch
+{
+   if ([_hudLayer containsPoint:[touch locationInNode:self]])
+      return;
+
+   [self toggleLivingForTileAtTouch:touch];
+}
+
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
@@ -223,7 +240,7 @@
    else
    {
       for (UITouch *touch in touches)
-         [self toggleLivingForTileAtTouch:touch];
+         [self handleTouch:touch];
    }
 }
 
@@ -231,7 +248,7 @@
            withEvent:(UIEvent *)event
 {
    if (!_running)
-      [self toggleLivingForTileAtTouch:[[touches allObjects] lastObject]];
+      [self handleTouch:[[touches allObjects] lastObject]];
 }
 
 - (void)touchesEnded:(NSSet *)touches
