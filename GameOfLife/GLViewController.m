@@ -59,7 +59,7 @@
 
 - (BOOL)shouldAutorotate
 {
-   return YES;
+   return NO;
 }
 
 - (NSUInteger)supportedInterfaceOrientations
