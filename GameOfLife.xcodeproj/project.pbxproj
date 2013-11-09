@@ -91,10 +91,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8E99B2A6182E098800C7AEDB /* Images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Images;
+			path = GameOfLife;
+			sourceTree = "<group>";
+		};
 		8ECA8977182371AE009D906F = {
 			isa = PBXGroup;
 			children = (
 				8ECA898B182371AE009D906F /* GameOfLife */,
+				8E99B2A6182E098800C7AEDB /* Images */,
 				8ECA89AF182371AE009D906F /* GameOfLifeTests */,
 				8ECA8982182371AE009D906F /* Frameworks */,
 				8ECA8981182371AE009D906F /* Products */,

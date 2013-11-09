@@ -14,6 +14,7 @@
 #include <vector>
 
 // NOTE: both TILESIZE.width and TILESIZE.height must be greater than 1
+#define HUD_POSITION_DEFAULT CGPointMake(0, 60)
 #define TILESIZE CGSizeMake(20, 20)
 #define LIVING YES
 #define DEAD   NO
@@ -81,7 +82,7 @@
    SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
                                                               size:bgSize];
    hudBackground.alpha = 0.5;
-   hudBackground.position = CGPointMake(0, 60);
+   hudBackground.position = HUD_POSITION_DEFAULT;
    hudBackground.anchorPoint = CGPointMake(0, 1);
    [_hudLayer addChild:hudBackground];
    [self addChild:_hudLayer];
