@@ -12,6 +12,8 @@
 		8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */; };
 		8E99B2A9182E0ABD00C7AEDB /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B2A7182E0ABD00C7AEDB /* gear.png */; };
 		8E99B2AA182E0ABD00C7AEDB /* gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B2A8182E0ABD00C7AEDB /* gear@2x.png */; };
+		8E99B2B0182EEAFE00C7AEDB /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B2AE182EEAFE00C7AEDB /* delete.png */; };
+		8E99B2B1182EEAFE00C7AEDB /* delete@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B2AF182EEAFE00C7AEDB /* delete@2x.png */; };
 		8ECA8984182371AE009D906F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8983182371AE009D906F /* Foundation.framework */; };
 		8ECA8986182371AE009D906F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8985182371AE009D906F /* CoreGraphics.framework */; };
 		8ECA8988182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
@@ -48,6 +50,8 @@
 		8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Crayola.m"; sourceTree = "<group>"; };
 		8E99B2A7182E0ABD00C7AEDB /* gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gear.png; path = Images/gear.png; sourceTree = SOURCE_ROOT; };
 		8E99B2A8182E0ABD00C7AEDB /* gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gear@2x.png"; path = "Images/gear@2x.png"; sourceTree = SOURCE_ROOT; };
+		8E99B2AE182EEAFE00C7AEDB /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = delete.png; path = Images/delete.png; sourceTree = SOURCE_ROOT; };
+		8E99B2AF182EEAFE00C7AEDB /* delete@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "delete@2x.png"; path = "Images/delete@2x.png"; sourceTree = SOURCE_ROOT; };
 		8ECA8980182371AE009D906F /* GameOfLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ECA8983182371AE009D906F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8ECA8985182371AE009D906F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -98,6 +102,8 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8E99B2AE182EEAFE00C7AEDB /* delete.png */,
+				8E99B2AF182EEAFE00C7AEDB /* delete@2x.png */,
 				8E99B2A7182E0ABD00C7AEDB /* gear.png */,
 				8E99B2A8182E0ABD00C7AEDB /* gear@2x.png */,
 			);
@@ -263,9 +269,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E99B2B0182EEAFE00C7AEDB /* delete.png in Resources */,
 				8ECA8990182371AE009D906F /* InfoPlist.strings in Resources */,
 				8ECA89A3182371AE009D906F /* Images.xcassets in Resources */,
 				8E99B2A9182E0ABD00C7AEDB /* gear.png in Resources */,
+				8E99B2B1182EEAFE00C7AEDB /* delete@2x.png in Resources */,
 				8E99B2AA182E0ABD00C7AEDB /* gear@2x.png in Resources */,
 				8ECA8999182371AE009D906F /* Main.storyboard in Resources */,
 			);

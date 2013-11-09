@@ -43,11 +43,11 @@
 //   
 //   return [SKColor colorForCrayolaColorName:*colorName];
    
-//   return [SKColor colorWithHue:[self colorDistance]
-//                     saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
-//                     brightness:1.0
-//                          alpha:1.0];
-   return [SKColor colorWithRed:[self colorDistance] green:0.0 blue:[self colorDistance] alpha:1.0];
+   return [SKColor colorWithHue:[self colorDistance]
+                     saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
+                     brightness:1.0
+                          alpha:1.0];
+//   return [SKColor colorWithRed:[self colorDistance] green:0.0 blue:[self colorDistance] alpha:1.0];
 }
 
 - (void)setIsLiving:(BOOL)living

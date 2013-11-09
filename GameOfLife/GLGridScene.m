@@ -89,13 +89,22 @@
    hudBackground.anchorPoint = CGPointMake(0, 1);
 
    SKTexture *gearTexture = [SKTexture textureWithImageNamed:@"gear.png"];
-   SKSpriteNode *gear = [SKSpriteNode spriteNodeWithTexture:gearTexture];
-   [_hudLayer addChild:gear];
+   SKSpriteNode *gearButton = [SKSpriteNode spriteNodeWithTexture:gearTexture];
+   [_hudLayer addChild:gearButton];
 
-   [gear setScale:.25];
-   gear.anchorPoint = CGPointMake(1,1);
-   gear.position = CGPointMake(size.width - 5, 48);
-   gear.name = @"gear";
+   [gearButton setScale:.25];
+   gearButton.anchorPoint = CGPointMake(1, 1);
+   gearButton.position = CGPointMake(size.width - 5, 48);
+   gearButton.name = @"gear";
+
+   SKTexture *clearTexture = [SKTexture textureWithImageNamed:@"delete"];
+   SKSpriteNode *clearButton = [SKSpriteNode spriteNodeWithTexture:clearTexture];
+   [_hudLayer addChild:clearButton];
+
+   [clearButton setScale:.25];
+   clearButton.anchorPoint = CGPointMake(0, 1);
+   clearButton.position = CGPointMake(5, 48);
+   clearButton.name = @"clear";
 
    [self addChild:_hudLayer];
 }
@@ -225,20 +234,36 @@
 //      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
 }
 
+- (void)toggleHUD
+{
+   int yOffset = self.size.height - HUD_POSITION_DEFAULT.y;
+   if (_hudIsExpanded)
+      yOffset *= -1;
+
+   SKAction *toggleHUD = [SKAction moveByX:0 y:yOffset duration:.5];
+   toggleHUD.timingMode = SKActionTimingEaseInEaseOut;
+   [_hudLayer runAction:toggleHUD];
+
+   _hudIsExpanded = !_hudIsExpanded;
+}
+
+- (void)clearGrid
+{
+   for (GLTileNode *tile in _tiles)
+      tile.isLiving = NO;
+}
+
 - (void)hudPressedWithTouch:(UITouch *)touch
 {
    SKNode *node = [_hudLayer nodeAtPoint:[touch locationInNode:_hudLayer]];
    if ([node.name isEqualToString:@"gear"])
    {
-      int yOffset = self.size.height - HUD_POSITION_DEFAULT.y;
-      if (_hudIsExpanded)
-         yOffset *= -1;
-
-      SKAction *toggleHUD = [SKAction moveByX:0 y:yOffset duration:.5];
-      toggleHUD.timingMode = SKActionTimingEaseInEaseOut;
-      [_hudLayer runAction:toggleHUD];
-
-      _hudIsExpanded = !_hudIsExpanded;
+      [self toggleHUD];
+   }
+   if ([node.name isEqualToString:@"clear"])
+   {
+      if (!_running)
+         [self clearGrid];
    }
 }
 
@@ -275,7 +300,7 @@
    UITouch *touch = [[touches allObjects] lastObject];
    if ([_hudLayer containsPoint:[touch locationInNode:self]])
       [self hudPressedWithTouch:touch];
-   
+
    _currentTileBeingTouched = nil;
 }
 
