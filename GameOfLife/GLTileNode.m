@@ -47,7 +47,7 @@
 //                     saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
 //                     brightness:1.0
 //                          alpha:1.0];
-   return [SKColor colorWithRed:0.2 green:0.2 blue:[self colorDistance] alpha:1.0];
+   return [SKColor colorWithRed:[self colorDistance] green:0.0 blue:[self colorDistance] alpha:1.0];
 }
 
 - (void)setIsLiving:(BOOL)living
