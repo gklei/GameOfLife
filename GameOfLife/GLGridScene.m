@@ -30,6 +30,7 @@
    GLTileNode *_currentTileBeingTouched;
 
    SKNode *_hudLayer;
+   BOOL _hudIsExpanded;
 }
 @end
 
@@ -76,24 +77,26 @@
 {
    _hudLayer = [SKNode new];
 
-   CGSize bgSize = CGSizeMake(size.width, size.height);
+   CGSize backgroundSize = CGSizeMake(size.width, size.height);
    SKColor *backgroundColor = [SKColor crayolaBlackCoralPearlColor];
 
    SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
-                                                              size:bgSize];
+                                                              size:backgroundSize];
+   [_hudLayer addChild:hudBackground];
+
    hudBackground.alpha = 0.5;
    hudBackground.position = HUD_POSITION_DEFAULT;
    hudBackground.anchorPoint = CGPointMake(0, 1);
 
    SKTexture *gearTexture = [SKTexture textureWithImageNamed:@"gear.png"];
    SKSpriteNode *gear = [SKSpriteNode spriteNodeWithTexture:gearTexture];
+   [_hudLayer addChild:gear];
+
    [gear setScale:.25];
    gear.anchorPoint = CGPointMake(1,1);
    gear.position = CGPointMake(size.width - 5, 48);
-   gear.userInteractionEnabled = YES;
+   gear.name = @"gear";
 
-   [_hudLayer addChild:hudBackground];
-   [_hudLayer addChild:gear];
    [self addChild:_hudLayer];
 }
 
@@ -222,12 +225,27 @@
 //      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
 }
 
+- (void)hudPressedWithTouch:(UITouch *)touch
+{
+   SKNode *node = [_hudLayer nodeAtPoint:[touch locationInNode:_hudLayer]];
+   if ([node.name isEqualToString:@"gear"])
+   {
+      int yOffset = self.size.height - HUD_POSITION_DEFAULT.y;
+      if (_hudIsExpanded)
+         yOffset *= -1;
+
+      SKAction *toggleHUD = [SKAction moveByX:0 y:yOffset duration:.5];
+      toggleHUD.timingMode = SKActionTimingEaseInEaseOut;
+      [_hudLayer runAction:toggleHUD];
+
+      _hudIsExpanded = !_hudIsExpanded;
+   }
+}
+
 - (void)handleTouch:(UITouch *)touch
 {
-   if ([_hudLayer containsPoint:[touch locationInNode:self]])
-      return;
-
-   [self toggleLivingForTileAtTouch:touch];
+   if (![_hudLayer containsPoint:[touch locationInNode:self]])
+      [self toggleLivingForTileAtTouch:touch];
 }
 
 - (void)touchesBegan:(NSSet *)touches
@@ -254,6 +272,10 @@
 - (void)touchesEnded:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
+   UITouch *touch = [[touches allObjects] lastObject];
+   if ([_hudLayer containsPoint:[touch locationInNode:self]])
+      [self hudPressedWithTouch:touch];
+   
    _currentTileBeingTouched = nil;
 }
 
