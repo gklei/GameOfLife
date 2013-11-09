@@ -46,6 +46,7 @@
                                                             yPos + 0.5,
                                                             TILESIZE.width - 1,
                                                             TILESIZE.height - 1)]];
+   _tiles = [NSArray arrayWithArray:self.children];
 }
 
 -(id)initWithSize:(CGSize)size
@@ -54,7 +55,6 @@
    {
       [self setupGridWithSize:size];
       [self setupHudWithSize:size];
-      _tiles = [NSArray arrayWithArray:self.children];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    }
    return self;
@@ -79,10 +79,11 @@
 
    SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
                                                               size:bgSize];
-
-   hudBackground.position = CGPointMake(0, size.height);
-   hudBackground.anchorPoint = CGPointZero;
+   hudBackground.alpha = 0.5;
+   hudBackground.position = CGPointMake(0, 40);
+   hudBackground.anchorPoint = CGPointMake(0, 1);
    [_hudLayer addChild:hudBackground];
+   [self addChild:_hudLayer];
 }
 
 - (void)toggleRunning
