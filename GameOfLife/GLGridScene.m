@@ -81,7 +81,7 @@
    SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
                                                               size:bgSize];
    hudBackground.alpha = 0.5;
-   hudBackground.position = CGPointMake(0, 40);
+   hudBackground.position = CGPointMake(0, 60);
    hudBackground.anchorPoint = CGPointMake(0, 1);
    [_hudLayer addChild:hudBackground];
    [self addChild:_hudLayer];
