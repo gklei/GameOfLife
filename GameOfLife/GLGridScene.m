@@ -86,7 +86,6 @@
 
    SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
                                                               size:backgroundSize];
-
    hudBackground.alpha = 0.5;
    hudBackground.position = HUD_POSITION_DEFAULT;
    hudBackground.anchorPoint = CGPointMake(1, 1);
@@ -104,35 +103,34 @@
 
    SKTexture *refreshTexture = [SKTexture textureWithImageNamed:@"refresh"];
    SKSpriteNode *refreshButton = [SKSpriteNode spriteNodeWithTexture:refreshTexture];
-   [_hudLayer addChild:refreshButton];
 
    [refreshButton setScale:.25];
    refreshButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
                                         HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 20,
                                         -refreshButton.size.height/2.0);
    refreshButton.name = @"refresh";
+   [_hudLayer addChild:refreshButton];
 
    SKTexture *startTexture = [SKTexture textureWithImageNamed:@"start"];
    SKSpriteNode *startStopButton = [SKSpriteNode spriteNodeWithTexture:startTexture];
-   [_hudLayer addChild:startStopButton];
 
    [startStopButton setScale:.25];
    startStopButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
                                         HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 100,
                                         -startStopButton.size.height/2.0);
    startStopButton.name = @"start_stop";
+   [_hudLayer addChild:startStopButton];
 
    SKTexture *gearTexture = [SKTexture textureWithImageNamed:@"gear"];
    SKSpriteNode *gearButton = [SKSpriteNode spriteNodeWithTexture:gearTexture];
-   [_hudLayer addChild:gearButton];
 
    [gearButton setScale:.25];
    gearButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - expandRightButton.size.width/2.0,
                                      -gearButton.size.height/2.0);
    gearButton.name = @"gear";
+   [_hudLayer addChild:gearButton];
 
    _coreFunctionButtons = @[refreshButton, startStopButton, gearButton];
-
    [self addChild:_hudLayer];
 }
 
