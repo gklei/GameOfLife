@@ -14,7 +14,9 @@
 #include <vector>
 
 // NOTE: both TILESIZE.width and TILESIZE.height must be greater than 1
-#define HUD_POSITION_DEFAULT CGPointMake(0, 60)
+#define HUD_POSITION_DEFAULT CGPointMake(60, 60)
+#define HUD_BUTTON_EDGE_PADDING 48
+#define HUD_BUTTON_PADDING 50
 #define TILESIZE CGSizeMake(20, 20)
 #define LIVING YES
 #define DEAD   NO
@@ -30,7 +32,9 @@
    GLTileNode *_currentTileBeingTouched;
 
    SKNode *_hudLayer;
-   BOOL _hudIsExpanded;
+   NSArray *_coreFunctionButtons;
+   BOOL _hudIsExpandedVertically;
+   BOOL _hudIsExpandedHorizontally;
 }
 @end
 
@@ -82,29 +86,52 @@
 
    SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
                                                               size:backgroundSize];
-   [_hudLayer addChild:hudBackground];
 
    hudBackground.alpha = 0.5;
    hudBackground.position = HUD_POSITION_DEFAULT;
-   hudBackground.anchorPoint = CGPointMake(0, 1);
+   hudBackground.anchorPoint = CGPointMake(1, 1);
+   [_hudLayer addChild:hudBackground];
 
-   SKTexture *gearTexture = [SKTexture textureWithImageNamed:@"gear.png"];
+   SKTexture *expandRightTexture = [SKTexture textureWithImageNamed:@"expand_right"];
+   SKSpriteNode *expandRightButton = [SKSpriteNode spriteNodeWithTexture:expandRightTexture];
+
+   [expandRightButton setScale:.25];
+   expandRightButton.anchorPoint = CGPointMake(.5, .5);
+   expandRightButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - expandRightButton.size.width/2.0,
+                                            HUD_BUTTON_EDGE_PADDING - expandRightButton.size.height/2.0);
+   expandRightButton.name = @"expand_right";
+   [_hudLayer addChild:expandRightButton];
+
+   SKTexture *refreshTexture = [SKTexture textureWithImageNamed:@"refresh"];
+   SKSpriteNode *refreshButton = [SKSpriteNode spriteNodeWithTexture:refreshTexture];
+   [_hudLayer addChild:refreshButton];
+
+   [refreshButton setScale:.25];
+   refreshButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
+                                        HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 20,
+                                        -refreshButton.size.height/2.0);
+   refreshButton.name = @"refresh";
+
+   SKTexture *startTexture = [SKTexture textureWithImageNamed:@"start"];
+   SKSpriteNode *startStopButton = [SKSpriteNode spriteNodeWithTexture:startTexture];
+   [_hudLayer addChild:startStopButton];
+
+   [startStopButton setScale:.25];
+   startStopButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
+                                        HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 100,
+                                        -startStopButton.size.height/2.0);
+   startStopButton.name = @"start_stop";
+
+   SKTexture *gearTexture = [SKTexture textureWithImageNamed:@"gear"];
    SKSpriteNode *gearButton = [SKSpriteNode spriteNodeWithTexture:gearTexture];
    [_hudLayer addChild:gearButton];
 
    [gearButton setScale:.25];
-   gearButton.anchorPoint = CGPointMake(1, 1);
-   gearButton.position = CGPointMake(size.width - 5, 48);
+   gearButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - expandRightButton.size.width/2.0,
+                                     -gearButton.size.height/2.0);
    gearButton.name = @"gear";
 
-   SKTexture *clearTexture = [SKTexture textureWithImageNamed:@"delete"];
-   SKSpriteNode *clearButton = [SKSpriteNode spriteNodeWithTexture:clearTexture];
-   [_hudLayer addChild:clearButton];
-
-   [clearButton setScale:.25];
-   clearButton.anchorPoint = CGPointMake(0, 1);
-   clearButton.position = CGPointMake(5, 48);
-   clearButton.name = @"clear";
+   _coreFunctionButtons = @[refreshButton, startStopButton, gearButton];
 
    [self addChild:_hudLayer];
 }
@@ -116,6 +143,8 @@
                     dyingDuration:duration];
 
    _running = !_running;
+   SKTexture *texture = [SKTexture textureWithImageNamed:(_running)? @"stop" : @"start"];
+   ((SKSpriteNode *)[_hudLayer childNodeWithName:@"start_stop"]).texture = texture;
 }
 
 - (GLTileNode *)tileAtTouch:(UITouch *)touch
@@ -234,36 +263,86 @@
 //      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
 }
 
-- (void)toggleHUD
+- (void)toggleHUDHorizontally
+{
+   if (_hudIsExpandedVertically)
+      return;
+
+   int xOffset = self.size.width - HUD_POSITION_DEFAULT.x;
+   xOffset *= (_hudIsExpandedHorizontally)? -1 : 1;
+
+   for (SKSpriteNode *button in _coreFunctionButtons)
+      button.hidden = _hudIsExpandedHorizontally;
+
+   SKAction *toggleHUDHorizontally = [SKAction moveByX:xOffset y:0 duration:.5];
+   toggleHUDHorizontally.timingMode = SKActionTimingEaseInEaseOut;
+   [_hudLayer runAction:toggleHUDHorizontally];
+
+   SKAction *rotateAction = [SKAction rotateByAngle:M_PI duration:.5];
+   SKAction *moveAction = [SKAction moveByX:-xOffset y:0 duration:.5];
+   moveAction.timingMode = SKActionTimingEaseInEaseOut;
+   [[_hudLayer childNodeWithName:@"expand_right"] runAction:moveAction];
+   [[_hudLayer childNodeWithName:@"expand_right"] runAction:rotateAction completion:
+   ^{
+      for (SKSpriteNode *button in _coreFunctionButtons)
+      {
+         int yOffset = HUD_BUTTON_PADDING;
+         if (!_hudIsExpandedHorizontally)
+            yOffset *= -1;
+
+         SKAction *moveIconsAction = [SKAction moveByX:0 y:yOffset duration:.2];
+         moveIconsAction.timingMode = SKActionTimingEaseInEaseOut;
+         [button runAction:moveIconsAction];
+      }
+   }];
+
+   _hudIsExpandedHorizontally = !_hudIsExpandedHorizontally;
+}
+
+- (void)toggleHUDVertically
 {
    int yOffset = self.size.height - HUD_POSITION_DEFAULT.y;
-   if (_hudIsExpanded)
+   if (_hudIsExpandedVertically)
       yOffset *= -1;
 
-   SKAction *toggleHUD = [SKAction moveByX:0 y:yOffset duration:.5];
-   toggleHUD.timingMode = SKActionTimingEaseInEaseOut;
-   [_hudLayer runAction:toggleHUD];
+   SKAction *toggleHUDVertically = [SKAction moveByX:0 y:yOffset duration:.5];
+   toggleHUDVertically.timingMode = SKActionTimingEaseInEaseOut;
+   [_hudLayer runAction:toggleHUDVertically completion:
+   ^{
+      SKAction *fadeAction = (_hudIsExpandedVertically)? [SKAction fadeOutWithDuration:.3] :
+                                                         [SKAction fadeInWithDuration:.3];
+      fadeAction.timingMode = SKActionTimingEaseInEaseOut;
+      [[_hudLayer childNodeWithName:@"expand_right"] runAction:fadeAction];
+   }];
 
-   _hudIsExpanded = !_hudIsExpanded;
+   _hudIsExpandedVertically = !_hudIsExpandedVertically;
 }
 
 - (void)clearGrid
 {
    for (GLTileNode *tile in _tiles)
-      tile.isLiving = NO;
+        [tile clearTile];
 }
 
 - (void)hudPressedWithTouch:(UITouch *)touch
 {
    SKNode *node = [_hudLayer nodeAtPoint:[touch locationInNode:_hudLayer]];
+   if ([node.name isEqualToString:@"expand_right"])
+   {
+      [self toggleHUDHorizontally];
+   }
    if ([node.name isEqualToString:@"gear"])
    {
-      [self toggleHUD];
+      [self toggleHUDVertically];
    }
-   if ([node.name isEqualToString:@"clear"])
+   if ([node.name isEqualToString:@"refresh"])
    {
       if (!_running)
          [self clearGrid];
+   }
+   if ([node.name isEqualToString:@"start_stop"])
+   {
+      [self toggleRunning];
    }
 }
 

@@ -13,6 +13,7 @@
 
 + (id)tileWithRect:(CGRect)rect;
 - (void)setIsLiving:(BOOL)living;
+- (void)clearTile;
 
 @property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
 @property (nonatomic, assign) float birthingDuration;

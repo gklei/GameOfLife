@@ -69,4 +69,14 @@
    [self runAction:changeColor];
 }
 
+- (void)clearTile
+{
+   _isLiving = NO;
+   SKColor *deadColor = [SKColor colorForCrayolaColorName:_deadColorName];
+   SKAction *changeColor = [SKAction colorizeWithColor:deadColor
+                                      colorBlendFactor:0.0
+                                              duration:.25];
+   [self runAction:changeColor];
+}
+
 @end
