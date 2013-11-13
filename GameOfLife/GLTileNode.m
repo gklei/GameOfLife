@@ -14,24 +14,36 @@
 + (id)tileWithRect:(CGRect)rect
 {
    GLTileNode *tile = [GLTileNode node];
-
+   
    tile.size = rect.size;
-   tile.anchorPoint = CGPointZero;
    tile.position = rect.origin;
+   tile.anchorPoint = CGPointZero;
+   
    tile.isLiving = NO;
    tile.color = [SKColor crayolaCoconutColor];
-
-   [tile setLiveColorName:CCN_crayolaMulberryColor - 1];
-   [tile setDeadColorName:CCN_crayolaCoconutColor];
+   tile.liveColorName = CCN_crayolaMulberryColor - 1;
+   tile.deadColorName = CCN_crayolaCoconutColor;
+   tile.boardMaxDistance = sqrt(320 * 320 + 480 * 480);// needs to be set externally
+   tile.maxColorDistance = tile.boardMaxDistance;
+   [tile setColorCenter:CGPointMake(320 * 0.5, 480 * 0.5)];
    
    return tile;
 }
 
+- (float)calcDistanceFromStart:(CGPoint)start toEnd:(CGPoint)end
+{
+   float dist = 0;
+   if ((start.x != end.x) || (start.y != end.y))
+      dist = sqrt((start.x - end.x) * (start.x - end.x) +
+                  (start.y - end.y) * (start.y - end.y));
+   return dist;
+}
+
 - (float)colorDistance
 {
-   CGPoint origin = self.position;
-   float dist = sqrt(origin.x * origin.x + origin.y * origin.y);
-   dist /= sqrt(320 * 320 + 480 * 480);
+   float dist = [self calcDistanceFromStart:_colorCenter toEnd:self.position];
+   dist /= _maxColorDistance;
+   dist = 1.0 - dist;
    return dist;
 }
 
@@ -43,30 +55,59 @@
 //   
 //   return [SKColor colorForCrayolaColorName:*colorName];
    
-   return [SKColor colorWithHue:[self colorDistance]
-                     saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
-                     brightness:1.0
-                          alpha:1.0];
-//   return [SKColor colorWithRed:[self colorDistance] green:0.0 blue:[self colorDistance] alpha:1.0];
+//   return [SKColor colorWithHue:[self colorDistance]
+//                     saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
+//                     brightness:1.0
+//                          alpha:1.0];
+   
+   float dist = [self colorDistance];
+   return [SKColor colorWithRed:dist green:0.0 blue:dist alpha:1.0];
 }
 
-- (void)setIsLiving:(BOOL)living
+- (void)updateColor
 {
-   if (_isLiving == living)
-      return;
-
-   _isLiving = living;
    float duration = (_isLiving)? _birthingDuration : _dyingDuration;
-
+   
    SKColor *newColor = (_isLiving)? [self getNextColor:&_liveColorName] :
-                                    [SKColor colorForCrayolaColorName:_deadColorName];
-
+   [SKColor colorForCrayolaColorName:_deadColorName];
+   
    SKAction *changeColor = [SKAction colorizeWithColor:newColor
                                       colorBlendFactor:0.0
                                               duration:duration];
    
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
    [self runAction:changeColor];
+}
+
+- (void)setMaxColorDistance:(float)dist
+{
+   _maxColorDistance = dist;
+   [self updateColor];
+}
+
+- (void)setColorCenter:(CGPoint)colorCenter
+{
+   _colorCenter = colorCenter;
+   
+   float colorDist = [self calcDistanceFromStart:CGPointZero toEnd:_colorCenter];
+   if (colorDist > _boardMaxDistance * 0.5)
+      colorDist = _boardMaxDistance - colorDist;
+   
+   self.maxColorDistance = _boardMaxDistance - colorDist;
+}
+
+- (void)setIsLiving:(BOOL)living
+{
+   if (_isLiving == living)
+      return;
+   
+   _isLiving = living;
+}
+
+- (void)updateLivingAndColor:(BOOL)living
+{
+   self.isLiving = living;
+   [self updateColor];
 }
 
 - (void)clearTile

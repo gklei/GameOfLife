@@ -165,7 +165,9 @@
    if (_currentTileBeingTouched != tile)
    {
       _currentTileBeingTouched = tile;
-      tile.isLiving = !tile.isLiving;
+//      tile.isLiving = !tile.isLiving;
+      [tile updateLivingAndColor:!tile.isLiving];
+//      [self updateColorCenter];
    }
 }
 
@@ -455,6 +457,34 @@
    return ((tile.isLiving && liveCount == 2) || (liveCount == 3))? LIVING : DEAD;
 }
 
+- (int)getLiveCountAtIndex:(int)index
+{
+   int liveCount = ((GLTileNode *)[_tiles objectAtIndex:index]).isLiving;
+   liveCount += [self getNorthSouthLiveCountForTileAtIndex:index];
+   liveCount += [self getEastBlockLiveCountForTileAtIndex:index];
+   liveCount += [self getWestBlockLiveCountForTileAtIndex:index];
+   return liveCount;
+}
+
+- (void)updateColorCenter
+{
+   int maxCount = [self getLiveCountAtIndex:0];
+   int indexForColorCenter = 0;
+   for (int i = 1; i < _tiles.count; ++i)
+   {
+      int count = [self getLiveCountAtIndex:i];
+      if (count > maxCount)
+      {
+         maxCount = count;
+         indexForColorCenter = i;
+      }
+   }
+   
+   CGPoint position = ((GLTileNode *)[_tiles objectAtIndex:indexForColorCenter]).position;
+   for (int i = 0; i < _tiles.count; ++i)
+      ((GLTileNode *)[_tiles objectAtIndex:i]).colorCenter = position;
+}
+
 - (void)updateNextGeneration:(CFTimeInterval)currentTime
 {
    _lastGenerationTime = currentTime;
@@ -463,6 +493,8 @@
 
    for (int i = 0; i < _tiles.count; ++i)
       ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
+   
+   [self updateColorCenter];
 }
 
 -(void)update:(CFTimeInterval)currentTime

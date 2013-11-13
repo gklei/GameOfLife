@@ -12,7 +12,7 @@
 @interface GLTileNode : SKSpriteNode
 
 + (id)tileWithRect:(CGRect)rect;
-- (void)setIsLiving:(BOOL)living;
+- (void)updateLivingAndColor:(BOOL)living;
 - (void)clearTile;
 
 @property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
@@ -20,5 +20,10 @@
 @property (nonatomic, assign) float dyingDuration;
 @property (nonatomic, assign) CrayolaColorName liveColorName;
 @property (nonatomic, assign) CrayolaColorName deadColorName;
+
+@property (nonatomic, assign) float boardMaxDistance; // should be global, not per tile
+
+@property (nonatomic, assign) float maxColorDistance;
+@property (nonatomic, assign) CGPoint colorCenter;
 
 @end
