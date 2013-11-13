@@ -37,6 +37,8 @@
 		8ECA89AC182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
 		8ECA89B4182371AE009D906F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8ECA89B2182371AE009D906F /* InfoPlist.strings */; };
 		8ECA89B6182371AE009D906F /* GameOfLifeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECA89B5182371AE009D906F /* GameOfLifeTests.m */; };
+		EDE4505C1833F3380063DE36 /* clear.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505A1833F3380063DE36 /* clear.png */; };
+		EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505B1833F3380063DE36 /* clear@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +90,8 @@
 		8ECA89B1182371AE009D906F /* GameOfLifeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GameOfLifeTests-Info.plist"; sourceTree = "<group>"; };
 		8ECA89B3182371AE009D906F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8ECA89B5182371AE009D906F /* GameOfLifeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameOfLifeTests.m; sourceTree = "<group>"; };
+		EDE4505A1833F3380063DE36 /* clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = clear.png; path = Images/clear.png; sourceTree = SOURCE_ROOT; };
+		EDE4505B1833F3380063DE36 /* clear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear@2x.png"; path = "Images/clear@2x.png"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,18 +122,20 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				EDE4505A1833F3380063DE36 /* clear.png */,
+				EDE4505B1833F3380063DE36 /* clear@2x.png */,
+				8E99B2AE182EEAFE00C7AEDB /* delete.png */,
+				8E99B2AF182EEAFE00C7AEDB /* delete@2x.png */,
+				8E99B2B6182F4D9000C7AEDB /* expand_right.png */,
+				8E99B2B7182F4D9000C7AEDB /* expand_right@2x.png */,
+				8E99B2A7182E0ABD00C7AEDB /* gear.png */,
+				8E99B2A8182E0ABD00C7AEDB /* gear@2x.png */,
+				8E99B2B2182F4B1400C7AEDB /* refresh.png */,
+				8E99B2B3182F4B1400C7AEDB /* refresh@2x.png */,
 				8E99B2BA182F7A1200C7AEDB /* start.png */,
 				8E99B2BB182F7A1200C7AEDB /* start@2x.png */,
 				8E99B2BC182F7A1200C7AEDB /* stop.png */,
 				8E99B2BD182F7A1200C7AEDB /* stop@2x.png */,
-				8E99B2B6182F4D9000C7AEDB /* expand_right.png */,
-				8E99B2B7182F4D9000C7AEDB /* expand_right@2x.png */,
-				8E99B2B2182F4B1400C7AEDB /* refresh.png */,
-				8E99B2B3182F4B1400C7AEDB /* refresh@2x.png */,
-				8E99B2AE182EEAFE00C7AEDB /* delete.png */,
-				8E99B2AF182EEAFE00C7AEDB /* delete@2x.png */,
-				8E99B2A7182E0ABD00C7AEDB /* gear.png */,
-				8E99B2A8182E0ABD00C7AEDB /* gear@2x.png */,
 			);
 			name = Images;
 			path = GameOfLife;
@@ -296,6 +302,7 @@
 				8E99B2B0182EEAFE00C7AEDB /* delete.png in Resources */,
 				8ECA8990182371AE009D906F /* InfoPlist.strings in Resources */,
 				8ECA89A3182371AE009D906F /* Images.xcassets in Resources */,
+				EDE4505C1833F3380063DE36 /* clear.png in Resources */,
 				8E99B2C0182F7A1200C7AEDB /* stop.png in Resources */,
 				8E99B2A9182E0ABD00C7AEDB /* gear.png in Resources */,
 				8E99B2B8182F4D9000C7AEDB /* expand_right.png in Resources */,
@@ -307,6 +314,7 @@
 				8ECA8999182371AE009D906F /* Main.storyboard in Resources */,
 				8E99B2BE182F7A1200C7AEDB /* start.png in Resources */,
 				8E99B2B9182F4D9000C7AEDB /* expand_right@2x.png in Resources */,
+				EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */,
 				8E99B2C1182F7A1200C7AEDB /* stop@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
