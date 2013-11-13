@@ -23,17 +23,16 @@
    tile.color = [SKColor crayolaCoconutColor];
    tile.liveColorName = CCN_crayolaMulberryColor - 1;
    tile.deadColorName = CCN_crayolaCoconutColor;
-   tile.boardMaxDistance = sqrt(320 * 320 + 480 * 480);// needs to be set externally
+   tile.boardMaxDistance = 1000;
    tile.maxColorDistance = tile.boardMaxDistance;
-   [tile setColorCenter:CGPointMake(320 * 0.5, 480 * 0.5)];
    
    return tile;
 }
 
 - (float)calcDistanceFromStart:(CGPoint)start toEnd:(CGPoint)end
 {
-   float dist = 0;
-   if ((start.x != end.x) || (start.y != end.y))
+   float dist;// = 0;
+//   if ((start.x != end.x) || (start.y != end.y))
       dist = sqrt((start.x - end.x) * (start.x - end.x) +
                   (start.y - end.y) * (start.y - end.y));
    return dist;

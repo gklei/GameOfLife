@@ -27,6 +27,7 @@
    NSArray *_tiles;
    CFTimeInterval _lastGenerationTime;
 
+   std::vector<BOOL> _storedTileStates;
    std::vector<BOOL> _nextGenerationTileStates;
    BOOL _running;
    GLTileNode *_currentTileBeingTouched;
@@ -46,7 +47,7 @@
 
    _gridDimensions.rows = size.height/TILESIZE.height;
    _gridDimensions.columns = size.width/TILESIZE.width;
-
+   
    for (int yPos = 0; yPos < size.height; yPos += TILESIZE.height)
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
          [self addChild:[GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
@@ -54,6 +55,16 @@
                                                             TILESIZE.width - 1,
                                                             TILESIZE.height - 1)]];
    _tiles = [NSArray arrayWithArray:self.children];
+   
+   
+   CGPoint boardCenter = CGPointMake(_gridDimensions.columns * TILESIZE.width * 0.5,
+                                     _gridDimensions.rows * TILESIZE.height * 0.5);
+   float maxBoardDistance = sqrt(size.width * size.width + size.height * size.height);
+   for (GLTileNode *tile in _tiles)
+   {
+      tile.boardMaxDistance = maxBoardDistance;
+      [tile setColorCenter:boardCenter];
+   }
 }
 
 -(id)initWithSize:(CGSize)size
@@ -63,6 +74,7 @@
       [self setupGridWithSize:size];
       [self setupHudWithSize:size];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
+      _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    }
    return self;
 }
@@ -101,12 +113,22 @@
    expandRightButton.name = @"expand_right";
    [_hudLayer addChild:expandRightButton];
 
+   SKTexture *clearTexture = [SKTexture textureWithImageNamed:@"clear"];
+   SKSpriteNode *clearButton = [SKSpriteNode spriteNodeWithTexture:clearTexture];
+   
+   [clearButton setScale:.25];
+   clearButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
+                                      HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 10,
+                                      -clearButton.size.height/2.0);
+   clearButton.name = @"clear";
+   [_hudLayer addChild:clearButton];
+   
    SKTexture *refreshTexture = [SKTexture textureWithImageNamed:@"refresh"];
    SKSpriteNode *refreshButton = [SKSpriteNode spriteNodeWithTexture:refreshTexture];
 
    [refreshButton setScale:.25];
    refreshButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
-                                        HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 20,
+                                        HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 60,
                                         -refreshButton.size.height/2.0);
    refreshButton.name = @"refresh";
    [_hudLayer addChild:refreshButton];
@@ -116,8 +138,8 @@
 
    [startStopButton setScale:.25];
    startStopButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
-                                        HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 100,
-                                        -startStopButton.size.height/2.0);
+                                          HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 110,
+                                          -startStopButton.size.height/2.0);
    startStopButton.name = @"start_stop";
    [_hudLayer addChild:startStopButton];
 
@@ -130,7 +152,7 @@
    gearButton.name = @"gear";
    [_hudLayer addChild:gearButton];
 
-   _coreFunctionButtons = @[refreshButton, startStopButton, gearButton];
+   _coreFunctionButtons = @[clearButton, refreshButton, startStopButton, gearButton];
    [self addChild:_hudLayer];
 }
 
@@ -159,6 +181,24 @@
    return nil;
 }
 
+- (void)restoreGameState
+{
+   CGPoint center = CGPointMake(_gridDimensions.columns * TILESIZE.width * 0.5,
+                                _gridDimensions.rows * TILESIZE.height * 0.5);
+   for (int i = 0; i < _tiles.count; ++i)
+   {
+      GLTileNode * tile = [_tiles objectAtIndex:i];
+      tile.isLiving = _storedTileStates[i];
+      [tile setColorCenter:center];
+   }
+}
+
+- (void)storeGameState
+{
+   for (int i = 0; i < _tiles.count; ++i)
+      _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
+}
+
 - (void)toggleLivingForTileAtTouch:(UITouch *)touch
 {
    GLTileNode *tile = [self tileAtTouch:touch];
@@ -168,6 +208,7 @@
 //      tile.isLiving = !tile.isLiving;
       [tile updateLivingAndColor:!tile.isLiving];
 //      [self updateColorCenter];
+      [self storeGameState];
    }
 }
 
@@ -335,10 +376,15 @@
    {
       [self toggleHUDVertically];
    }
-   if ([node.name isEqualToString:@"refresh"])
+   if ([node.name isEqualToString:@"clear"])
    {
       if (!_running)
          [self clearGrid];
+   }
+   if ([node.name isEqualToString:@"refresh"])
+   {
+      if (!_running)
+         [self restoreGameState];
    }
    if ([node.name isEqualToString:@"start_stop"])
    {
@@ -466,6 +512,7 @@
    return liveCount;
 }
 
+
 - (void)updateColorCenter
 {
    int maxCount = [self getLiveCountAtIndex:0];
@@ -490,7 +537,7 @@
    _lastGenerationTime = currentTime;
    for (int i = 0; i < _tiles.count; ++i)
       _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
-
+   
    for (int i = 0; i < _tiles.count; ++i)
       ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
    
