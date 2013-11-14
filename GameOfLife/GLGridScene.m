@@ -89,6 +89,7 @@
    hudBackground.alpha = 0.5;
    hudBackground.position = HUD_POSITION_DEFAULT;
    hudBackground.anchorPoint = CGPointMake(1, 1);
+
    [_hudLayer addChild:hudBackground];
 
    SKTexture *expandRightTexture = [SKTexture textureWithImageNamed:@"expand_right"];
