@@ -36,6 +36,8 @@
    NSArray *_coreFunctionButtons;
    BOOL _hudIsExpandedVertically;
    BOOL _hudIsExpandedHorizontally;
+
+   CGPoint _firstLocationOfTouch;
 }
 @end
 
@@ -94,13 +96,14 @@
    _hudLayer = [SKNode new];
 
    CGSize backgroundSize = CGSizeMake(size.width, size.height);
-   SKColor *backgroundColor = [SKColor crayolaBlackCoralPearlColor];
+   SKColor *backgroundColor = [SKColor clearColor];
 
    SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
                                                               size:backgroundSize];
    hudBackground.alpha = 0.5;
    hudBackground.position = HUD_POSITION_DEFAULT;
    hudBackground.anchorPoint = CGPointMake(1, 1);
+   hudBackground.name = @"hud_background";
 
    [_hudLayer addChild:hudBackground];
 
@@ -119,7 +122,7 @@
    
    [clearButton setScale:.25];
    clearButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
-                                      HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 10,
+                                      HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING - 5,
                                       -clearButton.size.height/2.0);
    clearButton.name = @"clear";
    [_hudLayer addChild:clearButton];
@@ -139,7 +142,7 @@
 
    [startStopButton setScale:.25];
    startStopButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
-                                          HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 110,
+                                          HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 125,
                                           -startStopButton.size.height/2.0);
    startStopButton.name = @"start_stop";
    [_hudLayer addChild:startStopButton];
@@ -153,7 +156,7 @@
    gearButton.name = @"gear";
    [_hudLayer addChild:gearButton];
 
-   _coreFunctionButtons = @[clearButton, refreshButton, startStopButton, gearButton];
+   _coreFunctionButtons = @[expandRightButton, clearButton, refreshButton, startStopButton, gearButton];
    [self addChild:_hudLayer];
 }
 
@@ -206,7 +209,6 @@
    if (_currentTileBeingTouched != tile)
    {
       _currentTileBeingTouched = tile;
-//      tile.isLiving = !tile.isLiving;
       [tile updateLivingAndColor:!tile.isLiving];
 //      [self updateColorCenter];
       [self storeGameState];
@@ -305,57 +307,97 @@
 //      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
 }
 
-- (void)toggleHUDHorizontally
+- (void)slideHUDAndUpdateCoreFunctionButtons
 {
-   if (_hudIsExpandedVertically)
-      return;
+   if (!_hudIsExpandedHorizontally)
+   {
+      SKSpriteNode *hudBackground = (SKSpriteNode *)[_hudLayer childNodeWithName:@"hud_background"];
+      SKAction *colorAnimation = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
+                                            colorBlendFactor:1.0
+                                                    duration:.25];
+      colorAnimation.timingMode = SKActionTimingEaseInEaseOut;
+      [hudBackground runAction:colorAnimation];
+   }
 
    int xOffset = self.size.width - HUD_POSITION_DEFAULT.x;
    xOffset *= (_hudIsExpandedHorizontally)? -1 : 1;
 
    for (SKSpriteNode *button in _coreFunctionButtons)
-      button.hidden = _hudIsExpandedHorizontally;
+      button.hidden = _hudIsExpandedHorizontally && (![button.name isEqualToString:@"expand_right"]);
+
+   if (_hudIsExpandedHorizontally)
+   {
+      SKSpriteNode *hudBackground = (SKSpriteNode *)[_hudLayer childNodeWithName:@"hud_background"];
+      SKAction *wait = [SKAction waitForDuration:.25];
+      SKAction *colorAnimation = [SKAction colorizeWithColor:[SKColor clearColor]
+                                            colorBlendFactor:1.0
+                                                    duration:.25];
+      colorAnimation.timingMode = SKActionTimingEaseInEaseOut;
+      SKAction *sequence = [SKAction sequence:@[wait, colorAnimation]];
+      [hudBackground runAction:sequence];
+   }
 
    SKAction *toggleHUDHorizontally = [SKAction moveByX:xOffset y:0 duration:.5];
    toggleHUDHorizontally.timingMode = SKActionTimingEaseInEaseOut;
    [_hudLayer runAction:toggleHUDHorizontally];
 
-   SKAction *rotateAction = [SKAction rotateByAngle:M_PI duration:.5];
+   SKAction *rotateAction = [SKAction rotateByAngle:(_hudIsExpandedHorizontally)? -M_PI : M_PI
+                                           duration:.5];
+
    SKAction *moveAction = [SKAction moveByX:-xOffset y:0 duration:.5];
    moveAction.timingMode = SKActionTimingEaseInEaseOut;
+
    [[_hudLayer childNodeWithName:@"expand_right"] runAction:moveAction];
    [[_hudLayer childNodeWithName:@"expand_right"] runAction:rotateAction completion:
-   ^{
-      for (SKSpriteNode *button in _coreFunctionButtons)
-      {
-         int yOffset = HUD_BUTTON_PADDING;
-         if (!_hudIsExpandedHorizontally)
-            yOffset *= -1;
+    ^{
+       for (SKSpriteNode *button in _coreFunctionButtons)
+       {
+          if (![button.name isEqualToString:@"expand_right"])
+          {
+             int yOffset = HUD_BUTTON_PADDING;
+             if (!_hudIsExpandedHorizontally)
+                yOffset *= -1;
 
-         SKAction *moveIconsAction = [SKAction moveByX:0 y:yOffset duration:.2];
-         moveIconsAction.timingMode = SKActionTimingEaseInEaseOut;
-         [button runAction:moveIconsAction];
-      }
-   }];
+             SKAction *moveIconsAction = [SKAction moveByX:0 y:yOffset duration:.2];
+             moveIconsAction.timingMode = SKActionTimingEaseInEaseOut;
+             [button runAction:moveIconsAction];
+          }
+       }
+    }];
 
    _hudIsExpandedHorizontally = !_hudIsExpandedHorizontally;
 }
 
-- (void)toggleHUDVertically
+- (void)toggleHUDHorizontally
+{
+   if (_hudIsExpandedVertically)
+   {
+      [self toggleHUDVerticallyWithCompletionBlock:
+       ^(){
+          [self slideHUDAndUpdateCoreFunctionButtons];
+       }];
+   }
+   else
+   {
+      [self slideHUDAndUpdateCoreFunctionButtons];
+   }
+}
+
+- (void)toggleHUDVerticallyWithCompletionBlock:(void (^)())completionBlock
 {
    int yOffset = self.size.height - HUD_POSITION_DEFAULT.y;
    if (_hudIsExpandedVertically)
       yOffset *= -1;
 
    SKAction *toggleHUDVertically = [SKAction moveByX:0 y:yOffset duration:.5];
+   SKAction *keepCoreFunctionButtonAtBottom = [SKAction moveByX:0 y:-yOffset duration:.5];
    toggleHUDVertically.timingMode = SKActionTimingEaseInEaseOut;
-   [_hudLayer runAction:toggleHUDVertically completion:
-   ^{
-      SKAction *fadeAction = (_hudIsExpandedVertically)? [SKAction fadeOutWithDuration:.3] :
-                                                         [SKAction fadeInWithDuration:.3];
-      fadeAction.timingMode = SKActionTimingEaseInEaseOut;
-      [[_hudLayer childNodeWithName:@"expand_right"] runAction:fadeAction];
-   }];
+   keepCoreFunctionButtonAtBottom.timingMode = SKActionTimingEaseInEaseOut;
+   for (SKNode *button in _coreFunctionButtons)
+   {
+      [button runAction:keepCoreFunctionButtonAtBottom];
+   }
+   [_hudLayer runAction:toggleHUDVertically completion:completionBlock];
 
    _hudIsExpandedVertically = !_hudIsExpandedVertically;
 }
@@ -375,7 +417,7 @@
    }
    if ([node.name isEqualToString:@"gear"])
    {
-      [self toggleHUDVertically];
+      [self toggleHUDVerticallyWithCompletionBlock:nil];
    }
    if ([node.name isEqualToString:@"clear"])
    {
@@ -408,23 +450,26 @@
    }
    else
    {
-      for (UITouch *touch in touches)
-         [self handleTouch:touch];
+      UITouch *touch = touches.allObjects.lastObject;
+      _firstLocationOfTouch = [touch locationInNode:self];
+      [self handleTouch:touches.allObjects.lastObject];
    }
 }
 
 - (void)touchesMoved:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-   if (!_running)
-      [self handleTouch:[[touches allObjects] lastObject]];
+   UITouch *touch = touches.allObjects.lastObject;
+   if (!_running && ![_hudLayer containsPoint:_firstLocationOfTouch])
+      [self toggleLivingForTileAtTouch:touch];
 }
 
 - (void)touchesEnded:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-   UITouch *touch = [[touches allObjects] lastObject];
-   if ([_hudLayer containsPoint:[touch locationInNode:self]])
+   UITouch *touch = touches.allObjects.lastObject;
+   if ([_hudLayer containsPoint:_firstLocationOfTouch] &&
+       [_hudLayer containsPoint:[touch locationInNode:self]])
       [self hudPressedWithTouch:touch];
 
    _currentTileBeingTouched = nil;
