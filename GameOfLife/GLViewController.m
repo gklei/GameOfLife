@@ -31,8 +31,8 @@
 
    // Configure the view.
    SKView * skView = (SKView *)self.view;
-   //    skView.showsFPS = YES;
-   //    skView.showsNodeCount = YES;
+   skView.showsFPS = YES;
+//    skView.showsNodeCount = YES;
 
    // Create and configure the scene.
    _gridScene = [GLGridScene sceneWithSize:skView.bounds.size];
