@@ -391,12 +391,13 @@
 
    SKAction *toggleHUDVertically = [SKAction moveByX:0 y:yOffset duration:.5];
    SKAction *keepCoreFunctionButtonAtBottom = [SKAction moveByX:0 y:-yOffset duration:.5];
+
    toggleHUDVertically.timingMode = SKActionTimingEaseInEaseOut;
    keepCoreFunctionButtonAtBottom.timingMode = SKActionTimingEaseInEaseOut;
+
    for (SKNode *button in _coreFunctionButtons)
-   {
       [button runAction:keepCoreFunctionButtonAtBottom];
-   }
+
    [_hudLayer runAction:toggleHUDVertically completion:completionBlock];
 
    _hudIsExpandedVertically = !_hudIsExpandedVertically;
