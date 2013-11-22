@@ -445,14 +445,14 @@
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
+   UITouch *touch = touches.allObjects.lastObject;
+   _firstLocationOfTouch = [touch locationInNode:self];
    if (_running)
    {
       [self grabScreenShot];
    }
    else
    {
-      UITouch *touch = touches.allObjects.lastObject;
-      _firstLocationOfTouch = [touch locationInNode:self];
       [self handleTouch:touches.allObjects.lastObject];
    }
 }
