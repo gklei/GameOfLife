@@ -36,6 +36,7 @@
    NSArray *_coreFunctionButtons;
    BOOL _hudIsExpandedVertically;
    BOOL _hudIsExpandedHorizontally;
+   BOOL _hudIsAnimting;
 
    CGPoint _firstLocationOfTouch;
 }
@@ -337,6 +338,7 @@
       [hudBackground runAction:sequence];
    }
 
+   float hudXBeforeCompletion = _hudLayer.position.x;
    SKAction *toggleHUDHorizontally = [SKAction moveByX:xOffset y:0 duration:.5];
    toggleHUDHorizontally.timingMode = SKActionTimingEaseInEaseOut;
    [_hudLayer runAction:toggleHUDHorizontally];
@@ -350,6 +352,13 @@
    [[_hudLayer childNodeWithName:@"expand_right"] runAction:moveAction];
    [[_hudLayer childNodeWithName:@"expand_right"] runAction:rotateAction completion:
     ^{
+       NSLog(@"(completion) hud position before completion: %f", hudXBeforeCompletion);
+
+       if (!_hudIsExpandedHorizontally)
+          NSLog(@"moving buttons down");
+       else
+          NSLog(@"moving buttons up");
+
        for (SKSpriteNode *button in _coreFunctionButtons)
        {
           if (![button.name isEqualToString:@"expand_right"])
@@ -363,6 +372,7 @@
              [button runAction:moveIconsAction];
           }
        }
+       _hudIsAnimting = NO;
     }];
 
    _hudIsExpandedHorizontally = !_hudIsExpandedHorizontally;
@@ -370,6 +380,7 @@
 
 - (void)toggleHUDHorizontally
 {
+   _hudIsAnimting = YES;
    if (_hudIsExpandedVertically)
    {
       [self toggleHUDVerticallyWithCompletionBlock:
@@ -412,7 +423,7 @@
 - (void)hudPressedWithTouch:(UITouch *)touch
 {
    SKNode *node = [_hudLayer nodeAtPoint:[touch locationInNode:_hudLayer]];
-   if ([node.name isEqualToString:@"expand_right"])
+   if ([node.name isEqualToString:@"expand_right"] && !_hudIsAnimting)
    {
       [self toggleHUDHorizontally];
    }
