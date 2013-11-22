@@ -338,7 +338,6 @@
       [hudBackground runAction:sequence];
    }
 
-   float hudXBeforeCompletion = _hudLayer.position.x;
    SKAction *toggleHUDHorizontally = [SKAction moveByX:xOffset y:0 duration:.5];
    toggleHUDHorizontally.timingMode = SKActionTimingEaseInEaseOut;
    [_hudLayer runAction:toggleHUDHorizontally];
@@ -352,13 +351,6 @@
    [[_hudLayer childNodeWithName:@"expand_right"] runAction:moveAction];
    [[_hudLayer childNodeWithName:@"expand_right"] runAction:rotateAction completion:
     ^{
-       NSLog(@"(completion) hud position before completion: %f", hudXBeforeCompletion);
-
-       if (!_hudIsExpandedHorizontally)
-          NSLog(@"moving buttons down");
-       else
-          NSLog(@"moving buttons up");
-
        for (SKSpriteNode *button in _coreFunctionButtons)
        {
           if (![button.name isEqualToString:@"expand_right"])
@@ -380,7 +372,8 @@
 
 - (void)toggleHUDHorizontally
 {
-   _hudIsAnimting = YES;
+   _hudIsAnimting = YES; // this is set back to NO in the completion
+                         // block in slideHUDAndUpdateCoreFunctionButtons
    if (_hudIsExpandedVertically)
    {
       [self toggleHUDVerticallyWithCompletionBlock:
