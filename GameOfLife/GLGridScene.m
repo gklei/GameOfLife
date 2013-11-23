@@ -7,6 +7,7 @@
 //
 
 #import "GLGridScene.h"
+#import "GLColorHud.h"
 #import "GLTileNode.h"
 #import "UIColor+Crayola.h"
 
@@ -33,6 +34,7 @@
    GLTileNode *_currentTileBeingTouched;
 
    SKNode *_hudLayer;
+   GLColorHud *_colorHudLayer;
    NSArray *_coreFunctionButtons;
    BOOL _hudIsExpandedVertically;
    BOOL _hudIsExpandedHorizontally;
@@ -75,7 +77,8 @@
    if (self = [super initWithSize:size])
    {
       [self setupGridWithSize:size];
-      [self setupHudWithSize:size];
+//      [self setupHudWithSize:size];
+      [self setupColorHud];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
       _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    }
@@ -92,16 +95,20 @@
    }
 }
 
+- (void)setupColorHud
+{
+   _colorHudLayer = [GLColorHud new];
+   [self addChild:_colorHudLayer];
+}
+
 - (void)setupHudWithSize:(CGSize)size
 {
    _hudLayer = [SKNode new];
-
-   CGSize backgroundSize = CGSizeMake(size.width, size.height);
+   
    SKColor *backgroundColor = [SKColor clearColor];
-
    SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
-                                                              size:backgroundSize];
-   hudBackground.alpha = 0.5;
+                                                              size:size];
+   hudBackground.alpha = 0.65;
    hudBackground.position = HUD_POSITION_DEFAULT;
    hudBackground.anchorPoint = CGPointMake(1, 1);
    hudBackground.name = @"hud_background";
@@ -109,10 +116,13 @@
    [_hudLayer addChild:hudBackground];
 
    SKTexture *expandRightTexture = [SKTexture textureWithImageNamed:@"expand_right"];
-   SKSpriteNode *expandRightButton = [SKSpriteNode spriteNodeWithTexture:expandRightTexture];
+   SKSpriteNode *expandRightButton = [[SKSpriteNode alloc] initWithTexture:expandRightTexture
+                                                                     color:[SKColor crayolaBlackCoralPearlColor]
+                                                                      size:expandRightTexture.size];
 
+   NSLog(@"expand_right size: %@", NSStringFromCGSize(expandRightButton.size));
+   expandRightButton.colorBlendFactor = 1.0;
    [expandRightButton setScale:.25];
-   expandRightButton.anchorPoint = CGPointMake(.5, .5);
    expandRightButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - expandRightButton.size.width/2.0,
                                             HUD_BUTTON_EDGE_PADDING - expandRightButton.size.height/2.0);
    expandRightButton.name = @"expand_right";
@@ -316,8 +326,12 @@
       SKAction *colorAnimation = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                             colorBlendFactor:1.0
                                                     duration:.25];
+      SKAction *buttonColorAnimation = [SKAction colorizeWithColor:[SKColor whiteColor]
+                                                  colorBlendFactor:1.0
+                                                          duration:.5];
       colorAnimation.timingMode = SKActionTimingEaseInEaseOut;
       [hudBackground runAction:colorAnimation];
+      [[_hudLayer childNodeWithName:@"expand_right"] runAction:buttonColorAnimation];
    }
 
    int xOffset = self.size.width - HUD_POSITION_DEFAULT.x;
@@ -334,8 +348,12 @@
                                             colorBlendFactor:1.0
                                                     duration:.25];
       colorAnimation.timingMode = SKActionTimingEaseInEaseOut;
+      SKAction *buttonColorAnimation = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
+                                                  colorBlendFactor:1.0
+                                                          duration:.5];
       SKAction *sequence = [SKAction sequence:@[wait, colorAnimation]];
       [hudBackground runAction:sequence];
+      [[_hudLayer childNodeWithName:@"expand_right"] runAction:buttonColorAnimation];
    }
 
    SKAction *toggleHUDHorizontally = [SKAction moveByX:xOffset y:0 duration:.5];
