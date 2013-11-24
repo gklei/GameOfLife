@@ -21,6 +21,6 @@
 @property (strong, nonatomic) id<ColorHudDelegate> delegate;
 @property (strong, nonatomic) SKColor *currentColor;
 
-- (void)handleTouch:(UITouch *)touch;
+- (void)handleTouch:(UITouch *)touch moved:(BOOL)moved;
 
 @end

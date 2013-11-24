@@ -482,7 +482,7 @@
 - (void)colorHudPressedWithTouch:(UITouch *)touch
 {
    if (!_colorHudIsAnimating)
-      [_colorHudLayer handleTouch:touch];
+      [_colorHudLayer handleTouch:touch moved:NO];
 }
 
 - (void)handleTouch:(UITouch *)touch
@@ -520,7 +520,7 @@
       [self toggleLivingForTileAtTouch:touch];
    }
    if ([_colorHudLayer containsPoint:_firstLocationOfTouch])
-      [_colorHudLayer handleTouch:touch];
+      [_colorHudLayer handleTouch:touch moved:YES];
 }
 
 - (void)touchesEnded:(NSSet *)touches
@@ -694,6 +694,8 @@
 - (void)setCurrentColor:(SKColor *)currentColor
 {
    _currentColor = currentColor;
+   for (GLTileNode *tile in _tiles)
+      [tile updateColor];
 }
 
 @end

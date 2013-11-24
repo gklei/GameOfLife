@@ -17,6 +17,7 @@
 
 + (id)tileWithRect:(CGRect)rect;
 - (void)updateLivingAndColor:(BOOL)living;
+- (void)updateColor;
 - (void)clearTile;
 
 @property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;

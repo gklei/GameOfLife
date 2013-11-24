@@ -114,14 +114,16 @@
       [_currentColorDrop runAction:deselectAnimation];
       [drop runAction:selectAnimation];
       _currentColorDrop = drop;
+      _currentColor = _colorDropColors[[_colorDrops indexOfObject:_currentColorDrop]];
+      [_delegate setCurrentColor:_currentColor];
    }
 }
 
-- (void)handleTouch:(UITouch *)touch
+- (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
 
-   if ([node.name isEqualToString:@"splash"])
+   if ([node.name isEqualToString:@"splash"] && !moved)
       [self toggle];
    else if ([_colorDrops containsObject:node])
    {
