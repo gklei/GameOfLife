@@ -459,6 +459,11 @@
    }
 }
 
+- (void)colorHudPressedWithTouch:(UITouch *)touch
+{
+   [_colorHudLayer toggle];
+}
+
 - (void)handleTouch:(UITouch *)touch
 {
    if (![_hudLayer containsPoint:[touch locationInNode:self]])
@@ -467,7 +472,7 @@
    }
    else if (![_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
-      NSLog(@"color hud touched!");
+      [self colorHudPressedWithTouch:touch];
    }
 }
 
@@ -506,7 +511,7 @@
    else if ([_colorHudLayer containsPoint:_firstLocationOfTouch] &&
        [_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
-      NSLog(@"color hud pressed!");
+      [self colorHudPressedWithTouch:touch];
    }
 
    _currentTileBeingTouched = nil;

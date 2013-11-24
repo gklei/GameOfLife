@@ -10,4 +10,6 @@
 
 @interface GLColorHud : SKNode
 
+- (void)toggle;
+
 @end

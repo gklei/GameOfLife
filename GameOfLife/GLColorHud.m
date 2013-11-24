@@ -16,6 +16,8 @@
    SKSpriteNode *_backgroundLayer;
    SKSpriteNode *_expandButton;
    CGSize _defaultSize;
+
+   BOOL _isExpanded;
 }
 @end
 
@@ -54,6 +56,32 @@
                                         HUD_BUTTON_EDGE_PADDING - _expandButton.size.height/2.0);
    _expandButton.name = @"color_hud_expand";
    [self addChild:_expandButton];
+}
+
+- (void)expand
+{
+   SKAction *expandAction = [SKAction moveTo:CGPointMake(0,0)
+                                    duration:.5];
+   expandAction.timingMode = SKActionTimingEaseInEaseOut;
+   _isExpanded = YES;
+   [self runAction:expandAction];
+}
+
+- (void)collapse
+{
+   SKAction *expandAction = [SKAction moveTo:CGPointMake(_defaultSize.width - 60, 0)
+                                    duration:.5];
+   expandAction.timingMode = SKActionTimingEaseInEaseOut;
+   _isExpanded = NO;
+   [self runAction:expandAction];
+}
+
+- (void)toggle
+{
+   if (!_isExpanded)
+      [self expand];
+   else
+      [self collapse];
 }
 
 @end
