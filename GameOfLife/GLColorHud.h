@@ -9,8 +9,10 @@
 #import <SpriteKit/SpriteKit.h>
 
 @protocol ColorHudDelegate <NSObject>
-- (void)colorHudWillExpand;
-- (void)colorHudWillCollapse;
+   - (void)colorHudWillExpand;
+   - (void)colorHudDidExpand;
+   - (void)colorHudWillCollapse;
+   - (void)colorHudDidCollapse;
 @end
 
 @interface GLColorHud : SKNode

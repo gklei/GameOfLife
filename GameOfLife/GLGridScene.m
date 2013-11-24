@@ -38,6 +38,7 @@
    BOOL _hudIsExpandedVertically;
    BOOL _hudIsExpandedHorizontally;
    BOOL _hudIsAnimting;
+   BOOL _colorHudIsAnimating;
 
    CGPoint _firstLocationOfTouch;
 }
@@ -474,7 +475,8 @@
 
 - (void)colorHudPressedWithTouch:(UITouch *)touch
 {
-   [_colorHudLayer handleTouch:touch];
+   if (!_colorHudIsAnimating)
+      [_colorHudLayer handleTouch:touch];
 }
 
 - (void)handleTouch:(UITouch *)touch
@@ -654,14 +656,26 @@
 
 - (void)colorHudWillExpand
 {
+   _colorHudIsAnimating = YES;
    SKAction *reposition = [SKAction moveByX:-100 y:0 duration:.25];
    [_hudLayer runAction:reposition];
 }
 
+- (void)colorHudDidExpand
+{
+   _colorHudIsAnimating = NO;
+}
+
 - (void)colorHudWillCollapse
 {
+   _colorHudIsAnimating = YES;
    SKAction *reposition = [SKAction moveByX:100 y:0 duration:.25];
    [_hudLayer runAction:reposition];
+}
+
+- (void)colorHudDidCollapse
+{
+   _colorHudIsAnimating = NO;
 }
 
 @end
