@@ -7,7 +7,6 @@
 //
 
 #import "GLGridScene.h"
-#import "GLTileNode.h"
 #import "UIColor+Crayola.h"
 
 #include <OpenGLES/ES1/glext.h>
@@ -40,6 +39,8 @@
    BOOL _hudIsAnimting;
    BOOL _colorHudIsAnimating;
 
+   SKColor *_currentColor;
+
    CGPoint _firstLocationOfTouch;
 }
 @end
@@ -55,10 +56,14 @@
    
    for (int yPos = 0; yPos < size.height; yPos += TILESIZE.height)
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
-         [self addChild:[GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
-                                                            yPos + 0.5,
-                                                            TILESIZE.width - 1,
-                                                            TILESIZE.height - 1)]];
+      {
+         GLTileNode *tile = [GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
+                                                                yPos + 0.5,
+                                                                TILESIZE.width - 1,
+                                                                TILESIZE.height - 1)];
+         tile.delegate = self;
+         [self addChild:tile];
+      }
    _tiles = [NSArray arrayWithArray:self.children];
    
    
@@ -99,6 +104,7 @@
 {
    _colorHudLayer = [GLColorHud new];
    _colorHudLayer.delegate = self;
+   _currentColor = _colorHudLayer.currentColor;
    [self addChild:_colorHudLayer];
    _colorHudLayer.position = CGPointMake(self.size.width - 60, 0);
 }
@@ -678,6 +684,16 @@
 - (void)colorHudDidCollapse
 {
    _colorHudIsAnimating = NO;
+}
+
+- (SKColor *)currentColor
+{
+   return _currentColor;
+}
+
+- (void)setCurrentColor:(SKColor *)currentColor
+{
+   _currentColor = currentColor;
 }
 
 @end

@@ -8,8 +8,9 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "GLColorHud.h"
+#import "GLTileNode.h"
 
-@interface GLGridScene : SKScene <ColorHudDelegate>
+@interface GLGridScene : SKScene <ColorHudDelegate, CurrentColorDelegate>
 
 typedef struct {
    int rows;

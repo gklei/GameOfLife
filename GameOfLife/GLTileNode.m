@@ -54,13 +54,22 @@
 //   
 //   return [SKColor colorForCrayolaColorName:*colorName];
    
-   return [SKColor colorWithHue:[self colorDistance]
-                     saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
-                     brightness:1.0
-                          alpha:1.0];
+//   return [SKColor colorWithHue:[self colorDistance]
+//                     saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
+//                     brightness:1.0
+//                          alpha:1.0];
 
-//   float dist = [self colorDistance];
-//   return [SKColor colorWithRed:dist green:0.0 blue:dist alpha:1.0];
+   float dist = [self colorDistance];
+   SKColor *currentColor = [_delegate currentColor];
+   CGFloat r, g, b;
+   
+   if ([currentColor getRed:&r green:&g blue:&b alpha:0])
+      return [SKColor colorWithRed:dist*r green:dist*g blue:dist*b alpha:1.0];
+   else
+      return [SKColor colorWithHue:[self colorDistance]
+                        saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
+                        brightness:1.0
+                             alpha:1.0];
 }
 
 - (void)updateColor
@@ -71,7 +80,7 @@
    [SKColor colorForCrayolaColorName:_deadColorName];
    
    SKAction *changeColor = [SKAction colorizeWithColor:newColor
-                                      colorBlendFactor:0.0
+                                      colorBlendFactor:1.0
                                               duration:duration];
    
    changeColor.timingMode = SKActionTimingEaseInEaseOut;

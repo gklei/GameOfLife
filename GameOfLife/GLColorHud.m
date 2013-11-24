@@ -88,6 +88,8 @@
       [_colorDrops insertObject:drop atIndex:i];
       [self addChild:drop];
    }
+   _currentColorDrop = _colorDrops.firstObject;
+   _currentColor = _colorDropColors.firstObject;
 }
 
 - (void)setColorDropsHidden:(BOOL)hidden
