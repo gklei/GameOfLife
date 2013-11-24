@@ -122,6 +122,7 @@
                                                                       size:expandRightTexture.size];
 
    NSLog(@"expand_right size: %@", NSStringFromCGSize(expandRightButton.size));
+   expandRightButton.alpha = hudBackground.alpha;
    expandRightButton.colorBlendFactor = 1.0;
    [expandRightButton setScale:.25];
    expandRightButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - expandRightButton.size.width/2.0,
@@ -330,9 +331,12 @@
       SKAction *buttonColorAnimation = [SKAction colorizeWithColor:[SKColor whiteColor]
                                                   colorBlendFactor:1.0
                                                           duration:.5];
+      SKAction *buttonAlphaAnimation = [SKAction fadeAlphaTo:1.0 duration:.5];
+
       colorAnimation.timingMode = SKActionTimingEaseInEaseOut;
       [hudBackground runAction:colorAnimation];
-      [[_hudLayer childNodeWithName:@"expand_right"] runAction:buttonColorAnimation];
+      [[_hudLayer childNodeWithName:@"expand_right"] runAction:[SKAction group:@[buttonColorAnimation,
+                                                                                 buttonAlphaAnimation]]];
    }
 
    int xOffset = self.size.width - HUD_POSITION_DEFAULT.x;
@@ -354,8 +358,10 @@
       SKAction *buttonColorAnimation = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                                   colorBlendFactor:1.0
                                                           duration:.5];
+      SKAction *buttonAlphaAnimation = [SKAction fadeAlphaTo:hudBackground.alpha duration:.5];
       SKAction *backgroundSequence = [SKAction sequence:@[wait, colorAnimation]];
-      SKAction *buttonSequence = [SKAction sequence:@[wait, buttonColorAnimation]];
+      SKAction *buttonSequence = [SKAction sequence:@[wait, [SKAction group:@[buttonColorAnimation,
+                                                                              buttonAlphaAnimation]]]];
       [hudBackground runAction:backgroundSequence];
       [[_hudLayer childNodeWithName:@"expand_right"] runAction:buttonSequence];
    }
