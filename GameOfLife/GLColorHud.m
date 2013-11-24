@@ -10,11 +10,17 @@
 #import "UIColor+Crayola.h"
 
 #define HUD_BUTTON_EDGE_PADDING 48
+#define COLOR_DROP_PADDING 44
+#define COLOR_DROP_NUMBER 6
+#define COLOR_DROP_SCALE .22
 
 @interface GLColorHud()
 {
    SKSpriteNode *_backgroundLayer;
    SKSpriteNode *_splashButton;
+   NSMutableArray *_colorDrops;
+   NSArray *_colorDropColors;
+   int _colorDropVerticalOffset;
    CGSize _defaultSize;
    BOOL _isExpanded;
 }
@@ -29,6 +35,7 @@
       _defaultSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, 60.0);
       [self setupBackgorundWithSize:_defaultSize];
       [self setupButtons];
+      [self addColorDrops];
    }
    return self;
 }
@@ -58,12 +65,42 @@
    [self addChild:_splashButton];
 }
 
+-(void)addColorDrops
+{
+   _colorDrops = [NSMutableArray arrayWithCapacity:COLOR_DROP_NUMBER];
+   _colorDropColors = @[[SKColor crayolaCaribbeanGreenColor],
+                        [SKColor crayolaBlueColor],
+                        [SKColor crayolaRazzleDazzleRoseColor],
+                        [SKColor crayolaSizzlingRedColor],
+                        [SKColor crayolaNeonCarrotColor],
+                        [SKColor crayolaLemonYellowColor]];
+
+   for (int i=0; i<COLOR_DROP_NUMBER; ++i)
+   {
+      SKSpriteNode *drop = [SKSpriteNode spriteNodeWithImageNamed:@"drop"];
+      [drop setScale:COLOR_DROP_SCALE];
+      drop.position = CGPointMake(i*COLOR_DROP_PADDING + 23, -drop.size.height/2.0);
+      drop.colorBlendFactor = 1.0;
+      drop.color = _colorDropColors[i];
+      [_colorDrops insertObject:drop atIndex:i];
+      [self addChild:drop];
+   }
+}
+
+- (void)setColorDropsHidden:(BOOL)hidden
+{
+   for (SKNode *node in _colorDrops)
+      node.hidden = hidden;
+}
+
 - (void)handleTouch:(UITouch *)touch
 {
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
 
    if ([node.name isEqualToString:@"splash"])
       [self toggle];
+   else if ([_colorDrops containsObject:node])
+      _splashButton.color = ((SKSpriteNode *)node).color;
 }
 
 - (void)expand
@@ -92,7 +129,7 @@
    maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
-   SKAction *buttonActions = [SKAction group:@[changeButtonColor,
+   SKAction *buttonActions = [SKAction group:@[//changeButtonColor,
                                                changeButtonAlpha,
                                                maintainPosition,
                                                rotate]];
@@ -100,7 +137,17 @@
    [self runAction:slide];
    [_backgroundLayer runAction:changeHudColor];
    [_splashButton runAction:buttonActions
-                 completion:^{[_delegate colorHudDidExpand];}];
+                 completion:^
+   {
+      SKAction *moveDrop = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.25];
+      for (SKNode *drop in _colorDrops)
+      {
+         drop.hidden = NO;
+         [drop runAction:moveDrop];
+      }
+
+      [_delegate colorHudDidExpand];
+   }];
 }
 
 - (void)collapse
@@ -116,7 +163,7 @@
    SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                             colorBlendFactor:1.0
                                                     duration:.25];
-   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:_backgroundLayer.alpha
+   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:.85
                                               duration:.25];
    SKAction *maintainPosition = [SKAction moveByX:-(_defaultSize.width - 60) y:0
                                          duration:.5];
@@ -135,10 +182,18 @@
    SKAction *buttonActions = [SKAction group:@[buttonAnimations, buttonColorSequence]];
 
    _isExpanded = NO;
+   [self setColorDropsHidden:YES];
    [self runAction:slide];
    [_splashButton runAction:buttonActions];
    [_backgroundLayer runAction:hudBackgroundColorSequence
-                    completion:^{[_delegate colorHudDidCollapse];}];
+                    completion:^
+   {
+      SKAction *moveDrop = [SKAction moveByX:0 y:-HUD_BUTTON_EDGE_PADDING duration:.25];
+      for (SKNode *drop in _colorDrops)
+         [drop runAction:moveDrop];
+
+      [_delegate colorHudDidCollapse];
+   }];
 }
 
 - (void)toggle
