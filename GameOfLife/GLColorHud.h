@@ -9,15 +9,14 @@
 #import <SpriteKit/SpriteKit.h>
 
 @protocol ColorHudDelegate <NSObject>
-
 - (void)colorHudWillExpand;
 - (void)colorHudWillCollapse;
-
 @end
 
 @interface GLColorHud : SKNode
 
 @property (strong, nonatomic) id<ColorHudDelegate> delegate;
+
 - (void)handleTouch:(UITouch *)touch;
 
 @end
