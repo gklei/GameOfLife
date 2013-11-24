@@ -513,6 +513,8 @@
    {
       [self toggleLivingForTileAtTouch:touch];
    }
+   if ([_colorHudLayer containsPoint:_firstLocationOfTouch])
+      [_colorHudLayer handleTouch:touch];
 }
 
 - (void)touchesEnded:(NSSet *)touches

@@ -12,12 +12,14 @@
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 44
 #define COLOR_DROP_NUMBER 6
-#define COLOR_DROP_SCALE .22
+#define COLOR_DROP_SCALE .23
+#define SELECTED_COLOR_DROP_SCALE .3
 
 @interface GLColorHud()
 {
    SKSpriteNode *_backgroundLayer;
    SKSpriteNode *_splashButton;
+   SKSpriteNode *_currentColorDrop;
    NSMutableArray *_colorDrops;
    NSArray *_colorDropColors;
    int _colorDropVerticalOffset;
@@ -82,6 +84,7 @@
       drop.position = CGPointMake(i*COLOR_DROP_PADDING + 23, -drop.size.height/2.0);
       drop.colorBlendFactor = 1.0;
       drop.color = _colorDropColors[i];
+      drop.alpha = .75;
       [_colorDrops insertObject:drop atIndex:i];
       [self addChild:drop];
    }
@@ -93,6 +96,25 @@
       node.hidden = hidden;
 }
 
+- (void)updateCurrentColorDrop:(SKSpriteNode *)drop
+{
+   if (_currentColorDrop != drop)
+   {
+      SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
+      SKAction *deselectScaleAction = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
+
+      SKAction *selectAlphaAction = [SKAction fadeAlphaTo:1.0 duration:.15];
+      SKAction *deselectAlphaAction = [SKAction fadeAlphaTo:.75 duration:.15];
+
+      SKAction *selectAnimation = [SKAction group:@[selectScaleAction, selectAlphaAction]];
+      SKAction *deselectAnimation = [SKAction group:@[deselectScaleAction, deselectAlphaAction]];
+
+      [_currentColorDrop runAction:deselectAnimation];
+      [drop runAction:selectAnimation];
+      _currentColorDrop = drop;
+   }
+}
+
 - (void)handleTouch:(UITouch *)touch
 {
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
@@ -100,7 +122,9 @@
    if ([node.name isEqualToString:@"splash"])
       [self toggle];
    else if ([_colorDrops containsObject:node])
-      _splashButton.color = ((SKSpriteNode *)node).color;
+   {
+      [self updateCurrentColorDrop:(SKSpriteNode *)(SKSpriteNode *)node];
+   }
 }
 
 - (void)expand
@@ -112,9 +136,6 @@
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                       colorBlendFactor:1.0
                                               duration:.5];
-   SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor crayolaFieryRoseColor]
-                                            colorBlendFactor:1.0
-                                                    duration:.5];
    SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:1.0
                                               duration:.5];
    SKAction *maintainPosition = [SKAction moveByX:(_defaultSize.width - 60) y:0
@@ -124,13 +145,11 @@
 
    slide.timingMode = SKActionTimingEaseInEaseOut;
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
-   changeButtonColor.timingMode = SKActionTimingEaseInEaseOut;
    changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
    maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
-   SKAction *buttonActions = [SKAction group:@[//changeButtonColor,
-                                               changeButtonAlpha,
+   SKAction *buttonActions = [SKAction group:@[changeButtonAlpha,
                                                maintainPosition,
                                                rotate]];
    _isExpanded = YES;
@@ -139,14 +158,25 @@
    [_splashButton runAction:buttonActions
                  completion:^
    {
-      SKAction *moveDrop = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.25];
+      SKAction *moveDrop = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.2];
+      moveDrop.timingMode = SKActionTimingEaseOut;
       for (SKNode *drop in _colorDrops)
       {
          drop.hidden = NO;
          [drop runAction:moveDrop];
       }
 
-      [_delegate colorHudDidExpand];
+      if (_currentColorDrop)
+      {
+         SKAction *wait = [SKAction waitForDuration:.2];
+         SKAction *rescaleSelectedDrop = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
+         SKAction *scaleSequence = [SKAction sequence:@[wait, rescaleSelectedDrop]];
+         [_currentColorDrop runAction:scaleSequence completion:^{[_delegate colorHudDidExpand];}];
+      }
+      else
+      {
+         [_delegate colorHudDidExpand];
+      }
    }];
 }
 
@@ -188,6 +218,7 @@
    [_backgroundLayer runAction:hudBackgroundColorSequence
                     completion:^
    {
+      [_currentColorDrop setScale:COLOR_DROP_SCALE];
       SKAction *moveDrop = [SKAction moveByX:0 y:-HUD_BUTTON_EDGE_PADDING duration:.25];
       for (SKNode *drop in _colorDrops)
          [drop runAction:moveDrop];
