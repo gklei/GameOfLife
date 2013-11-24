@@ -7,7 +7,6 @@
 //
 
 #import "GLGridScene.h"
-#import "GLColorHud.h"
 #import "GLTileNode.h"
 #import "UIColor+Crayola.h"
 
@@ -77,7 +76,7 @@
    if (self = [super initWithSize:size])
    {
       [self setupGridWithSize:size];
-//      [self setupHudWithSize:size];
+      [self setupHudWithSize:size];
       [self setupColorHud];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
       _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
@@ -98,6 +97,7 @@
 - (void)setupColorHud
 {
    _colorHudLayer = [GLColorHud new];
+   _colorHudLayer.delegate = self;
    [self addChild:_colorHudLayer];
    _colorHudLayer.position = CGPointMake(self.size.width - 60, 0);
 }
@@ -336,7 +336,9 @@
    }
 
    int xOffset = self.size.width - HUD_POSITION_DEFAULT.x;
+   int colorHudXOffset = 100;
    xOffset *= (_hudIsExpandedHorizontally)? -1 : 1;
+   colorHudXOffset *= (_hudIsExpandedHorizontally)? -1 : 1;
 
    for (SKSpriteNode *button in _coreFunctionButtons)
       button.hidden = _hudIsExpandedHorizontally && (![button.name isEqualToString:@"expand_right"]);
@@ -352,14 +354,19 @@
       SKAction *buttonColorAnimation = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                                   colorBlendFactor:1.0
                                                           duration:.5];
-      SKAction *sequence = [SKAction sequence:@[wait, colorAnimation]];
-      [hudBackground runAction:sequence];
-      [[_hudLayer childNodeWithName:@"expand_right"] runAction:buttonColorAnimation];
+      SKAction *backgroundSequence = [SKAction sequence:@[wait, colorAnimation]];
+      SKAction *buttonSequence = [SKAction sequence:@[wait, buttonColorAnimation]];
+      [hudBackground runAction:backgroundSequence];
+      [[_hudLayer childNodeWithName:@"expand_right"] runAction:buttonSequence];
    }
 
    SKAction *toggleHUDHorizontally = [SKAction moveByX:xOffset y:0 duration:.5];
    toggleHUDHorizontally.timingMode = SKActionTimingEaseInEaseOut;
    [_hudLayer runAction:toggleHUDHorizontally];
+
+   SKAction *repositionColorHud = [SKAction moveByX:colorHudXOffset y:0 duration:.25];
+   repositionColorHud.timingMode = SKActionTimingEaseInEaseOut;
+   [_colorHudLayer runAction:repositionColorHud];
 
    SKAction *rotateAction = [SKAction rotateByAngle:(_hudIsExpandedHorizontally)? -M_PI : M_PI
                                            duration:.5];
@@ -637,6 +644,18 @@
 {
    if (_running && currentTime - _lastGenerationTime > .8)
       [self updateNextGeneration:currentTime];
+}
+
+- (void)colorHudWillExpand
+{
+   SKAction *reposition = [SKAction moveByX:-100 y:0 duration:.25];
+   [_hudLayer runAction:reposition];
+}
+
+- (void)colorHudWillCollapse
+{
+   SKAction *reposition = [SKAction moveByX:100 y:0 duration:.25];
+   [_hudLayer runAction:reposition];
 }
 
 @end
