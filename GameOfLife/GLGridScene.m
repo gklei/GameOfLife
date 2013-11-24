@@ -461,18 +461,15 @@
 
 - (void)colorHudPressedWithTouch:(UITouch *)touch
 {
-   [_colorHudLayer toggle];
+   [_colorHudLayer handleTouch:touch];
 }
 
 - (void)handleTouch:(UITouch *)touch
 {
-   if (![_hudLayer containsPoint:[touch locationInNode:self]])
+   if (![_hudLayer containsPoint:[touch locationInNode:self]] &&
+       ![_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
       [self toggleLivingForTileAtTouch:touch];
-   }
-   else if (![_colorHudLayer containsPoint:[touch locationInNode:self]])
-   {
-      [self colorHudPressedWithTouch:touch];
    }
 }
 
@@ -495,8 +492,12 @@
            withEvent:(UIEvent *)event
 {
    UITouch *touch = touches.allObjects.lastObject;
-   if (!_running && ![_hudLayer containsPoint:_firstLocationOfTouch])
+   if (!_running &&
+       ![_hudLayer containsPoint:_firstLocationOfTouch] &&
+       ![_colorHudLayer containsPoint:_firstLocationOfTouch])
+   {
       [self toggleLivingForTileAtTouch:touch];
+   }
 }
 
 - (void)touchesEnded:(NSSet *)touches

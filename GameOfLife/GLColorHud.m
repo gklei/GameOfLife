@@ -58,22 +58,41 @@
    [self addChild:_expandButton];
 }
 
+- (void)handleTouch:(UITouch *)touch
+{
+   SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
+
+   if ([node.name isEqualToString:@"color_hud_expand"])
+      [self toggle];
+}
+
 - (void)expand
 {
-   SKAction *expandAction = [SKAction moveTo:CGPointMake(0,0)
+   SKAction *slideHud = [SKAction moveTo:CGPointMake(0,0)
                                     duration:.5];
-   expandAction.timingMode = SKActionTimingEaseInEaseOut;
+   SKAction *maintainPosition = [SKAction moveByX:(_defaultSize.width - 60) y:0
+                                         duration:.5];
+
+   slideHud.timingMode = SKActionTimingEaseInEaseOut;
+   maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
+
    _isExpanded = YES;
-   [self runAction:expandAction];
+   [self runAction:slideHud];
+   [_expandButton runAction:maintainPosition];
 }
 
 - (void)collapse
 {
    SKAction *expandAction = [SKAction moveTo:CGPointMake(_defaultSize.width - 60, 0)
                                     duration:.5];
+   SKAction *maintainPosition = [SKAction moveByX:-(_defaultSize.width - 60) y:0
+                                         duration:.5];
    expandAction.timingMode = SKActionTimingEaseInEaseOut;
+   maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
+
    _isExpanded = NO;
    [self runAction:expandAction];
+   [_expandButton runAction:maintainPosition];
 }
 
 - (void)toggle

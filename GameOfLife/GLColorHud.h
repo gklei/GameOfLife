@@ -10,6 +10,6 @@
 
 @interface GLColorHud : SKNode
 
-- (void)toggle;
+- (void)handleTouch:(UITouch *)touch;
 
 @end
