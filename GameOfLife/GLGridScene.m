@@ -99,6 +99,7 @@
 {
    _colorHudLayer = [GLColorHud new];
    [self addChild:_colorHudLayer];
+   _colorHudLayer.position = CGPointMake(self.size.width - 60, 0);
 }
 
 - (void)setupHudWithSize:(CGSize)size
@@ -461,7 +462,13 @@
 - (void)handleTouch:(UITouch *)touch
 {
    if (![_hudLayer containsPoint:[touch locationInNode:self]])
+   {
       [self toggleLivingForTileAtTouch:touch];
+   }
+   else if (![_colorHudLayer containsPoint:[touch locationInNode:self]])
+   {
+      NSLog(@"color hud touched!");
+   }
 }
 
 - (void)touchesBegan:(NSSet *)touches
@@ -493,7 +500,14 @@
    UITouch *touch = touches.allObjects.lastObject;
    if ([_hudLayer containsPoint:_firstLocationOfTouch] &&
        [_hudLayer containsPoint:[touch locationInNode:self]])
+   {
       [self hudPressedWithTouch:touch];
+   }
+   else if ([_colorHudLayer containsPoint:_firstLocationOfTouch] &&
+       [_colorHudLayer containsPoint:[touch locationInNode:self]])
+   {
+      NSLog(@"color hud pressed!");
+   }
 
    _currentTileBeingTouched = nil;
 }
