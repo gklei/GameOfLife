@@ -31,7 +31,7 @@
    BOOL _running;
    GLTileNode *_currentTileBeingTouched;
 
-   SKNode *_hudLayer;
+   GLGeneralHud *_hudLayer;
    GLColorHud *_colorHudLayer;
    NSArray *_coreFunctionButtons;
    BOOL _hudIsExpandedVertically;
@@ -111,7 +111,7 @@
 
 - (void)setupHudWithSize:(CGSize)size
 {
-   _hudLayer = [SKNode new];
+   _hudLayer = [GLGeneralHud new];
    
    SKColor *backgroundColor = [SKColor clearColor];
    SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
@@ -176,7 +176,12 @@
    gearButton.name = @"gear";
    [_hudLayer addChild:gearButton];
 
-   _coreFunctionButtons = @[expandRightButton, clearButton, refreshButton, startStopButton, gearButton];
+   _coreFunctionButtons = @[expandRightButton,
+                            clearButton,
+                            refreshButton,
+                            startStopButton,
+                            gearButton];
+   
    [self addChild:_hudLayer];
 }
 

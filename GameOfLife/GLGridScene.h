@@ -8,6 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "GLColorHud.h"
+#import "GLGeneralHud.h"
 #import "GLTileNode.h"
 
 @interface GLGridScene : SKScene <ColorHudDelegate, CurrentColorDelegate>

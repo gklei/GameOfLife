@@ -21,7 +21,6 @@
    SKSpriteNode *_splashButton;
    SKSpriteNode *_currentColorDrop;
    NSMutableArray *_colorDrops;
-   NSArray *_colorDropColors;
    int _colorDropVerticalOffset;
    CGSize _defaultSize;
    BOOL _isExpanded;
@@ -70,12 +69,12 @@
 -(void)addColorDrops
 {
    _colorDrops = [NSMutableArray arrayWithCapacity:COLOR_DROP_NUMBER];
-   _colorDropColors = @[[SKColor crayolaCaribbeanGreenColor],
-                        [SKColor crayolaBlueColor],
-                        [SKColor crayolaRazzleDazzleRoseColor],
-                        [SKColor crayolaSizzlingRedColor],
-                        [SKColor crayolaNeonCarrotColor],
-                        [SKColor crayolaLemonYellowColor]];
+   NSArray *colorDropColors = @[[SKColor crayolaCaribbeanGreenColor],
+                                [SKColor crayolaBlueColor],
+                                [SKColor crayolaRazzleDazzleRoseColor],
+                                [SKColor crayolaSizzlingRedColor],
+                                [SKColor crayolaNeonCarrotColor],
+                                [SKColor crayolaLemonYellowColor]];
 
    for (int i=0; i<COLOR_DROP_NUMBER; ++i)
    {
@@ -83,13 +82,13 @@
       [drop setScale:COLOR_DROP_SCALE];
       drop.position = CGPointMake(i*COLOR_DROP_PADDING + 23, -drop.size.height/2.0);
       drop.colorBlendFactor = 1.0;
-      drop.color = _colorDropColors[i];
+      drop.color = colorDropColors[i];
       drop.alpha = .75;
       [_colorDrops insertObject:drop atIndex:i];
       [self addChild:drop];
    }
    _currentColorDrop = _colorDrops.firstObject;
-   _currentColor = _colorDropColors.firstObject;
+   _currentColor = _currentColorDrop.color;
 }
 
 - (void)setColorDropsHidden:(BOOL)hidden
@@ -114,8 +113,7 @@
       [_currentColorDrop runAction:deselectAnimation];
       [drop runAction:selectAnimation];
       _currentColorDrop = drop;
-      _currentColor = _colorDropColors[[_colorDrops indexOfObject:_currentColorDrop]];
-      [_delegate setCurrentColor:_currentColor];
+      [_delegate setCurrentColor:_currentColorDrop.color];
    }
 }
 
