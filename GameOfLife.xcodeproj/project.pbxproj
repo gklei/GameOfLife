@@ -16,6 +16,7 @@
 		8E75B03918419670000AEEB8 /* ring@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B03718419670000AEEB8 /* ring@2x.png */; };
 		8E75B03C1841C909000AEEB8 /* drop.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B03A1841C909000AEEB8 /* drop.png */; };
 		8E75B03D1841C909000AEEB8 /* drop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B03B1841C909000AEEB8 /* drop@2x.png */; };
+		8E75B0401842FFE3000AEEB8 /* GLGeneralHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */; };
 		8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B29E182BFE7600C7AEDB /* GLGridScene.m */; };
 		8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A1182C013D00C7AEDB /* GLTileNode.m */; };
 		8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */; };
@@ -69,6 +70,8 @@
 		8E75B03718419670000AEEB8 /* ring@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ring@2x.png"; path = "Images/ring@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B03A1841C909000AEEB8 /* drop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = drop.png; path = Images/drop.png; sourceTree = SOURCE_ROOT; };
 		8E75B03B1841C909000AEEB8 /* drop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "drop@2x.png"; path = "Images/drop@2x.png"; sourceTree = SOURCE_ROOT; };
+		8E75B03E1842FFE3000AEEB8 /* GLGeneralHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGeneralHud.h; sourceTree = "<group>"; };
+		8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLGeneralHud.m; sourceTree = "<group>"; };
 		8E99B29D182BFE7600C7AEDB /* GLGridScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGridScene.h; sourceTree = "<group>"; };
 		8E99B29E182BFE7600C7AEDB /* GLGridScene.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLGridScene.m; sourceTree = "<group>"; };
 		8E99B2A0182C013D00C7AEDB /* GLTileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTileNode.h; sourceTree = "<group>"; };
@@ -206,6 +209,8 @@
 				8ECA899B182371AE009D906F /* GLViewController.m */,
 				8E99B29D182BFE7600C7AEDB /* GLGridScene.h */,
 				8E99B29E182BFE7600C7AEDB /* GLGridScene.m */,
+				8E75B03E1842FFE3000AEEB8 /* GLGeneralHud.h */,
+				8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */,
 				8E75B02F184169BF000AEEB8 /* GLColorHud.h */,
 				8E75B030184169BF000AEEB8 /* GLColorHud.m */,
 				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
@@ -366,6 +371,7 @@
 				8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */,
 				8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */,
 				8ECA8992182371AE009D906F /* main.m in Sources */,
+				8E75B0401842FFE3000AEEB8 /* GLGeneralHud.m in Sources */,
 				8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */,
 				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,
 				8ECA899C182371AE009D906F /* GLViewController.m in Sources */,
