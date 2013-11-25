@@ -123,12 +123,8 @@
 
    [_hudLayer addChild:hudBackground];
 
-   SKTexture *expandRightTexture = [SKTexture textureWithImageNamed:@"expand_right"];
-   SKSpriteNode *expandRightButton = [[SKSpriteNode alloc] initWithTexture:expandRightTexture
-                                                                     color:[SKColor crayolaBlackCoralPearlColor]
-                                                                      size:expandRightTexture.size];
-
-   NSLog(@"expand_right size: %@", NSStringFromCGSize(expandRightButton.size));
+   SKSpriteNode *expandRightButton = [SKSpriteNode spriteNodeWithImageNamed:@"expand_right"];
+   expandRightButton.color = [SKColor crayolaBlackCoralPearlColor];
    expandRightButton.alpha = hudBackground.alpha;
    expandRightButton.colorBlendFactor = 1.0;
    [expandRightButton setScale:.25];
@@ -137,19 +133,15 @@
    expandRightButton.name = @"expand_right";
    [_hudLayer addChild:expandRightButton];
 
-   SKTexture *clearTexture = [SKTexture textureWithImageNamed:@"clear"];
-   SKSpriteNode *clearButton = [SKSpriteNode spriteNodeWithTexture:clearTexture];
-   
+   SKSpriteNode *clearButton = [SKSpriteNode spriteNodeWithImageNamed:@"clear"];
    [clearButton setScale:.25];
    clearButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
                                       HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING - 5,
                                       -clearButton.size.height/2.0);
    clearButton.name = @"clear";
    [_hudLayer addChild:clearButton];
-   
-   SKTexture *refreshTexture = [SKTexture textureWithImageNamed:@"refresh"];
-   SKSpriteNode *refreshButton = [SKSpriteNode spriteNodeWithTexture:refreshTexture];
 
+   SKSpriteNode *refreshButton = [SKSpriteNode spriteNodeWithImageNamed:@"refresh"];
    [refreshButton setScale:.25];
    refreshButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
                                         HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 60,
@@ -157,9 +149,7 @@
    refreshButton.name = @"refresh";
    [_hudLayer addChild:refreshButton];
 
-   SKTexture *startTexture = [SKTexture textureWithImageNamed:@"start"];
-   SKSpriteNode *startStopButton = [SKSpriteNode spriteNodeWithTexture:startTexture];
-
+   SKSpriteNode *startStopButton = [SKSpriteNode spriteNodeWithImageNamed:@"start"];
    [startStopButton setScale:.25];
    startStopButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
                                           HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 125,
@@ -167,9 +157,7 @@
    startStopButton.name = @"start_stop";
    [_hudLayer addChild:startStopButton];
 
-   SKTexture *gearTexture = [SKTexture textureWithImageNamed:@"gear"];
-   SKSpriteNode *gearButton = [SKSpriteNode spriteNodeWithTexture:gearTexture];
-
+   SKSpriteNode *gearButton = [SKSpriteNode spriteNodeWithImageNamed:@"gear"];
    [gearButton setScale:.25];
    gearButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - expandRightButton.size.width/2.0,
                                      -gearButton.size.height/2.0);
