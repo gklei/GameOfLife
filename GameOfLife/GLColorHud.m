@@ -153,9 +153,7 @@
    maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
-   SKAction *buttonActions = [SKAction group:@[changeButtonAlpha,
-                                               maintainPosition,
-                                               rotate]];
+   SKAction *buttonActions = [SKAction group:@[changeButtonAlpha, maintainPosition, rotate]];
    _isExpanded = YES;
    [self runAction:slide];
    [_backgroundLayer runAction:changeHudColor];
