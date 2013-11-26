@@ -7,6 +7,8 @@
 //
 
 #import "GLGridScene.h"
+#import "GLColorHud.h"
+#import "GLGeneralHud.h"
 #import "UIColor+Crayola.h"
 
 #include <OpenGLES/ES1/glext.h>
@@ -20,7 +22,7 @@
 #define LIVING YES
 #define DEAD   NO
 
-@interface GLGridScene()
+@interface GLGridScene() <ColorHudDelegate, CurrentColorDelegate>
 {
    GridDimensions _gridDimensions;
    NSArray *_tiles;
@@ -32,6 +34,7 @@
    GLTileNode *_currentTileBeingTouched;
 
    GLGeneralHud *_hudLayer;
+   GLGeneralHud *_generalHudLayer;
    GLColorHud *_colorHudLayer;
    NSArray *_coreFunctionButtons;
    BOOL _hudIsExpandedVertically;
@@ -82,7 +85,8 @@
    if (self = [super initWithSize:size])
    {
       [self setupGridWithSize:size];
-      [self setupHudWithSize:size];
+//      [self setupHudWithSize:size];
+//      [self setupGeneralHud];
       [self setupColorHud];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
       _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
@@ -105,8 +109,15 @@
    _colorHudLayer = [GLColorHud new];
    _colorHudLayer.delegate = self;
    _currentColor = _colorHudLayer.currentColor;
-   [self addChild:_colorHudLayer];
    _colorHudLayer.position = CGPointMake(self.size.width - 60, 0);
+   [self addChild:_colorHudLayer];
+}
+
+- (void)setupGeneralHud
+{
+   _generalHudLayer = [GLGeneralHud new];
+   _generalHudLayer.position = CGPointMake(-self.size.width + 60, 0);
+   [self addChild:_generalHudLayer];
 }
 
 - (void)setupHudWithSize:(CGSize)size
