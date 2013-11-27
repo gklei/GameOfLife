@@ -11,7 +11,7 @@
 
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 44
-#define COLOR_DROP_NUMBER 6
+#define COLOR_DROP_CAPACITY 6
 #define COLOR_DROP_SCALE .23
 #define SELECTED_COLOR_DROP_SCALE .3
 
@@ -68,7 +68,7 @@
 
 -(void)addColorDrops
 {
-   _colorDrops = [NSMutableArray arrayWithCapacity:COLOR_DROP_NUMBER];
+   _colorDrops = [NSMutableArray arrayWithCapacity:COLOR_DROP_CAPACITY];
    NSArray *colorDropColors = @[[SKColor crayolaCaribbeanGreenColor],
                                 [SKColor crayolaBlueColor],
                                 [SKColor crayolaRazzleDazzleRoseColor],
@@ -76,7 +76,7 @@
                                 [SKColor crayolaNeonCarrotColor],
                                 [SKColor crayolaLemonYellowColor]];
 
-   for (int i=0; i<COLOR_DROP_NUMBER; ++i)
+   for (int i=0; i<COLOR_DROP_CAPACITY; ++i)
    {
       SKSpriteNode *drop = [SKSpriteNode spriteNodeWithImageNamed:@"drop"];
       [drop setScale:COLOR_DROP_SCALE];
