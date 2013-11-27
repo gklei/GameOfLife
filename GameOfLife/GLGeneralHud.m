@@ -123,14 +123,6 @@
       button.hidden = hidden;
 }
 
-- (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
-{
-   SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
-
-   if ([node.name isEqualToString:@"expand_collapse"] && !moved)
-      [self toggle];
-}
-
 - (void)expandBottomBar
 {
    [self.delegate hudWillExpand:self];
@@ -223,14 +215,38 @@
     }];
 }
 
+- (void)expandSettings
+{
+   _settingsAreExpanded = YES;
+   SKAction *expand = [SKAction moveByX:0 y:_defaultSize.height - 60 duration:.5];
+   expand.timingMode = SKActionTimingEaseInEaseOut;
+   [_backgroundLayer runAction:expand];
+}
+
 - (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
 {
+   _settingsAreExpanded = NO;
+   SKAction *collapse = [SKAction moveByX:0 y:-(_defaultSize.height - 60) duration:.5];
+   collapse.timingMode = SKActionTimingEaseInEaseOut;
+   [_backgroundLayer runAction:collapse completion:completionBlock];
+}
+
+- (void)toggleSettings
+{
+   if (_settingsAreExpanded)
+      [self collapseSettingsWithCompletionBlock:nil];
+   else
+      [self expandSettings];
 }
 
 - (void)collapse
 {
    if (_settingsAreExpanded)
    {
+      [self collapseSettingsWithCompletionBlock:^
+      {
+         [self collapseBottomBar];
+      }];
    }
    else
    {
@@ -244,6 +260,16 @@
       [self expandBottomBar];
    else
       [self collapse];
+}
+
+- (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
+{
+   SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
+
+   if ([node isEqual:_expandCollapseButton] && !moved)
+      [self toggle];
+   else if ([node isEqual:_settingsButton] && !moved)
+      [self toggleSettings];
 }
 
 @end
