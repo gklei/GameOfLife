@@ -22,7 +22,7 @@
 #define LIVING YES
 #define DEAD   NO
 
-@interface GLGridScene() <ColorHudDelegate, CurrentColorDelegate>
+@interface GLGridScene() <GLColorHudDelegate, CurrentColorDelegate>
 {
    GridDimensions _gridDimensions;
    NSArray *_tiles;
@@ -86,8 +86,8 @@
    {
       [self setupGridWithSize:size];
 //      [self setupHudWithSize:size];
-//      [self setupGeneralHud];
-      [self setupColorHud];
+      [self setupGeneralHud];
+//      [self setupColorHud];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
       _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    }
@@ -116,7 +116,9 @@
 - (void)setupGeneralHud
 {
    _generalHudLayer = [GLGeneralHud new];
+   _generalHudLayer.delegate = self;
    _generalHudLayer.position = CGPointMake(-self.size.width + 60, 0);
+//   _generalHudLayer.position = CGPointMake(0, 60);
    [self addChild:_generalHudLayer];
 }
 
@@ -673,9 +675,18 @@
    [_hudLayer runAction:reposition];
 }
 
+- (void)generalHudWillExpand
+{
+   NSLog(@"general hud will expand");
+}
+
 - (void)colorHudDidExpand
 {
    _colorHudIsAnimating = NO;
+}
+
+- (void)generalHudDidExpand
+{
 }
 
 - (void)colorHudWillCollapse
@@ -685,14 +696,54 @@
    [_hudLayer runAction:reposition];
 }
 
+- (void)generalHudWillCollapse
+{
+}
+
 - (void)colorHudDidCollapse
 {
    _colorHudIsAnimating = NO;
 }
 
+- (void)generalHudDidCollapse
+{
+}
+
 - (SKColor *)currentColor
 {
    return _currentColor;
+}
+
+- (void)hudWillExpand:(GLHud *)hud
+{
+   if (hud == _colorHudLayer)
+      [self colorHudWillExpand];
+   else if (hud == _generalHudLayer)
+      [self generalHudWillExpand];
+}
+
+- (void)hudDidExpand:(GLHud *)hud
+{
+   if (hud == _colorHudLayer)
+      [self colorHudDidExpand];
+   else if (hud == _generalHudLayer)
+      [self generalHudDidExpand];
+}
+
+- (void)hudWillCollapse:(GLHud *)hud
+{
+   if (hud == _colorHudLayer)
+      [self colorHudWillCollapse];
+   else if (hud == _generalHudLayer)
+      [self generalHudWillCollapse];
+}
+
+- (void)hudDidCollapse:(GLHud *)hud
+{
+   if (hud == _colorHudLayer)
+      [self colorHudDidCollapse];
+   else if (hud == _generalHudLayer)
+      [self generalHudDidCollapse];
 }
 
 - (void)setCurrentColor:(SKColor *)currentColor

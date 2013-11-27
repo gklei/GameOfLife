@@ -10,7 +10,7 @@
 #import "UIColor+Crayola.h"
 
 @protocol CurrentColorDelegate <NSObject>
-- (SKColor *)currentColor;
+   - (SKColor *)currentColor;
 @end
 
 @interface GLTileNode : SKSpriteNode

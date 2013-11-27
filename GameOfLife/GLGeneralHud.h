@@ -7,7 +7,8 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "GLHud.h"
 
-@interface GLGeneralHud : SKNode
+@interface GLGeneralHud : GLHud
 
 @end

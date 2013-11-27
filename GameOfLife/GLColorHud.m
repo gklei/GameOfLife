@@ -113,7 +113,7 @@
       [_currentColorDrop runAction:deselectAnimation];
       [drop runAction:selectAnimation];
       _currentColorDrop = drop;
-      [_delegate setCurrentColor:_currentColorDrop.color];
+      [self.delegate setCurrentColor:_currentColorDrop.color];
    }
 }
 
@@ -131,7 +131,7 @@
 
 - (void)expand
 {
-   [_delegate colorHudWillExpand];
+   [self.delegate hudWillExpand:self];
 
    SKAction *slide = [SKAction moveTo:CGPointMake(0,0)
                                 duration:.5];
@@ -174,18 +174,18 @@
          SKAction *wait = [SKAction waitForDuration:.2];
          SKAction *rescaleSelectedDrop = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
          SKAction *scaleSequence = [SKAction sequence:@[wait, rescaleSelectedDrop]];
-         [_currentColorDrop runAction:scaleSequence completion:^{[_delegate colorHudDidExpand];}];
+         [_currentColorDrop runAction:scaleSequence completion:^{[self.delegate hudDidExpand:self];}];
       }
       else
       {
-         [_delegate colorHudDidExpand];
+         [self.delegate hudDidExpand:self];
       }
    }];
 }
 
 - (void)collapse
 {
-   [_delegate colorHudWillCollapse];
+   [self.delegate hudWillCollapse:self];
 
    SKAction *wait = [SKAction waitForDuration:.25];
    SKAction *slide = [SKAction moveTo:CGPointMake(_defaultSize.width - 60, 0)
@@ -227,7 +227,7 @@
       for (SKNode *drop in _colorDrops)
          [drop runAction:moveDrop];
 
-      [_delegate colorHudDidCollapse];
+      [self.delegate hudDidCollapse:self];
    }];
 }
 

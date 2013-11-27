@@ -7,20 +7,15 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "GLHud.h"
 
-@protocol ColorHudDelegate <NSObject>
-   - (void)colorHudWillExpand;
-   - (void)colorHudDidExpand;
-   - (void)colorHudWillCollapse;
-   - (void)colorHudDidCollapse;
-   - (void)setCurrentColor:(SKColor *)currentColor;
+@protocol GLColorHudDelegate <GLHudDelegate>
+   - (void)setCurrentColor:(SKColor *)color;
 @end
 
-@interface GLColorHud : SKNode
+@interface GLColorHud : GLHud
 
-@property (strong, nonatomic) id<ColorHudDelegate> delegate;
 @property (strong, nonatomic) SKColor *currentColor;
-
-- (void)handleTouch:(UITouch *)touch moved:(BOOL)moved;
+@property (strong, nonatomic) id<GLColorHudDelegate> delegate;
 
 @end
