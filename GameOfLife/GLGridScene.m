@@ -691,7 +691,6 @@
 
 - (void)generalHudWillExpand
 {
-   NSLog(@"general hud will expand");
    _generalHudIsAnimating = YES;
    SKAction *reposition = [SKAction moveByX:100 y:0 duration:.25];
    [_colorHudLayer runAction:reposition];

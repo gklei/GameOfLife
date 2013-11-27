@@ -9,6 +9,7 @@
 #import "GLGeneralHud.h"
 #import "UIColor+Crayola.h"
 
+#define CORE_FUNCTION_BUTTON_PADDING 52
 #define HUD_BUTTON_EDGE_PADDING 48
 #define HUD_BUTTON_PADDING 50
 
@@ -16,8 +17,14 @@
 {
    CGSize _defaultSize;
    SKSpriteNode *_backgroundLayer;
-   NSMutableArray *_coreFunctionButtons;
+   NSArray *_coreFunctionButtons;
+
    SKSpriteNode *_expandCollapseButton;
+   SKSpriteNode *_clearButton;
+   SKSpriteNode *_refreshButton;
+   SKSpriteNode *_startStopButton;
+   SKSpriteNode *_cameraButton;
+   SKSpriteNode *_settingsButton;
 
    BOOL _isExpanded;
    BOOL _settingsAreExpanded;
@@ -71,8 +78,49 @@
    [self addChild:_expandCollapseButton];
 }
 
+- (SKSpriteNode *)buttonWithFilename:(NSString *)fileName buttonName:(NSString *)buttonName
+{
+   SKSpriteNode *button = [SKSpriteNode spriteNodeWithImageNamed:fileName];
+   button.color = [SKColor whiteColor];
+   button.colorBlendFactor = 1.0;
+   [button setScale:.20];
+   button.name = buttonName;
+
+   return button;
+}
+
+- (void)setCoreFunctionButtonPositionsAndAddToLayer
+{
+   int multiplier = 0;
+   for (SKSpriteNode *button in _coreFunctionButtons)
+   {
+      [self addChild:button];
+      button.position = CGPointMake((multiplier++)*CORE_FUNCTION_BUTTON_PADDING + 80,
+                                    -button.size.height/2.0);
+   }
+}
+
 - (void)setupCoreFunctionButtons
 {
+   _clearButton = [self buttonWithFilename:@"clear" buttonName:@"clear"];
+   _refreshButton = [self buttonWithFilename:@"refresh" buttonName:@"refresh"];
+   _startStopButton = [self buttonWithFilename:@"start" buttonName:@"start_stop"];
+   _cameraButton = [self buttonWithFilename:@"camera" buttonName:@"camera"];
+   _settingsButton = [self buttonWithFilename:@"gear" buttonName:@"settings"];
+
+   _coreFunctionButtons = @[_clearButton,
+                            _refreshButton,
+                            _startStopButton,
+                            _cameraButton,
+                            _settingsButton];
+
+   [self setCoreFunctionButtonPositionsAndAddToLayer];
+}
+
+- (void)setCoreFunctionButtonsHidden:(BOOL)hidden
+{
+   for (SKSpriteNode *button in _coreFunctionButtons)
+      button.hidden = hidden;
 }
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
@@ -83,7 +131,7 @@
       [self toggle];
 }
 
-- (void)expand
+- (void)expandBottomBar
 {
    [self.delegate hudWillExpand:self];
 
@@ -118,11 +166,18 @@
    [_expandCollapseButton runAction:buttonActions
                  completion:^
     {
+       SKAction *moveButton = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.25];
+       moveButton.timingMode = SKActionTimingEaseInEaseOut;
+       for (SKNode *button in _coreFunctionButtons)
+       {
+          button.hidden = NO;
+          [button runAction:moveButton];
+       }
        [self.delegate hudDidExpand:self];
     }];
 }
 
-- (void)collapse
+- (void)collapseBottomBar
 {
    [self.delegate hudWillCollapse:self];
 
@@ -155,19 +210,38 @@
    SKAction *buttonActions = [SKAction group:@[buttonAnimations, buttonColorSequence]];
 
    _isExpanded = NO;
+   [self setCoreFunctionButtonsHidden:YES];
    [self runAction:slide];
    [_expandCollapseButton runAction:buttonActions];
    [_backgroundLayer runAction:hudBackgroundColorSequence
                     completion:^
     {
+       SKAction *moveButton = [SKAction moveByX:0 y:-HUD_BUTTON_EDGE_PADDING duration:.25];
+       for (SKNode *button in _coreFunctionButtons)
+          [button runAction:moveButton];
        [self.delegate hudDidCollapse:self];
     }];
+}
+
+- (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
+{
+}
+
+- (void)collapse
+{
+   if (_settingsAreExpanded)
+   {
+   }
+   else
+   {
+      [self collapseBottomBar];
+   }
 }
 
 - (void)toggle
 {
    if (!_isExpanded)
-      [self expand];
+      [self expandBottomBar];
    else
       [self collapse];
 }

@@ -18,6 +18,8 @@
 		8E75B03D1841C909000AEEB8 /* drop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B03B1841C909000AEEB8 /* drop@2x.png */; };
 		8E75B0401842FFE3000AEEB8 /* GLGeneralHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */; };
 		8E75B043184577E0000AEEB8 /* GLHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B042184577E0000AEEB8 /* GLHud.m */; };
+		8E75B04618466F7F000AEEB8 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B04418466F7F000AEEB8 /* camera.png */; };
+		8E75B04718466F7F000AEEB8 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B04518466F7F000AEEB8 /* camera@2x.png */; };
 		8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B29E182BFE7600C7AEDB /* GLGridScene.m */; };
 		8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A1182C013D00C7AEDB /* GLTileNode.m */; };
 		8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */; };
@@ -75,6 +77,8 @@
 		8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLGeneralHud.m; sourceTree = "<group>"; };
 		8E75B041184577E0000AEEB8 /* GLHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLHud.h; sourceTree = "<group>"; };
 		8E75B042184577E0000AEEB8 /* GLHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLHud.m; sourceTree = "<group>"; };
+		8E75B04418466F7F000AEEB8 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = camera.png; path = Images/camera.png; sourceTree = SOURCE_ROOT; };
+		8E75B04518466F7F000AEEB8 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "camera@2x.png"; path = "Images/camera@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E99B29D182BFE7600C7AEDB /* GLGridScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGridScene.h; sourceTree = "<group>"; };
 		8E99B29E182BFE7600C7AEDB /* GLGridScene.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLGridScene.m; sourceTree = "<group>"; };
 		8E99B2A0182C013D00C7AEDB /* GLTileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTileNode.h; sourceTree = "<group>"; };
@@ -143,6 +147,8 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8E75B04418466F7F000AEEB8 /* camera.png */,
+				8E75B04518466F7F000AEEB8 /* camera@2x.png */,
 				8E75B03A1841C909000AEEB8 /* drop.png */,
 				8E75B03B1841C909000AEEB8 /* drop@2x.png */,
 				8E75B03618419670000AEEB8 /* ring.png */,
@@ -353,7 +359,9 @@
 				8E99B2B9182F4D9000C7AEDB /* expand_right@2x.png in Resources */,
 				EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */,
 				8E99B2C1182F7A1200C7AEDB /* stop@2x.png in Resources */,
+				8E75B04718466F7F000AEEB8 /* camera@2x.png in Resources */,
 				8E75B03418419630000AEEB8 /* splash.png in Resources */,
+				8E75B04618466F7F000AEEB8 /* camera.png in Resources */,
 				8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
