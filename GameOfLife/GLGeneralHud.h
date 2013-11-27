@@ -9,6 +9,12 @@
 #import <SpriteKit/SpriteKit.h>
 #import "GLHud.h"
 
+@protocol GLGeneralHudDelegate <GLHudDelegate>
+- (void)toggleRunning;
+@end
+
 @interface GLGeneralHud : GLHud
+
+@property (strong, nonatomic) id<GLGeneralHudDelegate> delegate;
 
 @end

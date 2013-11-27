@@ -218,17 +218,27 @@
 - (void)expandSettings
 {
    _settingsAreExpanded = YES;
+
    SKAction *expand = [SKAction moveByX:0 y:_defaultSize.height - 60 duration:.5];
+   SKAction *spin = [SKAction rotateByAngle:M_PI*2 duration:.5];
    expand.timingMode = SKActionTimingEaseInEaseOut;
+   spin.timingMode = SKActionTimingEaseInEaseOut;
+
    [_backgroundLayer runAction:expand];
+   [_settingsButton runAction:spin];
 }
 
 - (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
 {
    _settingsAreExpanded = NO;
+
    SKAction *collapse = [SKAction moveByX:0 y:-(_defaultSize.height - 60) duration:.5];
+   SKAction *spin = [SKAction rotateByAngle:-M_PI*2 duration:.5];
    collapse.timingMode = SKActionTimingEaseInEaseOut;
+   spin.timingMode = SKActionTimingEaseInEaseOut;
+
    [_backgroundLayer runAction:collapse completion:completionBlock];
+   [_settingsButton runAction:spin];
 }
 
 - (void)toggleSettings
@@ -270,6 +280,8 @@
       [self toggle];
    else if ([node isEqual:_settingsButton] && !moved)
       [self toggleSettings];
+   else if ([node isEqual:_startStopButton])
+      [self.delegate toggleRunning];
 }
 
 @end

@@ -22,7 +22,7 @@
 #define LIVING YES
 #define DEAD   NO
 
-@interface GLGridScene() <GLColorHudDelegate, CurrentColorDelegate>
+@interface GLGridScene() <GLColorHudDelegate, GLGeneralHudDelegate, CurrentColorDelegate>
 {
    GridDimensions _gridDimensions;
    NSArray *_tiles;
@@ -549,7 +549,6 @@
    if ([_generalHudLayer containsPoint:_firstLocationOfTouch] &&
        [_generalHudLayer containsPoint:[touch locationInNode:self]])
    {
-//      [self hudPressedWithTouch:touch];
       [self generalHudPressedWithTouch:touch];
    }
    else if ([_colorHudLayer containsPoint:_firstLocationOfTouch] &&
