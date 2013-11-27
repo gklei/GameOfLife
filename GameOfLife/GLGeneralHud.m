@@ -17,6 +17,9 @@
    CGSize _defaultSize;
    SKSpriteNode *_backgroundLayer;
    NSMutableArray *_coreFunctionButtons;
+   SKSpriteNode *_expandCollapseButton;
+
+   BOOL _isExpanded;
 }
 @end
 
@@ -35,7 +38,7 @@
 
 - (void)setupBackgroundWithSize:(CGSize)size
 {
-   _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor crayolaBlackCoralPearlColor]
+   _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
                                                    size:size];
    _backgroundLayer.colorBlendFactor = 1.0;
    _backgroundLayer.alpha = .65;
@@ -47,50 +50,112 @@
 
 - (void)setupButtons
 {
-   SKSpriteNode *expandRightButton = [SKSpriteNode spriteNodeWithImageNamed:@"expand_right"];
-   expandRightButton.color = [SKColor whiteColor];
-   expandRightButton.alpha = _backgroundLayer.alpha;
-   expandRightButton.colorBlendFactor = 1.0;
-   [expandRightButton setScale:.23];
-   expandRightButton.position = CGPointMake(_defaultSize.width - expandRightButton.size.width/2 - 15,
-                                            HUD_BUTTON_EDGE_PADDING - expandRightButton.size.height/2);
-   expandRightButton.name = @"expand_right";
-   [self addChild:expandRightButton];
-//
-//   SKSpriteNode *clearButton = [SKSpriteNode spriteNodeWithImageNamed:@"clear"];
-//   [clearButton setScale:.25];
-//   clearButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - _defaultSize.width +
-//                                      HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING - 5,
-//                                      -clearButton.size.height/2.0);
-//   clearButton.name = @"clear";
-//   [self addChild:clearButton];
-//
-//   SKSpriteNode *refreshButton = [SKSpriteNode spriteNodeWithImageNamed:@"refresh"];
-//   [refreshButton setScale:.25];
-//   refreshButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - _defaultSize.width +
-//                                        HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 60,
-//                                        -refreshButton.size.height/2.0);
-//   refreshButton.name = @"refresh";
-//   [self addChild:refreshButton];
-//
-//   SKSpriteNode *startStopButton = [SKSpriteNode spriteNodeWithImageNamed:@"start"];
-//   [startStopButton setScale:.25];
-//   startStopButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - _defaultSize.width +
-//                                          HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 125,
-//                                          -startStopButton.size.height/2.0);
-//   startStopButton.name = @"start_stop";
-//   [self addChild:startStopButton];
-//
-//   SKSpriteNode *gearButton = [SKSpriteNode spriteNodeWithImageNamed:@"gear"];
-//   [gearButton setScale:.25];
-//   gearButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - expandRightButton.size.width/2.0,
-//                                     -gearButton.size.height/2.0);
-//   gearButton.name = @"gear";
-//   [self addChild:gearButton];
+   _expandCollapseButton = [SKSpriteNode spriteNodeWithImageNamed:@"expand_right"];
+   _expandCollapseButton.color = [SKColor crayolaBlackCoralPearlColor];
+   _expandCollapseButton.alpha = _backgroundLayer.alpha;
+   _expandCollapseButton.colorBlendFactor = 1.0;
+   [_expandCollapseButton setScale:.23];
+   _expandCollapseButton.position = CGPointMake(_defaultSize.width - _expandCollapseButton.size.width/2 - 15,
+                                            HUD_BUTTON_EDGE_PADDING - _expandCollapseButton.size.height/2);
+   _expandCollapseButton.name = @"expand_collapse";
+   [self addChild:_expandCollapseButton];
 }
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
+   SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
+
+   if ([node.name isEqualToString:@"expand_collapse"] && !moved)
+      [self toggle];
+}
+
+- (void)toggle
+{
+   if (!_isExpanded)
+      [self expand];
+   else
+      [self collapse];
+}
+
+- (void)expand
+{
+   [self.delegate hudWillExpand:self];
+
+   SKAction *slide = [SKAction moveTo:CGPointMake(0,0)
+                             duration:.5];
+   SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
+                                         colorBlendFactor:1.0
+                                                 duration:.5];
+   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:1.0
+                                              duration:.5];
+   SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor whiteColor]
+                                            colorBlendFactor:1.0
+                                                    duration:.5];
+   SKAction *maintainPosition = [SKAction moveByX:-(_defaultSize.width - 60) y:0
+                                         duration:.5];
+   SKAction *rotate = [SKAction rotateByAngle:M_PI
+                                     duration:.5];
+
+   slide.timingMode = SKActionTimingEaseInEaseOut;
+   changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
+   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
+   maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
+   rotate.timingMode = SKActionTimingEaseInEaseOut;
+
+   SKAction *buttonActions = [SKAction group:@[changeButtonAlpha,
+                                               changeButtonColor,
+                                               maintainPosition,
+                                               rotate]];
+   _isExpanded = YES;
+   [self runAction:slide];
+   [_backgroundLayer runAction:changeHudColor];
+   [_expandCollapseButton runAction:buttonActions
+                 completion:^
+    {
+       [self.delegate hudDidExpand:self];
+    }];
+}
+
+- (void)collapse
+{
+   [self.delegate hudWillCollapse:self];
+
+   SKAction *wait = [SKAction waitForDuration:.25];
+   SKAction *slide = [SKAction moveTo:CGPointMake(-_defaultSize.width + 60, 0)
+                             duration:.5];
+   SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor clearColor]
+                                         colorBlendFactor:1.0
+                                                 duration:.25];
+   SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
+                                            colorBlendFactor:1.0
+                                                    duration:.25];
+   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:_backgroundLayer.alpha
+                                              duration:.25];
+   SKAction *maintainPosition = [SKAction moveByX:_defaultSize.width - 60 y:0
+                                         duration:.5];
+   SKAction *rotate = [SKAction rotateByAngle:-M_PI duration:.5];
+
+   slide.timingMode = SKActionTimingEaseInEaseOut;
+   changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
+   changeButtonColor.timingMode = SKActionTimingEaseInEaseOut;
+   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
+   maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
+   rotate.timingMode = SKActionTimingEaseInEaseOut;
+
+   SKAction *hudBackgroundColorSequence = [SKAction sequence:@[wait, changeHudColor]];
+   SKAction *buttonAnimations = [SKAction group:@[maintainPosition, rotate]];
+   SKAction *buttonColorAnimations = [SKAction group:@[changeButtonAlpha, changeButtonColor]];
+   SKAction *buttonColorSequence = [SKAction sequence:@[wait, buttonColorAnimations]];
+   SKAction *buttonActions = [SKAction group:@[buttonAnimations, buttonColorSequence]];
+
+   _isExpanded = NO;
+   [self runAction:slide];
+   [_expandCollapseButton runAction:buttonActions];
+   [_backgroundLayer runAction:hudBackgroundColorSequence
+                    completion:^
+    {
+       [self.delegate hudDidCollapse:self];
+    }];
 }
 
 @end

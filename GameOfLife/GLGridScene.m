@@ -41,6 +41,7 @@
    BOOL _hudIsExpandedHorizontally;
    BOOL _hudIsAnimting;
    BOOL _colorHudIsAnimating;
+   BOOL _generalHudIsAnimating;
 
    SKColor *_currentColor;
 
@@ -87,7 +88,7 @@
       [self setupGridWithSize:size];
 //      [self setupHudWithSize:size];
       [self setupGeneralHud];
-//      [self setupColorHud];
+      [self setupColorHud];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
       _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    }
@@ -118,7 +119,6 @@
    _generalHudLayer = [GLGeneralHud new];
    _generalHudLayer.delegate = self;
    _generalHudLayer.position = CGPointMake(-self.size.width + 60, 0);
-//   _generalHudLayer.position = CGPointMake(0, 60);
    [self addChild:_generalHudLayer];
 }
 
@@ -491,9 +491,15 @@
       [_colorHudLayer handleTouch:touch moved:NO];
 }
 
+- (void)generalHudPressedWithTouch:(UITouch *)touch
+{
+   if (!_generalHudIsAnimating)
+      [_generalHudLayer handleTouch:touch moved:NO];
+}
+
 - (void)handleTouch:(UITouch *)touch
 {
-   if (![_hudLayer containsPoint:[touch locationInNode:self]] &&
+   if (![_generalHudLayer containsPoint:[touch locationInNode:self]] &&
        ![_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
       [self toggleLivingForTileAtTouch:touch];
@@ -520,23 +526,31 @@
 {
    UITouch *touch = touches.allObjects.lastObject;
    if (!_running &&
-       ![_hudLayer containsPoint:_firstLocationOfTouch] &&
+       ![_generalHudLayer containsPoint:_firstLocationOfTouch] &&
        ![_colorHudLayer containsPoint:_firstLocationOfTouch])
    {
       [self toggleLivingForTileAtTouch:touch];
    }
+
    if ([_colorHudLayer containsPoint:_firstLocationOfTouch])
+   {
       [_colorHudLayer handleTouch:touch moved:YES];
+   }
+   else if ([_generalHudLayer containsPoint:_firstLocationOfTouch])
+   {
+      [_generalHudLayer handleTouch:touch moved:YES];
+   }
 }
 
 - (void)touchesEnded:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
    UITouch *touch = touches.allObjects.lastObject;
-   if ([_hudLayer containsPoint:_firstLocationOfTouch] &&
-       [_hudLayer containsPoint:[touch locationInNode:self]])
+   if ([_generalHudLayer containsPoint:_firstLocationOfTouch] &&
+       [_generalHudLayer containsPoint:[touch locationInNode:self]])
    {
-      [self hudPressedWithTouch:touch];
+//      [self hudPressedWithTouch:touch];
+      [self generalHudPressedWithTouch:touch];
    }
    else if ([_colorHudLayer containsPoint:_firstLocationOfTouch] &&
        [_colorHudLayer containsPoint:[touch locationInNode:self]])
@@ -672,12 +686,15 @@
 {
    _colorHudIsAnimating = YES;
    SKAction *reposition = [SKAction moveByX:-100 y:0 duration:.25];
-   [_hudLayer runAction:reposition];
+   [_generalHudLayer runAction:reposition];
 }
 
 - (void)generalHudWillExpand
 {
    NSLog(@"general hud will expand");
+   _generalHudIsAnimating = YES;
+   SKAction *reposition = [SKAction moveByX:100 y:0 duration:.25];
+   [_colorHudLayer runAction:reposition];
 }
 
 - (void)colorHudDidExpand
@@ -687,17 +704,21 @@
 
 - (void)generalHudDidExpand
 {
+   _generalHudIsAnimating = NO;
 }
 
 - (void)colorHudWillCollapse
 {
    _colorHudIsAnimating = YES;
    SKAction *reposition = [SKAction moveByX:100 y:0 duration:.25];
-   [_hudLayer runAction:reposition];
+   [_generalHudLayer runAction:reposition];
 }
 
 - (void)generalHudWillCollapse
 {
+   _generalHudIsAnimating = YES;
+   SKAction *reposition = [SKAction moveByX:-100 y:0 duration:.25];
+   [_colorHudLayer runAction:reposition];
 }
 
 - (void)colorHudDidCollapse
@@ -707,6 +728,7 @@
 
 - (void)generalHudDidCollapse
 {
+   _generalHudIsAnimating = NO;
 }
 
 - (SKColor *)currentColor

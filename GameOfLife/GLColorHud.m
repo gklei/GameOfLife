@@ -145,7 +145,7 @@
                                                     duration:.5];
    SKAction *maintainPosition = [SKAction moveByX:(_defaultSize.width - 60) y:0
                                          duration:.5];
-   SKAction *rotate = [SKAction rotateByAngle:-M_PI*2
+   SKAction *rotate = [SKAction rotateByAngle:M_PI*2
                                      duration:.5];
 
    slide.timingMode = SKActionTimingEaseInEaseOut;
@@ -154,7 +154,10 @@
    maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
-   SKAction *buttonActions = [SKAction group:@[changeButtonAlpha, changeButtonColor, maintainPosition, rotate]];
+   SKAction *buttonActions = [SKAction group:@[changeButtonAlpha,
+                                               changeButtonColor,
+                                               maintainPosition,
+                                               rotate]];
    _isExpanded = YES;
    [self runAction:slide];
    [_backgroundLayer runAction:changeHudColor];
@@ -200,7 +203,7 @@
                                               duration:.25];
    SKAction *maintainPosition = [SKAction moveByX:-(_defaultSize.width - 60) y:0
                                          duration:.5];
-   SKAction *rotate = [SKAction rotateByAngle:M_PI*2 duration:.5];
+   SKAction *rotate = [SKAction rotateByAngle:-M_PI*2 duration:.5];
 
    slide.timingMode = SKActionTimingEaseInEaseOut;
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
