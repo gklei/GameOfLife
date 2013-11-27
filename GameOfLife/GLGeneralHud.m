@@ -20,6 +20,7 @@
    SKSpriteNode *_expandCollapseButton;
 
    BOOL _isExpanded;
+   BOOL _settingsAreExpanded;
 }
 @end
 
@@ -50,15 +51,28 @@
 
 - (void)setupButtons
 {
+   [self setupExpandCollapseButton];
+   [self setupCoreFunctionButtons];
+}
+
+- (void)setupExpandCollapseButton
+{
    _expandCollapseButton = [SKSpriteNode spriteNodeWithImageNamed:@"expand_right"];
    _expandCollapseButton.color = [SKColor crayolaBlackCoralPearlColor];
    _expandCollapseButton.alpha = _backgroundLayer.alpha;
    _expandCollapseButton.colorBlendFactor = 1.0;
    [_expandCollapseButton setScale:.23];
-   _expandCollapseButton.position = CGPointMake(_defaultSize.width - _expandCollapseButton.size.width/2 - 15,
-                                            HUD_BUTTON_EDGE_PADDING - _expandCollapseButton.size.height/2);
+
+   _expandCollapseButton.position =
+   CGPointMake(_defaultSize.width - _expandCollapseButton.size.width/2 - 15,
+               HUD_BUTTON_EDGE_PADDING - _expandCollapseButton.size.height/2);
+
    _expandCollapseButton.name = @"expand_collapse";
    [self addChild:_expandCollapseButton];
+}
+
+- (void)setupCoreFunctionButtons
+{
 }
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
@@ -67,14 +81,6 @@
 
    if ([node.name isEqualToString:@"expand_collapse"] && !moved)
       [self toggle];
-}
-
-- (void)toggle
-{
-   if (!_isExpanded)
-      [self expand];
-   else
-      [self collapse];
 }
 
 - (void)expand
@@ -156,6 +162,14 @@
     {
        [self.delegate hudDidCollapse:self];
     }];
+}
+
+- (void)toggle
+{
+   if (!_isExpanded)
+      [self expand];
+   else
+      [self collapse];
 }
 
 @end
