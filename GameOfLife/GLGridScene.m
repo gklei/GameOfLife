@@ -54,6 +54,7 @@
    _gridDimensions.columns = size.width/TILESIZE.width;
    
    for (int yPos = 0; yPos < size.height; yPos += TILESIZE.height)
+   {
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
       {
          GLTileNode *tile = [GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
@@ -63,6 +64,7 @@
          tile.delegate = self;
          [self addChild:tile];
       }
+   }
    _tiles = [NSArray arrayWithArray:self.children];
    
    
