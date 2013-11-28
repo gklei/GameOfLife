@@ -49,7 +49,7 @@
    _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
                                                    size:size];
    _backgroundLayer.colorBlendFactor = 1.0;
-   _backgroundLayer.alpha = .65;
+   _backgroundLayer.alpha = .7;
    _backgroundLayer.anchorPoint = CGPointMake(0, 1);
    _backgroundLayer.position = CGPointMake(0, 60);
    _backgroundLayer.name = @"general_hud_background";

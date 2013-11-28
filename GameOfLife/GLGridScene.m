@@ -272,18 +272,6 @@
 //      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
 }
 
-- (void)colorHudPressedWithTouch:(UITouch *)touch
-{
-   if (!_colorHudIsAnimating)
-      [_colorHudLayer handleTouch:touch moved:NO];
-}
-
-- (void)generalHudPressedWithTouch:(UITouch *)touch
-{
-   if (!_generalHudIsAnimating)
-      [_generalHudLayer handleTouch:touch moved:NO];
-}
-
 - (void)handleTouch:(UITouch *)touch
 {
    if (![_generalHudLayer containsPoint:[touch locationInNode:self]] &&
@@ -335,12 +323,24 @@
       [self generalHudPressedWithTouch:touch];
    }
    else if ([_colorHudLayer containsPoint:_firstLocationOfTouch] &&
-       [_colorHudLayer containsPoint:[touch locationInNode:self]])
+            [_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
       [self colorHudPressedWithTouch:touch];
    }
 
    _currentTileBeingTouched = nil;
+}
+
+- (void)colorHudPressedWithTouch:(UITouch *)touch
+{
+   if (!_colorHudIsAnimating)
+      [_colorHudLayer handleTouch:touch moved:NO];
+}
+
+- (void)generalHudPressedWithTouch:(UITouch *)touch
+{
+   if (!_generalHudIsAnimating)
+      [_generalHudLayer handleTouch:touch moved:NO];
 }
 
 - (int)getNorthSouthLiveCountForTileAtIndex:(int)index

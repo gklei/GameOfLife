@@ -10,6 +10,7 @@
 
 @implementation GLHud
 
+// empty implementation -- this should be overridden by subclasses
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
 }
