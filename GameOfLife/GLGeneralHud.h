@@ -10,7 +10,10 @@
 #import "GLHud.h"
 
 @protocol GLGeneralHudDelegate <GLHudDelegate>
+- (void)clear;
+- (void)restore;
 - (void)toggleRunning;
+- (void)grabScreenShot;
 @end
 
 @interface GLGeneralHud : GLHud

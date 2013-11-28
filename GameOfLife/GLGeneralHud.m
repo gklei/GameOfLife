@@ -21,7 +21,7 @@
 
    SKSpriteNode *_expandCollapseButton;
    SKSpriteNode *_clearButton;
-   SKSpriteNode *_refreshButton;
+   SKSpriteNode *_restoreButton;
    SKSpriteNode *_startStopButton;
    SKSpriteNode *_cameraButton;
    SKSpriteNode *_settingsButton;
@@ -103,13 +103,13 @@
 - (void)setupCoreFunctionButtons
 {
    _clearButton = [self buttonWithFilename:@"clear" buttonName:@"clear"];
-   _refreshButton = [self buttonWithFilename:@"refresh" buttonName:@"refresh"];
+   _restoreButton = [self buttonWithFilename:@"restore" buttonName:@"restore"];
    _startStopButton = [self buttonWithFilename:@"start" buttonName:@"start_stop"];
    _cameraButton = [self buttonWithFilename:@"camera" buttonName:@"camera"];
    _settingsButton = [self buttonWithFilename:@"gear" buttonName:@"settings"];
 
    _coreFunctionButtons = @[_clearButton,
-                            _refreshButton,
+                            _restoreButton,
                             _startStopButton,
                             _cameraButton,
                             _settingsButton];
@@ -274,14 +274,23 @@
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
+   if (moved)
+      return;
+   
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
 
-   if ([node isEqual:_expandCollapseButton] && !moved)
+   if (node == _expandCollapseButton)
       [self toggle];
-   else if ([node isEqual:_settingsButton] && !moved)
+   else if (node == _settingsButton)
       [self toggleSettings];
-   else if ([node isEqual:_startStopButton])
+   else if (node == _startStopButton)
       [self.delegate toggleRunning];
+   else if (node == _clearButton)
+      [self.delegate clear];
+   else if (node == _restoreButton)
+      [self.delegate restore];
+   else if (node == _cameraButton)
+      [self.delegate grabScreenShot];
 }
 
 @end

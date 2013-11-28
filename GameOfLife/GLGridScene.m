@@ -211,7 +211,7 @@
    return nil;
 }
 
-- (void)restoreGameState
+- (void)restore
 {
    CGPoint center = CGPointMake(_gridDimensions.columns * TILESIZE.width * 0.5,
                                 _gridDimensions.rows * TILESIZE.height * 0.5);
@@ -239,6 +239,12 @@
 //      [self updateColorCenter];
       [self storeGameState];
    }
+}
+
+- (void)clear
+{
+   for (GLTileNode *tile in _tiles)
+      [tile clearTile];
 }
 
 - (void)grabScreenShot
@@ -452,12 +458,6 @@
    _hudIsExpandedVertically = !_hudIsExpandedVertically;
 }
 
-- (void)clearGrid
-{
-   for (GLTileNode *tile in _tiles)
-        [tile clearTile];
-}
-
 - (void)hudPressedWithTouch:(UITouch *)touch
 {
    SKNode *node = [_hudLayer nodeAtPoint:[touch locationInNode:_hudLayer]];
@@ -472,12 +472,12 @@
    if ([node.name isEqualToString:@"clear"])
    {
       if (!_running)
-         [self clearGrid];
+         [self clear];
    }
    if ([node.name isEqualToString:@"refresh"])
    {
       if (!_running)
-         [self restoreGameState];
+         [self restore];
    }
    if ([node.name isEqualToString:@"start_stop"])
    {
@@ -513,7 +513,7 @@
    _firstLocationOfTouch = [touch locationInNode:self];
    if (_running)
    {
-      [self grabScreenShot];
+//      [self grabScreenShot];
    }
    else
    {
@@ -642,7 +642,6 @@
    liveCount += [self getWestBlockLiveCountForTileAtIndex:index];
    return liveCount;
 }
-
 
 - (void)updateColorCenter
 {
