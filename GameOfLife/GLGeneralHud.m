@@ -78,6 +78,21 @@
    [self addChild:_expandCollapseButton];
 }
 
+- (void)updateStartStopButtonForState:(GL_GAME_STATE)state
+{
+   switch (state)
+   {
+      case GL_RUNNING:
+         _startStopButton.texture = [SKTexture textureWithImageNamed:@"stop"];
+         break;
+      case GL_STOPPED:
+         _startStopButton.texture = [SKTexture textureWithImageNamed:@"start"];
+         break;
+      default:
+         break;
+   }
+}
+
 - (SKSpriteNode *)buttonWithFilename:(NSString *)fileName buttonName:(NSString *)buttonName
 {
    SKSpriteNode *button = [SKSpriteNode spriteNodeWithImageNamed:fileName];
@@ -127,8 +142,7 @@
 {
    [self.delegate hudWillExpand:self];
 
-   SKAction *slide = [SKAction moveTo:CGPointMake(0,0)
-                             duration:.5];
+   SKAction *slide = [SKAction moveByX:_defaultSize.width - 60 y:0 duration:.5];
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                          colorBlendFactor:1.0
                                                  duration:.5];
@@ -150,10 +164,12 @@
 
    SKAction *buttonActions = [SKAction group:@[changeButtonAlpha,
                                                changeButtonColor,
-                                               maintainPosition,
                                                rotate]];
    _isExpanded = YES;
-   [self runAction:slide];
+   [_backgroundLayer runAction:slide];
+   for (SKNode *button in _coreFunctionButtons)
+      [button runAction:slide];
+
    [_backgroundLayer runAction:changeHudColor];
    [_expandCollapseButton runAction:buttonActions
                  completion:^
@@ -174,8 +190,7 @@
    [self.delegate hudWillCollapse:self];
 
    SKAction *wait = [SKAction waitForDuration:.25];
-   SKAction *slide = [SKAction moveTo:CGPointMake(-_defaultSize.width + 60, 0)
-                             duration:.5];
+   SKAction *slide = [SKAction moveByX:-_defaultSize.width + 60 y:0 duration:.5];
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor clearColor]
                                          colorBlendFactor:1.0
                                                  duration:.25];
@@ -196,14 +211,17 @@
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
    SKAction *hudBackgroundColorSequence = [SKAction sequence:@[wait, changeHudColor]];
-   SKAction *buttonAnimations = [SKAction group:@[maintainPosition, rotate]];
    SKAction *buttonColorAnimations = [SKAction group:@[changeButtonAlpha, changeButtonColor]];
    SKAction *buttonColorSequence = [SKAction sequence:@[wait, buttonColorAnimations]];
-   SKAction *buttonActions = [SKAction group:@[buttonAnimations, buttonColorSequence]];
+   SKAction *buttonActions = [SKAction group:@[rotate, buttonColorSequence]];
 
    _isExpanded = NO;
    [self setCoreFunctionButtonsHidden:YES];
-   [self runAction:slide];
+   
+   [_backgroundLayer runAction:slide];
+   for (SKNode *button in _coreFunctionButtons)
+      [button runAction:slide];
+
    [_expandCollapseButton runAction:buttonActions];
    [_backgroundLayer runAction:hudBackgroundColorSequence
                     completion:^
@@ -237,8 +255,8 @@
    collapse.timingMode = SKActionTimingEaseInEaseOut;
    spin.timingMode = SKActionTimingEaseInEaseOut;
 
-   [_backgroundLayer runAction:collapse completion:completionBlock];
-   [_settingsButton runAction:spin];
+   [_backgroundLayer runAction:collapse];
+   [_settingsButton runAction:spin completion:completionBlock];
 }
 
 - (void)toggleSettings

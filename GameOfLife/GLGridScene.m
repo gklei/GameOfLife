@@ -33,13 +33,8 @@
    BOOL _running;
    GLTileNode *_currentTileBeingTouched;
 
-   GLGeneralHud *_hudLayer;
    GLGeneralHud *_generalHudLayer;
    GLColorHud *_colorHudLayer;
-   NSArray *_coreFunctionButtons;
-   BOOL _hudIsExpandedVertically;
-   BOOL _hudIsExpandedHorizontally;
-   BOOL _hudIsAnimting;
    BOOL _colorHudIsAnimating;
    BOOL _generalHudIsAnimating;
 
@@ -86,7 +81,6 @@
    if (self = [super initWithSize:size])
    {
       [self setupGridWithSize:size];
-//      [self setupHudWithSize:size];
       [self setupGeneralHud];
       [self setupColorHud];
       _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
@@ -122,68 +116,9 @@
    [self addChild:_generalHudLayer];
 }
 
-- (void)setupHudWithSize:(CGSize)size
+- (BOOL)isRunning
 {
-   _hudLayer = [GLGeneralHud new];
-   
-   SKColor *backgroundColor = [SKColor clearColor];
-   SKSpriteNode *hudBackground = [SKSpriteNode spriteNodeWithColor:backgroundColor
-                                                              size:size];
-   hudBackground.alpha = 0.65;
-   hudBackground.position = HUD_POSITION_DEFAULT;
-   hudBackground.anchorPoint = CGPointMake(1, 1);
-   hudBackground.name = @"hud_background";
-
-   [_hudLayer addChild:hudBackground];
-
-   SKSpriteNode *expandRightButton = [SKSpriteNode spriteNodeWithImageNamed:@"expand_right"];
-   expandRightButton.color = [SKColor crayolaBlackCoralPearlColor];
-   expandRightButton.alpha = hudBackground.alpha;
-   expandRightButton.colorBlendFactor = 1.0;
-   [expandRightButton setScale:.25];
-   expandRightButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - expandRightButton.size.width/2.0,
-                                            HUD_BUTTON_EDGE_PADDING - expandRightButton.size.height/2.0);
-   expandRightButton.name = @"expand_right";
-   [_hudLayer addChild:expandRightButton];
-
-   SKSpriteNode *clearButton = [SKSpriteNode spriteNodeWithImageNamed:@"clear"];
-   [clearButton setScale:.25];
-   clearButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
-                                      HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING - 5,
-                                      -clearButton.size.height/2.0);
-   clearButton.name = @"clear";
-   [_hudLayer addChild:clearButton];
-
-   SKSpriteNode *refreshButton = [SKSpriteNode spriteNodeWithImageNamed:@"refresh"];
-   [refreshButton setScale:.25];
-   refreshButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
-                                        HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 60,
-                                        -refreshButton.size.height/2.0);
-   refreshButton.name = @"refresh";
-   [_hudLayer addChild:refreshButton];
-
-   SKSpriteNode *startStopButton = [SKSpriteNode spriteNodeWithImageNamed:@"start"];
-   [startStopButton setScale:.25];
-   startStopButton.position = CGPointMake(HUD_POSITION_DEFAULT.x - hudBackground.size.width +
-                                          HUD_BUTTON_EDGE_PADDING + HUD_BUTTON_PADDING + 125,
-                                          -startStopButton.size.height/2.0);
-   startStopButton.name = @"start_stop";
-   [_hudLayer addChild:startStopButton];
-
-   SKSpriteNode *gearButton = [SKSpriteNode spriteNodeWithImageNamed:@"gear"];
-   [gearButton setScale:.25];
-   gearButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - expandRightButton.size.width/2.0,
-                                     -gearButton.size.height/2.0);
-   gearButton.name = @"gear";
-   [_hudLayer addChild:gearButton];
-
-   _coreFunctionButtons = @[expandRightButton,
-                            clearButton,
-                            refreshButton,
-                            startStopButton,
-                            gearButton];
-   
-   [self addChild:_hudLayer];
+   return _running;
 }
 
 - (void)toggleRunning
@@ -193,8 +128,7 @@
                     dyingDuration:duration];
 
    _running = !_running;
-   SKTexture *texture = [SKTexture textureWithImageNamed:(_running)? @"stop" : @"start"];
-   ((SKSpriteNode *)[_hudLayer childNodeWithName:@"start_stop"]).texture = texture;
+   [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED];
 }
 
 - (GLTileNode *)tileAtTouch:(UITouch *)touch
@@ -236,7 +170,6 @@
    {
       _currentTileBeingTouched = tile;
       [tile updateLivingAndColor:!tile.isLiving];
-//      [self updateColorCenter];
       [self storeGameState];
    }
 }
@@ -339,152 +272,6 @@
 //      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
 }
 
-- (void)slideHUDAndUpdateCoreFunctionButtons
-{
-   if (!_hudIsExpandedHorizontally)
-   {
-      SKSpriteNode *hudBackground = (SKSpriteNode *)[_hudLayer childNodeWithName:@"hud_background"];
-      SKAction *colorAnimation = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
-                                            colorBlendFactor:1.0
-                                                    duration:.25];
-      SKAction *buttonColorAnimation = [SKAction colorizeWithColor:[SKColor whiteColor]
-                                                  colorBlendFactor:1.0
-                                                          duration:.5];
-      SKAction *buttonAlphaAnimation = [SKAction fadeAlphaTo:1.0 duration:.5];
-
-      colorAnimation.timingMode = SKActionTimingEaseInEaseOut;
-      [hudBackground runAction:colorAnimation];
-      [[_hudLayer childNodeWithName:@"expand_right"] runAction:[SKAction group:@[buttonColorAnimation,
-                                                                                 buttonAlphaAnimation]]];
-   }
-
-   int xOffset = self.size.width - HUD_POSITION_DEFAULT.x;
-   int colorHudXOffset = 100;
-   xOffset *= (_hudIsExpandedHorizontally)? -1 : 1;
-   colorHudXOffset *= (_hudIsExpandedHorizontally)? -1 : 1;
-
-   for (SKSpriteNode *button in _coreFunctionButtons)
-      button.hidden = _hudIsExpandedHorizontally && (![button.name isEqualToString:@"expand_right"]);
-
-   if (_hudIsExpandedHorizontally)
-   {
-      SKSpriteNode *hudBackground = (SKSpriteNode *)[_hudLayer childNodeWithName:@"hud_background"];
-      SKAction *wait = [SKAction waitForDuration:.25];
-      SKAction *colorAnimation = [SKAction colorizeWithColor:[SKColor clearColor]
-                                            colorBlendFactor:1.0
-                                                    duration:.25];
-      colorAnimation.timingMode = SKActionTimingEaseInEaseOut;
-      SKAction *buttonColorAnimation = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
-                                                  colorBlendFactor:1.0
-                                                          duration:.5];
-      SKAction *buttonAlphaAnimation = [SKAction fadeAlphaTo:hudBackground.alpha duration:.5];
-      SKAction *backgroundSequence = [SKAction sequence:@[wait, colorAnimation]];
-      SKAction *buttonSequence = [SKAction sequence:@[wait, [SKAction group:@[buttonColorAnimation,
-                                                                              buttonAlphaAnimation]]]];
-      [hudBackground runAction:backgroundSequence];
-      [[_hudLayer childNodeWithName:@"expand_right"] runAction:buttonSequence];
-   }
-
-   SKAction *toggleHUDHorizontally = [SKAction moveByX:xOffset y:0 duration:.5];
-   toggleHUDHorizontally.timingMode = SKActionTimingEaseInEaseOut;
-   [_hudLayer runAction:toggleHUDHorizontally];
-
-   SKAction *repositionColorHud = [SKAction moveByX:colorHudXOffset y:0 duration:.25];
-   repositionColorHud.timingMode = SKActionTimingEaseInEaseOut;
-   [_colorHudLayer runAction:repositionColorHud];
-
-   SKAction *rotateAction = [SKAction rotateByAngle:(_hudIsExpandedHorizontally)? -M_PI : M_PI
-                                           duration:.5];
-
-   SKAction *moveAction = [SKAction moveByX:-xOffset y:0 duration:.5];
-   moveAction.timingMode = SKActionTimingEaseInEaseOut;
-
-   [[_hudLayer childNodeWithName:@"expand_right"] runAction:moveAction];
-   [[_hudLayer childNodeWithName:@"expand_right"] runAction:rotateAction completion:
-    ^{
-       for (SKSpriteNode *button in _coreFunctionButtons)
-       {
-          if (![button.name isEqualToString:@"expand_right"])
-          {
-             int yOffset = HUD_BUTTON_PADDING;
-             if (!_hudIsExpandedHorizontally)
-                yOffset *= -1;
-
-             SKAction *moveIconsAction = [SKAction moveByX:0 y:yOffset duration:.2];
-             moveIconsAction.timingMode = SKActionTimingEaseInEaseOut;
-             [button runAction:moveIconsAction];
-          }
-       }
-       _hudIsAnimting = NO;
-    }];
-
-   _hudIsExpandedHorizontally = !_hudIsExpandedHorizontally;
-}
-
-- (void)toggleHUDHorizontally
-{
-   _hudIsAnimting = YES; // this is set back to NO in the completion
-                         // block in slideHUDAndUpdateCoreFunctionButtons
-   if (_hudIsExpandedVertically)
-   {
-      [self toggleHUDVerticallyWithCompletionBlock:
-       ^(){
-          [self slideHUDAndUpdateCoreFunctionButtons];
-       }];
-   }
-   else
-   {
-      [self slideHUDAndUpdateCoreFunctionButtons];
-   }
-}
-
-- (void)toggleHUDVerticallyWithCompletionBlock:(void (^)())completionBlock
-{
-   int yOffset = self.size.height - HUD_POSITION_DEFAULT.y;
-   if (_hudIsExpandedVertically)
-      yOffset *= -1;
-
-   SKAction *toggleHUDVertically = [SKAction moveByX:0 y:yOffset duration:.5];
-   SKAction *keepCoreFunctionButtonAtBottom = [SKAction moveByX:0 y:-yOffset duration:.5];
-
-   toggleHUDVertically.timingMode = SKActionTimingEaseInEaseOut;
-   keepCoreFunctionButtonAtBottom.timingMode = SKActionTimingEaseInEaseOut;
-
-   for (SKNode *button in _coreFunctionButtons)
-      [button runAction:keepCoreFunctionButtonAtBottom];
-
-   [_hudLayer runAction:toggleHUDVertically completion:completionBlock];
-
-   _hudIsExpandedVertically = !_hudIsExpandedVertically;
-}
-
-- (void)hudPressedWithTouch:(UITouch *)touch
-{
-   SKNode *node = [_hudLayer nodeAtPoint:[touch locationInNode:_hudLayer]];
-   if ([node.name isEqualToString:@"expand_right"] && !_hudIsAnimting)
-   {
-      [self toggleHUDHorizontally];
-   }
-   if ([node.name isEqualToString:@"gear"])
-   {
-      [self toggleHUDVerticallyWithCompletionBlock:nil];
-   }
-   if ([node.name isEqualToString:@"clear"])
-   {
-      if (!_running)
-         [self clear];
-   }
-   if ([node.name isEqualToString:@"refresh"])
-   {
-      if (!_running)
-         [self restore];
-   }
-   if ([node.name isEqualToString:@"start_stop"])
-   {
-      [self toggleRunning];
-   }
-}
-
 - (void)colorHudPressedWithTouch:(UITouch *)touch
 {
    if (!_colorHudIsAnimating)
@@ -511,11 +298,7 @@
 {
    UITouch *touch = touches.allObjects.lastObject;
    _firstLocationOfTouch = [touch locationInNode:self];
-   if (_running)
-   {
-//      [self grabScreenShot];
-   }
-   else
+   if (!_running)
    {
       [self handleTouch:touches.allObjects.lastObject];
    }
