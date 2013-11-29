@@ -61,6 +61,7 @@
 
    float dist = [self colorDistance];
    SKColor *currentColor = [_delegate currentColor];
+
    CGFloat r, g, b;
 
    if ([currentColor getRed:&r green:&g blue:&b alpha:0])

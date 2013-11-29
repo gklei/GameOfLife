@@ -83,7 +83,7 @@
 		8E75B0481846CB23000AEEB8 /* restore.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = restore.png; path = Images/restore.png; sourceTree = SOURCE_ROOT; };
 		8E75B0491846CB23000AEEB8 /* restore@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "restore@2x.png"; path = "Images/restore@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B04C18490C0A000AEEB8 /* GLGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGrid.h; sourceTree = "<group>"; };
-		8E75B04D18490C0A000AEEB8 /* GLGrid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLGrid.m; sourceTree = "<group>"; };
+		8E75B04D18490C0A000AEEB8 /* GLGrid.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLGrid.m; sourceTree = "<group>"; };
 		8E99B29D182BFE7600C7AEDB /* GLGridScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGridScene.h; sourceTree = "<group>"; };
 		8E99B29E182BFE7600C7AEDB /* GLGridScene.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLGridScene.m; sourceTree = "<group>"; };
 		8E99B2A0182C013D00C7AEDB /* GLTileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTileNode.h; sourceTree = "<group>"; };

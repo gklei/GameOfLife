@@ -27,7 +27,6 @@
 {
    GLGrid *_grid;
 
-   NSArray *_tiles;
    CFTimeInterval _lastGenerationTime;
 
    std::vector<BOOL> _storedTileStates;
@@ -51,37 +50,8 @@
 
 - (void)setupGridWithSize:(CGSize)size
 {
-   GridDimensions gridDimensions;
-   gridDimensions.rows = size.width/TILESIZE.width;
-   gridDimensions.columns = size.width/TILESIZE.width;
-
-   _grid = [GLGrid new];
-   _grid.dimensions = gridDimensions;
-
-   self.backgroundColor = [SKColor crayolaPeriwinkleColor];
-   
-   for (int yPos = 0; yPos < size.height; yPos += TILESIZE.height)
-   {
-      for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
-      {
-         GLTileNode *tile = [GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
-                                                                yPos + 0.5,
-                                                                TILESIZE.width - 1,
-                                                                TILESIZE.height - 1)];
-         tile.delegate = self;
-         [self addChild:tile];
-      }
-   }
-   _tiles = [NSArray arrayWithArray:self.children];
-   
-   CGPoint boardCenter = CGPointMake(_grid.dimensions.columns * TILESIZE.width * 0.5,
-                                     _grid.dimensions.rows * TILESIZE.height * 0.5);
-   float maxBoardDistance = sqrt(size.width * size.width + size.height * size.height);
-   for (GLTileNode *tile in _tiles)
-   {
-      tile.boardMaxDistance = maxBoardDistance;
-      [tile setColorCenter:boardCenter];
-   }
+   _grid = [[GLGrid alloc] initWithSize:size];
+   [self addChild:_grid];
 }
 
 -(id)initWithSize:(CGSize)size
@@ -91,8 +61,11 @@
       [self setupGridWithSize:size];
       [self setupGeneralHud];
       [self setupColorHud];
-      _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
-      _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
+
+      _nextGenerationTileStates = std::vector<BOOL>(_grid.tiles.count, DEAD);
+      _storedTileStates = std::vector<BOOL>(_grid.tiles.count, DEAD);
+
+      self.backgroundColor = [SKColor crayolaPeriwinkleColor];
    }
    return self;
 }
@@ -100,7 +73,7 @@
 - (void)setTilesBirthingDuration:(float)bDuration
                    dyingDuration:(float)dDuration
 {
-   for (GLTileNode *tile in _tiles)
+   for (GLTileNode *tile in _grid.tiles)
    {
       tile.birthingDuration = bDuration;
       tile.dyingDuration = dDuration;
@@ -139,27 +112,13 @@
    [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED];
 }
 
-- (GLTileNode *)tileAtTouch:(UITouch *)touch
-{
-   CGPoint location = [touch locationInNode:self];
-   
-   int row = location.y / TILESIZE.height;
-   int col = location.x / TILESIZE.width;
-   int arrayIndex = row*_grid.dimensions.columns + col;
-
-   if (arrayIndex >= 0 && arrayIndex < _tiles.count)
-      return [_tiles objectAtIndex:arrayIndex];
-
-   return nil;
-}
-
 - (void)restore
 {
    CGPoint center = CGPointMake(_grid.dimensions.columns * TILESIZE.width * 0.5,
                                 _grid.dimensions.rows * TILESIZE.height * 0.5);
-   for (int i = 0; i < _tiles.count; ++i)
+   for (int i = 0; i < _grid.tiles.count; ++i)
    {
-      GLTileNode * tile = [_tiles objectAtIndex:i];
+      GLTileNode * tile = [_grid.tiles objectAtIndex:i];
       tile.isLiving = _storedTileStates[i];
       [tile setColorCenter:center];
    }
@@ -167,13 +126,13 @@
 
 - (void)storeGameState
 {
-   for (int i = 0; i < _tiles.count; ++i)
-      _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
+   for (int i = 0; i < _grid.tiles.count; ++i)
+      _storedTileStates[i] = ((GLTileNode *)[_grid.tiles objectAtIndex:i]).isLiving;
 }
 
 - (void)toggleLivingForTileAtTouch:(UITouch *)touch
 {
-   GLTileNode *tile = [self tileAtTouch:touch];
+   GLTileNode *tile = [_grid tileAtTouch:touch];
    if (_currentTileBeingTouched != tile)
    {
       _currentTileBeingTouched = tile;
@@ -184,7 +143,7 @@
 
 - (void)clear
 {
-   for (GLTileNode *tile in _tiles)
+   for (GLTileNode *tile in _grid.tiles)
       [tile clearTile];
 }
 
@@ -359,19 +318,19 @@
 
    // north
    neighborIndex = index + _grid.dimensions.columns;
-   if (neighborIndex >= _tiles.count)
-      neighborIndex -= _tiles.count;
+   if (neighborIndex >= _grid.tiles.count)
+      neighborIndex -= _grid.tiles.count;
 
-   tile = [_tiles objectAtIndex:neighborIndex];
+   tile = [_grid.tiles objectAtIndex:neighborIndex];
    if (tile.isLiving)
       ++liveCount;
 
    // south
    neighborIndex = index - _grid.dimensions.columns;
    if (neighborIndex < 0)
-      neighborIndex += _tiles.count;
+      neighborIndex += _grid.tiles.count;
 
-   tile = [_tiles objectAtIndex:neighborIndex];
+   tile = [_grid.tiles objectAtIndex:neighborIndex];
    if (tile.isLiving)
       ++liveCount;
 
@@ -386,7 +345,7 @@
    if (neighborIdx / _grid.dimensions.columns > index / _grid.dimensions.columns)
       neighborIdx -= _grid.dimensions.columns;
    
-   if (((GLTileNode *)[_tiles objectAtIndex:neighborIdx]).isLiving)
+   if (((GLTileNode *)[_grid.tiles objectAtIndex:neighborIdx]).isLiving)
       ++result;
    
    result += [self getNorthSouthLiveCountForTileAtIndex:neighborIdx];
@@ -402,7 +361,7 @@
    if (neighborIdx < 0 || neighborIdx / _grid.dimensions.columns < index / _grid.dimensions.columns)
       neighborIdx += _grid.dimensions.columns;
    
-   if (((GLTileNode *)[_tiles objectAtIndex:neighborIdx]).isLiving)
+   if (((GLTileNode *)[_grid.tiles objectAtIndex:neighborIdx]).isLiving)
       ++result;
    
    result += [self getNorthSouthLiveCountForTileAtIndex:neighborIdx];
@@ -419,7 +378,7 @@
    
    liveCount += [self getWestBlockLiveCountForTileAtIndex:index];
    
-   GLTileNode * tile = [_tiles objectAtIndex:index];
+   GLTileNode * tile = [_grid.tiles objectAtIndex:index];
    
    // behold, the meaning of life (all in one statement)
    return ((tile.isLiving && liveCount == 2) || (liveCount == 3))? LIVING : DEAD;
@@ -427,7 +386,7 @@
 
 - (int)getLiveCountAtIndex:(int)index
 {
-   int liveCount = ((GLTileNode *)[_tiles objectAtIndex:index]).isLiving;
+   int liveCount = ((GLTileNode *)[_grid.tiles objectAtIndex:index]).isLiving;
    liveCount += [self getNorthSouthLiveCountForTileAtIndex:index];
    liveCount += [self getEastBlockLiveCountForTileAtIndex:index];
    liveCount += [self getWestBlockLiveCountForTileAtIndex:index];
@@ -438,7 +397,7 @@
 {
    int maxCount = [self getLiveCountAtIndex:0];
    int indexForColorCenter = 0;
-   for (int i = 1; i < _tiles.count; ++i)
+   for (int i = 1; i < _grid.tiles.count; ++i)
    {
       int count = [self getLiveCountAtIndex:i];
       if (count > maxCount)
@@ -448,19 +407,19 @@
       }
    }
    
-   CGPoint position = ((GLTileNode *)[_tiles objectAtIndex:indexForColorCenter]).position;
-   for (int i = 0; i < _tiles.count; ++i)
-      ((GLTileNode *)[_tiles objectAtIndex:i]).colorCenter = position;
+   CGPoint position = ((GLTileNode *)[_grid.tiles objectAtIndex:indexForColorCenter]).position;
+   for (int i = 0; i < _grid.tiles.count; ++i)
+      ((GLTileNode *)[_grid.tiles objectAtIndex:i]).colorCenter = position;
 }
 
 - (void)updateNextGeneration:(CFTimeInterval)currentTime
 {
    _lastGenerationTime = currentTime;
-   for (int i = 0; i < _tiles.count; ++i)
+   for (int i = 0; i < _grid.tiles.count; ++i)
       _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
    
-   for (int i = 0; i < _tiles.count; ++i)
-      ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
+   for (int i = 0; i < _grid.tiles.count; ++i)
+      ((GLTileNode *)[_grid.tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
    
    [self updateColorCenter];
 }
@@ -559,7 +518,7 @@
 - (void)setCurrentColor:(SKColor *)currentColor
 {
    _currentColor = currentColor;
-   for (GLTileNode *tile in _tiles)
+   for (GLTileNode *tile in _grid.tiles)
       [tile updateColor];
 }
 

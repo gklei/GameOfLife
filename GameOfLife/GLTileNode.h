@@ -13,6 +13,10 @@
    - (SKColor *)currentColor;
 @end
 
+@protocol GLTileColorDelegate <NSObject>
+   - (SKColor *)currentTileColor;
+@end
+
 @interface GLTileNode : SKSpriteNode
 
 + (id)tileWithRect:(CGRect)rect;
@@ -32,5 +36,6 @@
 @property (nonatomic, assign) CGPoint colorCenter;
 
 @property (strong, nonatomic) id<CurrentColorDelegate> delegate;
+@property (strong, nonatomic) id<GLTileColorDelegate> colorDelegate;
 
 @end
