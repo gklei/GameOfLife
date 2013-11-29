@@ -53,6 +53,7 @@
    _backgroundLayer.anchorPoint = CGPointMake(0, 1);
    _backgroundLayer.position = CGPointMake(0, 60);
    _backgroundLayer.name = @"general_hud_background";
+
    [self addChild:_backgroundLayer];
 }
 
@@ -122,6 +123,8 @@
    _startStopButton = [self buttonWithFilename:@"start" buttonName:@"start_stop"];
    _cameraButton = [self buttonWithFilename:@"camera" buttonName:@"camera"];
    _settingsButton = [self buttonWithFilename:@"gear" buttonName:@"settings"];
+
+//   NSArray *names = [CIFilter filterNamesInCategory:kCICategoryStylize];
 
    _coreFunctionButtons = @[_clearButton,
                             _restoreButton,
