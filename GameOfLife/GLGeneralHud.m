@@ -44,6 +44,18 @@
    return self;
 }
 
+- (SKSpriteNode *)buttonWithFilename:(NSString *)fileName buttonName:(NSString *)buttonName
+{
+   SKSpriteNode *button = [SKSpriteNode spriteNodeWithImageNamed:fileName];
+   button.color = [SKColor whiteColor];
+   button.colorBlendFactor = 1.0;
+   [button setScale:.20];
+   button.name = buttonName;
+
+   return button;
+}
+
+#pragma mark Setup Methods
 - (void)setupBackgroundWithSize:(CGSize)size
 {
    _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
@@ -79,32 +91,6 @@
    [self addChild:_expandCollapseButton];
 }
 
-- (void)updateStartStopButtonForState:(GL_GAME_STATE)state
-{
-   switch (state)
-   {
-      case GL_RUNNING:
-         _startStopButton.texture = [SKTexture textureWithImageNamed:@"stop"];
-         break;
-      case GL_STOPPED:
-         _startStopButton.texture = [SKTexture textureWithImageNamed:@"start"];
-         break;
-      default:
-         break;
-   }
-}
-
-- (SKSpriteNode *)buttonWithFilename:(NSString *)fileName buttonName:(NSString *)buttonName
-{
-   SKSpriteNode *button = [SKSpriteNode spriteNodeWithImageNamed:fileName];
-   button.color = [SKColor whiteColor];
-   button.colorBlendFactor = 1.0;
-   [button setScale:.20];
-   button.name = buttonName;
-
-   return button;
-}
-
 - (void)setCoreFunctionButtonPositionsAndAddToLayer
 {
    int multiplier = 0;
@@ -133,12 +119,28 @@
    [self setCoreFunctionButtonPositionsAndAddToLayer];
 }
 
+- (void)updateStartStopButtonForState:(GL_GAME_STATE)state
+{
+   switch (state)
+   {
+      case GL_RUNNING:
+         _startStopButton.texture = [SKTexture textureWithImageNamed:@"stop"];
+         break;
+      case GL_STOPPED:
+         _startStopButton.texture = [SKTexture textureWithImageNamed:@"start"];
+         break;
+      default:
+         break;
+   }
+}
+
 - (void)setCoreFunctionButtonsHidden:(BOOL)hidden
 {
    for (SKSpriteNode *button in _coreFunctionButtons)
       button.hidden = hidden;
 }
 
+#pragma mark HUD Toggling Methods
 - (void)expandBottomBar
 {
    [self.delegate hudWillExpand:self];
@@ -291,6 +293,7 @@
       [self collapse];
 }
 
+#pragma mark GLHud Touch Method
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
    if (moved)
