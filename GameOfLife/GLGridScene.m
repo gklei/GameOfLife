@@ -7,6 +7,7 @@
 //
 
 #import "GLGridScene.h"
+#import "GLGrid.h"
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
 #import "UIColor+Crayola.h"
@@ -24,7 +25,8 @@
 
 @interface GLGridScene() <GLColorHudDelegate, GLGeneralHudDelegate, CurrentColorDelegate>
 {
-   GridDimensions _gridDimensions;
+   GLGrid *_grid;
+
    NSArray *_tiles;
    CFTimeInterval _lastGenerationTime;
 
@@ -48,10 +50,14 @@
 
 - (void)setupGridWithSize:(CGSize)size
 {
-   self.backgroundColor = [SKColor crayolaPeriwinkleColor];
+   GridDimensions gridDimensions;
+   gridDimensions.rows = size.width/TILESIZE.width;
+   gridDimensions.columns = size.width/TILESIZE.width;
 
-   _gridDimensions.rows = size.height/TILESIZE.height;
-   _gridDimensions.columns = size.width/TILESIZE.width;
+   _grid = [GLGrid new];
+   _grid.dimensions = gridDimensions;
+
+   self.backgroundColor = [SKColor crayolaPeriwinkleColor];
    
    for (int yPos = 0; yPos < size.height; yPos += TILESIZE.height)
    {
@@ -68,8 +74,8 @@
    _tiles = [NSArray arrayWithArray:self.children];
    
    
-   CGPoint boardCenter = CGPointMake(_gridDimensions.columns * TILESIZE.width * 0.5,
-                                     _gridDimensions.rows * TILESIZE.height * 0.5);
+   CGPoint boardCenter = CGPointMake(_grid.dimensions.columns * TILESIZE.width * 0.5,
+                                     _grid.dimensions.rows * TILESIZE.height * 0.5);
    float maxBoardDistance = sqrt(size.width * size.width + size.height * size.height);
    for (GLTileNode *tile in _tiles)
    {
@@ -139,7 +145,7 @@
    
    int row = location.y / TILESIZE.height;
    int col = location.x / TILESIZE.width;
-   int arrayIndex = row*_gridDimensions.columns + col;
+   int arrayIndex = row*_grid.dimensions.columns + col;
 
    if (arrayIndex >= 0 && arrayIndex < _tiles.count)
       return [_tiles objectAtIndex:arrayIndex];
@@ -149,8 +155,8 @@
 
 - (void)restore
 {
-   CGPoint center = CGPointMake(_gridDimensions.columns * TILESIZE.width * 0.5,
-                                _gridDimensions.rows * TILESIZE.height * 0.5);
+   CGPoint center = CGPointMake(_grid.dimensions.columns * TILESIZE.width * 0.5,
+                                _grid.dimensions.rows * TILESIZE.height * 0.5);
    for (int i = 0; i < _tiles.count; ++i)
    {
       GLTileNode * tile = [_tiles objectAtIndex:i];
@@ -352,7 +358,7 @@
    int neighborIndex;
 
    // north
-   neighborIndex = index + _gridDimensions.columns;
+   neighborIndex = index + _grid.dimensions.columns;
    if (neighborIndex >= _tiles.count)
       neighborIndex -= _tiles.count;
 
@@ -361,7 +367,7 @@
       ++liveCount;
 
    // south
-   neighborIndex = index - _gridDimensions.columns;
+   neighborIndex = index - _grid.dimensions.columns;
    if (neighborIndex < 0)
       neighborIndex += _tiles.count;
 
@@ -377,8 +383,8 @@
    int result = 0;
    
    int neighborIdx = index + 1;
-   if (neighborIdx / _gridDimensions.columns > index / _gridDimensions.columns)
-      neighborIdx -= _gridDimensions.columns;
+   if (neighborIdx / _grid.dimensions.columns > index / _grid.dimensions.columns)
+      neighborIdx -= _grid.dimensions.columns;
    
    if (((GLTileNode *)[_tiles objectAtIndex:neighborIdx]).isLiving)
       ++result;
@@ -393,8 +399,8 @@
    int result = 0;
    
    int neighborIdx = index - 1;
-   if (neighborIdx < 0 || neighborIdx / _gridDimensions.columns < index / _gridDimensions.columns)
-      neighborIdx += _gridDimensions.columns;
+   if (neighborIdx < 0 || neighborIdx / _grid.dimensions.columns < index / _grid.dimensions.columns)
+      neighborIdx += _grid.dimensions.columns;
    
    if (((GLTileNode *)[_tiles objectAtIndex:neighborIdx]).isLiving)
       ++result;

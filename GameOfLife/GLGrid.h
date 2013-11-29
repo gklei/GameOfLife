@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+typedef struct {
+   int rows;
+   int columns;
+} GridDimensions;
+
 @interface GLGrid : NSObject
+
+@property (nonatomic, assign) GridDimensions dimensions;
 
 @end
