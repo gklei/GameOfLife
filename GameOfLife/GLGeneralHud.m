@@ -124,8 +124,6 @@
    _cameraButton = [self buttonWithFilename:@"camera" buttonName:@"camera"];
    _settingsButton = [self buttonWithFilename:@"gear" buttonName:@"settings"];
 
-//   NSArray *names = [CIFilter filterNamesInCategory:kCICategoryStylize];
-
    _coreFunctionButtons = @[_clearButton,
                             _restoreButton,
                             _startStopButton,
