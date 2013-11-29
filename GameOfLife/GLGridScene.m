@@ -32,16 +32,17 @@
 
    std::vector<BOOL> _storedTileStates;
    std::vector<BOOL> _nextGenerationTileStates;
-   BOOL _running;
+
    GLTileNode *_currentTileBeingTouched;
 
    GLGeneralHud *_generalHudLayer;
    GLColorHud *_colorHudLayer;
+
    BOOL _colorHudIsAnimating;
    BOOL _generalHudIsAnimating;
+   BOOL _running;
 
    SKColor *_currentColor;
-
    CGPoint _firstLocationOfTouch;
 }
 @end
@@ -72,7 +73,6 @@
       }
    }
    _tiles = [NSArray arrayWithArray:self.children];
-   
    
    CGPoint boardCenter = CGPointMake(_grid.dimensions.columns * TILESIZE.width * 0.5,
                                      _grid.dimensions.rows * TILESIZE.height * 0.5);
