@@ -54,6 +54,12 @@
    [self addChild:_grid];
 }
 
+- (void)setupVariables
+{
+   _nextGenerationTileStates = std::vector<BOOL>(_grid.tiles.count, DEAD);
+   _storedTileStates = std::vector<BOOL>(_grid.tiles.count, DEAD);
+}
+
 -(id)initWithSize:(CGSize)size
 {
    if (self = [super initWithSize:size])
@@ -61,9 +67,7 @@
       [self setupGridWithSize:size];
       [self setupGeneralHud];
       [self setupColorHud];
-
-      _nextGenerationTileStates = std::vector<BOOL>(_grid.tiles.count, DEAD);
-      _storedTileStates = std::vector<BOOL>(_grid.tiles.count, DEAD);
+      [self setupVariables];
 
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
    }
@@ -95,11 +99,6 @@
    _generalHudLayer.delegate = self;
    _generalHudLayer.position = CGPointMake(-self.size.width + 60, 0);
    [self addChild:_generalHudLayer];
-}
-
-- (BOOL)isRunning
-{
-   return _running;
 }
 
 - (void)toggleRunning
