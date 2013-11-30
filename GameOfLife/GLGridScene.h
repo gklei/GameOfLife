@@ -11,6 +11,4 @@
 
 @interface GLGridScene : SKScene
 
-- (void)toggleRunning;
-
 @end

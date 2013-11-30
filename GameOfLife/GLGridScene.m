@@ -15,23 +15,11 @@
 #include <OpenGLES/ES1/glext.h>
 #include <vector>
 
-// NOTE: both TILESIZE.width and TILESIZE.height must be greater than 1
-#define HUD_POSITION_DEFAULT CGPointMake(60, 60)
-#define HUD_BUTTON_EDGE_PADDING 48
-#define HUD_BUTTON_PADDING 50
-#define TILESIZE CGSizeMake(20, 20)
-#define LIVING YES
-#define DEAD   NO
-
-@interface GLGridScene() <GLColorHudDelegate, GLGeneralHudDelegate, CurrentColorDelegate>
+@interface GLGridScene() <GLColorHudDelegate, GLGeneralHudDelegate>
 {
    GLGrid *_grid;
 
-   CFTimeInterval _lastGenerationTime;
-
-   std::vector<BOOL> _storedTileStates;
-   std::vector<BOOL> _nextGenerationTileStates;
-
+   CGPoint _firstLocationOfTouch;
    GLTileNode *_currentTileBeingTouched;
 
    GLGeneralHud *_generalHudLayer;
@@ -41,8 +29,7 @@
    BOOL _generalHudIsAnimating;
    BOOL _running;
 
-   SKColor *_currentColor;
-   CGPoint _firstLocationOfTouch;
+   CFTimeInterval _lastGenerationTime;
 }
 @end
 
@@ -54,12 +41,6 @@
    [self addChild:_grid];
 }
 
-- (void)setupVariables
-{
-   _nextGenerationTileStates = std::vector<BOOL>(_grid.tiles.count, DEAD);
-   _storedTileStates = std::vector<BOOL>(_grid.tiles.count, DEAD);
-}
-
 -(id)initWithSize:(CGSize)size
 {
    if (self = [super initWithSize:size])
@@ -67,29 +48,19 @@
       [self setupGridWithSize:size];
       [self setupGeneralHud];
       [self setupColorHud];
-      [self setupVariables];
 
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
    }
    return self;
 }
 
-- (void)setTilesBirthingDuration:(float)bDuration
-                   dyingDuration:(float)dDuration
-{
-   for (GLTileNode *tile in _grid.tiles)
-   {
-      tile.birthingDuration = bDuration;
-      tile.dyingDuration = dDuration;
-   }
-}
-
 - (void)setupColorHud
 {
    _colorHudLayer = [GLColorHud new];
    _colorHudLayer.delegate = self;
-   _currentColor = _colorHudLayer.currentColor;
    _colorHudLayer.position = CGPointMake(self.size.width - 60, 0);
+   
+   [_grid setCurrentColor:_colorHudLayer.currentColor];
    [self addChild:_colorHudLayer];
 }
 
@@ -101,32 +72,19 @@
    [self addChild:_generalHudLayer];
 }
 
-- (void)toggleRunning
+- (void)toggleRunningButtonPressed
 {
    float duration = (_running)? .15 : .35;
-   [self setTilesBirthingDuration:duration
+   [_grid setTilesBirthingDuration:duration
                     dyingDuration:duration];
 
    _running = !_running;
    [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED];
 }
 
-- (void)restore
+- (void)restoreButtonPressed
 {
-   CGPoint center = CGPointMake(_grid.dimensions.columns * TILESIZE.width * 0.5,
-                                _grid.dimensions.rows * TILESIZE.height * 0.5);
-   for (int i = 0; i < _grid.tiles.count; ++i)
-   {
-      GLTileNode * tile = [_grid.tiles objectAtIndex:i];
-      tile.isLiving = _storedTileStates[i];
-      [tile setColorCenter:center];
-   }
-}
-
-- (void)storeGameState
-{
-   for (int i = 0; i < _grid.tiles.count; ++i)
-      _storedTileStates[i] = ((GLTileNode *)[_grid.tiles objectAtIndex:i]).isLiving;
+   [_grid restoreGrid];
 }
 
 - (void)toggleLivingForTileAtTouch:(UITouch *)touch
@@ -136,17 +94,16 @@
    {
       _currentTileBeingTouched = tile;
       [tile updateLivingAndColor:!tile.isLiving];
-      [self storeGameState];
+      [_grid storeGridState];
    }
 }
 
-- (void)clear
+- (void)clearButtonPressed
 {
-   for (GLTileNode *tile in _grid.tiles)
-      [tile clearTile];
+   [_grid clearGrid];
 }
 
-- (void)grabScreenShot
+- (void)screenShotButtonPressed
 {
    CGFloat scale = self.view.contentScaleFactor;
    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
@@ -309,124 +266,13 @@
       [_generalHudLayer handleTouch:touch moved:NO];
 }
 
-- (int)getNorthSouthLiveCountForTileAtIndex:(int)index
-{
-   GLTileNode *tile;
-   int liveCount = 0;
-   int neighborIndex;
-
-   // north
-   neighborIndex = index + _grid.dimensions.columns;
-   if (neighborIndex >= _grid.tiles.count)
-      neighborIndex -= _grid.tiles.count;
-
-   tile = [_grid.tiles objectAtIndex:neighborIndex];
-   if (tile.isLiving)
-      ++liveCount;
-
-   // south
-   neighborIndex = index - _grid.dimensions.columns;
-   if (neighborIndex < 0)
-      neighborIndex += _grid.tiles.count;
-
-   tile = [_grid.tiles objectAtIndex:neighborIndex];
-   if (tile.isLiving)
-      ++liveCount;
-
-   return liveCount;
-}
-
-- (int)getEastBlockLiveCountForTileAtIndex:(int)index
-{
-   int result = 0;
-   
-   int neighborIdx = index + 1;
-   if (neighborIdx / _grid.dimensions.columns > index / _grid.dimensions.columns)
-      neighborIdx -= _grid.dimensions.columns;
-   
-   if (((GLTileNode *)[_grid.tiles objectAtIndex:neighborIdx]).isLiving)
-      ++result;
-   
-   result += [self getNorthSouthLiveCountForTileAtIndex:neighborIdx];
-   
-   return result;
-}
-
-- (int)getWestBlockLiveCountForTileAtIndex:(int)index
-{
-   int result = 0;
-   
-   int neighborIdx = index - 1;
-   if (neighborIdx < 0 || neighborIdx / _grid.dimensions.columns < index / _grid.dimensions.columns)
-      neighborIdx += _grid.dimensions.columns;
-   
-   if (((GLTileNode *)[_grid.tiles objectAtIndex:neighborIdx]).isLiving)
-      ++result;
-   
-   result += [self getNorthSouthLiveCountForTileAtIndex:neighborIdx];
-   
-   return result;
-}
-
-- (BOOL)getIsLivingForNextGenerationAtIndex:(int)index
-{
-   int liveCount = [self getNorthSouthLiveCountForTileAtIndex:index];
-   liveCount += [self getEastBlockLiveCountForTileAtIndex:index];
-   
-   if (liveCount > 3) return DEAD; // optimization - no need to check any further
-   
-   liveCount += [self getWestBlockLiveCountForTileAtIndex:index];
-   
-   GLTileNode * tile = [_grid.tiles objectAtIndex:index];
-   
-   // behold, the meaning of life (all in one statement)
-   return ((tile.isLiving && liveCount == 2) || (liveCount == 3))? LIVING : DEAD;
-}
-
-- (int)getLiveCountAtIndex:(int)index
-{
-   int liveCount = ((GLTileNode *)[_grid.tiles objectAtIndex:index]).isLiving;
-   liveCount += [self getNorthSouthLiveCountForTileAtIndex:index];
-   liveCount += [self getEastBlockLiveCountForTileAtIndex:index];
-   liveCount += [self getWestBlockLiveCountForTileAtIndex:index];
-   return liveCount;
-}
-
-- (void)updateColorCenter
-{
-   int maxCount = [self getLiveCountAtIndex:0];
-   int indexForColorCenter = 0;
-   for (int i = 1; i < _grid.tiles.count; ++i)
-   {
-      int count = [self getLiveCountAtIndex:i];
-      if (count > maxCount)
-      {
-         maxCount = count;
-         indexForColorCenter = i;
-      }
-   }
-   
-   CGPoint position = ((GLTileNode *)[_grid.tiles objectAtIndex:indexForColorCenter]).position;
-   for (int i = 0; i < _grid.tiles.count; ++i)
-      ((GLTileNode *)[_grid.tiles objectAtIndex:i]).colorCenter = position;
-}
-
-- (void)updateNextGeneration:(CFTimeInterval)currentTime
-{
-   _lastGenerationTime = currentTime;
-   for (int i = 0; i < _grid.tiles.count; ++i)
-      _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
-   
-   for (int i = 0; i < _grid.tiles.count; ++i)
-      ((GLTileNode *)[_grid.tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
-   
-   [self updateColorCenter];
-}
-
 -(void)update:(CFTimeInterval)currentTime
 {
    if (_running && currentTime - _lastGenerationTime > .8)
-      [self updateNextGeneration:currentTime];
+   {
+      _lastGenerationTime = currentTime;
+      [_grid updateNextGeneration];
+   }
 }
 
 - (void)colorHudWillExpand
@@ -477,11 +323,6 @@
    _generalHudIsAnimating = NO;
 }
 
-- (SKColor *)currentColor
-{
-   return _currentColor;
-}
-
 - (void)hudWillExpand:(GLHud *)hud
 {
    if (hud == _colorHudLayer)
@@ -516,9 +357,7 @@
 
 - (void)setCurrentColor:(SKColor *)currentColor
 {
-   _currentColor = currentColor;
-   for (GLTileNode *tile in _grid.tiles)
-      [tile updateColor];
+   [_grid setCurrentColor:currentColor];
 }
 
 @end

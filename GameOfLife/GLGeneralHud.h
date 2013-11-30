@@ -15,10 +15,10 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
 };
 
 @protocol GLGeneralHudDelegate <GLHudDelegate>
-   - (void)clear;
-   - (void)restore;
-   - (void)toggleRunning;
-   - (void)grabScreenShot;
+   - (void)clearButtonPressed;
+   - (void)restoreButtonPressed;
+   - (void)toggleRunningButtonPressed;
+   - (void)screenShotButtonPressed;
 @end
 
 @interface GLGeneralHud : GLHud

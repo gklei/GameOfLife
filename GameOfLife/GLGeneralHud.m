@@ -306,13 +306,13 @@
    else if (node == _settingsButton)
       [self toggleSettings];
    else if (node == _startStopButton)
-      [self.delegate toggleRunning];
+      [self.delegate toggleRunningButtonPressed];
    else if (node == _clearButton)
-      [self.delegate clear];
+      [self.delegate clearButtonPressed];
    else if (node == _restoreButton)
-      [self.delegate restore];
+      [self.delegate restoreButtonPressed];
    else if (node == _cameraButton)
-      [self.delegate grabScreenShot];
+      [self.delegate screenShotButtonPressed];
 }
 
 @end

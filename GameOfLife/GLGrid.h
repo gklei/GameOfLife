@@ -22,5 +22,14 @@ typedef struct {
 
 - (id)initWithSize:(CGSize)size;
 - (GLTileNode *)tileAtTouch:(UITouch *)touch;
+- (void)updateNextGeneration;
+- (void)storeGridState;
+- (void)restoreGrid;
+- (void)clearGrid;
+
+- (void)setCurrentColor:(SKColor *)color;
+
+- (void)setTilesBirthingDuration:(float)bDuration
+                   dyingDuration:(float)dDuration;
 
 @end

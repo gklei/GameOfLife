@@ -9,10 +9,6 @@
 #import <SpriteKit/SpriteKit.h>
 #import "UIColor+Crayola.h"
 
-@protocol CurrentColorDelegate <NSObject>
-   - (SKColor *)currentColor;
-@end
-
 @protocol GLTileColorDelegate <NSObject>
    - (SKColor *)currentTileColor;
 @end
@@ -35,7 +31,6 @@
 @property (nonatomic, assign) float maxColorDistance;
 @property (nonatomic, assign) CGPoint colorCenter;
 
-@property (strong, nonatomic) id<CurrentColorDelegate> delegate;
-@property (strong, nonatomic) id<GLTileColorDelegate> colorDelegate;
+@property (strong, nonatomic) id<GLTileColorDelegate> delegate;
 
 @end

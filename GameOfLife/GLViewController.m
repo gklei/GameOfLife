@@ -62,13 +62,6 @@
    [super viewWillDisappear:animated];
 }
 
-- (void)motionEnded:(UIEventSubtype)motion
-          withEvent:(UIEvent *)event
-{
-   if (motion == UIEventSubtypeMotionShake)
-      [_gridScene toggleRunning];
-}
-
 - (BOOL)shouldAutorotate
 {
    return NO;
