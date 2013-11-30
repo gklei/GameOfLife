@@ -71,14 +71,12 @@
    return button;
 }
 
-- (SKSpriteNode *)backgroundNodeForButton:(SKSpriteNode *)button
+- (SKSpriteNode *)hitBoxForButton:(SKSpriteNode *)button
 {
-   // for debugging...
-   SKColor *debuggingBgColor = [SKColor clearColor];
-   CGSize backgroundSize = CGSizeMake(button.size.width + 20, 60);
-   SKSpriteNode *buttonBackground = [SKSpriteNode spriteNodeWithColor:debuggingBgColor
-                                                                 size:backgroundSize];
-   return buttonBackground;
+   CGSize hitBoxSize = CGSizeMake(button.size.width + 20, 60);
+   SKSpriteNode *buttonHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
+                                                             size:hitBoxSize];
+   return buttonHitBox;
 }
 
 #pragma mark Setup Methods
@@ -117,48 +115,34 @@
    [self addChild:_expandCollapseButton];
 }
 
-- (void)setCoreFunctionButtonPositionsAndAddToLayer
+- (void)setButtonPositionsAndAddToLayer:(NSArray *)buttons
 {
    int multiplier = 0;
-   for (SKSpriteNode *button in _coreFunctionButtons)
+   for (SKSpriteNode *button in buttons)
    {
       [self addChild:button];
-
       button.position = CGPointMake((multiplier++)*CORE_FUNCTION_BUTTON_PADDING + 80,
                                     -button.size.height/2.0);
-   }
-}
-
-- (void)setBackgroundButtonsAndAddToLayer
-{
-   int multiplier = 0;
-   for (SKSpriteNode *button in _buttonHitBoxes)
-   {
-      [self addChild:button];
-
-      button.position = CGPointMake((multiplier++)*CORE_FUNCTION_BUTTON_PADDING + 80,
-                                    -button.size.height/2.0);
-      button.alpha = .5;
    }
 }
 
 - (void)setupCoreFunctionButtons
 {
    _clearButton = [self buttonWithFilename:@"clear" buttonName:@"clear"];
-   _clearButtonHitBox = [self backgroundNodeForButton:_clearButton];
+   _clearButtonHitBox = [self hitBoxForButton:_clearButton];
 
    _restoreButton = [self buttonWithFilename:@"restore" buttonName:@"restore"];
-   _restoreButtonHitBox = [self backgroundNodeForButton:_restoreButton];
+   _restoreButtonHitBox = [self hitBoxForButton:_restoreButton];
 
    _startStopButton = [self buttonWithFilename:@"start" buttonName:@"start_stop"];
    _startStopButton.color = [SKColor crayolaLimeColor];
-   _startStopButtonHitBox = [self backgroundNodeForButton:_startStopButton];
+   _startStopButtonHitBox = [self hitBoxForButton:_startStopButton];
 
    _cameraButton = [self buttonWithFilename:@"camera" buttonName:@"camera"];
-   _cameraButtonHitBox = [self backgroundNodeForButton:_cameraButton];
+   _cameraButtonHitBox = [self hitBoxForButton:_cameraButton];
 
    _settingsButton = [self buttonWithFilename:@"gear" buttonName:@"settings"];
-   _settingsButtonHitBox = [self backgroundNodeForButton:_settingsButton];
+   _settingsButtonHitBox = [self hitBoxForButton:_settingsButton];
 
    _coreFunctionButtons = @[_clearButton,
                             _restoreButton,
@@ -172,8 +156,8 @@
                           _cameraButtonHitBox,
                           _settingsButtonHitBox];
 
-   [self setCoreFunctionButtonPositionsAndAddToLayer];
-   [self setBackgroundButtonsAndAddToLayer];
+   [self setButtonPositionsAndAddToLayer:_coreFunctionButtons];
+   [self setButtonPositionsAndAddToLayer:_buttonHitBoxes];
 }
 
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state
@@ -205,7 +189,6 @@
 #pragma mark HUD Toggling Methods
 - (void)expandBottomBar
 {
-//   [self.delegate hudWillExpand:self];
    CFTimeInterval waitPeriod = 0.0;
    [self.delegate hud:self willExpandAfterPeriod:&waitPeriod];
 
