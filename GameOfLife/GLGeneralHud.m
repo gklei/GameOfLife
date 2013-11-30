@@ -17,6 +17,7 @@
 {
    CGSize _defaultSize;
    SKSpriteNode *_backgroundLayer;
+
    NSArray *_coreFunctionButtons;
    NSArray *_buttonHitBoxes;
 
@@ -151,12 +152,14 @@
                             _settingsButton];
 
    _buttonHitBoxes = @[_clearButtonHitBox,
-                          _restoreButtonHitBox,
-                          _startStopButtonHitBox,
-                          _cameraButtonHitBox,
-                          _settingsButtonHitBox];
+                       _restoreButtonHitBox,
+                       _startStopButtonHitBox,
+                       _cameraButtonHitBox,
+                       _settingsButtonHitBox];
 
    [self setButtonPositionsAndAddToLayer:_coreFunctionButtons];
+
+   // need to add the hit boxes as children to this layer after the core function buttons
    [self setButtonPositionsAndAddToLayer:_buttonHitBoxes];
 }
 
