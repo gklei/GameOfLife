@@ -13,7 +13,6 @@
 #import "UIColor+Crayola.h"
 
 #include <OpenGLES/ES1/glext.h>
-#include <vector>
 
 @interface GLGridScene() <GLColorHudDelegate, GLGeneralHudDelegate>
 {

@@ -80,6 +80,65 @@
    return nil;
 }
 
+- (void)updateNextGeneration
+{
+   for (int i = 0; i < _tiles.count; ++i)
+      _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
+
+   for (int i = 0; i < _tiles.count; ++i)
+      ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
+
+   [self updateColorCenter];
+}
+
+- (void)storeGridState
+{
+   for (int i = 0; i < _tiles.count; ++i)
+      _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
+}
+
+- (void)restoreGrid
+{
+   CGPoint center = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
+                                _dimensions.rows * TILESIZE.height * 0.5);
+   for (int i = 0; i < _tiles.count; ++i)
+   {
+      GLTileNode * tile = [_tiles objectAtIndex:i];
+      tile.isLiving = _storedTileStates[i];
+      [tile setColorCenter:center];
+   }
+}
+
+- (void)clearGrid
+{
+   for (GLTileNode *tile in _tiles)
+      [tile clearTile];
+}
+
+- (void)setCurrentColor:(UIColor *)color
+{
+   _currentColor = color;
+   for (GLTileNode *tile in _tiles)
+      [tile updateColor];
+}
+
+- (void)setTilesBirthingDuration:(float)bDuration
+                   dyingDuration:(float)dDuration
+{
+   for (GLTileNode *tile in _tiles)
+   {
+      tile.birthingDuration = bDuration;
+      tile.dyingDuration = dDuration;
+   }
+}
+
+#pragma mark GLTileColor Delegate Methods
+- (SKColor *)currentTileColor
+{
+   return _currentColor;
+}
+
+#pragma mark Helper Methods
 - (int)getNorthSouthTileLiveCountForTileAtIndex:(int)index
 {
    GLTileNode *tile;
@@ -180,64 +239,6 @@
    CGPoint position = ((GLTileNode *)[_tiles objectAtIndex:indexForColorCenter]).position;
    for (int i = 0; i < _tiles.count; ++i)
       ((GLTileNode *)[_tiles objectAtIndex:i]).colorCenter = position;
-}
-
-- (void)updateNextGeneration
-{
-   for (int i = 0; i < _tiles.count; ++i)
-      _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
-
-   for (int i = 0; i < _tiles.count; ++i)
-      ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
-
-   [self updateColorCenter];
-}
-
-- (void)restoreGrid
-{
-   CGPoint center = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
-                                _dimensions.rows * TILESIZE.height * 0.5);
-   for (int i = 0; i < _tiles.count; ++i)
-   {
-      GLTileNode * tile = [_tiles objectAtIndex:i];
-      tile.isLiving = _storedTileStates[i];
-      [tile setColorCenter:center];
-   }
-}
-
-- (void)storeGridState
-{
-   for (int i = 0; i < _tiles.count; ++i)
-      _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
-}
-
-
-- (void)setTilesBirthingDuration:(float)bDuration
-                   dyingDuration:(float)dDuration
-{
-   for (GLTileNode *tile in _tiles)
-   {
-      tile.birthingDuration = bDuration;
-      tile.dyingDuration = dDuration;
-   }
-}
-
-- (void)clearGrid
-{
-   for (GLTileNode *tile in _tiles)
-      [tile clearTile];
-}
-
-- (SKColor *)currentTileColor
-{
-   return _currentColor;
-}
-
-- (void)setCurrentColor:(UIColor *)color
-{
-   _currentColor = color;
-   for (GLTileNode *tile in _tiles)
-      [tile updateColor];
 }
 
 @end
