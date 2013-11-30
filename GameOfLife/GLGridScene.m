@@ -14,7 +14,7 @@
 
 #include <OpenGLES/ES1/glext.h>
 
-@interface GLGridScene() <GLColorHudDelegate, GLGeneralHudDelegate>
+@interface GLGridScene() <GLGeneralHudDelegate, GLColorHudDelegate>
 {
    GLGrid *_grid;
 
@@ -24,8 +24,8 @@
    GLGeneralHud *_generalHudLayer;
    GLColorHud *_colorHudLayer;
 
-   BOOL _colorHudIsAnimating;
    BOOL _generalHudIsAnimating;
+   BOOL _colorHudIsAnimating;
    BOOL _running;
 
    CFTimeInterval _lastGenerationTime;
@@ -33,12 +33,6 @@
 @end
 
 @implementation GLGridScene
-
-- (void)setupGridWithSize:(CGSize)size
-{
-   _grid = [[GLGrid alloc] initWithSize:size];
-   [self addChild:_grid];
-}
 
 -(id)initWithSize:(CGSize)size
 {
@@ -48,9 +42,25 @@
       [self setupGeneralHud];
       [self setupColorHud];
 
+      // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
    }
    return self;
+}
+
+#pragma mark Setup Methods
+- (void)setupGridWithSize:(CGSize)size
+{
+   _grid = [[GLGrid alloc] initWithSize:size];
+   [self addChild:_grid];
+}
+
+- (void)setupGeneralHud
+{
+   _generalHudLayer = [GLGeneralHud new];
+   _generalHudLayer.delegate = self;
+   _generalHudLayer.position = CGPointMake(-self.size.width + 60, 0);
+   [self addChild:_generalHudLayer];
 }
 
 - (void)setupColorHud
@@ -63,22 +73,10 @@
    [self addChild:_colorHudLayer];
 }
 
-- (void)setupGeneralHud
+#pragma mark GLGeneralHud Delegate Methods
+- (void)clearButtonPressed
 {
-   _generalHudLayer = [GLGeneralHud new];
-   _generalHudLayer.delegate = self;
-   _generalHudLayer.position = CGPointMake(-self.size.width + 60, 0);
-   [self addChild:_generalHudLayer];
-}
-
-- (void)toggleRunningButtonPressed
-{
-   float duration = (_running)? .15 : .35;
-   [_grid setTilesBirthingDuration:duration
-                    dyingDuration:duration];
-
-   _running = !_running;
-   [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED];
+   [_grid clearGrid];
 }
 
 - (void)restoreButtonPressed
@@ -86,20 +84,14 @@
    [_grid restoreGrid];
 }
 
-- (void)toggleLivingForTileAtTouch:(UITouch *)touch
+- (void)toggleRunningButtonPressed
 {
-   GLTileNode *tile = [_grid tileAtTouch:touch];
-   if (_currentTileBeingTouched != tile)
-   {
-      _currentTileBeingTouched = tile;
-      [tile updateLivingAndColor:!tile.isLiving];
-      [_grid storeGridState];
-   }
-}
+   float duration = (_running)? .15 : .35;
+   [_grid setTilesBirthingDuration:duration
+                     dyingDuration:duration];
 
-- (void)clearButtonPressed
-{
-   [_grid clearGrid];
+   _running = !_running;
+   [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED];
 }
 
 - (void)screenShotButtonPressed
@@ -107,13 +99,21 @@
    CGFloat scale = self.view.contentScaleFactor;
    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
    [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
+
    UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
    UIGraphicsEndImageContext();
-   
+
    if (viewImage)
       UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
 }
 
+#pragma GLColorHud Delegate Method
+- (void)setCurrentColor:(SKColor *)currentColor
+{
+   [_grid setCurrentColor:currentColor];
+}
+
+#pragma mark Touch Methods
 - (void)handleTouch:(UITouch *)touch
 {
    if (![_generalHudLayer containsPoint:[touch locationInNode:self]] &&
@@ -185,15 +185,40 @@
       [_generalHudLayer handleTouch:touch moved:NO];
 }
 
--(void)update:(CFTimeInterval)currentTime
+#pragma mark GLHud Delegate Methods
+- (void)hud:(GLHud *)hud willExpandAfterPeriod:(CFTimeInterval *)waitPeriod
 {
-   if (_running && currentTime - _lastGenerationTime > .8)
-   {
-      _lastGenerationTime = currentTime;
-      [_grid updateNextGeneration];
-   }
+   if (hud == _colorHudLayer)
+      [self colorHudWillExpandWithWaitPeriod:waitPeriod];
+   else if (hud == _generalHudLayer)
+      [self generalHudWillExpandWithWaitPeriod:waitPeriod];
 }
 
+- (void)hudDidExpand:(GLHud *)hud
+{
+   if (hud == _colorHudLayer)
+      [self colorHudDidExpand];
+   else if (hud == _generalHudLayer)
+      [self generalHudDidExpand];
+}
+
+- (void)hudWillCollapse:(GLHud *)hud
+{
+   if (hud == _colorHudLayer)
+      [self colorHudWillCollapse];
+   else if (hud == _generalHudLayer)
+      [self generalHudWillCollapse];
+}
+
+- (void)hudDidCollapse:(GLHud *)hud
+{
+   if (hud == _colorHudLayer)
+      [self colorHudDidCollapse];
+   else if (hud == _generalHudLayer)
+      [self generalHudDidCollapse];
+}
+
+#pragma mark Helper HUD Methods
 - (void)colorHudWillExpandWithWaitPeriod:(CFTimeInterval *)waitPeriod
 {
    if (_generalHudLayer.isExpanded)
@@ -228,7 +253,7 @@
       [_colorHudLayer setColorDropsHidden:YES];
       [_colorHudLayer runAction:reposition];
    }
-   
+
    _generalHudIsAnimating = YES;
 }
 
@@ -240,19 +265,6 @@
 - (void)generalHudDidExpand
 {
    _generalHudIsAnimating = NO;
-
-//   SKAction *wait = [SKAction waitForDuration:.5];
-//   [self runAction:wait completion:^{
-//      for (SKSpriteNode* button in [_generalHudLayer coreFunctionButtons])
-//      {
-//         SKSpriteNode *buttonFrame = [SKSpriteNode spriteNodeWithColor:[SKColor redColor]
-//                                                                  size:button.size];
-//         buttonFrame.position = [button convertPoint:button.position toNode:self];
-////         buttonFrame.position = button.position;
-//         NSLog(@"button frame: %@", NSStringFromCGRect(buttonFrame.frame));
-//         [self addChild:buttonFrame];
-//      }
-//   }];
 }
 
 - (void)colorHudWillCollapse
@@ -307,41 +319,25 @@
    }
 }
 
-- (void)hud:(GLHud *)hud willExpandAfterPeriod:(CFTimeInterval *)waitPeriod
+- (void)toggleLivingForTileAtTouch:(UITouch *)touch
 {
-   if (hud == _colorHudLayer)
-      [self colorHudWillExpandWithWaitPeriod:waitPeriod];
-   else if (hud == _generalHudLayer)
-      [self generalHudWillExpandWithWaitPeriod:waitPeriod];
+   GLTileNode *tile = [_grid tileAtTouch:touch];
+   if (_currentTileBeingTouched != tile)
+   {
+      _currentTileBeingTouched = tile;
+      [tile updateLivingAndColor:!tile.isLiving];
+      [_grid storeGridState];
+   }
 }
 
-- (void)hudDidExpand:(GLHud *)hud
+#pragma mark SKScene Overridden Method
+-(void)update:(CFTimeInterval)currentTime
 {
-   if (hud == _colorHudLayer)
-      [self colorHudDidExpand];
-   else if (hud == _generalHudLayer)
-      [self generalHudDidExpand];
-}
-
-- (void)hudWillCollapse:(GLHud *)hud
-{
-   if (hud == _colorHudLayer)
-      [self colorHudWillCollapse];
-   else if (hud == _generalHudLayer)
-      [self generalHudWillCollapse];
-}
-
-- (void)hudDidCollapse:(GLHud *)hud
-{
-   if (hud == _colorHudLayer)
-      [self colorHudDidCollapse];
-   else if (hud == _generalHudLayer)
-      [self generalHudDidCollapse];
-}
-
-- (void)setCurrentColor:(SKColor *)currentColor
-{
-   [_grid setCurrentColor:currentColor];
+   if (_running && currentTime - _lastGenerationTime > .8)
+   {
+      _lastGenerationTime = currentTime;
+      [_grid updateNextGeneration];
+   }
 }
 
 @end
