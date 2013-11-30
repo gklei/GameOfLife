@@ -197,12 +197,9 @@
 {
    for (SKSpriteNode *button in _coreFunctionButtons)
       button.hidden = hidden;
-
-   // ------------- DEBUGGING --------------
+   
    for (SKSpriteNode *button in _buttonHitBoxes)
       button.hidden = hidden;
-   // --------------------------------------
-
 }
 
 #pragma mark HUD Toggling Methods
@@ -242,17 +239,15 @@
       for (SKNode *button in _coreFunctionButtons)
          [button runAction:slide];
 
-      // ------------- DEBUGGING --------------
       for (SKNode *button in _buttonHitBoxes)
          [button runAction:slide];
-      // --------------------------------------
 
       [_backgroundLayer runAction:changeHudColor];
       [_expandCollapseButton runAction:buttonActions
                     completion:^
        {
           SKAction *moveButton = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.25];
-          SKAction *moveButtonBackground = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING + 10 duration:.25];
+          SKAction *moveButtonHitBox = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING + 10 duration:.25];
           moveButton.timingMode = SKActionTimingEaseInEaseOut;
           for (SKNode *button in _coreFunctionButtons)
           {
@@ -260,14 +255,11 @@
              [button runAction:moveButton];
           }
 
-
-          // ------------- DEBUGGING --------------
           for (SKNode *button in _buttonHitBoxes)
           {
              button.hidden = NO;
-             [button runAction:moveButtonBackground];
+             [button runAction:moveButtonHitBox];
           }
-          // ---------------------------------------
 
           [self.delegate hudDidExpand:self];
        }];
@@ -311,25 +303,20 @@
    for (SKNode *button in _coreFunctionButtons)
       [button runAction:slide];
 
-
-   // ------------- DEBUGGING --------------
    for (SKNode *button in _buttonHitBoxes)
       [button runAction:slide];
-   // --------------------------------------
 
    [_expandCollapseButton runAction:buttonActions];
    [_backgroundLayer runAction:hudBackgroundColorSequence
                     completion:^
     {
        SKAction *moveButton = [SKAction moveByX:0 y:-HUD_BUTTON_EDGE_PADDING duration:.25];
-       SKAction *moveButtonBackground = [SKAction moveByX:0 y:-(HUD_BUTTON_EDGE_PADDING + 10) duration:.25];
+       SKAction *moveButtonHitBox = [SKAction moveByX:0 y:-(HUD_BUTTON_EDGE_PADDING + 10) duration:.25];
        for (SKNode *button in _coreFunctionButtons)
           [button runAction:moveButton];
 
-       // ------------- DEBUGGING --------------
        for (SKNode *button in _buttonHitBoxes)
-          [button runAction:moveButtonBackground];
-       // --------------------------------------
+          [button runAction:moveButtonHitBox];
 
        [self.delegate hudDidCollapse:self];
     }];
