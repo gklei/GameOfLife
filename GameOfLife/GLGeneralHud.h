@@ -29,4 +29,6 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
 - (void)setCoreFunctionButtonsHidden:(BOOL)hidden;
 - (void)collapse;
 
+- (NSArray *)coreFunctionButtons;
+
 @end

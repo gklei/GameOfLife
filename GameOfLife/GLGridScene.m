@@ -240,6 +240,19 @@
 - (void)generalHudDidExpand
 {
    _generalHudIsAnimating = NO;
+
+//   SKAction *wait = [SKAction waitForDuration:.5];
+//   [self runAction:wait completion:^{
+//      for (SKSpriteNode* button in [_generalHudLayer coreFunctionButtons])
+//      {
+//         SKSpriteNode *buttonFrame = [SKSpriteNode spriteNodeWithColor:[SKColor redColor]
+//                                                                  size:button.size];
+//         buttonFrame.position = [button convertPoint:button.position toNode:self];
+////         buttonFrame.position = button.position;
+//         NSLog(@"button frame: %@", NSStringFromCGRect(buttonFrame.frame));
+//         [self addChild:buttonFrame];
+//      }
+//   }];
 }
 
 - (void)colorHudWillCollapse

@@ -18,13 +18,25 @@
    CGSize _defaultSize;
    SKSpriteNode *_backgroundLayer;
    NSArray *_coreFunctionButtons;
+   NSArray *_buttonHitBoxes;
 
    SKSpriteNode *_expandCollapseButton;
+   SKSpriteNode *_expandCollapseButtonBackground;
+
    SKSpriteNode *_clearButton;
+   SKSpriteNode *_clearButtonHitBox;
+
    SKSpriteNode *_restoreButton;
+   SKSpriteNode *_restoreButtonHitBox;
+
    SKSpriteNode *_startStopButton;
+   SKSpriteNode *_startStopButtonHitBox;
+
    SKSpriteNode *_cameraButton;
+   SKSpriteNode *_cameraButtonHitBox;
+
    SKSpriteNode *_settingsButton;
+   SKSpriteNode *_settingsButtonHitBox;
 
    BOOL _settingsAreExpanded;
 }
@@ -43,6 +55,11 @@
    return self;
 }
 
+- (NSArray *)coreFunctionButtons
+{
+   return _coreFunctionButtons;
+}
+
 - (SKSpriteNode *)buttonWithFilename:(NSString *)fileName buttonName:(NSString *)buttonName
 {
    SKSpriteNode *button = [SKSpriteNode spriteNodeWithImageNamed:fileName];
@@ -52,6 +69,16 @@
    button.name = buttonName;
 
    return button;
+}
+
+- (SKSpriteNode *)backgroundNodeForButton:(SKSpriteNode *)button
+{
+   // for debugging...
+   SKColor *debuggingBgColor = [SKColor clearColor];
+   CGSize backgroundSize = CGSizeMake(button.size.width + 20, 60);
+   SKSpriteNode *buttonBackground = [SKSpriteNode spriteNodeWithColor:debuggingBgColor
+                                                                 size:backgroundSize];
+   return buttonBackground;
 }
 
 #pragma mark Setup Methods
@@ -96,18 +123,42 @@
    for (SKSpriteNode *button in _coreFunctionButtons)
    {
       [self addChild:button];
+
       button.position = CGPointMake((multiplier++)*CORE_FUNCTION_BUTTON_PADDING + 80,
                                     -button.size.height/2.0);
+   }
+}
+
+- (void)setBackgroundButtonsAndAddToLayer
+{
+   int multiplier = 0;
+   for (SKSpriteNode *button in _buttonHitBoxes)
+   {
+      [self addChild:button];
+
+      button.position = CGPointMake((multiplier++)*CORE_FUNCTION_BUTTON_PADDING + 80,
+                                    -button.size.height/2.0);
+      button.alpha = .5;
    }
 }
 
 - (void)setupCoreFunctionButtons
 {
    _clearButton = [self buttonWithFilename:@"clear" buttonName:@"clear"];
+   _clearButtonHitBox = [self backgroundNodeForButton:_clearButton];
+
    _restoreButton = [self buttonWithFilename:@"restore" buttonName:@"restore"];
+   _restoreButtonHitBox = [self backgroundNodeForButton:_restoreButton];
+
    _startStopButton = [self buttonWithFilename:@"start" buttonName:@"start_stop"];
+   _startStopButton.color = [SKColor crayolaLimeColor];
+   _startStopButtonHitBox = [self backgroundNodeForButton:_startStopButton];
+
    _cameraButton = [self buttonWithFilename:@"camera" buttonName:@"camera"];
+   _cameraButtonHitBox = [self backgroundNodeForButton:_cameraButton];
+
    _settingsButton = [self buttonWithFilename:@"gear" buttonName:@"settings"];
+   _settingsButtonHitBox = [self backgroundNodeForButton:_settingsButton];
 
    _coreFunctionButtons = @[_clearButton,
                             _restoreButton,
@@ -115,7 +166,14 @@
                             _cameraButton,
                             _settingsButton];
 
+   _buttonHitBoxes = @[_clearButtonHitBox,
+                          _restoreButtonHitBox,
+                          _startStopButtonHitBox,
+                          _cameraButtonHitBox,
+                          _settingsButtonHitBox];
+
    [self setCoreFunctionButtonPositionsAndAddToLayer];
+   [self setBackgroundButtonsAndAddToLayer];
 }
 
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state
@@ -124,9 +182,11 @@
    {
       case GL_RUNNING:
          _startStopButton.texture = [SKTexture textureWithImageNamed:@"stop"];
+         _startStopButton.color = [SKColor crayolaSizzlingRedColor];
          break;
       case GL_STOPPED:
          _startStopButton.texture = [SKTexture textureWithImageNamed:@"start"];
+         _startStopButton.color = [SKColor crayolaLimeColor];
          break;
       default:
          break;
@@ -137,6 +197,12 @@
 {
    for (SKSpriteNode *button in _coreFunctionButtons)
       button.hidden = hidden;
+
+   // ------------- DEBUGGING --------------
+   for (SKSpriteNode *button in _buttonHitBoxes)
+      button.hidden = hidden;
+   // --------------------------------------
+
 }
 
 #pragma mark HUD Toggling Methods
@@ -176,17 +242,33 @@
       for (SKNode *button in _coreFunctionButtons)
          [button runAction:slide];
 
+      // ------------- DEBUGGING --------------
+      for (SKNode *button in _buttonHitBoxes)
+         [button runAction:slide];
+      // --------------------------------------
+
       [_backgroundLayer runAction:changeHudColor];
       [_expandCollapseButton runAction:buttonActions
                     completion:^
        {
           SKAction *moveButton = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.25];
+          SKAction *moveButtonBackground = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING + 10 duration:.25];
           moveButton.timingMode = SKActionTimingEaseInEaseOut;
           for (SKNode *button in _coreFunctionButtons)
           {
              button.hidden = NO;
              [button runAction:moveButton];
           }
+
+
+          // ------------- DEBUGGING --------------
+          for (SKNode *button in _buttonHitBoxes)
+          {
+             button.hidden = NO;
+             [button runAction:moveButtonBackground];
+          }
+          // ---------------------------------------
+
           [self.delegate hudDidExpand:self];
        }];
    }];
@@ -229,13 +311,26 @@
    for (SKNode *button in _coreFunctionButtons)
       [button runAction:slide];
 
+
+   // ------------- DEBUGGING --------------
+   for (SKNode *button in _buttonHitBoxes)
+      [button runAction:slide];
+   // --------------------------------------
+
    [_expandCollapseButton runAction:buttonActions];
    [_backgroundLayer runAction:hudBackgroundColorSequence
                     completion:^
     {
        SKAction *moveButton = [SKAction moveByX:0 y:-HUD_BUTTON_EDGE_PADDING duration:.25];
+       SKAction *moveButtonBackground = [SKAction moveByX:0 y:-(HUD_BUTTON_EDGE_PADDING + 10) duration:.25];
        for (SKNode *button in _coreFunctionButtons)
           [button runAction:moveButton];
+
+       // ------------- DEBUGGING --------------
+       for (SKNode *button in _buttonHitBoxes)
+          [button runAction:moveButtonBackground];
+       // --------------------------------------
+
        [self.delegate hudDidCollapse:self];
     }];
 }
@@ -314,15 +409,15 @@
       return;
 
    // we know that the bottom bar is expanded and can now check to see where the hud was pressed
-   if (node == _settingsButton)
+   if (node == _settingsButtonHitBox)
       [self toggleSettings];
-   else if (node == _startStopButton)
+   else if (node == _startStopButtonHitBox)
       [self.delegate toggleRunningButtonPressed];
-   else if (node == _clearButton)
+   else if (node == _clearButtonHitBox)
       [self.delegate clearButtonPressed];
-   else if (node == _restoreButton)
+   else if (node == _restoreButtonHitBox)
       [self.delegate restoreButtonPressed];
-   else if (node == _cameraButton)
+   else if (node == _cameraButtonHitBox)
       [self.delegate screenShotButtonPressed];
 }
 
