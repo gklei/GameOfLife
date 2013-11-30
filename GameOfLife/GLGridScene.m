@@ -32,8 +32,10 @@
 }
 @end
 
+#pragma mark GLGridScene
 @implementation GLGridScene
 
+#pragma mark Initializer Method
 -(id)initWithSize:(CGSize)size
 {
    if (self = [super initWithSize:size])
@@ -169,7 +171,6 @@
    {
       [self colorHudPressedWithTouch:touch];
    }
-
    _currentTileBeingTouched = nil;
 }
 
@@ -234,7 +235,6 @@
       [_generalHudLayer setCoreFunctionButtonsHidden:YES];
       [_generalHudLayer runAction:reposition];
    }
-
    _colorHudIsAnimating = YES;
 }
 
@@ -253,7 +253,6 @@
       [_colorHudLayer setColorDropsHidden:YES];
       [_colorHudLayer runAction:reposition];
    }
-
    _generalHudIsAnimating = YES;
 }
 
@@ -296,7 +295,6 @@
 - (void)colorHudDidCollapse
 {
    _colorHudIsAnimating = NO;
-
    if (_generalHudIsAnimating)
    {
       SKAction *reposition = [SKAction moveByX:0 y:60 duration:.15];
@@ -309,7 +307,6 @@
 - (void)generalHudDidCollapse
 {
    _generalHudIsAnimating = NO;
-
    if (_colorHudIsAnimating)
    {
       SKAction *reposition = [SKAction moveByX:0 y:60 duration:.15];
@@ -319,6 +316,7 @@
    }
 }
 
+#pragma mark Helper Method
 - (void)toggleLivingForTileAtTouch:(UITouch *)touch
 {
    GLTileNode *tile = [_grid tileAtTouch:touch];
