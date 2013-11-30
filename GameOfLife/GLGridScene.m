@@ -274,18 +274,40 @@
    }
 }
 
-- (void)colorHudWillExpand
+- (void)colorHudWillExpandWithWaitPeriod:(CFTimeInterval *)waitPeriod
 {
+   if (_generalHudLayer.isExpanded)
+   {
+      *waitPeriod = 0.25;
+      [_generalHudLayer collapse];
+   }
+   else
+   {
+      SKAction *reposition = [SKAction moveByX:0 y:60 duration:.25];
+      reposition.timingMode = SKActionTimingEaseInEaseOut;
+      [_generalHudLayer setCoreFunctionButtonsHidden:YES];
+      [_generalHudLayer runAction:reposition];
+   }
+
    _colorHudIsAnimating = YES;
-   SKAction *reposition = [SKAction moveByX:-100 y:0 duration:.25];
-   [_generalHudLayer runAction:reposition];
 }
 
-- (void)generalHudWillExpand
+- (void)generalHudWillExpandWithWaitPeriod:(CFTimeInterval *)waitPeriod
 {
+   if (_colorHudLayer.isExpanded)
+   {
+      *waitPeriod = 0.25;
+      [_colorHudLayer collapse];
+   }
+   else
+   {
+      SKAction *reposition = [SKAction moveByX:0 y:60 duration:.25];
+      reposition.timingMode = SKActionTimingEaseInEaseOut;
+      [_colorHudLayer setColorDropsHidden:YES];
+      [_colorHudLayer runAction:reposition];
+   }
+   
    _generalHudIsAnimating = YES;
-   SKAction *reposition = [SKAction moveByX:100 y:0 duration:.25];
-   [_colorHudLayer runAction:reposition];
 }
 
 - (void)colorHudDidExpand
@@ -301,33 +323,65 @@
 - (void)colorHudWillCollapse
 {
    _colorHudIsAnimating = YES;
-   SKAction *reposition = [SKAction moveByX:100 y:0 duration:.25];
-   [_generalHudLayer runAction:reposition];
+   SKAction *wait = [SKAction waitForDuration:.15];
+   SKAction *reposition = [SKAction moveByX:0 y:-60 duration:.25];
+   reposition.timingMode = SKActionTimingEaseInEaseOut;
+   [_generalHudLayer runAction:[SKAction sequence:@[wait, reposition]] completion:^{
+      [_generalHudLayer setCoreFunctionButtonsHidden:NO];
+   }];
 }
 
 - (void)generalHudWillCollapse
 {
    _generalHudIsAnimating = YES;
-   SKAction *reposition = [SKAction moveByX:-100 y:0 duration:.25];
-   [_colorHudLayer runAction:reposition];
+   SKAction *wait = [SKAction waitForDuration:.15];
+   SKAction *reposition = [SKAction moveByX:0 y:-60 duration:.25];
+   reposition.timingMode = SKActionTimingEaseInEaseOut;
+   [_colorHudLayer runAction:[SKAction sequence:@[wait, reposition]] completion:^{
+      [_colorHudLayer setColorDropsHidden:NO];
+   }];
 }
 
 - (void)colorHudDidCollapse
 {
    _colorHudIsAnimating = NO;
+
+   if (_generalHudIsAnimating)
+   {
+      SKAction *reposition = [SKAction moveByX:0 y:60 duration:.15];
+      reposition.timingMode = SKActionTimingEaseInEaseOut;
+      [_colorHudLayer setColorDropsHidden:YES];
+      [_colorHudLayer runAction:reposition];
+   }
 }
 
 - (void)generalHudDidCollapse
 {
    _generalHudIsAnimating = NO;
+
+   if (_colorHudIsAnimating)
+   {
+      SKAction *reposition = [SKAction moveByX:0 y:60 duration:.15];
+      reposition.timingMode = SKActionTimingEaseInEaseOut;
+      [_generalHudLayer setCoreFunctionButtonsHidden:YES];
+      [_generalHudLayer runAction:reposition];
+   }
 }
 
-- (void)hudWillExpand:(GLHud *)hud
+//- (void)hudWillExpand:(GLHud *)hud
+//{
+//   if (hud == _colorHudLayer)
+//      [self colorHudWillExpand];
+//   else if (hud == _generalHudLayer)
+//      [self generalHudWillExpand];
+//}
+
+- (void)hud:(GLHud *)hud willExpandAfterPeriod:(CFTimeInterval *)waitPeriod
 {
    if (hud == _colorHudLayer)
-      [self colorHudWillExpand];
+      [self colorHudWillExpandWithWaitPeriod:waitPeriod];
    else if (hud == _generalHudLayer)
-      [self generalHudWillExpand];
+      [self generalHudWillExpandWithWaitPeriod:waitPeriod];
 }
 
 - (void)hudDidExpand:(GLHud *)hud

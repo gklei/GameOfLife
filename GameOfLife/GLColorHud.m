@@ -23,7 +23,6 @@
    SKSpriteNode *_currentColorDrop;
    NSMutableArray *_colorDrops;
    int _colorDropVerticalOffset;
-   BOOL _isExpanded;
 }
 @end
 
@@ -131,10 +130,14 @@
 
 - (void)expand
 {
-   [self.delegate hudWillExpand:self];
+//   [self.delegate hudWillExpand:self];
+   CFTimeInterval waitPeriod = 0.0;
+   [self.delegate hud:self willExpandAfterPeriod:&waitPeriod];
 
-   SKAction *slide = [SKAction moveTo:CGPointMake(0,0)
-                                duration:.5];
+//   SKAction *slide = [SKAction moveTo:CGPointMake(0,0)
+//                                duration:.5];
+   SKAction *wait = [SKAction waitForDuration:waitPeriod];
+   SKAction *slide = [SKAction moveByX:-_defaultSize.width + 60 y:0 duration:.5];
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                       colorBlendFactor:1.0
                                               duration:.5];
@@ -158,31 +161,33 @@
                                                changeButtonColor,
                                                maintainPosition,
                                                rotate]];
-   _isExpanded = YES;
-   [self runAction:slide];
-   [_backgroundLayer runAction:changeHudColor];
-   [_splashButton runAction:buttonActions
-                 completion:^
-   {
-      SKAction *moveDrop = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.2];
-      moveDrop.timingMode = SKActionTimingEaseOut;
-      for (SKNode *drop in _colorDrops)
+   self.expanded = YES;
+   [self runAction:wait completion:^{
+      [self runAction:slide];
+      [_backgroundLayer runAction:changeHudColor];
+      [_splashButton runAction:buttonActions
+                    completion:^
       {
-         drop.hidden = NO;
-         [drop runAction:moveDrop];
-      }
+         SKAction *moveDrop = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.2];
+         moveDrop.timingMode = SKActionTimingEaseOut;
+         for (SKNode *drop in _colorDrops)
+         {
+            drop.hidden = NO;
+            [drop runAction:moveDrop];
+         }
 
-      if (_currentColorDrop)
-      {
-         SKAction *wait = [SKAction waitForDuration:.2];
-         SKAction *rescaleSelectedDrop = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
-         SKAction *scaleSequence = [SKAction sequence:@[wait, rescaleSelectedDrop]];
-         [_currentColorDrop runAction:scaleSequence completion:^{[self.delegate hudDidExpand:self];}];
-      }
-      else
-      {
-         [self.delegate hudDidExpand:self];
-      }
+         if (_currentColorDrop)
+         {
+            SKAction *wait = [SKAction waitForDuration:.2];
+            SKAction *rescaleSelectedDrop = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
+            SKAction *scaleSequence = [SKAction sequence:@[wait, rescaleSelectedDrop]];
+            [_currentColorDrop runAction:scaleSequence completion:^{[self.delegate hudDidExpand:self];}];
+         }
+         else
+         {
+            [self.delegate hudDidExpand:self];
+         }
+      }];
    }];
 }
 
@@ -191,8 +196,9 @@
    [self.delegate hudWillCollapse:self];
 
    SKAction *wait = [SKAction waitForDuration:.25];
-   SKAction *slide = [SKAction moveTo:CGPointMake(_defaultSize.width - 60, 0)
-                                    duration:.5];
+//   SKAction *slide = [SKAction moveTo:CGPointMake(_defaultSize.width - 60, 0)
+//                                    duration:.5];
+   SKAction *slide = [SKAction moveByX:_defaultSize.width - 60 y:0 duration:.5];
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor clearColor]
                                       colorBlendFactor:1.0
                                               duration:.25];
@@ -218,7 +224,7 @@
    SKAction *buttonColorSequence = [SKAction sequence:@[wait, buttonColorAnimations]];
    SKAction *buttonActions = [SKAction group:@[buttonAnimations, buttonColorSequence]];
 
-   _isExpanded = NO;
+   self.expanded = NO;
    [self setColorDropsHidden:YES];
    [self runAction:slide];
    [_splashButton runAction:buttonActions];
@@ -236,7 +242,7 @@
 
 - (void)toggle
 {
-   if (!_isExpanded)
+   if (!self.expanded)
       [self expand];
    else
       [self collapse];

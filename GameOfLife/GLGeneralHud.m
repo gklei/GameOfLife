@@ -26,7 +26,6 @@
    SKSpriteNode *_cameraButton;
    SKSpriteNode *_settingsButton;
 
-   BOOL _isExpanded;
    BOOL _settingsAreExpanded;
 }
 @end
@@ -143,8 +142,11 @@
 #pragma mark HUD Toggling Methods
 - (void)expandBottomBar
 {
-   [self.delegate hudWillExpand:self];
+//   [self.delegate hudWillExpand:self];
+   CFTimeInterval waitPeriod = 0.0;
+   [self.delegate hud:self willExpandAfterPeriod:&waitPeriod];
 
+   SKAction *wait = [SKAction waitForDuration:waitPeriod];
    SKAction *slide = [SKAction moveByX:_defaultSize.width - 60 y:0 duration:.5];
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                          colorBlendFactor:1.0
@@ -168,24 +170,26 @@
    SKAction *buttonActions = [SKAction group:@[changeButtonAlpha,
                                                changeButtonColor,
                                                rotate]];
-   _isExpanded = YES;
-   [_backgroundLayer runAction:slide];
-   for (SKNode *button in _coreFunctionButtons)
-      [button runAction:slide];
+   self.expanded = YES;
+   [self runAction:wait completion:^{
+      [_backgroundLayer runAction:slide];
+      for (SKNode *button in _coreFunctionButtons)
+         [button runAction:slide];
 
-   [_backgroundLayer runAction:changeHudColor];
-   [_expandCollapseButton runAction:buttonActions
-                 completion:^
-    {
-       SKAction *moveButton = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.25];
-       moveButton.timingMode = SKActionTimingEaseInEaseOut;
-       for (SKNode *button in _coreFunctionButtons)
+      [_backgroundLayer runAction:changeHudColor];
+      [_expandCollapseButton runAction:buttonActions
+                    completion:^
        {
-          button.hidden = NO;
-          [button runAction:moveButton];
-       }
-       [self.delegate hudDidExpand:self];
-    }];
+          SKAction *moveButton = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.25];
+          moveButton.timingMode = SKActionTimingEaseInEaseOut;
+          for (SKNode *button in _coreFunctionButtons)
+          {
+             button.hidden = NO;
+             [button runAction:moveButton];
+          }
+          [self.delegate hudDidExpand:self];
+       }];
+   }];
 }
 
 - (void)collapseBottomBar
@@ -218,7 +222,7 @@
    SKAction *buttonColorSequence = [SKAction sequence:@[wait, buttonColorAnimations]];
    SKAction *buttonActions = [SKAction group:@[rotate, buttonColorSequence]];
 
-   _isExpanded = NO;
+   self.expanded = NO;
    [self setCoreFunctionButtonsHidden:YES];
    
    [_backgroundLayer runAction:slide];
@@ -287,7 +291,7 @@
 
 - (void)toggle
 {
-   if (!_isExpanded)
+   if (!self.expanded)
       [self expandBottomBar];
    else
       [self collapse];

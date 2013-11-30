@@ -11,7 +11,7 @@
 @class GLHud;
 
 @protocol GLHudDelegate <NSObject>
-   - (void)hudWillExpand:(GLHud *)hud;
+   - (void)hud:(GLHud *)hud willExpandAfterPeriod:(CFTimeInterval *)waitPeriod;
    - (void)hudDidExpand:(GLHud *)hud;
    - (void)hudWillCollapse:(GLHud *)hud;
    - (void)hudDidCollapse:(GLHud *)hud;
@@ -20,6 +20,7 @@
 @interface GLHud : SKNode
 
 @property (strong, nonatomic) id<GLHudDelegate> delegate;
+@property (nonatomic, assign, getter = isExpanded) BOOL expanded;
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved;
 
