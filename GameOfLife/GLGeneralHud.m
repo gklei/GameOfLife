@@ -305,9 +305,16 @@
    
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
 
+   // check to see if the bottom bar should expand or collapse
    if (node == _expandCollapseButton)
       [self toggle];
-   else if (node == _settingsButton)
+
+   // if the hud was somehow pressed elsewhere and the bottom bar is not expanded, return
+   if (!self.expanded)
+      return;
+
+   // we know that the bottom bar is expanded and can now check to see where the hud was pressed
+   if (node == _settingsButton)
       [self toggleSettings];
    else if (node == _startStopButton)
       [self.delegate toggleRunningButtonPressed];
