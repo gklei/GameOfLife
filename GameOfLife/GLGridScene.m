@@ -334,7 +334,11 @@
    if (_running && currentTime - _lastGenerationTime > .8)
    {
       _lastGenerationTime = currentTime;
-      [_grid updateNextGeneration];
+      
+      if (!_grid.isInContinuousLoop)
+         [_grid updateNextGeneration];
+      else
+         [self toggleRunningButtonPressed];
    }
 }
 

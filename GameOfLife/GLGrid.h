@@ -19,6 +19,7 @@ typedef struct {
 
 @property (nonatomic, assign) GridDimensions dimensions;
 @property (nonatomic, strong) NSArray *tiles;
+@property (nonatomic, readonly, getter = isInContinuousLoop) BOOL inContinuousLoop;
 
 - (id)initWithSize:(CGSize)size;
 - (GLTileNode *)tileAtTouch:(UITouch *)touch;

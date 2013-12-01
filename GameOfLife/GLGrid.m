@@ -85,10 +85,29 @@
    for (int i = 0; i < _tiles.count; ++i)
       _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
 
+   if ([self currentlyInContinuousLoop])
+   {
+      _inContinuousLoop = YES;
+      return;
+   }
+   else
+   {
+      _inContinuousLoop = NO;
+   }
+
    for (int i = 0; i < _tiles.count; ++i)
       ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
 
    [self updateColorCenter];
+}
+
+- (BOOL)currentlyInContinuousLoop
+{
+   for (int i = 0; i < _tiles.count; ++i)
+      if (((GLTileNode *)_tiles[i]).isLiving != _nextGenerationTileStates[i])
+         return NO;
+
+   return YES;
 }
 
 - (void)storeGridState
@@ -107,12 +126,15 @@
       tile.isLiving = _storedTileStates[i];
       [tile setColorCenter:center];
    }
+   _inContinuousLoop = NO;
 }
 
 - (void)clearGrid
 {
    for (GLTileNode *tile in _tiles)
       [tile clearTile];
+   
+   _inContinuousLoop = NO;
 }
 
 - (void)setCurrentColor:(UIColor *)color
