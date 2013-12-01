@@ -59,7 +59,7 @@
 //                     brightness:1.0
 //                          alpha:1.0];
 
-   float dist = [self colorDistance];
+   float dist = [self colorDistance] * 1.2;
    SKColor *currentColor = [_delegate currentTileColor];
 
    CGFloat r, g, b;
