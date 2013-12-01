@@ -222,7 +222,7 @@
          {
             [self.delegate hudDidExpand:self];
          }
-         }];
+      }];
    }];
 }
 
