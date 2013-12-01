@@ -166,7 +166,7 @@
    {
       [self generalHudPressedWithTouch:touch];
    }
-   else if ([_colorHudLayer containsPoint:_firstLocationOfTouch] &&
+   if ([_colorHudLayer containsPoint:_firstLocationOfTouch] &&
             [_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
       [self colorHudPressedWithTouch:touch];

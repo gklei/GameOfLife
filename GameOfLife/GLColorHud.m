@@ -21,7 +21,10 @@
    SKSpriteNode *_backgroundLayer;
    SKSpriteNode *_splashButton;
    SKSpriteNode *_currentColorDrop;
+
    NSMutableArray *_colorDrops;
+   NSMutableArray *_colorDropHitBoxes;
+
    int _colorDropVerticalOffset;
 }
 @end
@@ -36,6 +39,7 @@
       [self setupBackgorundWithSize:_defaultSize];
       [self setupButtons];
       [self addColorDrops];
+      [self addColorDropHitBoxes];
    }
    return self;
 }
@@ -90,14 +94,32 @@
    _currentColor = _currentColorDrop.color;
 }
 
+- (void)addColorDropHitBoxes
+{
+   _colorDropHitBoxes = [NSMutableArray arrayWithCapacity:COLOR_DROP_CAPACITY];
+   for (int i=0; i<COLOR_DROP_CAPACITY; ++i)
+   {
+      SKSpriteNode *dropHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor crayolaSizzlingRedColor]
+                                                              size:CGSizeMake(_defaultSize.width/(_colorDrops.count + 2),
+                                                                              60)];
+      dropHitBox.position = CGPointMake(i*COLOR_DROP_PADDING + 23, -dropHitBox.size.height/2.0);
+      dropHitBox.colorBlendFactor = 1.0;
+      dropHitBox.color = ((SKSpriteNode *)_colorDrops[i]).color;
+      dropHitBox.alpha = 0;
+      [_colorDropHitBoxes insertObject:dropHitBox atIndex:i];
+      [self addChild:dropHitBox];
+   }
+}
+
 - (void)setColorDropsHidden:(BOOL)hidden
 {
    for (SKNode *node in _colorDrops)
       node.hidden = hidden;
 }
 
-- (void)updateCurrentColorDrop:(SKSpriteNode *)drop
+- (void)updateCurrentColorDrop:(SKSpriteNode *)hitBox
 {
+   SKSpriteNode *drop = _colorDrops[[_colorDropHitBoxes indexOfObject:hitBox]];
    if (_currentColorDrop != drop)
    {
       SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
@@ -122,20 +144,17 @@
 
    if ([node.name isEqualToString:@"splash"] && !moved)
       [self toggle];
-   else if ([_colorDrops containsObject:node])
+   else if ([_colorDropHitBoxes containsObject:node])
    {
-      [self updateCurrentColorDrop:(SKSpriteNode *)(SKSpriteNode *)node];
+      [self updateCurrentColorDrop:(SKSpriteNode *)node];
    }
 }
 
 - (void)expand
 {
-//   [self.delegate hudWillExpand:self];
    CFTimeInterval waitPeriod = 0.0;
    [self.delegate hud:self willExpandAfterPeriod:&waitPeriod];
 
-//   SKAction *slide = [SKAction moveTo:CGPointMake(0,0)
-//                                duration:.5];
    SKAction *wait = [SKAction waitForDuration:waitPeriod];
    SKAction *slide = [SKAction moveByX:-_defaultSize.width + 60 y:0 duration:.5];
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
@@ -169,12 +188,16 @@
                     completion:^
       {
          SKAction *moveDrop = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.2];
+         SKAction *moveDropHitBox = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING + 12 duration:.2];
          moveDrop.timingMode = SKActionTimingEaseOut;
          for (SKNode *drop in _colorDrops)
          {
             drop.hidden = NO;
             [drop runAction:moveDrop];
          }
+
+         for (SKNode *hitBox in _colorDropHitBoxes)
+            [hitBox runAction:moveDropHitBox];
 
          if (_currentColorDrop)
          {
@@ -196,8 +219,6 @@
    [self.delegate hudWillCollapse:self];
 
    SKAction *wait = [SKAction waitForDuration:.25];
-//   SKAction *slide = [SKAction moveTo:CGPointMake(_defaultSize.width - 60, 0)
-//                                    duration:.5];
    SKAction *slide = [SKAction moveByX:_defaultSize.width - 60 y:0 duration:.5];
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor clearColor]
                                       colorBlendFactor:1.0
@@ -233,8 +254,12 @@
    {
       [_currentColorDrop setScale:COLOR_DROP_SCALE];
       SKAction *moveDrop = [SKAction moveByX:0 y:-HUD_BUTTON_EDGE_PADDING duration:.25];
+      SKAction *moveDropHitBox = [SKAction moveByX:0 y:-(HUD_BUTTON_EDGE_PADDING + 12) duration:.2];
       for (SKNode *drop in _colorDrops)
          [drop runAction:moveDrop];
+
+      for (SKNode *hitBox in _colorDropHitBoxes)
+         [hitBox runAction:moveDropHitBox];
 
       [self.delegate hudDidCollapse:self];
    }];
