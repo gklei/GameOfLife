@@ -38,6 +38,7 @@
 		8EAA59C0184B03C7008E34D9 /* menu.opening.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59BD184B03C7008E34D9 /* menu.opening.wav */; };
 		8EAA59C1184B03C7008E34D9 /* up.finger.off.tile.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */; };
 		8EAA59C3184B03E1008E34D9 /* menu.closing.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59C2184B03E1008E34D9 /* menu.closing.wav */; };
+		8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */; };
 		8ECA8984182371AE009D906F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8983182371AE009D906F /* Foundation.framework */; };
 		8ECA8986182371AE009D906F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8985182371AE009D906F /* CoreGraphics.framework */; };
 		8ECA8988182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
@@ -106,6 +107,8 @@
 		8EAA59BD184B03C7008E34D9 /* menu.opening.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = menu.opening.wav; path = "GL Sound FX/menu.opening.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = up.finger.off.tile.wav; path = "GL Sound FX/up.finger.off.tile.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59C2184B03E1008E34D9 /* menu.closing.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = menu.closing.wav; path = "GL Sound FX/menu.closing.wav"; sourceTree = SOURCE_ROOT; };
+		8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSettingsLayer.h; sourceTree = "<group>"; };
+		8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSettingsLayer.m; sourceTree = "<group>"; };
 		8ECA8980182371AE009D906F /* GameOfLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ECA8983182371AE009D906F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8ECA8985182371AE009D906F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -239,6 +242,8 @@
 				8E75B030184169BF000AEEB8 /* GLColorHud.m */,
 				8E75B03E1842FFE3000AEEB8 /* GLGeneralHud.h */,
 				8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */,
+				8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */,
+				8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */,
 				8E75B04C18490C0A000AEEB8 /* GLGrid.h */,
 				8E75B04D18490C0A000AEEB8 /* GLGrid.m */,
 				8E99B29D182BFE7600C7AEDB /* GLGridScene.h */,
@@ -415,6 +420,7 @@
 				8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */,
 				8ECA8992182371AE009D906F /* main.m in Sources */,
 				8E75B0401842FFE3000AEEB8 /* GLGeneralHud.m in Sources */,
+				8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */,
 				8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */,
 				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,
 				8E75B04E18490C0A000AEEB8 /* GLGrid.m in Sources */,

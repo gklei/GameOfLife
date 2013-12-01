@@ -7,6 +7,8 @@
 //
 
 #import "GLGeneralHud.h"
+
+#import "GLSettingsLayer.h"
 #import "UIColor+Crayola.h"
 
 #define CORE_FUNCTION_BUTTON_PADDING 52
@@ -326,6 +328,7 @@
 
    [_backgroundLayer runAction:expand];
    [_settingsButton runAction:spin];
+
 }
 
 - (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
