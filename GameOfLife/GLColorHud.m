@@ -183,6 +183,9 @@
    self.expanded = YES;
    [self runAction:wait completion:^
    {
+      SKAction *soundFX = [SKAction playSoundFileNamed:@"menu.opening.wav" waitForCompletion:NO];
+      [self runAction:soundFX];
+
       [_backgroundLayer runAction:backgroundActions];
 
       for (SKNode *button in _colorDrops)
@@ -262,6 +265,9 @@
    for (SKNode *hitBox in _colorDropHitBoxes)
       [hitBox runAction:slide];
 
+   SKAction *soundFX = [SKAction playSoundFileNamed:@"menu.closing.wav" waitForCompletion:NO];
+   [self runAction:soundFX];
+   
    [_backgroundLayer runAction:hudBackgroundActions
                     completion:^
    {

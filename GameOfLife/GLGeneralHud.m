@@ -220,7 +220,11 @@
                                                changeButtonColor,
                                                rotate]];
    self.expanded = YES;
-   [self runAction:wait completion:^{
+   [self runAction:wait completion:^
+   {
+      SKAction *soundFX = [SKAction playSoundFileNamed:@"menu.opening.wav" waitForCompletion:NO];
+      [self runAction:soundFX];
+
       [_backgroundLayer runAction:slide];
       for (SKNode *button in _coreFunctionButtons)
          [button runAction:slide];
@@ -284,7 +288,10 @@
 
    self.expanded = NO;
    [self setCoreFunctionButtonsHidden:YES];
-   
+
+   SKAction *soundFX = [SKAction playSoundFileNamed:@"menu.closing.wav" waitForCompletion:NO];
+   [self runAction:soundFX];
+
    [_backgroundLayer runAction:slide];
    for (SKNode *button in _coreFunctionButtons)
       [button runAction:slide];

@@ -121,7 +121,8 @@
    if (![_generalHudLayer containsPoint:[touch locationInNode:self]] &&
        ![_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
-      [self toggleLivingForTileAtTouch:touch];
+      SKAction *soundFX = [SKAction playSoundFileNamed:@"down.finger.on.tile.wav" waitForCompletion:NO];
+      [self toggleLivingForTileAtTouch:touch withSoundFX:soundFX];
    }
 }
 
@@ -144,7 +145,8 @@
        ![_generalHudLayer containsPoint:_firstLocationOfTouch] &&
        ![_colorHudLayer containsPoint:_firstLocationOfTouch])
    {
-      [self toggleLivingForTileAtTouch:touch];
+      SKAction *soundFX = [SKAction playSoundFileNamed:@"up.finger.off.tile.wav" waitForCompletion:NO];
+      [self toggleLivingForTileAtTouch:touch withSoundFX:soundFX];
    }
 
    if ([_colorHudLayer containsPoint:_firstLocationOfTouch])
@@ -317,12 +319,13 @@
 }
 
 #pragma mark Helper Method
-- (void)toggleLivingForTileAtTouch:(UITouch *)touch
+- (void)toggleLivingForTileAtTouch:(UITouch *)touch withSoundFX:(SKAction *)soundFX
 {
    GLTileNode *tile = [_grid tileAtTouch:touch];
    if (_currentTileBeingTouched != tile)
    {
       _currentTileBeingTouched = tile;
+      [self runAction:soundFX];
       [tile updateLivingAndColor:!tile.isLiving];
       [_grid storeGridState];
    }
