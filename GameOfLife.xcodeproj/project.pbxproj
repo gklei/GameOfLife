@@ -39,6 +39,7 @@
 		8EAA59C1184B03C7008E34D9 /* up.finger.off.tile.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */; };
 		8EAA59C3184B03E1008E34D9 /* menu.closing.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59C2184B03E1008E34D9 /* menu.closing.wav */; };
 		8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */; };
+		8EAA5A10184B29EC008E34D9 /* button.press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA5A0F184B29EC008E34D9 /* button.press.wav */; };
 		8ECA8984182371AE009D906F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8983182371AE009D906F /* Foundation.framework */; };
 		8ECA8986182371AE009D906F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8985182371AE009D906F /* CoreGraphics.framework */; };
 		8ECA8988182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
@@ -109,6 +110,7 @@
 		8EAA59C2184B03E1008E34D9 /* menu.closing.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = menu.closing.wav; path = "GL Sound FX/menu.closing.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSettingsLayer.h; sourceTree = "<group>"; };
 		8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSettingsLayer.m; sourceTree = "<group>"; };
+		8EAA5A0F184B29EC008E34D9 /* button.press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = button.press.wav; path = "GL Sound FX/button.press.wav"; sourceTree = SOURCE_ROOT; };
 		8ECA8980182371AE009D906F /* GameOfLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ECA8983182371AE009D906F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8ECA8985182371AE009D906F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -191,6 +193,7 @@
 		8EAA59BB184B0218008E34D9 /* SoundFX */ = {
 			isa = PBXGroup;
 			children = (
+				8EAA5A0F184B29EC008E34D9 /* button.press.wav */,
 				8EAA59C2184B03E1008E34D9 /* menu.closing.wav */,
 				8EAA59BC184B03C7008E34D9 /* down.finger.on.tile.wav */,
 				8EAA59BD184B03C7008E34D9 /* menu.opening.wav */,
@@ -384,6 +387,7 @@
 				8E75B04A1846CB23000AEEB8 /* restore.png in Resources */,
 				8E99B2AA182E0ABD00C7AEDB /* gear@2x.png in Resources */,
 				8E75B03818419670000AEEB8 /* ring.png in Resources */,
+				8EAA5A10184B29EC008E34D9 /* button.press.wav in Resources */,
 				8ECA8999182371AE009D906F /* Main.storyboard in Resources */,
 				8E99B2BE182F7A1200C7AEDB /* start.png in Resources */,
 				8E75B03D1841C909000AEEB8 /* drop@2x.png in Resources */,

@@ -21,6 +21,7 @@
 
 - (void)setupSoundFX
 {
+   _defaultButtonPressSound = [SKAction playSoundFileNamed:@"button.press.wav" waitForCompletion:NO];
    _defaultExpandingSoundFX = [SKAction playSoundFileNamed:@"menu.opening.wav" waitForCompletion:NO];
    _defaultCollapsingSoundFX = [SKAction playSoundFileNamed:@"menu.closing.wav" waitForCompletion:NO];
 }

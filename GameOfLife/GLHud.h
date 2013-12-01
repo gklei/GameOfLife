@@ -21,6 +21,8 @@
 
 @property (strong, nonatomic) id<GLHudDelegate> delegate;
 @property (assign, nonatomic, getter = isExpanded) BOOL expanded;
+
+@property (strong, nonatomic) SKAction *defaultButtonPressSound;
 @property (strong, nonatomic) SKAction *defaultExpandingSoundFX;
 @property (strong, nonatomic) SKAction *defaultCollapsingSoundFX;
 

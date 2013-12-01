@@ -323,11 +323,18 @@
 
    SKAction *expand = [SKAction moveByX:0 y:_defaultSize.height - 60 duration:.5];
    SKAction *spin = [SKAction rotateByAngle:M_PI*2 duration:.5];
+   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor crayolaRobinsEggBlueColor]
+                                      colorBlendFactor:1.0
+                                              duration:.5];
+
+   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+
    expand.timingMode = SKActionTimingEaseInEaseOut;
    spin.timingMode = SKActionTimingEaseInEaseOut;
+   changeColor.timingMode = SKActionTimingEaseInEaseOut;
 
    [_backgroundLayer runAction:expand];
-   [_settingsButton runAction:spin];
+   [_settingsButton runAction:buttonActions];
 
 }
 
@@ -337,17 +344,24 @@
 
    SKAction *collapse = [SKAction moveByX:0 y:-(_defaultSize.height - 60) duration:.5];
    SKAction *spin = [SKAction rotateByAngle:-M_PI*2 duration:.5];
+   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor whiteColor]
+                                      colorBlendFactor:1.0
+                                              duration:.5];
+
+   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+
    collapse.timingMode = SKActionTimingEaseInEaseOut;
    spin.timingMode = SKActionTimingEaseInEaseOut;
+   changeColor.timingMode = SKActionTimingEaseInEaseOut;
 
    [_backgroundLayer runAction:collapse];
-   [_settingsButton runAction:spin completion:completionBlock];
+   [_settingsButton runAction:buttonActions completion:completionBlock];
 }
 
 - (void)toggleSettings
 {
    if (_settingsAreExpanded)
-      [self collapseSettingsWithCompletionBlock:nil];
+      [self collapseSettingsWithCompletionBlock:^{_settingsButton.color = [SKColor whiteColor];}];
    else
       [self expandSettings];
 }
@@ -385,11 +399,17 @@
 
    // check to see if the bottom bar should expand or collapse
    if (node == _expandCollapseButton)
+   {
+      [self runAction:self.defaultButtonPressSound];
       [self toggle];
+      return;
+   }
 
    // if the hud was somehow pressed elsewhere and the bottom bar is not expanded, return
-   if (!self.expanded)
+   if (!self.expanded || ![_buttonHitBoxes containsObject:node])
       return;
+
+   [self runAction:self.defaultButtonPressSound];
 
    // we know that the bottom bar is expanded and can now check to see where the hud was pressed
    if (node == _settingsButtonHitBox)

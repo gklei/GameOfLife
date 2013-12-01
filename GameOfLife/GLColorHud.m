@@ -124,6 +124,7 @@
    SKSpriteNode *drop = _colorDrops[[_colorDropHitBoxes indexOfObject:hitBox]];
    if (_currentColorDrop != drop)
    {
+      [self runAction:self.defaultButtonPressSound];
       SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
       SKAction *deselectScaleAction = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
 
@@ -145,7 +146,10 @@
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
 
    if ([node.name isEqualToString:@"splash"] && !moved)
+   {
+      [self runAction:self.defaultButtonPressSound];
       [self toggle];
+   }
    else if ([_colorDropHitBoxes containsObject:node] && self.isExpanded)
    {
       [self updateCurrentColorDrop:(SKSpriteNode *)node];
