@@ -165,8 +165,7 @@
    SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor whiteColor]
                                             colorBlendFactor:1.0
                                                     duration:.5];
-   SKAction *maintainPosition = [SKAction moveByX:(_defaultSize.width - 60) y:0
-                                         duration:.5];
+   SKAction *maintainPosition = [SKAction moveByX:(_defaultSize.width - 60) y:0 duration:.5];
    SKAction *rotate = [SKAction rotateByAngle:M_PI*2
                                      duration:.5];
 
@@ -178,18 +177,26 @@
 
    SKAction *buttonActions = [SKAction group:@[changeButtonAlpha,
                                                changeButtonColor,
-                                               maintainPosition,
                                                rotate]];
+   SKAction *backgroundActions = [SKAction group:@[changeHudColor,
+                                                   slide]];
    self.expanded = YES;
-   [self runAction:wait completion:^{
-      [self runAction:slide];
-      [_backgroundLayer runAction:changeHudColor];
+   [self runAction:wait completion:^
+   {
+      [_backgroundLayer runAction:backgroundActions];
+
+      for (SKNode *button in _colorDrops)
+         [button runAction:slide];
+
+      for (SKNode *hitBox in _colorDropHitBoxes)
+         [hitBox runAction:slide];
+
       [_splashButton runAction:buttonActions
                     completion:^
       {
          SKAction *moveDrop = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.2];
          SKAction *moveDropHitBox = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING + 12 duration:.2];
-         moveDrop.timingMode = SKActionTimingEaseOut;
+         moveDrop.timingMode = SKActionTimingEaseInEaseOut;
          for (SKNode *drop in _colorDrops)
          {
             drop.hidden = NO;
@@ -210,7 +217,7 @@
          {
             [self.delegate hudDidExpand:self];
          }
-      }];
+         }];
    }];
 }
 
@@ -240,16 +247,22 @@
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
    SKAction *hudBackgroundColorSequence = [SKAction sequence:@[wait, changeHudColor]];
-   SKAction *buttonAnimations = [SKAction group:@[maintainPosition, rotate]];
+   SKAction *hudBackgroundActions = [SKAction group:@[hudBackgroundColorSequence, slide]];
    SKAction *buttonColorAnimations = [SKAction group:@[changeButtonAlpha, changeButtonColor]];
    SKAction *buttonColorSequence = [SKAction sequence:@[wait, buttonColorAnimations]];
-   SKAction *buttonActions = [SKAction group:@[buttonAnimations, buttonColorSequence]];
+   SKAction *buttonActions = [SKAction group:@[rotate, buttonColorSequence]];
 
    self.expanded = NO;
    [self setColorDropsHidden:YES];
-   [self runAction:slide];
    [_splashButton runAction:buttonActions];
-   [_backgroundLayer runAction:hudBackgroundColorSequence
+
+   for (SKNode *button in _colorDrops)
+      [button runAction:slide];
+
+   for (SKNode *hitBox in _colorDropHitBoxes)
+      [hitBox runAction:slide];
+
+   [_backgroundLayer runAction:hudBackgroundActions
                     completion:^
    {
       [_currentColorDrop setScale:COLOR_DROP_SCALE];
