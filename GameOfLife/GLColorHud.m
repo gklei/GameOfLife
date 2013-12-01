@@ -144,7 +144,7 @@
 
    if ([node.name isEqualToString:@"splash"] && !moved)
       [self toggle];
-   else if ([_colorDropHitBoxes containsObject:node])
+   else if ([_colorDropHitBoxes containsObject:node] && self.isExpanded)
    {
       [self updateCurrentColorDrop:(SKSpriteNode *)node];
    }

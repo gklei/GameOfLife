@@ -114,6 +114,8 @@
 {
    for (int i = 0; i < _tiles.count; ++i)
       _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
+
+   _inContinuousLoop = NO;
 }
 
 - (void)restoreGrid
