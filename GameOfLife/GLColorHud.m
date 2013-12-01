@@ -99,9 +99,11 @@
    _colorDropHitBoxes = [NSMutableArray arrayWithCapacity:COLOR_DROP_CAPACITY];
    for (int i=0; i<COLOR_DROP_CAPACITY; ++i)
    {
-      SKSpriteNode *dropHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor crayolaSizzlingRedColor]
-                                                              size:CGSizeMake(_defaultSize.width/(_colorDrops.count + 2),
-                                                                              60)];
+      SKSpriteNode *dropHitBox =
+         [SKSpriteNode spriteNodeWithColor:[SKColor crayolaSizzlingRedColor]
+                                      size:CGSizeMake(_defaultSize.width/(_colorDrops.count + 2),
+                                                      60)];
+      
       dropHitBox.position = CGPointMake(i*COLOR_DROP_PADDING + 23, -dropHitBox.size.height/2.0);
       dropHitBox.colorBlendFactor = 1.0;
       dropHitBox.color = ((SKSpriteNode *)_colorDrops[i]).color;
