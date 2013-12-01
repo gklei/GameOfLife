@@ -220,7 +220,8 @@
                                                changeButtonColor,
                                                rotate]];
    self.expanded = YES;
-   [self runAction:wait completion:^
+   [self runAction:wait
+        completion:^
    {
       [self runAction:self.defaultExpandingSoundFX];
       [_backgroundLayer runAction:slide];
@@ -233,11 +234,12 @@
 
       [_backgroundLayer runAction:changeHudColor];
       [_expandCollapseButton runAction:buttonActions
-                    completion:^
+                            completion:^
        {
           SKAction *moveButton = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING duration:.25];
           SKAction *moveButtonHitBox = [SKAction moveByX:0 y:HUD_BUTTON_EDGE_PADDING + 10 duration:.25];
           moveButton.timingMode = SKActionTimingEaseInEaseOut;
+
           for (SKNode *button in _coreFunctionButtons)
           {
              button.hidden = NO;

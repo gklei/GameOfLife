@@ -292,7 +292,9 @@
    SKAction *reposition = [SKAction moveByX:0 y:-60 duration:.25];
    reposition.timingMode = SKActionTimingEaseInEaseOut;
 
-   [_generalHudLayer runAction:[SKAction sequence:@[wait, reposition]] completion:^{
+   [_generalHudLayer runAction:[SKAction sequence:@[wait, reposition]]
+                    completion:^
+   {
       [_generalHudLayer setCoreFunctionButtonsHidden:NO];
    }];
 }
@@ -305,7 +307,9 @@
    SKAction *reposition = [SKAction moveByX:0 y:-60 duration:.25];
    reposition.timingMode = SKActionTimingEaseInEaseOut;
 
-   [_colorHudLayer runAction:[SKAction sequence:@[wait, reposition]] completion:^{
+   [_colorHudLayer runAction:[SKAction sequence:@[wait, reposition]]
+                  completion:^
+   {
       [_colorHudLayer setColorDropsHidden:NO];
    }];
 }

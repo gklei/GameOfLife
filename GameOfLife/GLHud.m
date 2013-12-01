@@ -21,8 +21,8 @@
 
 - (void)setupSoundFX
 {
-   _defaultCollapsingSoundFX = [SKAction playSoundFileNamed:@"menu.closing.wav" waitForCompletion:NO];
    _defaultExpandingSoundFX = [SKAction playSoundFileNamed:@"menu.opening.wav" waitForCompletion:NO];
+   _defaultCollapsingSoundFX = [SKAction playSoundFileNamed:@"menu.closing.wav" waitForCompletion:NO];
 }
 
 // empty implementation -- this should be overridden by subclasses

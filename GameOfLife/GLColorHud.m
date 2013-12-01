@@ -183,7 +183,8 @@
    SKAction *backgroundActions = [SKAction group:@[changeHudColor,
                                                    slide]];
    self.expanded = YES;
-   [self runAction:wait completion:^
+   [self runAction:wait
+        completion:^
    {
       [self runAction:self.defaultExpandingSoundFX];
 
