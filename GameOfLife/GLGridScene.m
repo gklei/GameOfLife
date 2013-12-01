@@ -29,6 +29,9 @@
    BOOL _colorHudIsAnimating;
    BOOL _running;
 
+   SKAction *_fingerDownSoundFX;
+   SKAction *_fingerUpSoundFX;
+
    CFTimeInterval _lastGenerationTime;
 }
 @end
@@ -44,6 +47,7 @@
       [self setupGridWithSize:size];
       [self setupGeneralHud];
       [self setupColorHud];
+      [self setupSoundFX];
 
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
@@ -74,6 +78,12 @@
    
    [_grid setCurrentColor:_colorHudLayer.currentColor];
    [self addChild:_colorHudLayer];
+}
+
+- (void)setupSoundFX
+{
+   _fingerUpSoundFX = [SKAction playSoundFileNamed:@"up.finger.off.tile.wav" waitForCompletion:NO];
+   _fingerDownSoundFX = [SKAction playSoundFileNamed:@"down.finger.on.tile.wav" waitForCompletion:NO];
 }
 
 #pragma mark GLGeneralHud Delegate Methods
@@ -123,8 +133,7 @@
        ![_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
       _oneTileTouched = YES;
-      SKAction *soundFX = [SKAction playSoundFileNamed:@"down.finger.on.tile.wav" waitForCompletion:NO];
-      [self toggleLivingForTileAtTouch:touch withSoundFX:soundFX];
+      [self toggleLivingForTileAtTouch:touch withSoundFX:_fingerDownSoundFX];
    }
 }
 
@@ -147,8 +156,7 @@
        ![_generalHudLayer containsPoint:_firstLocationOfTouch] &&
        ![_colorHudLayer containsPoint:_firstLocationOfTouch])
    {
-      SKAction *soundFX = [SKAction playSoundFileNamed:@"up.finger.off.tile.wav" waitForCompletion:NO];
-      [self toggleLivingForTileAtTouch:touch withSoundFX:soundFX];
+      [self toggleLivingForTileAtTouch:touch withSoundFX:_fingerUpSoundFX];
    }
 
    if ([_colorHudLayer containsPoint:_firstLocationOfTouch])
@@ -178,8 +186,7 @@
 
    if (_oneTileTouched)
    {
-      SKAction *soundFX = [SKAction playSoundFileNamed:@"up.finger.off.tile.wav" waitForCompletion:NO];
-      [self runAction:soundFX];
+      [self runAction:_fingerUpSoundFX];
       _oneTileTouched = NO;
    }
    _currentTileBeingTouched = nil;

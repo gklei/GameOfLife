@@ -20,7 +20,9 @@
 @interface GLHud : SKNode
 
 @property (strong, nonatomic) id<GLHudDelegate> delegate;
-@property (nonatomic, assign, getter = isExpanded) BOOL expanded;
+@property (assign, nonatomic, getter = isExpanded) BOOL expanded;
+@property (strong, nonatomic) SKAction *defaultExpandingSoundFX;
+@property (strong, nonatomic) SKAction *defaultCollapsingSoundFX;
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved;
 

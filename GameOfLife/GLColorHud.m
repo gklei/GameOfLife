@@ -183,8 +183,7 @@
    self.expanded = YES;
    [self runAction:wait completion:^
    {
-      SKAction *soundFX = [SKAction playSoundFileNamed:@"menu.opening.wav" waitForCompletion:NO];
-      [self runAction:soundFX];
+      [self runAction:self.defaultExpandingSoundFX];
 
       [_backgroundLayer runAction:backgroundActions];
 
@@ -265,8 +264,7 @@
    for (SKNode *hitBox in _colorDropHitBoxes)
       [hitBox runAction:slide];
 
-   SKAction *soundFX = [SKAction playSoundFileNamed:@"menu.closing.wav" waitForCompletion:NO];
-   [self runAction:soundFX];
+   [self runAction:self.defaultCollapsingSoundFX];
    
    [_backgroundLayer runAction:hudBackgroundActions
                     completion:^

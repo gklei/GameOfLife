@@ -10,6 +10,21 @@
 
 @implementation GLHud
 
+- (id)init
+{
+   if (self = [super init])
+   {
+      [self setupSoundFX];
+   }
+   return self;
+}
+
+- (void)setupSoundFX
+{
+   _defaultCollapsingSoundFX = [SKAction playSoundFileNamed:@"menu.closing.wav" waitForCompletion:NO];
+   _defaultExpandingSoundFX = [SKAction playSoundFileNamed:@"menu.opening.wav" waitForCompletion:NO];
+}
+
 // empty implementation -- this should be overridden by subclasses
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
