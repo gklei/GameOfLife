@@ -8,7 +8,6 @@
 
 #import "GLTileNode.h"
 
-
 @implementation GLTileNode
 
 + (id)tileWithRect:(CGRect)rect
