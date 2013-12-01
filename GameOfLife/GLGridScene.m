@@ -33,6 +33,9 @@
    SKAction *_fingerUpSoundFX;
 
    CFTimeInterval _lastGenerationTime;
+
+   SKSpriteNode *_flashLayer;
+   SKAction *_flashAnimation;
 }
 @end
 
@@ -48,6 +51,7 @@
       [self setupGeneralHud];
       [self setupColorHud];
       [self setupSoundFX];
+      [self setupFlashLayerAndAnimation];
 
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
@@ -86,6 +90,22 @@
    _fingerDownSoundFX = [SKAction playSoundFileNamed:@"down.finger.on.tile.wav" waitForCompletion:NO];
 }
 
+- (void)setupFlashLayerAndAnimation
+{
+   _flashLayer = [SKSpriteNode spriteNodeWithColor:[UIColor whiteColor] size:self.size];
+   _flashLayer.name = @"flashLayer";
+   _flashLayer.colorBlendFactor = 1.0;
+   _flashLayer.alpha = 0;
+   _flashLayer.anchorPoint = CGPointZero;
+   _flashLayer.position = CGPointZero;
+
+   SKAction *flashIn = [SKAction fadeAlphaTo:1 duration:.1];
+   SKAction *flashOut = [SKAction fadeAlphaTo:0 duration:.5];
+   _flashAnimation = [SKAction sequence:@[flashIn, flashOut]];
+
+   [self addChild:_flashLayer];
+}
+
 #pragma mark GLGeneralHud Delegate Methods
 - (void)clearButtonPressed
 {
@@ -109,15 +129,18 @@
 
 - (void)screenShotButtonPressed
 {
-   CGFloat scale = self.view.contentScaleFactor;
-   UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
-   [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
+   [_flashLayer runAction:_flashAnimation completion:^
+    {
+       CGFloat scale = self.view.contentScaleFactor;
+       UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
+       [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
 
-   UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
-   UIGraphicsEndImageContext();
+       UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+       UIGraphicsEndImageContext();
 
-   if (viewImage)
-      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+       if (viewImage)
+          UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+   }];
 }
 
 #pragma GLColorHud Delegate Method

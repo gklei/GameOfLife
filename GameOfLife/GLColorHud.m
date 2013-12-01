@@ -147,7 +147,6 @@
 
    if ([node.name isEqualToString:@"splash"] && !moved)
    {
-      [self runAction:self.defaultButtonPressSound];
       [self toggle];
    }
    else if ([_colorDropHitBoxes containsObject:node] && self.isExpanded)

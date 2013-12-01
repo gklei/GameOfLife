@@ -111,8 +111,8 @@
    [_expandCollapseButton setScale:.23];
 
    _expandCollapseButton.position =
-   CGPointMake(_defaultSize.width - _expandCollapseButton.size.width/2 - 15,
-               HUD_BUTTON_EDGE_PADDING - _expandCollapseButton.size.height/2);
+      CGPointMake(_defaultSize.width - _expandCollapseButton.size.width/2 - 15,
+                  HUD_BUTTON_EDGE_PADDING - _expandCollapseButton.size.height/2);
 
    _expandCollapseButton.name = @"expand_collapse";
    [self addChild:_expandCollapseButton];
@@ -400,7 +400,6 @@
    // check to see if the bottom bar should expand or collapse
    if (node == _expandCollapseButton)
    {
-      [self runAction:self.defaultButtonPressSound];
       [self toggle];
       return;
    }
