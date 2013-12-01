@@ -36,6 +36,7 @@
 
    SKSpriteNode *_flashLayer;
    SKAction *_flashAnimation;
+   BOOL _firstScreenShotTaken;
 }
 @end
 
@@ -129,18 +130,39 @@
 
 - (void)screenShotButtonPressed
 {
-   [_flashLayer runAction:_flashAnimation completion:^
-    {
-       CGFloat scale = self.view.contentScaleFactor;
-       UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
-       [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
+   // weird work around for the first screen shot that's taken being slow
+   if (!_firstScreenShotTaken)
+   {
+      [_flashLayer runAction:_flashAnimation
+                  completion:^
+       {
+          CGFloat scale = self.view.contentScaleFactor;
+          UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
+          [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
 
-       UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
-       UIGraphicsEndImageContext();
+          UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+          UIGraphicsEndImageContext();
 
-       if (viewImage)
-          UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
-   }];
+          if (viewImage)
+             UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+          
+          _firstScreenShotTaken = YES;
+      }];
+   }
+   else
+   {
+      CGFloat scale = self.view.contentScaleFactor;
+      UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
+      [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
+
+      UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+      UIGraphicsEndImageContext();
+
+      if (viewImage)
+         UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+
+      [_flashLayer runAction:_flashAnimation];
+   }
 }
 
 #pragma GLColorHud Delegate Method
