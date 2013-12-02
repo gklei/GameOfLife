@@ -19,10 +19,16 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
    - (void)restoreButtonPressed;
    - (void)toggleRunningButtonPressed;
    - (void)screenShotButtonPressed;
+
+   - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action;
+   - (void)settingsDidExpand;
+   - (void)settingsWillCollapseWithRepositioningAction:(SKAction *)action;
+   - (void)settingsDidCollapse;
 @end
 
 @interface GLGeneralHud : GLHud
 
+@property (readonly, nonatomic) BOOL settingsAreExpanded;
 @property (strong, nonatomic) id<GLGeneralHudDelegate> delegate;
 
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state;

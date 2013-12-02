@@ -40,8 +40,6 @@
 
    SKSpriteNode *_settingsButton;
    SKSpriteNode *_settingsButtonHitBox;
-
-   BOOL _settingsAreExpanded;
 }
 @end
 
@@ -325,7 +323,7 @@
    SKAction *spin = [SKAction rotateByAngle:M_PI duration:.25];
    SKAction *changeColor = [SKAction colorizeWithColor:[SKColor crayolaRobinsEggBlueColor]
                                       colorBlendFactor:1.0
-                                              duration:.5];
+                                              duration:.25];
 
    SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
 
@@ -333,7 +331,8 @@
    spin.timingMode = SKActionTimingEaseInEaseOut;
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
 
-   [_backgroundLayer runAction:expand];
+   [self.delegate settingsWillExpandWithRepositioningAction:expand];
+   [_backgroundLayer runAction:expand completion:^{[self.delegate settingsDidExpand];}];
    [_settingsButton runAction:buttonActions completion:completionBlock];
 
 }
@@ -346,7 +345,7 @@
    SKAction *spin = [SKAction rotateByAngle:-M_PI duration:.25];
    SKAction *changeColor = [SKAction colorizeWithColor:[SKColor whiteColor]
                                       colorBlendFactor:1.0
-                                              duration:.5];
+                                              duration:.25];
 
    SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
 
@@ -354,7 +353,8 @@
    spin.timingMode = SKActionTimingEaseInEaseOut;
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
 
-   [_backgroundLayer runAction:collapse];
+   [self.delegate settingsWillCollapseWithRepositioningAction:collapse];
+   [_backgroundLayer runAction:collapse completion:^{[self.delegate settingsDidCollapse];}];
    [_settingsButton runAction:buttonActions completion:completionBlock];
 }
 

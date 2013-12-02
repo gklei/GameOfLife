@@ -165,6 +165,24 @@
    }
 }
 
+- (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
+{
+   [_colorHudLayer runAction:action];
+}
+
+- (void)settingsDidExpand
+{
+}
+
+- (void)settingsWillCollapseWithRepositioningAction:(SKAction *)action
+{
+   [_colorHudLayer runAction:action];
+}
+
+- (void)settingsDidCollapse
+{
+}
+
 #pragma GLColorHud Delegate Method
 - (void)setCurrentColor:(SKColor *)currentColor
 {
@@ -287,7 +305,7 @@
 {
    if (_generalHudLayer.isExpanded)
    {
-      *waitPeriod = 0.25;
+      *waitPeriod = (_generalHudLayer.settingsAreExpanded)? 0.5 : 0.25;
       [_generalHudLayer collapse];
    }
    else
