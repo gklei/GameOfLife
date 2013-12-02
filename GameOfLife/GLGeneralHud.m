@@ -419,10 +419,10 @@
 
 - (void)toggle
 {
-   if (!self.expanded)
-      [self expandBottomBar];
-   else
+   if (self.expanded)
       [self collapse];
+   else
+      [self expandBottomBar];
 }
 
 #pragma mark GLHud Touch Method
