@@ -44,10 +44,15 @@
    {
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
       {
-         GLTileNode *tile = [GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
-                                                                yPos + 0.5,
-                                                                TILESIZE.width - 1,
-                                                                TILESIZE.height - 1)];
+//         GLTileNode *tile = [GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
+//                                                                yPos + 0.5,
+//                                                                TILESIZE.width - 1,
+//                                                                TILESIZE.height - 1)];
+         GLTileNode *tile = [GLTileNode tileWithImageNamed:@"tile.circle.png"
+                                                      rect:CGRectMake(xPos + 0.5,
+                                                                      yPos + 0.5,
+                                                                      TILESIZE.width - 1,
+                                                                      TILESIZE.height - 1)];
          tile.delegate = self;
          [self addChild:tile];
       }

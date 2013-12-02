@@ -15,11 +15,6 @@
 
 @interface GLTileNode : SKSpriteNode
 
-+ (id)tileWithRect:(CGRect)rect;
-- (void)updateLivingAndColor:(BOOL)living;
-- (void)updateColor;
-- (void)clearTile;
-
 @property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
 @property (nonatomic, assign) float birthingDuration;
 @property (nonatomic, assign) float dyingDuration;
@@ -32,5 +27,12 @@
 @property (nonatomic, assign) CGPoint colorCenter;
 
 @property (strong, nonatomic) id<GLTileColorDelegate> delegate;
+
++ (id)tileWithRect:(CGRect)rect;
++ (id)tileWithImageNamed:(NSString *)imageName rect:(CGRect)rect;
+
+- (void)updateLivingAndColor:(BOOL)living;
+- (void)updateColor;
+- (void)clearTile;
 
 @end
