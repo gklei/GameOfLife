@@ -323,8 +323,12 @@
    [_backgroundLayer runAction:hudBackgroundColorSequence
                     completion:^
     {
-       SKAction *moveButton = [SKAction moveByX:0 y:-HUD_BUTTON_EDGE_PADDING duration:.25];
-       SKAction *moveButtonHitBox = [SKAction moveByX:0 y:-(HUD_BUTTON_EDGE_PADDING + 10) duration:.25];
+       SKAction *moveButton = [SKAction moveByX:0
+                                              y:-HUD_BUTTON_EDGE_PADDING
+                                       duration:REPOSITION_BUTTONS_DURATION];
+       SKAction *moveButtonHitBox = [SKAction moveByX:0
+                                                    y:-(HUD_BUTTON_EDGE_PADDING + 10)
+                                             duration:REPOSITION_BUTTONS_DURATION];
        for (SKNode *button in _coreFunctionButtons)
           [button runAction:moveButton];
 
