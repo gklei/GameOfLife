@@ -19,6 +19,5 @@
 @property (strong, nonatomic) id<GLColorHudDelegate> delegate;
 
 - (void)setColorDropsHidden:(BOOL)hidden;
-- (void)collapse;
 
 @end

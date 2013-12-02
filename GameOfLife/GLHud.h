@@ -27,5 +27,6 @@
 @property (strong, nonatomic) SKAction *defaultCollapsingSoundFX;
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved;
+- (void)collapse;
 
 @end

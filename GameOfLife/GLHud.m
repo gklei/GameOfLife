@@ -31,4 +31,9 @@
 {
 }
 
+// empty implementation -- this should be overridden by subclasses
+- (void)collapse
+{
+}
+
 @end
