@@ -32,11 +32,7 @@
 {
    SKTexture *texture = [SKTexture textureWithImageNamed:imageName];
    GLTileNode *tile = [GLTileNode spriteNodeWithTexture:texture size:rect.size];
-
-<<<<<<< HEAD
-//   tile.size = rect.size;
-=======
->>>>>>> 3b85a7c9755e95d5c71feb530bf08674d28b5211
+   
    tile.position = rect.origin;
    tile.anchorPoint = CGPointZero;
 

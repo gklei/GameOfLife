@@ -32,12 +32,8 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
 @property (strong, nonatomic) id<GLGeneralHudDelegate> delegate;
 
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state;
-<<<<<<< HEAD
-- (void)setCoreFunctionButtonsHidden:(BOOL)hidden;
 - (void)collapse;
 - (void)expand;
-=======
->>>>>>> 3b85a7c9755e95d5c71feb530bf08674d28b5211
 
 - (NSArray *)coreFunctionButtons;
 - (void)setCoreFunctionButtonsHidden:(BOOL)hidden;

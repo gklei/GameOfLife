@@ -370,16 +370,12 @@
 {
    _settingsAreExpanded = YES;
 
-<<<<<<< HEAD
-   SKAction *expand = [SKAction moveByX:0 y:(_defaultSize.height/2) - 60 duration:.25];
-   SKAction *spin = [SKAction rotateByAngle:M_PI duration:.25];
-=======
    SKAction *expand = [SKAction moveByX:0
                                       y:(_defaultSize.height/2) - 60
                                duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
    SKAction *spin = [SKAction rotateByAngle:M_PI
                                    duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
->>>>>>> 3b85a7c9755e95d5c71feb530bf08674d28b5211
+
    SKAction *changeColor = [SKAction colorizeWithColor:[SKColor crayolaRobinsEggBlueColor]
                                       colorBlendFactor:1.0
                                               duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
@@ -390,14 +386,13 @@
    spin.timingMode = SKActionTimingEaseInEaseOut;
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
 
-<<<<<<< HEAD
-   [_backgroundLayer runAction:expand];
-=======
+//   [_backgroundLayer runAction:expand];
+
    [self.delegate settingsWillExpandWithRepositioningAction:expand];
 
    [self runAction:_expandSettingsSound];
    [_backgroundLayer runAction:expand completion:^{[self.delegate settingsDidExpand];}];
->>>>>>> 3b85a7c9755e95d5c71feb530bf08674d28b5211
+
    [_settingsButton runAction:buttonActions completion:completionBlock];
 
 }
@@ -406,16 +401,12 @@
 {
    _settingsAreExpanded = NO;
 
-<<<<<<< HEAD
-   SKAction *collapse = [SKAction moveByX:0 y:-((_defaultSize.height/2) - 60) duration:.25];
-   SKAction *spin = [SKAction rotateByAngle:-M_PI duration:.25];
-=======
    SKAction *collapse = [SKAction moveByX:0
                                         y:-((_defaultSize.height/2) - 60)
                                  duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
    SKAction *spin = [SKAction rotateByAngle:-M_PI
                                    duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
->>>>>>> 3b85a7c9755e95d5c71feb530bf08674d28b5211
+   
    SKAction *changeColor = [SKAction colorizeWithColor:[SKColor whiteColor]
                                       colorBlendFactor:1.0
                                               duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
