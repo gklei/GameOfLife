@@ -49,6 +49,8 @@
 
    SKAction *_expandSettingsSound;
    SKAction *_collapseSettingsSound;
+   SKAction *_startAlgorithmSound;
+   SKAction *_stopAlgorithmSound;
 }
 @end
 
@@ -59,12 +61,19 @@
    if (self = [super init])
    {
       _defaultSize = [UIScreen mainScreen].bounds.size;
-      _expandSettingsSound = [SKAction playSoundFileNamed:@"settings.up.wav" waitForCompletion:NO];
-      _collapseSettingsSound = [SKAction playSoundFileNamed:@"settings.down.wav" waitForCompletion:NO];
+      [self setupGeneralHUDSoundFX];
       [self setupBackgroundWithSize:_defaultSize];
       [self setupButtons];
    }
    return self;
+}
+
+- (void)setupGeneralHUDSoundFX
+{
+   _expandSettingsSound = [SKAction playSoundFileNamed:@"settings.expand.wav" waitForCompletion:NO];
+   _collapseSettingsSound = [SKAction playSoundFileNamed:@"settings.collapse.wav" waitForCompletion:NO];
+   _startAlgorithmSound = [SKAction playSoundFileNamed:@"start.algorithm.wav" waitForCompletion:NO];
+   _stopAlgorithmSound = [SKAction playSoundFileNamed:@"stop.algorithm.wav" waitForCompletion:NO];
 }
 
 - (NSArray *)coreFunctionButtons
@@ -179,10 +188,12 @@
    switch (state)
    {
       case GL_RUNNING:
+         [self runAction:_startAlgorithmSound];
          _startStopButton.texture = [SKTexture textureWithImageNamed:@"stop"];
          _startStopButton.color = [SKColor crayolaSizzlingRedColor];
          break;
       case GL_STOPPED:
+         [self runAction:_stopAlgorithmSound];
          _startStopButton.texture = [SKTexture textureWithImageNamed:@"start"];
          _startStopButton.color = [SKColor crayolaLimeColor];
          break;
@@ -453,7 +464,7 @@
    if (!self.expanded || ![_buttonHitBoxes containsObject:node])
       return;
 
-   if (node != _settingsButtonHitBox)
+   if (node != _settingsButtonHitBox || node != _startStopButtonHitBox)
       [self runAction:self.defaultButtonPressSound];
 
 
