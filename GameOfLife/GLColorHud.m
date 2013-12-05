@@ -25,6 +25,8 @@
    NSMutableArray *_colorDrops;
    NSMutableArray *_colorDropHitBoxes;
 
+   SKAction *_colorDropButtonSound;
+
    int _colorDropVerticalOffset;
 }
 @end
@@ -36,6 +38,7 @@
    if (self = [super init])
    {
       _defaultSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, 60.0);
+      _colorDropButtonSound = [SKAction playSoundFileNamed:@"color.change.wav" waitForCompletion:NO];
       [self setupBackgorundWithSize:_defaultSize];
       [self setupButtons];
       [self addColorDrops];
@@ -124,7 +127,7 @@
    SKSpriteNode *drop = _colorDrops[[_colorDropHitBoxes indexOfObject:hitBox]];
    if (_currentColorDrop != drop)
    {
-      [self runAction:self.defaultButtonPressSound];
+      [self runAction:_colorDropButtonSound];
       SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
       SKAction *deselectScaleAction = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
 

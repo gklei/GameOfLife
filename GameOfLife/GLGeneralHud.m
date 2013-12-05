@@ -46,6 +46,9 @@
 
    SKSpriteNode *_settingsButton;
    SKSpriteNode *_settingsButtonHitBox;
+
+   SKAction *_expandSettingsSound;
+   SKAction *_collapseSettingsSound;
 }
 @end
 
@@ -56,6 +59,8 @@
    if (self = [super init])
    {
       _defaultSize = [UIScreen mainScreen].bounds.size;
+      _expandSettingsSound = [SKAction playSoundFileNamed:@"settings.up.wav" waitForCompletion:NO];
+      _collapseSettingsSound = [SKAction playSoundFileNamed:@"settings.down.wav" waitForCompletion:NO];
       [self setupBackgroundWithSize:_defaultSize];
       [self setupButtons];
    }
@@ -359,6 +364,8 @@
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
 
    [self.delegate settingsWillExpandWithRepositioningAction:expand];
+
+   [self runAction:_expandSettingsSound];
    [_backgroundLayer runAction:expand completion:^{[self.delegate settingsDidExpand];}];
    [_settingsButton runAction:buttonActions completion:completionBlock];
 
@@ -384,6 +391,8 @@
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
 
    [self.delegate settingsWillCollapseWithRepositioningAction:collapse];
+
+   [self runAction:_collapseSettingsSound];
    [_backgroundLayer runAction:collapse completion:^{[self.delegate settingsDidCollapse];}];
    [_settingsButton runAction:buttonActions completion:completionBlock];
 }
@@ -444,7 +453,9 @@
    if (!self.expanded || ![_buttonHitBoxes containsObject:node])
       return;
 
-   [self runAction:self.defaultButtonPressSound];
+   if (node != _settingsButtonHitBox)
+      [self runAction:self.defaultButtonPressSound];
+
 
    // we know that the bottom bar is expanded and can now check to see where the hud was pressed
    if (node == _settingsButtonHitBox)
