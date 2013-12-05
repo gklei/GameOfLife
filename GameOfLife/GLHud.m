@@ -22,12 +22,17 @@
 - (void)setupSoundFX
 {
    _defaultButtonPressSound = [SKAction playSoundFileNamed:@"button.press.wav" waitForCompletion:NO];
-   _defaultExpandingSoundFX = [SKAction playSoundFileNamed:@"menu.opening.wav" waitForCompletion:NO];
-   _defaultCollapsingSoundFX = [SKAction playSoundFileNamed:@"menu.closing.wav" waitForCompletion:NO];
+   _defaultExpandingSoundFX = [SKAction playSoundFileNamed:@"menu.open.wav" waitForCompletion:NO];
+   _defaultCollapsingSoundFX = [SKAction playSoundFileNamed:@"menu.close.wav" waitForCompletion:NO];
 }
 
 // empty implementation -- this should be overridden by subclasses
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
+{
+}
+
+// empty implementation -- this should be overridden by subclasses
+- (void)collapse
 {
 }
 
