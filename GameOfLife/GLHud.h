@@ -28,5 +28,6 @@
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved;
 - (void)collapse;
+- (void)setupSoundFX;
 
 @end

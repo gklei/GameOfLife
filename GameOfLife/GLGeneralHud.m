@@ -61,19 +61,21 @@
    if (self = [super init])
    {
       _defaultSize = [UIScreen mainScreen].bounds.size;
-      [self setupGeneralHUDSoundFX];
+      [self setupSoundFX];
       [self setupBackgroundWithSize:_defaultSize];
       [self setupButtons];
    }
    return self;
 }
 
-- (void)setupGeneralHUDSoundFX
+- (void)setupSoundFX
 {
    _expandSettingsSound = [SKAction playSoundFileNamed:@"settings.expand.wav" waitForCompletion:NO];
    _collapseSettingsSound = [SKAction playSoundFileNamed:@"settings.collapse.wav" waitForCompletion:NO];
    _startAlgorithmSound = [SKAction playSoundFileNamed:@"start.algorithm.wav" waitForCompletion:NO];
    _stopAlgorithmSound = [SKAction playSoundFileNamed:@"stop.algorithm.wav" waitForCompletion:NO];
+
+   [super setupSoundFX];
 }
 
 - (NSArray *)coreFunctionButtons
@@ -464,9 +466,8 @@
    if (!self.expanded || ![_buttonHitBoxes containsObject:node])
       return;
 
-   if (node != _settingsButtonHitBox || node != _startStopButtonHitBox)
+   if (node != _settingsButtonHitBox && node != _startStopButtonHitBox)
       [self runAction:self.defaultButtonPressSound];
-
 
    // we know that the bottom bar is expanded and can now check to see where the hud was pressed
    if (node == _settingsButtonHitBox)
