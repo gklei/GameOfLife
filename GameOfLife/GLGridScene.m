@@ -28,6 +28,7 @@
    BOOL _generalHudIsAnimating;
    BOOL _colorHudIsAnimating;
    BOOL _running;
+   BOOL _autoShowHideHudForStartStop;
 
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;
@@ -56,6 +57,9 @@
 
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
+      
+      // TODO:LEA set flag from preferences
+      _autoShowHideHudForStartStop = YES;
    }
    return self;
 }
@@ -124,8 +128,17 @@
    [_grid setTilesBirthingDuration:duration
                      dyingDuration:duration];
 
+   [_grid toggleRunning:!_running];
    _running = !_running;
    [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED];
+   
+   if (_autoShowHideHudForStartStop)
+   {
+      if (_running)
+         [_generalHudLayer collapse];
+      else
+         [_generalHudLayer expand];
+   }
 }
 
 - (void)screenShotButtonPressed

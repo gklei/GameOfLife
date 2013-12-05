@@ -19,6 +19,8 @@
 {
    std::vector<BOOL> _storedTileStates;
    std::vector<BOOL> _nextGenerationTileStates;
+   std::vector<BOOL> _currentGenerationTileStates;
+   std::vector<BOOL> _priorGenerationTileStates;
 
    SKColor *_currentColor;
 }
@@ -44,18 +46,26 @@
    {
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
       {
-         GLTileNode *tile = [GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
-                                                                yPos + 0.5,
-                                                                TILESIZE.width - 1,
-                                                                TILESIZE.height - 1)];
+//         GLTileNode *tile = [GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
+//                                                                yPos + 0.5,
+//                                                                TILESIZE.width - 1,
+//                                                                TILESIZE.height - 1)];
+         GLTileNode *tile = [GLTileNode tileWithImageNamed:@"tile.circle.png"
+                                                      rect:CGRectMake(xPos + 0.5,
+                                                                      yPos + 0.5,
+                                                                      TILESIZE.width - 1,
+                                                                      TILESIZE.height - 1)];
          tile.delegate = self;
          [self addChild:tile];
       }
    }
    _tiles = [NSArray arrayWithArray:self.children];
+   
+   _priorGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
+   _currentGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
-
+   
    CGPoint boardCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
                                      _dimensions.rows * TILESIZE.height * 0.5);
    float maxBoardDistance = sqrt(size.width * size.width + size.height * size.height);
@@ -83,29 +93,38 @@
 - (void)updateNextGeneration
 {
    for (int i = 0; i < _tiles.count; ++i)
+   {
+      _priorGenerationTileStates[i] = _currentGenerationTileStates[i];
+      _currentGenerationTileStates[i] = _nextGenerationTileStates[i];
       _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
-
-   if ([self currentlyInContinuousLoop])
-   {
-      _inContinuousLoop = YES;
+   }
+   
+   _inContinuousLoop = [self currentlyInContinuousLoop];
+   if (_inContinuousLoop)
       return;
-   }
-   else
-   {
-      _inContinuousLoop = NO;
-   }
 
+   ++_generationCount;
+   
    for (int i = 0; i < _tiles.count; ++i)
       ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
 
    [self updateColorCenter];
 }
 
+- (BOOL)currentlyInContinuousBiLoop
+{
+   for (int i = 0; i < _tiles.count; ++i)
+      if (_nextGenerationTileStates[i] != _priorGenerationTileStates[i])
+         return NO;
+   
+   return YES;
+}
+
 - (BOOL)currentlyInContinuousLoop
 {
    for (int i = 0; i < _tiles.count; ++i)
       if (((GLTileNode *)_tiles[i]).isLiving != _nextGenerationTileStates[i])
-         return NO;
+         return [self currentlyInContinuousBiLoop];
 
    return YES;
 }
@@ -137,6 +156,24 @@
       [tile clearTile];
    
    _inContinuousLoop = NO;
+}
+
+- (void)prepareForNextRun
+{
+   _generationCount = 0;
+   
+   for (int i = 0; i < _tiles.count; ++i)
+   {
+      BOOL isLiving = ((GLTileNode*)[_tiles objectAtIndex:i]).isLiving;
+      _priorGenerationTileStates[i] = DEAD;
+      _currentGenerationTileStates[i] = isLiving;
+      _nextGenerationTileStates[i] = isLiving;
+   }
+}
+
+- (void)toggleRunning:(BOOL)starting
+{
+   if (starting) [self prepareForNextRun];
 }
 
 - (void)setCurrentColor:(UIColor *)color

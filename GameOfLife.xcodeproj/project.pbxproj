@@ -40,6 +40,7 @@
 		8EAA59C3184B03E1008E34D9 /* menu.closing.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59C2184B03E1008E34D9 /* menu.closing.wav */; };
 		8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */; };
 		8EAA5A10184B29EC008E34D9 /* button.press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA5A0F184B29EC008E34D9 /* button.press.wav */; };
+		8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA5A11184C22BE008E34D9 /* tile.circle.png */; };
 		8ECA8984182371AE009D906F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8983182371AE009D906F /* Foundation.framework */; };
 		8ECA8986182371AE009D906F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8985182371AE009D906F /* CoreGraphics.framework */; };
 		8ECA8988182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
@@ -111,6 +112,7 @@
 		8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSettingsLayer.h; sourceTree = "<group>"; };
 		8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSettingsLayer.m; sourceTree = "<group>"; };
 		8EAA5A0F184B29EC008E34D9 /* button.press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = button.press.wav; path = "GL Sound FX/button.press.wav"; sourceTree = SOURCE_ROOT; };
+		8EAA5A11184C22BE008E34D9 /* tile.circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.circle.png; path = Images/tile.circle.png; sourceTree = SOURCE_ROOT; };
 		8ECA8980182371AE009D906F /* GameOfLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ECA8983182371AE009D906F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8ECA8985182371AE009D906F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -163,6 +165,7 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8EAA5A11184C22BE008E34D9 /* tile.circle.png */,
 				8E75B0481846CB23000AEEB8 /* restore.png */,
 				8E75B0491846CB23000AEEB8 /* restore@2x.png */,
 				8E75B04418466F7F000AEEB8 /* camera.png */,
@@ -400,6 +403,7 @@
 				8EAA59C3184B03E1008E34D9 /* menu.closing.wav in Resources */,
 				8E75B04718466F7F000AEEB8 /* camera@2x.png in Resources */,
 				8E75B03418419630000AEEB8 /* splash.png in Resources */,
+				8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */,
 				8E75B04618466F7F000AEEB8 /* camera.png in Resources */,
 				8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */,
 			);

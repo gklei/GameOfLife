@@ -26,8 +26,9 @@
       settingsLabel.colorBlendFactor = 1.0;
       settingsLabel.color = [SKColor whiteColor];
       settingsLabel.fontSize = 30;
-      settingsLabel.position = CGPointMake(CGRectGetMidX(self.frame),
-                                     CGRectGetMidY(self.frame));
+      CGRect frame = self.frame;
+      NSLog(@"frame = %@", NSStringFromCGRect(frame));
+      settingsLabel.position = CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame));
       [self addChild:settingsLabel];
    }
    return self;

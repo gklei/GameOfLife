@@ -28,6 +28,7 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state;
 - (void)setCoreFunctionButtonsHidden:(BOOL)hidden;
 - (void)collapse;
+- (void)expand;
 
 - (NSArray *)coreFunctionButtons;
 

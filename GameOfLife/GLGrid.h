@@ -17,6 +17,7 @@ typedef struct {
 
 @interface GLGrid : SKNode
 
+@property (nonatomic, readonly) NSUInteger generationCount;
 @property (nonatomic, assign) GridDimensions dimensions;
 @property (nonatomic, strong) NSArray *tiles;
 @property (nonatomic, readonly, getter = isInContinuousLoop) BOOL inContinuousLoop;
@@ -27,6 +28,7 @@ typedef struct {
 - (void)storeGridState;
 - (void)restoreGrid;
 - (void)clearGrid;
+- (void)toggleRunning:(BOOL)starting;
 
 - (void)setCurrentColor:(SKColor *)color;
 

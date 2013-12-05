@@ -14,6 +14,7 @@
 #define COLOR_DROP_CAPACITY 6
 #define COLOR_DROP_SCALE .23
 #define SELECTED_COLOR_DROP_SCALE .3
+#define HIT_DIST_FROM_POSITION 4
 
 @interface GLColorHud()
 {
@@ -141,17 +142,106 @@
    }
 }
 
+- (CGFloat)horizontalDistanceFromNode:(SKNode *)node toPoint:(CGPoint)touchPt
+{
+   CGFloat result = FLT_MAX;
+   
+   if (node)
+   {
+      CGPoint nodePt = node.position;
+      result = fabs(touchPt.x - nodePt.x);
+   }
+   
+   return result;
+}
+
+- (CGFloat)getDistanceFromNearest:(NSUInteger *)nearestIdx
+                      andNeighbor:(NSUInteger *)neighborIdx
+                        FromTouch:(CGPoint)touchPt
+{
+   // find the nearest and neighbor indeces and the distance to the nearest
+   CGFloat result = FLT_MAX;
+   *nearestIdx = UINT_MAX;
+   *neighborIdx = UINT_MAX;
+   for (SKNode *node in _colorDropHitBoxes)
+   {
+      double thisDist = [self horizontalDistanceFromNode:node toPoint:touchPt];
+      if (thisDist < result)
+      {
+         result = thisDist;
+         *nearestIdx = [_colorDropHitBoxes indexOfObject:node];
+         
+         if (touchPt.x < node.position.x)
+            *neighborIdx = (*nearestIdx > 0)? *nearestIdx - 1 : UINT_MAX;
+         else
+            *neighborIdx = (*nearestIdx < _colorDropHitBoxes.count - 2)? *nearestIdx + 1 : UINT_MAX;
+      }
+   }
+   
+   return result;
+}
+
+- (SKColor *) interpolatedColorFromIndex:(NSUInteger)idx
+                             andDistance:(CGFloat)distance
+                             toNeighbor:(NSUInteger)nextIdx
+{
+   // interpolate a color between two nodes
+   SKColor * newClr = nil;
+   
+   SKNode * nearest = [_colorDropHitBoxes objectAtIndex:idx];
+   SKNode * neighbor = [_colorDropHitBoxes objectAtIndex:nextIdx];
+   if (nearest && neighbor)
+   {
+      CGFloat interpolateDist = fabs(distance) / fabs(neighbor.position.x - nearest.position.x);
+      
+      SKColor * nearClr = ((SKSpriteNode *)_colorDrops[idx]).color;
+      SKColor * nextClr = ((SKSpriteNode *)_colorDrops[nextIdx]).color;
+      
+      CGFloat nearRed, nearGreen, nearBlue;
+      CGFloat nextRed, nextGreen, nextBlue;
+      
+      if ([nearClr getRed:&nearRed green:&nearGreen blue:&nearBlue alpha:nil] &&
+          [nextClr getRed:&nextRed green:&nextGreen blue:&nextBlue alpha:nil])
+      {
+         CGFloat newRed = nearRed + interpolateDist * (nextRed - nearRed);
+         CGFloat newGreen = nearGreen + interpolateDist * (nextGreen - nearGreen);
+         CGFloat newBlue = nearBlue + interpolateDist * (nextBlue - nearBlue);
+         
+         newClr = [UIColor colorWithRed:newRed green:newGreen blue:newBlue alpha:1.0];
+      }
+   }
+   
+   return newClr;
+}
+
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
-   SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
+   SKNode * node = [self nodeAtPoint:[touch locationInNode:self]];
 
    if ([node.name isEqualToString:@"splash"] && !moved)
    {
       [self toggle];
    }
-   else if ([_colorDropHitBoxes containsObject:node] && self.isExpanded)
+   else if (self.isExpanded)
    {
-      [self updateCurrentColorDrop:(SKSpriteNode *)node];
+      CGPoint touchPt = [touch locationInNode:self];
+      if (fabs(node.position.x - touchPt.x) < HIT_DIST_FROM_POSITION &&
+          [_colorDropHitBoxes containsObject:node])
+      {
+         [self updateCurrentColorDrop:(SKSpriteNode *)node];
+      }
+      else
+      {
+         NSUInteger nearestIdx;
+         NSUInteger neighborIdx;
+         CGFloat distance = [self getDistanceFromNearest:&nearestIdx
+                                             andNeighbor:&neighborIdx
+                                               FromTouch:touchPt];
+         if (neighborIdx != UINT_MAX)
+            [self.delegate setCurrentColor:[self interpolatedColorFromIndex:nearestIdx
+                                                                andDistance:distance
+                                                                 toNeighbor:neighborIdx]];
+      }
    }
 }
 
