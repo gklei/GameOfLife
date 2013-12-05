@@ -14,6 +14,7 @@
 #define CORE_FUNCTION_BUTTON_PADDING 52
 #define HUD_BUTTON_EDGE_PADDING 48
 #define HUD_BUTTON_PADDING 50
+#define HEADING_FONT_SIZE 30
 
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
@@ -113,6 +114,16 @@
    _backgroundLayer.position = CGPointMake(0, 60);
    _backgroundLayer.name = @"general_hud_background";
 
+//   UIFont *systemFont = [UIFont systemFontOfSize:12];
+//   SKLabelNode * settingsLabel = [SKLabelNode labelNodeWithFontNamed:systemFont.fontName];
+//   
+//   settingsLabel.text = @"Settings";
+//   settingsLabel.colorBlendFactor = 1.0;
+//   settingsLabel.color = [SKColor blackColor];
+//   settingsLabel.fontSize = HEADING_FONT_SIZE;
+//   settingsLabel.position = CGPointMake(size.width * 0.5, -HEADING_FONT_SIZE);
+//   [_backgroundLayer addChild:settingsLabel];
+   
    [self addChild:_backgroundLayer];
 }
 
@@ -140,12 +151,12 @@
 
 - (void)setButtonPositionsAndAddToLayer:(NSArray *)buttons
 {
-   int multiplier = 0;
-   for (SKSpriteNode *button in buttons)
+   int multiplier = -1;
+   for (SKSpriteNode * button in buttons)
    {
       [self addChild:button];
-      button.position = CGPointMake((multiplier++)*CORE_FUNCTION_BUTTON_PADDING + 80,
-                                    -button.size.height/2.0);
+      button.position = CGPointMake(++multiplier * CORE_FUNCTION_BUTTON_PADDING + 80,
+                                    -button.size.height / 2.0);
    }
 }
 
@@ -366,6 +377,7 @@
                                duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
    SKAction *spin = [SKAction rotateByAngle:M_PI
                                    duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
    SKAction *changeColor = [SKAction colorizeWithColor:[SKColor crayolaRobinsEggBlueColor]
                                       colorBlendFactor:1.0
                                               duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
@@ -376,10 +388,13 @@
    spin.timingMode = SKActionTimingEaseInEaseOut;
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
 
+//   [_backgroundLayer runAction:expand];
+
    [self.delegate settingsWillExpandWithRepositioningAction:expand];
 
    [self runAction:_expandSettingsSound];
    [_backgroundLayer runAction:expand completion:^{[self.delegate settingsDidExpand];}];
+
    [_settingsButton runAction:buttonActions completion:completionBlock];
 
 }
@@ -393,6 +408,7 @@
                                  duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
    SKAction *spin = [SKAction rotateByAngle:-M_PI
                                    duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+   
    SKAction *changeColor = [SKAction colorizeWithColor:[SKColor whiteColor]
                                       colorBlendFactor:1.0
                                               duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
@@ -437,6 +453,12 @@
    {
       [self collapseBottomBar];
    }
+}
+
+- (void)expand
+{
+   if (!self.expanded)
+      [self expandBottomBar];
 }
 
 - (void)toggle
