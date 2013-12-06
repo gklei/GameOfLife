@@ -124,7 +124,8 @@
 {
    for (int i = 0; i < _tiles.count; ++i)
       if (((GLTileNode *)_tiles[i]).isLiving != _nextGenerationTileStates[i])
-         return [self currentlyInContinuousBiLoop];
+//         return [self currentlyInContinuousBiLoop];
+         return NO;
 
    return YES;
 }
@@ -191,6 +192,15 @@
       tile.birthingDuration = bDuration;
       tile.dyingDuration = dDuration;
    }
+}
+
+- (BOOL)currentStateIsRunnable
+{
+   for (int i=0; i < _tiles.count; ++i)
+      if (((GLTileNode*)_tiles[i]).isLiving != [self getIsLivingForNextGenerationAtIndex:i])
+         return YES;
+   
+   return NO;
 }
 
 #pragma mark GLTileColor Delegate Methods

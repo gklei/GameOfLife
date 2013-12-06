@@ -124,6 +124,9 @@
 
 - (void)toggleRunningButtonPressed
 {
+   if (![_grid currentStateIsRunnable] && !_running)
+      return;
+   
    float duration = (_running)? .15 : .35;
    [_grid setTilesBirthingDuration:duration
                      dyingDuration:duration];

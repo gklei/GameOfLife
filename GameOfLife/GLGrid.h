@@ -35,4 +35,6 @@ typedef struct {
 - (void)setTilesBirthingDuration:(float)bDuration
                    dyingDuration:(float)dDuration;
 
+- (BOOL)currentStateIsRunnable;
+
 @end
