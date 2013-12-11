@@ -225,26 +225,26 @@
    {
       [self toggle];
    }
-   else if (self.isExpanded)
+   else if ([_colorDropHitBoxes containsObject:node] && self.isExpanded)
    {
-      CGPoint touchPt = [touch locationInNode:self];
-      if (fabs(node.position.x - touchPt.x) < HIT_DIST_FROM_POSITION &&
-          [_colorDropHitBoxes containsObject:node])
-      {
+//      CGPoint touchPt = [touch locationInNode:self];
+//      if (fabs(node.position.x - touchPt.x) < HIT_DIST_FROM_POSITION &&
+//          [_colorDropHitBoxes containsObject:node])
+//      {
          [self updateCurrentColorDrop:(SKSpriteNode *)node];
-      }
-      else
-      {
-         NSUInteger nearestIdx;
-         NSUInteger neighborIdx;
-         CGFloat distance = [self getDistanceFromNearest:&nearestIdx
-                                             andNeighbor:&neighborIdx
-                                               FromTouch:touchPt];
-         if (neighborIdx != UINT_MAX)
-            [self.delegate setCurrentColor:[self interpolatedColorFromIndex:nearestIdx
-                                                                andDistance:distance
-                                                                 toNeighbor:neighborIdx]];
-      }
+//      }
+//      else
+//      {
+//         NSUInteger nearestIdx;
+//         NSUInteger neighborIdx;
+//         CGFloat distance = [self getDistanceFromNearest:&nearestIdx
+//                                             andNeighbor:&neighborIdx
+//                                               FromTouch:touchPt];
+//         if (neighborIdx != UINT_MAX)
+//            [self.delegate setCurrentColor:[self interpolatedColorFromIndex:nearestIdx
+//                                                                andDistance:distance
+//                                                                 toNeighbor:neighborIdx]];
+//      }
    }
 }
 

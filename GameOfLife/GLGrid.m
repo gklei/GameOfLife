@@ -11,6 +11,11 @@
 
 #include <vector>
 
+#define IS_WIDESCREEN (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)568) < DBL_EPSILON)
+#define IS_IPHONE     ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
+#define IS_IPOD       ([[[UIDevice currentDevice] model] isEqualToString: @"iPod touch"])
+#define IS_IPHONE_5   (IS_IPHONE && IS_WIDESCREEN)
+
 #define LIVING YES
 #define DEAD   NO
 #define TILESIZE CGSizeMake(20, 20)
@@ -42,7 +47,15 @@
    _dimensions.rows = size.width/TILESIZE.width;
    _dimensions.columns = size.width/TILESIZE.width;
 
-   for (int yPos = 0; yPos < size.height; yPos += TILESIZE.height)
+   float maxRowHeight = size.height;
+   // check for iPhone 5
+   if (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)568) < DBL_EPSILON)
+      if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
+      {
+         maxRowHeight -= TILESIZE.height;
+      }
+
+   for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
    {
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
       {

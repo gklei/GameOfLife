@@ -111,6 +111,11 @@
    [self addChild:_flashLayer];
 }
 
+- (void)expandGeneralHUD
+{
+   [_generalHudLayer expand];
+}
+
 #pragma mark GLGeneralHud Delegate Methods
 - (void)clearButtonPressed
 {

@@ -54,6 +54,7 @@
 {
    [super viewDidAppear:animated];
    [self becomeFirstResponder];
+   [_gridScene expandGeneralHUD];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
