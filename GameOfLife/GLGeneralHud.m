@@ -16,6 +16,8 @@
 #define HUD_BUTTON_PADDING 50
 #define HEADING_FONT_SIZE 25
 
+#define BOTTOM_BAR_HEIGHT 60
+#define SETTINGS_HEIGHT ([UIScreen mainScreen].bounds.size.height * .66) - BOTTOM_BAR_HEIGHT
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
 #define REPOSITION_BUTTONS_DURATION .25
@@ -99,7 +101,7 @@
 
 - (SKSpriteNode *)hitBoxForButton:(SKSpriteNode *)button
 {
-   CGSize hitBoxSize = CGSizeMake(button.size.width + 20, 60);
+   CGSize hitBoxSize = CGSizeMake(button.size.width + 20, BOTTOM_BAR_HEIGHT);
    SKSpriteNode *buttonHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
                                                              size:hitBoxSize];
    return buttonHitBox;
@@ -113,7 +115,7 @@
    _backgroundLayer.colorBlendFactor = 1.0;
    _backgroundLayer.alpha = .7;
    _backgroundLayer.anchorPoint = CGPointMake(0, 1);
-   _backgroundLayer.position = CGPointMake(0, 60);
+   _backgroundLayer.position = CGPointMake(0, BOTTOM_BAR_HEIGHT);
    _backgroundLayer.name = @"general_hud_background";
 
    [self addChild:_backgroundLayer];
@@ -121,8 +123,10 @@
 
 - (void)setupSettingsWithSize:(CGSize)size
 {
-   _settingsLayer = [[GLSettingsLayer alloc] initWithSize:size
+   CGSize settingsSize = CGSizeMake(size.width, SETTINGS_HEIGHT);
+   _settingsLayer = [[GLSettingsLayer alloc] initWithSize:settingsSize
                                               anchorPoint:_backgroundLayer.anchorPoint];
+   _settingsLayer.hidden = YES;
    [_backgroundLayer addChild:_settingsLayer];
 }
 
@@ -224,6 +228,82 @@
 }
 
 #pragma mark HUD Toggling Methods
+- (void)expandSettingsWithCompletionBlock:(void (^)())completionBlock
+{
+   _settingsAreExpanded = YES;
+
+   SKAction *expand = [SKAction moveByX:0
+                                      y:SETTINGS_HEIGHT
+                               duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+   SKAction *spin = [SKAction rotateByAngle:M_PI
+                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor crayolaRobinsEggBlueColor]
+                                      colorBlendFactor:1.0
+                                              duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+
+   expand.timingMode = SKActionTimingEaseInEaseOut;
+   spin.timingMode = SKActionTimingEaseInEaseOut;
+   changeColor.timingMode = SKActionTimingEaseInEaseOut;
+
+   [self.delegate settingsWillExpandWithRepositioningAction:expand];
+
+   [self runAction:_expandSettingsSound];
+   [_backgroundLayer runAction:expand
+                    completion:
+    ^{
+       _settingsLayer.hidden = NO;
+       [self.delegate settingsDidExpand];
+    }];
+
+   [_settingsButton runAction:buttonActions completion:completionBlock];
+
+}
+
+- (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
+{
+   _settingsAreExpanded = NO;
+   _settingsLayer.hidden = YES;
+
+   SKAction *collapse = [SKAction moveByX:0
+                                        y:-(SETTINGS_HEIGHT)
+                                 duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+   SKAction *spin = [SKAction rotateByAngle:-M_PI
+                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor whiteColor]
+                                      colorBlendFactor:1.0
+                                              duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+
+   collapse.timingMode = SKActionTimingEaseInEaseOut;
+   spin.timingMode = SKActionTimingEaseInEaseOut;
+   changeColor.timingMode = SKActionTimingEaseInEaseOut;
+
+   [self.delegate settingsWillCollapseWithRepositioningAction:collapse];
+
+   [self runAction:_collapseSettingsSound];
+   [_backgroundLayer runAction:collapse completion:^{[self.delegate settingsDidCollapse];}];
+   [_settingsButton runAction:buttonActions completion:completionBlock];
+}
+
+- (void)toggleSettings
+{
+   if (_settingsAreExpanded)
+      [self collapseSettingsWithCompletionBlock:^
+       {
+          _settingsButton.color = [SKColor whiteColor];
+       }];
+   else
+      [self expandSettingsWithCompletionBlock:^
+       {
+          _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
+       }];
+}
+
 - (void)expandBottomBar
 {
    CFTimeInterval waitPeriod = 0.0;
@@ -241,16 +321,12 @@
    SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor whiteColor]
                                             colorBlendFactor:1.0
                                                     duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION];
-   SKAction *maintainPosition = [SKAction moveByX:-(_defaultSize.width - 60)
-                                                y:0
-                                         duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION];
    SKAction *rotate = [SKAction rotateByAngle:M_PI
                                      duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION];
 
    slide.timingMode = SKActionTimingEaseInEaseOut;
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
    changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
-   maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
    SKAction *buttonActions = [SKAction group:@[changeButtonAlpha,
@@ -317,9 +393,6 @@
    SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:_backgroundLayer.alpha
                                               duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION -
                                                        WAIT_BEFORE_COLORIZE_DURATION];
-   SKAction *maintainPosition = [SKAction moveByX:_defaultSize.width - 60
-                                                y:0
-                                         duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION];
    SKAction *rotate = [SKAction rotateByAngle:-M_PI
                                      duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION];
 
@@ -327,7 +400,6 @@
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
    changeButtonColor.timingMode = SKActionTimingEaseInEaseOut;
    changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
-   maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
    SKAction *hudBackgroundColorSequence = [SKAction sequence:@[wait, changeHudColor]];
@@ -365,78 +437,6 @@
 
        [self.delegate hudDidCollapse:self];
     }];
-}
-
-- (void)expandSettingsWithCompletionBlock:(void (^)())completionBlock
-{
-   _settingsAreExpanded = YES;
-
-   SKAction *expand = [SKAction moveByX:0
-                                      y:(_defaultSize.height/2) - 60
-                               duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-   SKAction *spin = [SKAction rotateByAngle:M_PI
-                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-
-   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor crayolaRobinsEggBlueColor]
-                                      colorBlendFactor:1.0
-                                              duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-
-   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
-
-   expand.timingMode = SKActionTimingEaseInEaseOut;
-   spin.timingMode = SKActionTimingEaseInEaseOut;
-   changeColor.timingMode = SKActionTimingEaseInEaseOut;
-
-//   [_backgroundLayer runAction:expand];
-
-   [self.delegate settingsWillExpandWithRepositioningAction:expand];
-
-   [self runAction:_expandSettingsSound];
-   [_backgroundLayer runAction:expand completion:^{[self.delegate settingsDidExpand];}];
-
-   [_settingsButton runAction:buttonActions completion:completionBlock];
-
-}
-
-- (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
-{
-   _settingsAreExpanded = NO;
-
-   SKAction *collapse = [SKAction moveByX:0
-                                        y:-((_defaultSize.height/2) - 60)
-                                 duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-   SKAction *spin = [SKAction rotateByAngle:-M_PI
-                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-   
-   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor whiteColor]
-                                      colorBlendFactor:1.0
-                                              duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-
-   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
-
-   collapse.timingMode = SKActionTimingEaseInEaseOut;
-   spin.timingMode = SKActionTimingEaseInEaseOut;
-   changeColor.timingMode = SKActionTimingEaseInEaseOut;
-
-   [self.delegate settingsWillCollapseWithRepositioningAction:collapse];
-
-   [self runAction:_collapseSettingsSound];
-   [_backgroundLayer runAction:collapse completion:^{[self.delegate settingsDidCollapse];}];
-   [_settingsButton runAction:buttonActions completion:completionBlock];
-}
-
-- (void)toggleSettings
-{
-   if (_settingsAreExpanded)
-      [self collapseSettingsWithCompletionBlock:^
-       {
-          _settingsButton.color = [SKColor whiteColor];
-       }];
-   else
-      [self expandSettingsWithCompletionBlock:^
-       {
-          _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
-       }];
 }
 
 - (void)collapse

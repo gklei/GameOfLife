@@ -8,6 +8,7 @@
 
 #import "GLSettingsLayer.h"
 
+#define TOP_PADDING 5
 #define HEADING_FONT_SIZE 25
 
 @interface GLSettingsLayer()
@@ -40,6 +41,7 @@
    _backgroundLayer.colorBlendFactor = 1.0;
    _backgroundLayer.alpha = .7;
    _backgroundLayer.anchorPoint = _defaultAnchorPoint;
+   _backgroundLayer.name = @"settings_background";
 
    [self addChild:_backgroundLayer];
 }
@@ -53,7 +55,9 @@
    settingsLabel.color = [SKColor whiteColor];
    settingsLabel.alpha = .85;
    settingsLabel.fontSize = HEADING_FONT_SIZE;
-   settingsLabel.position = CGPointMake(_defaultSize.width * 0.5, -HEADING_FONT_SIZE);
+   settingsLabel.position = CGPointMake(_defaultSize.width * 0.5,
+                                        -(HEADING_FONT_SIZE + TOP_PADDING));
+
    [_backgroundLayer addChild:settingsLabel];
 }
 
