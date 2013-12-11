@@ -46,14 +46,12 @@
 {
    _dimensions.rows = size.width/TILESIZE.width;
    _dimensions.columns = size.width/TILESIZE.width;
-
    float maxRowHeight = size.height;
+
    // check for iPhone 5
    if (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)568) < DBL_EPSILON)
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
-      {
          maxRowHeight -= TILESIZE.height;
-      }
 
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
    {
