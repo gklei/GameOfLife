@@ -49,16 +49,16 @@
 
 - (void)setupSettingsLabel
 {
-   SKLabelNode * settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-Medium"];
+   NSLog(@"%@", [UIFont fontNamesForFamilyName:@"Futura"]);
+   SKLabelNode * settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
 
-   settingsLabel.text = @"Settings";
+   settingsLabel.text = @"S E T T I N G S";
    settingsLabel.colorBlendFactor = 1.0;
    settingsLabel.color = [SKColor whiteColor];
    settingsLabel.alpha = 1;
    settingsLabel.fontSize = HEADING_FONT_SIZE;
    settingsLabel.position = CGPointMake(_defaultSize.width * 0.5,
                                         -(HEADING_FONT_SIZE + TOP_PADDING));
-
    [self addChild:settingsLabel];
 }
 

@@ -41,6 +41,11 @@
 		8EA264FD1850229100351F5E /* settings.expand.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA264F71850229100351F5E /* settings.expand.wav */; };
 		8EA264FE1850229100351F5E /* start.algorithm.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA264F81850229100351F5E /* start.algorithm.wav */; };
 		8EA264FF1850229100351F5E /* stop.algorithm.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA264F91850229100351F5E /* stop.algorithm.wav */; };
+		8EA265051858033A00351F5E /* flash.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA265001858033A00351F5E /* flash.wav */; };
+		8EA265071858033A00351F5E /* settings.collapse.2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA265021858033A00351F5E /* settings.collapse.2.wav */; };
+		8EA265081858033A00351F5E /* settings.expand.2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA265031858033A00351F5E /* settings.expand.2.wav */; };
+		8EA265091858033A00351F5E /* stop.algorithm.2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA265041858033A00351F5E /* stop.algorithm.2.wav */; };
+		8EA2650B1858045800351F5E /* start.algorithm.2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA2650A1858045800351F5E /* start.algorithm.2.wav */; };
 		8EAA59BF184B03C7008E34D9 /* down.finger.on.tile.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59BC184B03C7008E34D9 /* down.finger.on.tile.wav */; };
 		8EAA59C1184B03C7008E34D9 /* up.finger.off.tile.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */; };
 		8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */; };
@@ -117,6 +122,11 @@
 		8EA264F71850229100351F5E /* settings.expand.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = settings.expand.wav; path = "GL Sound FX/settings.expand.wav"; sourceTree = SOURCE_ROOT; };
 		8EA264F81850229100351F5E /* start.algorithm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = start.algorithm.wav; path = "GL Sound FX/start.algorithm.wav"; sourceTree = SOURCE_ROOT; };
 		8EA264F91850229100351F5E /* stop.algorithm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = stop.algorithm.wav; path = "GL Sound FX/stop.algorithm.wav"; sourceTree = SOURCE_ROOT; };
+		8EA265001858033A00351F5E /* flash.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = flash.wav; path = "GL Sound FX/flash.wav"; sourceTree = SOURCE_ROOT; };
+		8EA265021858033A00351F5E /* settings.collapse.2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = settings.collapse.2.wav; path = "GL Sound FX/settings.collapse.2.wav"; sourceTree = SOURCE_ROOT; };
+		8EA265031858033A00351F5E /* settings.expand.2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = settings.expand.2.wav; path = "GL Sound FX/settings.expand.2.wav"; sourceTree = SOURCE_ROOT; };
+		8EA265041858033A00351F5E /* stop.algorithm.2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = stop.algorithm.2.wav; path = "GL Sound FX/stop.algorithm.2.wav"; sourceTree = SOURCE_ROOT; };
+		8EA2650A1858045800351F5E /* start.algorithm.2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = start.algorithm.2.wav; path = "GL Sound FX/start.algorithm.2.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59BC184B03C7008E34D9 /* down.finger.on.tile.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = down.finger.on.tile.wav; path = "GL Sound FX/down.finger.on.tile.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = up.finger.off.tile.wav; path = "GL Sound FX/up.finger.off.tile.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSettingsLayer.h; sourceTree = "<group>"; };
@@ -206,6 +216,11 @@
 		8EAA59BB184B0218008E34D9 /* SoundFX */ = {
 			isa = PBXGroup;
 			children = (
+				8EA2650A1858045800351F5E /* start.algorithm.2.wav */,
+				8EA265001858033A00351F5E /* flash.wav */,
+				8EA265021858033A00351F5E /* settings.collapse.2.wav */,
+				8EA265031858033A00351F5E /* settings.expand.2.wav */,
+				8EA265041858033A00351F5E /* stop.algorithm.2.wav */,
 				8EA264F41850229100351F5E /* menu.close.wav */,
 				8EA264F51850229100351F5E /* menu.open.wav */,
 				8EA264F61850229100351F5E /* settings.collapse.wav */,
@@ -390,14 +405,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EA265081858033A00351F5E /* settings.expand.2.wav in Resources */,
 				8EA264FE1850229100351F5E /* start.algorithm.wav in Resources */,
 				8ECA8990182371AE009D906F /* InfoPlist.strings in Resources */,
+				8EA265091858033A00351F5E /* stop.algorithm.2.wav in Resources */,
 				8ECA89A3182371AE009D906F /* Images.xcassets in Resources */,
 				EDE4505C1833F3380063DE36 /* clear.png in Resources */,
 				8E99B2C0182F7A1200C7AEDB /* stop.png in Resources */,
 				8E99B2A9182E0ABD00C7AEDB /* gear.png in Resources */,
 				8E75B04B1846CB23000AEEB8 /* restore@2x.png in Resources */,
 				8EA264FA1850229100351F5E /* menu.close.wav in Resources */,
+				8EA2650B1858045800351F5E /* start.algorithm.2.wav in Resources */,
 				8E99B2B8182F4D9000C7AEDB /* expand_right.png in Resources */,
 				8E99B2BF182F7A1200C7AEDB /* start@2x.png in Resources */,
 				8E75B03518419630000AEEB8 /* splash@2x.png in Resources */,
@@ -405,6 +423,7 @@
 				8EAA59C1184B03C7008E34D9 /* up.finger.off.tile.wav in Resources */,
 				8E75B03C1841C909000AEEB8 /* drop.png in Resources */,
 				8E75B03918419670000AEEB8 /* ring@2x.png in Resources */,
+				8EA265071858033A00351F5E /* settings.collapse.2.wav in Resources */,
 				8E75B04A1846CB23000AEEB8 /* restore.png in Resources */,
 				8E99B2AA182E0ABD00C7AEDB /* gear@2x.png in Resources */,
 				8E75B03818419670000AEEB8 /* ring.png in Resources */,
@@ -420,6 +439,7 @@
 				EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */,
 				8E99B2C1182F7A1200C7AEDB /* stop@2x.png in Resources */,
 				8E75B04718466F7F000AEEB8 /* camera@2x.png in Resources */,
+				8EA265051858033A00351F5E /* flash.wav in Resources */,
 				8E75B03418419630000AEEB8 /* splash.png in Resources */,
 				8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */,
 				8E75B04618466F7F000AEEB8 /* camera.png in Resources */,

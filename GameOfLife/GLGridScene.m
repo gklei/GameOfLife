@@ -33,6 +33,7 @@
 
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;
+   SKAction *_flashSound;
 
    CFTimeInterval _lastGenerationTime;
 
@@ -94,6 +95,7 @@
 {
    _fingerUpSoundFX = [SKAction playSoundFileNamed:@"up.finger.off.tile.wav" waitForCompletion:NO];
    _fingerDownSoundFX = [SKAction playSoundFileNamed:@"down.finger.on.tile.wav" waitForCompletion:NO];
+   _flashSound = [SKAction playSoundFileNamed:@"flash.wav" waitForCompletion:NO];
 }
 
 - (void)setupFlashLayerAndAnimation
@@ -153,6 +155,7 @@
 - (void)screenShotButtonPressed
 {
    // weird work around for the first screen shot that's taken being slow
+   [self runAction:_flashSound];
    if (!_firstScreenShotTaken)
    {
       [_flashLayer runAction:_flashAnimation
