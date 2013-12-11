@@ -10,6 +10,6 @@
 
 @interface GLSettingsLayer : SKNode
 
-- (id)initWithSize:(CGSize)size;
-
+- (id)initWithSize:(CGSize)size
+       anchorPoint:(CGPoint)anchorPoint;
 @end

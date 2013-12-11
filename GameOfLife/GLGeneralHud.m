@@ -14,7 +14,7 @@
 #define CORE_FUNCTION_BUTTON_PADDING 52
 #define HUD_BUTTON_EDGE_PADDING 48
 #define HUD_BUTTON_PADDING 50
-#define HEADING_FONT_SIZE 30
+#define HEADING_FONT_SIZE 25
 
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
@@ -26,6 +26,7 @@
 {
    CGSize _defaultSize;
    SKSpriteNode *_backgroundLayer;
+   GLSettingsLayer *_settingsLayer;
 
    NSArray *_coreFunctionButtons;
    NSArray *_buttonHitBoxes;
@@ -64,6 +65,7 @@
       _defaultSize = [UIScreen mainScreen].bounds.size;
       [self setupSoundFX];
       [self setupBackgroundWithSize:_defaultSize];
+      [self setupSettingsWithSize:_defaultSize];
       [self setupButtons];
    }
    return self;
@@ -114,17 +116,14 @@
    _backgroundLayer.position = CGPointMake(0, 60);
    _backgroundLayer.name = @"general_hud_background";
 
-//   UIFont *systemFont = [UIFont systemFontOfSize:12];
-//   SKLabelNode * settingsLabel = [SKLabelNode labelNodeWithFontNamed:systemFont.fontName];
-//   
-//   settingsLabel.text = @"Settings";
-//   settingsLabel.colorBlendFactor = 1.0;
-//   settingsLabel.color = [SKColor blackColor];
-//   settingsLabel.fontSize = HEADING_FONT_SIZE;
-//   settingsLabel.position = CGPointMake(size.width * 0.5, -HEADING_FONT_SIZE);
-//   [_backgroundLayer addChild:settingsLabel];
-   
    [self addChild:_backgroundLayer];
+}
+
+- (void)setupSettingsWithSize:(CGSize)size
+{
+   _settingsLayer = [[GLSettingsLayer alloc] initWithSize:size
+                                              anchorPoint:_backgroundLayer.anchorPoint];
+   [_backgroundLayer addChild:_settingsLayer];
 }
 
 - (void)setupButtons

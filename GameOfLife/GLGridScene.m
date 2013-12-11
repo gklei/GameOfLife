@@ -11,6 +11,7 @@
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
 #import "UIColor+Crayola.h"
+#import "GLSettingsLayer.h"
 
 #include <OpenGLES/ES1/glext.h>
 

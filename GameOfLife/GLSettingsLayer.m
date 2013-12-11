@@ -8,30 +8,53 @@
 
 #import "GLSettingsLayer.h"
 
+#define HEADING_FONT_SIZE 25
+
 @interface GLSettingsLayer()
 {
    SKSpriteNode *_backgroundLayer;
+   CGSize _defaultSize;
+   CGPoint _defaultAnchorPoint;
 }
 @end
 
 @implementation GLSettingsLayer
 
 - (id)initWithSize:(CGSize)size
+       anchorPoint:(CGPoint)anchorPoint
 {
    if (self = [super init])
    {
-      SKLabelNode *settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"AvenirNext-UltraLight"];
-
-      settingsLabel.text = @"Settings";
-      settingsLabel.colorBlendFactor = 1.0;
-      settingsLabel.color = [SKColor whiteColor];
-      settingsLabel.fontSize = 30;
-      CGRect frame = self.frame;
-      NSLog(@"frame = %@", NSStringFromCGRect(frame));
-      settingsLabel.position = CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame));
-      [self addChild:settingsLabel];
+      _defaultSize = size;
+      _defaultAnchorPoint = anchorPoint;
+      [self setupBackground];
+      [self setupSettingsLabel];
    }
    return self;
+}
+
+- (void)setupBackground
+{
+   _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor redColor]
+                                                   size:_defaultSize];
+   _backgroundLayer.colorBlendFactor = 1.0;
+   _backgroundLayer.alpha = .7;
+   _backgroundLayer.anchorPoint = _defaultAnchorPoint;
+
+   [self addChild:_backgroundLayer];
+}
+
+- (void)setupSettingsLabel
+{
+   SKLabelNode * settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-Medium"];
+
+   settingsLabel.text = @"Settings";
+   settingsLabel.colorBlendFactor = 1.0;
+   settingsLabel.color = [SKColor whiteColor];
+   settingsLabel.alpha = .85;
+   settingsLabel.fontSize = HEADING_FONT_SIZE;
+   settingsLabel.position = CGPointMake(_defaultSize.width * 0.5, -HEADING_FONT_SIZE);
+   [_backgroundLayer addChild:settingsLabel];
 }
 
 @end
