@@ -29,7 +29,7 @@
    {
       _defaultSize = size;
       _defaultAnchorPoint = anchorPoint;
-      [self setupBackground];
+//      [self setupBackground];
       [self setupSettingsLabel];
    }
    return self;
