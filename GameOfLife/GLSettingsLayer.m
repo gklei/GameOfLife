@@ -7,6 +7,7 @@
 //
 
 #import "GLSettingsLayer.h"
+#import "UIColor+Crayola.h"
 
 #define TOP_PADDING 5
 #define HEADING_FONT_SIZE 25
@@ -36,7 +37,7 @@
 
 - (void)setupBackground
 {
-   _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor redColor]
+   _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                                    size:_defaultSize];
    _backgroundLayer.colorBlendFactor = 1.0;
    _backgroundLayer.alpha = .7;
@@ -53,12 +54,12 @@
    settingsLabel.text = @"Settings";
    settingsLabel.colorBlendFactor = 1.0;
    settingsLabel.color = [SKColor whiteColor];
-   settingsLabel.alpha = .85;
+   settingsLabel.alpha = 1;
    settingsLabel.fontSize = HEADING_FONT_SIZE;
    settingsLabel.position = CGPointMake(_defaultSize.width * 0.5,
                                         -(HEADING_FONT_SIZE + TOP_PADDING));
 
-   [_backgroundLayer addChild:settingsLabel];
+   [self addChild:settingsLabel];
 }
 
 @end
