@@ -12,8 +12,8 @@
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 44
 #define COLOR_DROP_CAPACITY 6
-#define COLOR_DROP_SCALE .23
-#define SELECTED_COLOR_DROP_SCALE .3
+#define COLOR_DROP_SCALE .95
+#define SELECTED_COLOR_DROP_SCALE 1.15
 #define HIT_DIST_FROM_POSITION 4
 
 @interface GLColorHud()
@@ -53,11 +53,17 @@
    _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
                                                    size:_defaultSize];
    _backgroundLayer.colorBlendFactor = 1.0;
-   _backgroundLayer.alpha = .7;
+   _backgroundLayer.alpha = .8;
    _backgroundLayer.anchorPoint = CGPointMake(0, 1);
    _backgroundLayer.position = CGPointMake(0, 60);
    _backgroundLayer.name = @"color_hud_background";
    [self addChild:_backgroundLayer];
+}
+
+- (BOOL)usingRetinaDisplay
+{
+   return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+           ([UIScreen mainScreen].scale == 2.0));
 }
 
 - (void)setupButtons
@@ -85,8 +91,9 @@
 
    for (int i=0; i<COLOR_DROP_CAPACITY; ++i)
    {
-      SKSpriteNode *drop = [SKSpriteNode spriteNodeWithImageNamed:@"drop"];
-      [drop setScale:COLOR_DROP_SCALE];
+      SKSpriteNode *drop = ([self usingRetinaDisplay]) ? [SKSpriteNode spriteNodeWithImageNamed:@"droplet@2x.png"] :
+                                                         [SKSpriteNode spriteNodeWithImageNamed:@"droplet.png"];
+//      [drop setScale:COLOR_DROP_SCALE];
       drop.position = CGPointMake(i*COLOR_DROP_PADDING + 23, -drop.size.height/2.0);
       drop.colorBlendFactor = 1.0;
       drop.color = colorDropColors[i];

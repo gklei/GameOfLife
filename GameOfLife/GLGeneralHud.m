@@ -88,12 +88,22 @@
    return _coreFunctionButtons;
 }
 
+- (BOOL)usingRetinaDisplay
+{
+   return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+           ([UIScreen mainScreen].scale == 2.0));
+}
+
 - (SKSpriteNode *)buttonWithFilename:(NSString *)fileName buttonName:(NSString *)buttonName
 {
+   if ([self usingRetinaDisplay])
+      fileName = [fileName stringByAppendingString:@"@2x"];
+
    SKSpriteNode *button = [SKSpriteNode spriteNodeWithImageNamed:fileName];
    button.color = [SKColor whiteColor];
    button.colorBlendFactor = 1.0;
-   [button setScale:.20];
+//   [button setScale:.20];
+   [button setScale:.9];
    button.name = buttonName;
 
    return button;
@@ -117,7 +127,7 @@
    _backgroundLayer.anchorPoint = CGPointMake(0, 1);
    _backgroundLayer.position = CGPointMake(0, BOTTOM_BAR_HEIGHT);
    _backgroundLayer.name = @"general_hud_background";
-
+   
    [self addChild:_backgroundLayer];
 }
 
@@ -126,6 +136,7 @@
    CGSize settingsSize = CGSizeMake(size.width, SETTINGS_HEIGHT);
    _settingsLayer = [[GLSettingsLayer alloc] initWithSize:settingsSize
                                               anchorPoint:_backgroundLayer.anchorPoint];
+   _settingsLayer.alpha = 5;
    _settingsLayer.hidden = YES;
    [_backgroundLayer addChild:_settingsLayer];
 }
@@ -138,11 +149,14 @@
 
 - (void)setupExpandCollapseButton
 {
-   _expandCollapseButton = [SKSpriteNode spriteNodeWithImageNamed:@"expand_right"];
+   if ([self usingRetinaDisplay])
+      _expandCollapseButton = [SKSpriteNode spriteNodeWithImageNamed:@"arrow-right@2x"];
+   else
+      _expandCollapseButton = [SKSpriteNode spriteNodeWithImageNamed:@"arrow-right"];
+
    _expandCollapseButton.color = [SKColor crayolaBlackCoralPearlColor];
    _expandCollapseButton.alpha = _backgroundLayer.alpha;
    _expandCollapseButton.colorBlendFactor = 1.0;
-   [_expandCollapseButton setScale:.23];
 
    _expandCollapseButton.position =
       CGPointMake(_defaultSize.width - _expandCollapseButton.size.width/2 - 15,
@@ -165,20 +179,20 @@
 
 - (void)setupCoreFunctionButtons
 {
-   _clearButton = [self buttonWithFilename:@"clear" buttonName:@"clear"];
+   _clearButton = [self buttonWithFilename:@"cancel-circle" buttonName:@"clear"];
    _clearButtonHitBox = [self hitBoxForButton:_clearButton];
 
-   _restoreButton = [self buttonWithFilename:@"restore" buttonName:@"restore"];
+   _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
    _restoreButtonHitBox = [self hitBoxForButton:_restoreButton];
 
-   _startStopButton = [self buttonWithFilename:@"start" buttonName:@"start_stop"];
+   _startStopButton = [self buttonWithFilename:@"play2" buttonName:@"start_stop"];
    _startStopButton.color = [SKColor crayolaLimeColor];
    _startStopButtonHitBox = [self hitBoxForButton:_startStopButton];
 
-   _cameraButton = [self buttonWithFilename:@"camera" buttonName:@"camera"];
+   _cameraButton = [self buttonWithFilename:@"camera2" buttonName:@"camera"];
    _cameraButtonHitBox = [self hitBoxForButton:_cameraButton];
 
-   _settingsButton = [self buttonWithFilename:@"gear" buttonName:@"settings"];
+   _settingsButton = [self buttonWithFilename:@"cog" buttonName:@"settings"];
    _settingsButtonHitBox = [self hitBoxForButton:_settingsButton];
 
    _coreFunctionButtons = @[_clearButton,
@@ -205,12 +219,12 @@
    {
       case GL_RUNNING:
          [self runAction:_startAlgorithmSound];
-         _startStopButton.texture = [SKTexture textureWithImageNamed:@"stop"];
+         _startStopButton.texture = [SKTexture textureWithImageNamed:@"pause"];
          _startStopButton.color = [SKColor crayolaSizzlingRedColor];
          break;
       case GL_STOPPED:
          [self runAction:_stopAlgorithmSound];
-         _startStopButton.texture = [SKTexture textureWithImageNamed:@"start"];
+         _startStopButton.texture = [SKTexture textureWithImageNamed:@"play2"];
          _startStopButton.color = [SKColor crayolaLimeColor];
          break;
       default:
