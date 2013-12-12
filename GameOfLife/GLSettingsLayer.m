@@ -31,6 +31,7 @@
       _defaultAnchorPoint = anchorPoint;
 //      [self setupBackground];
       [self setupSettingsLabel];
+      [self setupToggleButton];
    }
    return self;
 }
@@ -50,7 +51,7 @@
 - (void)setupSettingsLabel
 {
 //   NSLog(@"%@", [UIFont fontNamesForFamilyName:@"Futura"]);
-   SKLabelNode * settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
+   SKLabelNode *settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
 
    settingsLabel.text = @"S E T T I N G S";
    settingsLabel.colorBlendFactor = 1.0;
@@ -60,6 +61,19 @@
    settingsLabel.position = CGPointMake(_defaultSize.width * 0.5,
                                         -(HEADING_FONT_SIZE + TOP_PADDING));
    [self addChild:settingsLabel];
+}
+
+- (void)setupToggleButton
+{
+   SKSpriteNode *toggleButton = [SKSpriteNode spriteNodeWithImageNamed:@"toggle-ring-outer@2x.png"];
+   toggleButton.position = CGPointMake(_defaultSize.width * 0.5,
+                                        -(HEADING_FONT_SIZE + TOP_PADDING + 50));
+   SKSpriteNode *innerRing = [SKSpriteNode spriteNodeWithImageNamed:@"radio-unchecked@2x.png"];
+   [innerRing setScale:.6];
+   innerRing.position = CGPointMake(_defaultSize.width * 0.5 - 8,
+                                    -(HEADING_FONT_SIZE + TOP_PADDING + 50));
+   [self addChild:innerRing];
+   [self addChild:toggleButton];
 }
 
 @end
