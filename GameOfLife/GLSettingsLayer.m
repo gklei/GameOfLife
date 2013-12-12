@@ -49,7 +49,7 @@
 
 - (void)setupSettingsLabel
 {
-   NSLog(@"%@", [UIFont fontNamesForFamilyName:@"Futura"]);
+//   NSLog(@"%@", [UIFont fontNamesForFamilyName:@"Futura"]);
    SKLabelNode * settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
 
    settingsLabel.text = @"S E T T I N G S";
