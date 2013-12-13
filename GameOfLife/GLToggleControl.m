@@ -1,12 +1,12 @@
 //
-//  GLToggleButton.m
+//  GLToggleControl.m
 //  GameOfLife
 //
 //  Created by Gregory Klein on 12/11/13.
 //  Copyright (c) 2013 Gregory Klein. All rights reserved.
 //
 
-#import "GLToggleButton.h"
+#import "GLToggleControl.h"
 #import "UIColor+Crayola.h"
 
 #define TOGGLE_ANIMATION_DURATION .1
@@ -14,7 +14,7 @@
 #define INNER_RING_OFFSET_FROM_CENTER 8
 #define INNER_RING_X_ANIMATION 16
 
-@interface GLToggleButton()
+@interface GLToggleControl()
 {
    SKSpriteNode *_innerRing;
    SKSpriteNode *_outerRing;
@@ -28,13 +28,13 @@
 }
 @end
 
-@implementation GLToggleButton
+@implementation GLToggleControl
 
 - (id)init
 {
    if (self = [super init])
    {
-      _state = e_TOGGLE_BUTTON_DISABLED;
+      _state = e_TOGGLE_CONTROL_DISABLED;
       [self setupButtonImages];
       [self setupHitBox];
    }
@@ -135,15 +135,15 @@
    if (_animating)
       return;
 
-   if (_state == e_TOGGLE_BUTTON_DISABLED)
+   if (_state == e_TOGGLE_CONTROL_DISABLED)
    {
       [self runEnableAnimations];
-      _state = e_TOGGLE_BUTTON_ENABLED;
+      _state = e_TOGGLE_CONTROL_ENABLED;
    }
    else
    {
       [self runDisableAnimations];
-      _state = e_TOGGLE_BUTTON_DISABLED;
+      _state = e_TOGGLE_CONTROL_DISABLED;
    }
 }
 

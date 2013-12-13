@@ -11,8 +11,6 @@
 #import "GLSettingsLayer.h"
 #import "UIColor+Crayola.h"
 
-#import "GLToggleButton.h"
-
 #define CORE_FUNCTION_BUTTON_PADDING 52
 #define HUD_BUTTON_EDGE_PADDING 48
 #define HUD_BUTTON_PADDING 50
@@ -504,12 +502,8 @@
       return;
    }
 
-   // TEMPORARY!!!
    if (_settingsAreExpanded)
-   {
       [_settingsLayer handleTouchAtPoint:[touch locationInNode:_settingsLayer]];
-      return;
-   }
 
    // if the hud was somehow pressed elsewhere and the bottom bar is not expanded, return
    if (!self.expanded || ![_buttonHitBoxes containsObject:node])

@@ -8,7 +8,7 @@
 
 #import "GLSettingsLayer.h"
 
-#import "GLToggleButton.h"
+#import "GLToggleControl.h"
 #import "UIColor+Crayola.h"
 
 #define TOP_PADDING 5
@@ -19,7 +19,7 @@
    SKSpriteNode *_backgroundLayer;
    CGSize _defaultSize;
    CGPoint _defaultAnchorPoint;
-   GLToggleButton *_toggleButton;
+   GLToggleControl *_toggleControl;
 }
 @end
 
@@ -67,19 +67,18 @@
 
 - (void)setupToggleButton
 {
-   _toggleButton = [[GLToggleButton alloc] init];
-   _toggleButton.position =  CGPointMake(_defaultSize.width * 0.5,
+   _toggleControl = [[GLToggleControl alloc] init];
+   _toggleControl.position =  CGPointMake(_defaultSize.width * 0.5,
                                         -(HEADING_FONT_SIZE + TOP_PADDING + 50));
-   _toggleButton.name = @"toggle";
-   [self addChild:_toggleButton];
+   _toggleControl.name = @"toggle";
+   [self addChild:_toggleControl];
 }
 
 - (void)handleTouchAtPoint:(CGPoint)point
 {
-//   if ([[self nodeAtPoint:point].name isEqualToString:@"toggle_hit_box"])
-   if ([_toggleButton.hitBox containsPoint:[self convertPoint:point toNode:_toggleButton]])
+   if ([_toggleControl.hitBox containsPoint:[self convertPoint:point toNode:_toggleControl]])
    {
-      [_toggleButton toggle];
+      [_toggleControl toggle];
    }
 }
 
