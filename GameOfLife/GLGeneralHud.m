@@ -505,9 +505,9 @@
    }
 
    // TEMPORARY!!!
-   if (_settingsAreExpanded && [node.name isEqual:@"toggle_hit_box"])
+   if (_settingsAreExpanded)
    {
-      [_settingsLayer toggle];
+      [_settingsLayer handleTouchAtPoint:[touch locationInNode:_settingsLayer]];
       return;
    }
 

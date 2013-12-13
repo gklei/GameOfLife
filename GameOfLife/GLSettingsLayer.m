@@ -74,9 +74,13 @@
    [self addChild:_toggleButton];
 }
 
-- (void)toggle
+- (void)handleTouchAtPoint:(CGPoint)point
 {
-   [_toggleButton toggle];
+//   if ([[self nodeAtPoint:point].name isEqualToString:@"toggle_hit_box"])
+   if ([_toggleButton.hitBox containsPoint:[self convertPoint:point toNode:_toggleButton]])
+   {
+      [_toggleButton toggle];
+   }
 }
 
 @end

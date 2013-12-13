@@ -17,6 +17,7 @@ typedef NS_ENUM(int, GL_TOGGLE_BUTTON_STATE)
 @interface GLToggleButton : SKSpriteNode
 
 @property (nonatomic, readonly) GL_TOGGLE_BUTTON_STATE state;
+@property (nonatomic, readonly) SKSpriteNode *hitBox;
 
 - (void)toggle;
 
