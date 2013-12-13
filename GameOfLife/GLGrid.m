@@ -53,27 +53,11 @@
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
          maxRowHeight -= TILESIZE.height;
    
-//   SKTexture * bumpedTexture = [SKTexture textureWithImageNamed:@"tile.circle.bumped.png"];
-//   SKTexture * dentedTexture = [SKTexture textureWithImageNamed:@"tile.circle.dented.png"];
    SKTexture *circleTexture = [SKTexture textureWithImageNamed:@"tile.circle.png"];
-//   bool bumped = true;
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
    {
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
       {
-//         GLTileNode *tile = [GLTileNode tileWithImageNamed:@"tile.circle.png"
-//                                                      rect:CGRectMake(xPos + 0.5,
-//                                                                      yPos + 0.5,
-//                                                                      TILESIZE.width - 1,
-//                                                                      TILESIZE.height - 1)];
-         
-//         GLTileNode *tile = [GLTileNode tileWithTextureNamed:(bumped? bumpedTexture : dentedTexture)
-//                                                        rect:CGRectMake(xPos + 0.5,
-//                                                                        yPos + 0.5,
-//                                                                        TILESIZE.width - 1,
-//                                                                        TILESIZE.height - 1)];
-//         bumped = !bumped;
-            
          GLTileNode *tile = [GLTileNode tileWithTextureNamed:circleTexture
                                                         rect:CGRectMake(xPos + 0.5,
                                                                         yPos + 0.5,

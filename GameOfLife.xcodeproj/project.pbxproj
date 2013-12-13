@@ -85,8 +85,6 @@
 		8ECA89AC182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
 		8ECA89B4182371AE009D906F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8ECA89B2182371AE009D906F /* InfoPlist.strings */; };
 		8ECA89B6182371AE009D906F /* GameOfLifeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECA89B5182371AE009D906F /* GameOfLifeTests.m */; };
-		EDE1F062185A8E390054AEBA /* tile.circle.dented.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE1F060185A8E390054AEBA /* tile.circle.dented.png */; };
-		EDE1F064185A912A0054AEBA /* tile.circle.bumped.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE1F063185A912A0054AEBA /* tile.circle.bumped.png */; };
 		EDE4505C1833F3380063DE36 /* clear.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505A1833F3380063DE36 /* clear.png */; };
 		EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505B1833F3380063DE36 /* clear@2x.png */; };
 /* End PBXBuildFile section */
@@ -194,8 +192,6 @@
 		8ECA89B1182371AE009D906F /* GameOfLifeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GameOfLifeTests-Info.plist"; sourceTree = "<group>"; };
 		8ECA89B3182371AE009D906F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8ECA89B5182371AE009D906F /* GameOfLifeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameOfLifeTests.m; sourceTree = "<group>"; };
-		EDE1F060185A8E390054AEBA /* tile.circle.dented.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile.circle.dented.png; sourceTree = "<group>"; };
-		EDE1F063185A912A0054AEBA /* tile.circle.bumped.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.circle.bumped.png; path = Images/tile.circle.bumped.png; sourceTree = SOURCE_ROOT; };
 		EDE4505A1833F3380063DE36 /* clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = clear.png; path = Images/clear.png; sourceTree = SOURCE_ROOT; };
 		EDE4505B1833F3380063DE36 /* clear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear@2x.png"; path = "Images/clear@2x.png"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -265,8 +261,6 @@
 				8E99B2BB182F7A1200C7AEDB /* start@2x.png */,
 				8E99B2BC182F7A1200C7AEDB /* stop.png */,
 				8E99B2BD182F7A1200C7AEDB /* stop@2x.png */,
-				EDE1F063185A912A0054AEBA /* tile.circle.bumped.png */,
-				EDE1F060185A8E390054AEBA /* tile.circle.dented.png */,
 				8EAA5A11184C22BE008E34D9 /* tile.circle.png */,
 				8EA265451859927100351F5E /* toggle-ring-outer@2x.png */,
 				8EA2652318596BBF00351F5E /* undo2.png */,
@@ -473,7 +467,6 @@
 				8EA265081858033A00351F5E /* settings.expand.2.wav in Resources */,
 				8EA2652118596A7D00351F5E /* cancel-circle.png in Resources */,
 				8EA2653118596F3E00351F5E /* pause.png in Resources */,
-				EDE1F062185A8E390054AEBA /* tile.circle.dented.png in Resources */,
 				8EA264FE1850229100351F5E /* start.algorithm.wav in Resources */,
 				8EA2652F18596F3E00351F5E /* cog.png in Resources */,
 				8ECA8990182371AE009D906F /* InfoPlist.strings in Resources */,
@@ -520,7 +513,6 @@
 				8EA265391859723500351F5E /* droplet.png in Resources */,
 				8EA265051858033A00351F5E /* flash.wav in Resources */,
 				8E75B03418419630000AEEB8 /* splash.png in Resources */,
-				EDE1F064185A912A0054AEBA /* tile.circle.bumped.png in Resources */,
 				8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */,
 				8E75B04618466F7F000AEEB8 /* camera.png in Resources */,
 				8EA2653518596FC800351F5E /* camera2.png in Resources */,
