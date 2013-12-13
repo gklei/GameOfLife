@@ -271,7 +271,6 @@
    [_backgroundLayer runAction:expand
                     completion:
     ^{
-       _settingsLayer.hidden = NO;
        [self.delegate settingsDidExpand];
     }];
 
@@ -321,7 +320,7 @@
           if (_settingsAreExpanded)
           {
              _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
-//             _settingsLayer.hidden = NO;
+             _settingsLayer.hidden = NO;
           }
        }];
 }
