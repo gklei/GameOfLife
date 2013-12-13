@@ -28,6 +28,24 @@
    return tile;
 }
 
++ (id)tileWithTextureNamed:(SKTexture *)texture rect:(CGRect)rect
+{
+   GLTileNode *tile = [GLTileNode spriteNodeWithTexture:texture size:rect.size];
+   
+   tile.position = rect.origin;
+   tile.anchorPoint = CGPointZero;
+   
+   tile.colorBlendFactor = 1.0;
+   tile.isLiving = NO;
+   tile.color = [SKColor crayolaCoconutColor];
+   tile.liveColorName = CCN_crayolaMulberryColor - 1;
+   tile.deadColorName = CCN_crayolaCoconutColor;
+   tile.boardMaxDistance = 1000;
+   tile.maxColorDistance = tile.boardMaxDistance;
+   
+   return tile;
+}
+
 + (id)tileWithImageNamed:(NSString *)imageName rect:(CGRect)rect
 {
    SKTexture *texture = [SKTexture textureWithImageNamed:imageName];

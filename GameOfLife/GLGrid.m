@@ -52,24 +52,37 @@
    if (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)568) < DBL_EPSILON)
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
          maxRowHeight -= TILESIZE.height;
-
+   
+   SKTexture * bumpedTexture = [SKTexture textureWithImageNamed:@"tile.circle.bumped.png"];
+//   SKTexture * dentedTexture = [SKTexture textureWithImageNamed:@"tile.circle.dented.png"];
+//   bool bumped = true;
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
    {
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
       {
-//         GLTileNode *tile = [GLTileNode tileWithRect:CGRectMake(xPos + 0.5,
-//                                                                yPos + 0.5,
-//                                                                TILESIZE.width - 1,
-//                                                                TILESIZE.height - 1)];
-         GLTileNode *tile = [GLTileNode tileWithImageNamed:@"tile.circle.png"
-                                                      rect:CGRectMake(xPos + 0.5,
-                                                                      yPos + 0.5,
-                                                                      TILESIZE.width - 1,
-                                                                      TILESIZE.height - 1)];
+//         GLTileNode *tile = [GLTileNode tileWithImageNamed:@"tile.circle.png"
+//                                                      rect:CGRectMake(xPos + 0.5,
+//                                                                      yPos + 0.5,
+//                                                                      TILESIZE.width - 1,
+//                                                                      TILESIZE.height - 1)];
+         
+//         GLTileNode *tile = [GLTileNode tileWithTextureNamed:(bumped? bumpedTexture : dentedTexture)
+//                                                        rect:CGRectMake(xPos + 0.5,
+//                                                                        yPos + 0.5,
+//                                                                        TILESIZE.width - 1,
+//                                                                        TILESIZE.height - 1)];
+//         bumped = !bumped;
+            
+         GLTileNode *tile = [GLTileNode tileWithTextureNamed:bumpedTexture
+                                                        rect:CGRectMake(xPos + 0.5,
+                                                                        yPos + 0.5,
+                                                                        TILESIZE.width - 1,
+                                                                        TILESIZE.height - 1)];
          tile.delegate = self;
          [self addChild:tile];
       }
    }
+   
    _tiles = [NSArray arrayWithArray:self.children];
    
    _priorGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
@@ -135,8 +148,8 @@
 {
    for (int i = 0; i < _tiles.count; ++i)
       if (((GLTileNode *)_tiles[i]).isLiving != _nextGenerationTileStates[i])
-//         return [self currentlyInContinuousBiLoop];
-         return NO;
+         return [self currentlyInContinuousBiLoop];
+//         return NO;
 
    return YES;
 }

@@ -15,6 +15,8 @@
 
 #include <OpenGLES/ES1/glext.h>
 
+#define DEFAULT_GENERATION_DURATION 0.8
+
 @interface GLGridScene() <GLGeneralHudDelegate, GLColorHudDelegate>
 {
    GLGrid *_grid;
@@ -36,10 +38,15 @@
    SKAction *_flashSound;
 
    CFTimeInterval _lastGenerationTime;
+   CFTimeInterval _generationDuration;
 
    SKSpriteNode *_flashLayer;
    SKAction *_flashAnimation;
    BOOL _firstScreenShotTaken;
+   
+// BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
+BOOL _decreasing;
+// END: tmp code to change generation speed from 0.1 <-> 1.0
 }
 @end
 
@@ -60,8 +67,9 @@
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
       
-      // TODO:LEA set flag from preferences
+      // TODO:LEA set these from preferences
       _autoShowHideHudForStartStop = YES;
+      _generationDuration = DEFAULT_GENERATION_DURATION;
    }
    return self;
 }
@@ -135,7 +143,7 @@
    if (![_grid currentStateIsRunnable] && !_running)
       return;
    
-   float duration = (_running)? .15 : .35;
+   float duration = (_running)? 0.1875 * _generationDuration : 0.4375 * _generationDuration;
    [_grid setTilesBirthingDuration:duration
                      dyingDuration:duration];
 
@@ -443,7 +451,7 @@
 #pragma mark SKScene Overridden Method
 -(void)update:(CFTimeInterval)currentTime
 {
-   if (_running && currentTime - _lastGenerationTime > .8)
+   if (_running && currentTime - _lastGenerationTime > _generationDuration)
    {
       _lastGenerationTime = currentTime;
       
@@ -451,6 +459,25 @@
          [_grid updateNextGeneration];
       else
          [self toggleRunningButtonPressed];
+      
+// BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
+//        _generationDuration should be set in the UI
+if ([_grid generationCount] % 10 == 0)
+{
+   _generationDuration += (_decreasing)? -0.1 : 0.1;
+
+   if (_generationDuration < 0.1)
+   {
+      _generationDuration = 0.2;
+      _decreasing = false;
+   }
+   else if (_generationDuration > 1)
+   {
+      _generationDuration = 0.9;
+      _decreasing = true;
+   }
+}
+// END: tmp code to change generation speed from 0.1 <-> 1.0
    }
 }
 
