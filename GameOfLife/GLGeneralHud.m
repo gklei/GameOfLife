@@ -7,6 +7,7 @@
 //
 
 #import "GLGeneralHud.h"
+#import "GLGridScene.h"
 
 #import "GLSettingsLayer.h"
 #import "UIColor+Crayola.h"
@@ -492,8 +493,13 @@
 {
    if (moved)
       return;
-   
+
+   CGPoint firstTouch = ((GLGridScene *)self.scene).locationOfFirstTouch;
+   SKNode *focusedNode = [self nodeAtPoint:[self convertPoint:firstTouch fromNode:self.scene]];
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
+
+   if (![focusedNode isEqual:node])
+      return;
 
    // check to see if the bottom bar should expand or collapse
    if (node == _expandCollapseButton)

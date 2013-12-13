@@ -21,7 +21,6 @@
 {
    GLGrid *_grid;
 
-   CGPoint _firstLocationOfTouch;
    GLTileNode *_currentTileBeingTouched;
    BOOL _oneTileTouched;
 
@@ -43,6 +42,8 @@
    SKSpriteNode *_flashLayer;
    SKAction *_flashAnimation;
    BOOL _firstScreenShotTaken;
+
+   SKNode *_focusedNode;
    
 // BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
 BOOL _decreasing;
@@ -240,7 +241,7 @@ BOOL _decreasing;
            withEvent:(UIEvent *)event
 {
    UITouch *touch = touches.allObjects.lastObject;
-   _firstLocationOfTouch = [touch locationInNode:self];
+   _locationOfFirstTouch = [touch locationInNode:self];
    if (!_running)
    {
       [self handleTouch:touches.allObjects.lastObject];
@@ -252,17 +253,17 @@ BOOL _decreasing;
 {
    UITouch *touch = touches.allObjects.lastObject;
    if (!_running &&
-       ![_generalHudLayer containsPoint:_firstLocationOfTouch] &&
-       ![_colorHudLayer containsPoint:_firstLocationOfTouch])
+       ![_generalHudLayer containsPoint:_locationOfFirstTouch] &&
+       ![_colorHudLayer containsPoint:_locationOfFirstTouch])
    {
       [self toggleLivingForTileAtTouch:touch withSoundFX:_fingerUpSoundFX];
    }
 
-   if ([_colorHudLayer containsPoint:_firstLocationOfTouch])
+   if ([_colorHudLayer containsPoint:_locationOfFirstTouch])
    {
       [_colorHudLayer handleTouch:touch moved:YES];
    }
-   else if ([_generalHudLayer containsPoint:_firstLocationOfTouch])
+   else if ([_generalHudLayer containsPoint:_locationOfFirstTouch])
    {
       [_generalHudLayer handleTouch:touch moved:YES];
    }
@@ -272,12 +273,12 @@ BOOL _decreasing;
            withEvent:(UIEvent *)event
 {
    UITouch *touch = touches.allObjects.lastObject;
-   if ([_generalHudLayer containsPoint:_firstLocationOfTouch] &&
+   if ([_generalHudLayer containsPoint:_locationOfFirstTouch] &&
        [_generalHudLayer containsPoint:[touch locationInNode:self]])
    {
       [self generalHudPressedWithTouch:touch];
    }
-   if ([_colorHudLayer containsPoint:_firstLocationOfTouch] &&
+   if ([_colorHudLayer containsPoint:_locationOfFirstTouch] &&
        [_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
       [self colorHudPressedWithTouch:touch];
