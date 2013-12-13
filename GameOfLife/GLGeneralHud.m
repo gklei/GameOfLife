@@ -502,7 +502,10 @@
 
    // TEMPORARY!!!
    if (_settingsAreExpanded && [node.name isEqual:@"toggle_hit_box"])
+   {
       [_settingsLayer toggle];
+      return;
+   }
 
    // if the hud was somehow pressed elsewhere and the bottom bar is not expanded, return
    if (!self.expanded || ![_buttonHitBoxes containsObject:node])
@@ -522,9 +525,6 @@
       [self.delegate restoreButtonPressed];
    else if (node == _cameraButtonHitBox)
       [self.delegate screenShotButtonPressed];
-
-   NSLog(@"node at point: %@ %@", NSStringFromCGPoint([touch locationInNode:self]),
-         [self nodeAtPoint:[touch locationInNode:self]]);
 }
 
 @end
