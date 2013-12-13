@@ -11,6 +11,8 @@
 #import "GLSettingsLayer.h"
 #import "UIColor+Crayola.h"
 
+#import "GLToggleButton.h"
+
 #define CORE_FUNCTION_BUTTON_PADDING 52
 #define HUD_BUTTON_EDGE_PADDING 48
 #define HUD_BUTTON_PADDING 50
@@ -138,6 +140,7 @@
                                               anchorPoint:_backgroundLayer.anchorPoint];
    _settingsLayer.alpha = 5;
    _settingsLayer.hidden = YES;
+   _settingsLayer.name = @"settings_layer";
    [_backgroundLayer addChild:_settingsLayer];
 }
 
@@ -497,6 +500,10 @@
       return;
    }
 
+   // TEMPORARY!!!
+   if (_settingsAreExpanded && [node.name isEqual:@"toggle_hit_box"])
+      [_settingsLayer toggle];
+
    // if the hud was somehow pressed elsewhere and the bottom bar is not expanded, return
    if (!self.expanded || ![_buttonHitBoxes containsObject:node])
       return;
@@ -515,6 +522,9 @@
       [self.delegate restoreButtonPressed];
    else if (node == _cameraButtonHitBox)
       [self.delegate screenShotButtonPressed];
+
+   NSLog(@"node at point: %@ %@", NSStringFromCGPoint([touch locationInNode:self]),
+         [self nodeAtPoint:[touch locationInNode:self]]);
 }
 
 @end

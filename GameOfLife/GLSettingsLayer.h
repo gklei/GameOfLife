@@ -12,4 +12,7 @@
 
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint;
+
+// temporary way of testing the toggle animation
+- (void)toggle;
 @end

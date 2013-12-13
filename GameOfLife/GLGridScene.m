@@ -66,7 +66,9 @@ BOOL _decreasing;
 
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
-      
+
+      self.userInteractionEnabled = YES;
+
       // TODO:LEA set these from preferences
       _autoShowHideHudForStartStop = YES;
       _generationDuration = DEFAULT_GENERATION_DURATION;
@@ -86,6 +88,7 @@ BOOL _decreasing;
    _generalHudLayer = [GLGeneralHud new];
    _generalHudLayer.delegate = self;
    _generalHudLayer.position = CGPointMake(-self.size.width + 60, 0);
+   _generalHudLayer.userInteractionEnabled = YES;
    [self addChild:_generalHudLayer];
 }
 
@@ -338,12 +341,14 @@ BOOL _decreasing;
 {
    if (_generalHudLayer.isExpanded)
    {
-      *waitPeriod = ((_generalHudLayer.settingsAreExpanded)? 0.625 : 0.3125) * _generationDuration;
+//      *waitPeriod = ((_generalHudLayer.settingsAreExpanded)? 0.625 : 0.3125) * _generationDuration;
+      *waitPeriod = (_generalHudLayer.settingsAreExpanded)? 0.5 : 0.25;
       [_generalHudLayer collapse];
    }
    else
    {
-      SKAction *reposition = [SKAction moveByX:0 y:60 duration:0.3125 * _generationDuration];
+//      SKAction *reposition = [SKAction moveByX:0 y:60 duration:0.3125 * _generationDuration];
+      SKAction *reposition = [SKAction moveByX:0 y:60 duration:.25];
       reposition.timingMode = SKActionTimingEaseInEaseOut;
 
       [_generalHudLayer setCoreFunctionButtonsHidden:YES];
@@ -356,12 +361,14 @@ BOOL _decreasing;
 {
    if (_colorHudLayer.isExpanded)
    {
-      *waitPeriod = 0.3125 * _generationDuration;
+//      *waitPeriod = 0.3125 * _generationDuration;
+      *waitPeriod = 0.25;
       [_colorHudLayer collapse];
    }
    else
    {
-      SKAction *reposition = [SKAction moveByX:0 y:60 duration:0.3125 * _generationDuration];
+//      SKAction *reposition = [SKAction moveByX:0 y:60 duration:0.3125 * _generationDuration];
+      SKAction *reposition = [SKAction moveByX:0 y:60 duration:.25];
       reposition.timingMode = SKActionTimingEaseInEaseOut;
 
       [_colorHudLayer setColorDropsHidden:YES];
@@ -384,8 +391,10 @@ BOOL _decreasing;
 {
    _colorHudIsAnimating = YES;
 
-   SKAction *wait = [SKAction waitForDuration:0.1875 * _generationDuration];
-   SKAction *reposition = [SKAction moveByX:0 y:-60 duration:0.3125 * _generationDuration];
+//   SKAction *wait = [SKAction waitForDuration:0.1875 * _generationDuration];
+//   SKAction *reposition = [SKAction moveByX:0 y:-60 duration:0.3125 * _generationDuration];
+   SKAction *wait = [SKAction waitForDuration:.15];
+   SKAction *reposition = [SKAction moveByX:0 y:-60 duration:.25];
    reposition.timingMode = SKActionTimingEaseInEaseOut;
 
    [_generalHudLayer runAction:[SKAction sequence:@[wait, reposition]]
@@ -399,8 +408,10 @@ BOOL _decreasing;
 {
    _generalHudIsAnimating = YES;
 
-   SKAction *wait = [SKAction waitForDuration:0.1875 * _generationDuration];
-   SKAction *reposition = [SKAction moveByX:0 y:-60 duration:0.3125 * _generationDuration];
+//   SKAction *wait = [SKAction waitForDuration:0.1875 * _generationDuration];
+//   SKAction *reposition = [SKAction moveByX:0 y:-60 duration:0.3125 * _generationDuration];
+   SKAction *wait = [SKAction waitForDuration:.15];
+   SKAction *reposition = [SKAction moveByX:0 y:-60 duration:.25];
    reposition.timingMode = SKActionTimingEaseInEaseOut;
 
    [_colorHudLayer runAction:[SKAction sequence:@[wait, reposition]]
@@ -415,7 +426,8 @@ BOOL _decreasing;
    _colorHudIsAnimating = NO;
    if (_generalHudIsAnimating)
    {
-      SKAction *reposition = [SKAction moveByX:0 y:60 duration:0.1875 * _generationDuration];
+//      SKAction *reposition = [SKAction moveByX:0 y:60 duration:0.1875 * _generationDuration];
+      SKAction *reposition = [SKAction moveByX:0 y:60 duration:.15];
       reposition.timingMode = SKActionTimingEaseInEaseOut;
       [_colorHudLayer setColorDropsHidden:YES];
       [_colorHudLayer runAction:reposition];
@@ -427,7 +439,8 @@ BOOL _decreasing;
    _generalHudIsAnimating = NO;
    if (_colorHudIsAnimating)
    {
-      SKAction *reposition = [SKAction moveByX:0 y:60 duration:0.1875 * _generationDuration];
+//      SKAction *reposition = [SKAction moveByX:0 y:60 duration:0.1875 * _generationDuration];
+      SKAction *reposition = [SKAction moveByX:0 y:60 duration:.15];
       reposition.timingMode = SKActionTimingEaseInEaseOut;
       [_generalHudLayer setCoreFunctionButtonsHidden:YES];
       [_generalHudLayer runAction:reposition];

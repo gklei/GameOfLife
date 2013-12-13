@@ -8,6 +8,16 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface GLToggleButton : SKNode
+typedef NS_ENUM(int, GL_TOGGLE_BUTTON_STATE)
+{
+   e_TOGGLE_BUTTON_ENABLED,
+   e_TOGGLE_BUTTON_DISABLED
+};
+
+@interface GLToggleButton : SKSpriteNode
+
+@property (nonatomic, readonly) GL_TOGGLE_BUTTON_STATE state;
+
+- (void)toggle;
 
 @end

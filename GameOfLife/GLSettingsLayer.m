@@ -7,6 +7,8 @@
 //
 
 #import "GLSettingsLayer.h"
+
+#import "GLToggleButton.h"
 #import "UIColor+Crayola.h"
 
 #define TOP_PADDING 5
@@ -17,6 +19,7 @@
    SKSpriteNode *_backgroundLayer;
    CGSize _defaultSize;
    CGPoint _defaultAnchorPoint;
+   GLToggleButton *_toggleButton;
 }
 @end
 
@@ -29,7 +32,6 @@
    {
       _defaultSize = size;
       _defaultAnchorPoint = anchorPoint;
-//      [self setupBackground];
       [self setupSettingsLabel];
       [self setupToggleButton];
    }
@@ -65,15 +67,16 @@
 
 - (void)setupToggleButton
 {
-   SKSpriteNode *toggleButton = [SKSpriteNode spriteNodeWithImageNamed:@"toggle-ring-outer@2x.png"];
-   toggleButton.position = CGPointMake(_defaultSize.width * 0.5,
+   _toggleButton = [[GLToggleButton alloc] init];
+   _toggleButton.position =  CGPointMake(_defaultSize.width * 0.5,
                                         -(HEADING_FONT_SIZE + TOP_PADDING + 50));
-   SKSpriteNode *innerRing = [SKSpriteNode spriteNodeWithImageNamed:@"radio-unchecked@2x.png"];
-   [innerRing setScale:.6];
-   innerRing.position = CGPointMake(_defaultSize.width * 0.5 - 8,
-                                    -(HEADING_FONT_SIZE + TOP_PADDING + 50));
-   [self addChild:innerRing];
-   [self addChild:toggleButton];
+   _toggleButton.name = @"toggle";
+   [self addChild:_toggleButton];
+}
+
+- (void)toggle
+{
+   [_toggleButton toggle];
 }
 
 @end
