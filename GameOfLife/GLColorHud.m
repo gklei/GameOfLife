@@ -8,6 +8,7 @@
 
 #import "GLColorHud.h"
 #import "UIColor+Crayola.h"
+#import "GLGridScene.h"
 
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 44
@@ -226,9 +227,11 @@
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
-   SKNode * node = [self nodeAtPoint:[touch locationInNode:self]];
+   CGPoint firstTouch = ((GLGridScene *)self.scene).locationOfFirstTouch;
+   SKNode *focusedNode = [self nodeAtPoint:[self convertPoint:firstTouch fromNode:self.scene]];
+   SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
 
-   if ([node.name isEqualToString:@"splash"] && !moved)
+   if ([node.name isEqualToString:@"splash"] && !moved && [focusedNode isEqual:node])
    {
       [self toggle];
    }
