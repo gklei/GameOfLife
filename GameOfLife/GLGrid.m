@@ -53,8 +53,9 @@
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
          maxRowHeight -= TILESIZE.height;
    
-   SKTexture * bumpedTexture = [SKTexture textureWithImageNamed:@"tile.circle.bumped.png"];
+//   SKTexture * bumpedTexture = [SKTexture textureWithImageNamed:@"tile.circle.bumped.png"];
 //   SKTexture * dentedTexture = [SKTexture textureWithImageNamed:@"tile.circle.dented.png"];
+   SKTexture *circleTexture = [SKTexture textureWithImageNamed:@"tile.circle.png"];
 //   bool bumped = true;
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
    {
@@ -73,7 +74,7 @@
 //                                                                        TILESIZE.height - 1)];
 //         bumped = !bumped;
             
-         GLTileNode *tile = [GLTileNode tileWithTextureNamed:bumpedTexture
+         GLTileNode *tile = [GLTileNode tileWithTextureNamed:circleTexture
                                                         rect:CGRectMake(xPos + 0.5,
                                                                         yPos + 0.5,
                                                                         TILESIZE.width - 1,
@@ -148,8 +149,8 @@
 {
    for (int i = 0; i < _tiles.count; ++i)
       if (((GLTileNode *)_tiles[i]).isLiving != _nextGenerationTileStates[i])
-         return [self currentlyInContinuousBiLoop];
-//         return NO;
+//         return [self currentlyInContinuousBiLoop];
+         return NO;
 
    return YES;
 }

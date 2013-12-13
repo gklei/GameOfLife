@@ -10,6 +10,7 @@
 #import "UIColor+Crayola.h"
 
 #define TOGGLE_ANIMATION_DURATION .1
+#define TOGGLE_COLOR_ANIMATION_DURATION .2
 #define INNER_RING_OFFSET_FROM_CENTER 8
 #define INNER_RING_X_ANIMATION 16
 
@@ -22,6 +23,7 @@
    SKAction *_enableAnimation;
    SKAction *_disableAnimation;
 
+   BOOL _animating;
    BOOL _firstTouchInHitBox;
 }
 @end
@@ -69,17 +71,31 @@
    SKAction *enableSlide = [SKAction moveByX:INNER_RING_X_ANIMATION
                                            y:0
                                     duration:TOGGLE_ANIMATION_DURATION];
-   enableSlide.timingMode = SKActionTimingEaseInEaseOut;
 
    SKAction *enableInnerRingColor = [SKAction colorizeWithColor:[SKColor crayolaLimeColor]
                                                colorBlendFactor:1
-                                                       duration:TOGGLE_ANIMATION_DURATION];
+                                                       duration:TOGGLE_COLOR_ANIMATION_DURATION];
    SKAction *enableOuterRingColor = [SKAction colorizeWithColor:[SKColor crayolaCaribbeanGreenPearlColor]
                                                colorBlendFactor:1
-                                                       duration:TOGGLE_ANIMATION_DURATION];
+                                                       duration:TOGGLE_COLOR_ANIMATION_DURATION];
 
-   [_innerRing runAction:[SKAction group:@[enableSlide, enableInnerRingColor]]];
-   [_outerRing runAction:enableOuterRingColor];
+   enableSlide.timingMode = SKActionTimingEaseInEaseOut;
+   enableInnerRingColor.timingMode = SKActionTimingEaseInEaseOut;
+   enableOuterRingColor.timingMode = SKActionTimingEaseInEaseOut;
+
+//   [_innerRing runAction:[SKAction group:@[enableSlide, enableInnerRingColor]]];
+//   [_outerRing runAction:enableOuterRingColor];
+   _animating = YES;
+   [_innerRing runAction:enableSlide
+              completion:
+    ^{
+       [_innerRing runAction:enableInnerRingColor];
+       [_outerRing runAction:enableOuterRingColor
+                  completion:
+        ^{
+           _animating = NO;
+        }];
+    }];
 }
 
 - (void)runDisableAnimations
@@ -87,21 +103,38 @@
    SKAction *disableSlide = [SKAction moveByX:-INNER_RING_X_ANIMATION
                                             y:0
                                      duration:TOGGLE_ANIMATION_DURATION];
-   disableSlide.timingMode = SKActionTimingEaseInEaseOut;
    
    SKAction *disableInnerRingColor = [SKAction colorizeWithColor:[SKColor crayolaCottonCandyColor]
                                                 colorBlendFactor:1
-                                                        duration:TOGGLE_ANIMATION_DURATION];
+                                                        duration:TOGGLE_COLOR_ANIMATION_DURATION];
    SKAction *disableOuterRingColor = [SKAction colorizeWithColor:[SKColor crayolaVioletRedColor]
                                                 colorBlendFactor:1
-                                                        duration:TOGGLE_ANIMATION_DURATION];
+                                                        duration:TOGGLE_COLOR_ANIMATION_DURATION];
+   
+   disableSlide.timingMode = SKActionTimingEaseInEaseOut;
+   disableInnerRingColor.timingMode = SKActionTimingEaseInEaseOut;
+   disableOuterRingColor.timingMode = SKActionTimingEaseInEaseOut;
 
-   [_innerRing runAction:[SKAction group:@[disableSlide, disableInnerRingColor]]];
-   [_outerRing runAction:disableOuterRingColor];
+//   [_innerRing runAction:[SKAction group:@[disableSlide, disableInnerRingColor]]];
+//   [_outerRing runAction:disableOuterRingColor];
+   _animating = YES;
+   [_innerRing runAction:disableSlide
+              completion:
+    ^{
+       [_innerRing runAction:disableInnerRingColor];
+       [_outerRing runAction:disableOuterRingColor
+                  completion:
+        ^{
+           _animating = NO;
+        }];
+    }];
 }
 
 - (void)toggle
 {
+   if (_animating)
+      return;
+
    if (_state == e_TOGGLE_BUTTON_DISABLED)
    {
       [self runEnableAnimations];

@@ -313,11 +313,16 @@
       [self collapseSettingsWithCompletionBlock:^
        {
           _settingsButton.color = [SKColor whiteColor];
+          _settingsLayer.hidden = YES;
        }];
    else
       [self expandSettingsWithCompletionBlock:^
        {
-          _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
+          if (_settingsAreExpanded)
+          {
+             _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
+//             _settingsLayer.hidden = NO;
+          }
        }];
 }
 
