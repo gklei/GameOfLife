@@ -53,12 +53,25 @@
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
          maxRowHeight -= TILESIZE.height;
    
-   SKTexture *circleTexture = [SKTexture textureWithImageNamed:@"tile.circle.png"];
+   SKTexture *texture;
+   int i = arc4random_uniform(3);
+   switch (i)
+   {
+      case 0:
+         texture = [SKTexture textureWithImageNamed:@"tile.ring.png"];
+         break;
+      case 1:
+         texture = [SKTexture textureWithImageNamed:@"tile.cylinder.png"];
+         break;
+      default:
+         texture = [SKTexture textureWithImageNamed:@"tile.circle.png"];
+   }
+   
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
    {
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
       {
-         GLTileNode *tile = [GLTileNode tileWithTextureNamed:circleTexture
+         GLTileNode *tile = [GLTileNode tileWithTextureNamed:texture
                                                         rect:CGRectMake(xPos + 0.5,
                                                                         yPos + 0.5,
                                                                         TILESIZE.width - 1,
