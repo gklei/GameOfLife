@@ -12,8 +12,8 @@
 #import "GLToggleControl.h"
 #import "UIColor+Crayola.h"
 
-#define TOP_PADDING 5
-#define HEADING_FONT_SIZE 25
+#define TOP_PADDING 10
+#define HEADING_FONT_SIZE 16
 
 @interface GLSettingsLayer()
 {
@@ -56,7 +56,7 @@
 - (void)setupSettingsLabel
 {
 //   NSLog(@"%@", [UIFont fontNamesForFamilyName:@"Futura"]);
-   SKLabelNode *settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
+   SKLabelNode *settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-Medium"];
 
    settingsLabel.text = @"S E T T I N G S";
    settingsLabel.colorBlendFactor = 1.0;
