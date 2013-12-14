@@ -31,6 +31,7 @@
    BOOL _colorHudIsAnimating;
    BOOL _running;
    BOOL _autoShowHideHudForStartStop;
+   BOOL _generalHudShouldExpand;
 
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;
@@ -161,6 +162,8 @@ BOOL _decreasing;
          [_generalHudLayer collapse];
       else if (!_generalHudIsAnimating)
          [_generalHudLayer expand];
+      else
+         _generalHudShouldExpand = YES;
    }
 }
 
@@ -444,7 +447,15 @@ BOOL _decreasing;
       SKAction *reposition = [SKAction moveByX:0 y:60 duration:.15];
       reposition.timingMode = SKActionTimingEaseInEaseOut;
       [_generalHudLayer setCoreFunctionButtonsHidden:YES];
-      [_generalHudLayer runAction:reposition];
+      [_generalHudLayer runAction:reposition
+                       completion:
+       ^{
+          if (_generalHudShouldExpand)
+          {
+             _generalHudShouldExpand = NO;
+             [_generalHudLayer expand];
+          }
+       }];
    }
 }
 
