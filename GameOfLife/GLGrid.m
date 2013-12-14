@@ -112,7 +112,8 @@
    if (_inContinuousLoop)
       return;
 
-   ++_generationCount;
+   if ([self currentlyInContinuousBiLoop] == NO)
+      ++_generationCount;  // don't add to count if we are not generating new life
    
    for (int i = 0; i < _tiles.count; ++i)
       ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
@@ -133,7 +134,6 @@
 {
    for (int i = 0; i < _tiles.count; ++i)
       if (((GLTileNode *)_tiles[i]).isLiving != _nextGenerationTileStates[i])
-//         return [self currentlyInContinuousBiLoop];
          return NO;
 
    return YES;
