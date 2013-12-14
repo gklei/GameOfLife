@@ -87,7 +87,8 @@
 
 - (void)handleTouchAtPoint:(CGPoint)point
 {
-   if ([_toggleControl.hitBox containsPoint:[self convertPoint:point toNode:_toggleControl]])
+   CGPoint convertedPoint = [self convertPoint:point toNode:_toggleControl];
+   if ([_toggleControl.hitBox containsPoint:convertedPoint])
    {
       [_toggleControl toggle];
    }

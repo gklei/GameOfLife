@@ -498,6 +498,8 @@
    SKNode *focusedNode = [self nodeAtPoint:[self convertPoint:firstTouch fromNode:self.scene]];
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
 
+   // do not forward on the touch event if the touch was let up on a node other than the one that
+   // the touch down was on
    if (![focusedNode isEqual:node])
       return;
 
