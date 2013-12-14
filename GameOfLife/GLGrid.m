@@ -53,38 +53,46 @@
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
          maxRowHeight -= TILESIZE.height;
    
-   SKTexture *texture;
-   int i = arc4random_uniform(6);
+   SKTexture *texture1 = nil;
+   SKTexture *texture2 = nil;
+   int i = arc4random_uniform(7);
    switch (i)
    {
       case 0:
-         texture = [SKTexture textureWithImageNamed:@"tile.ring.png"];
+         texture1 = [SKTexture textureWithImageNamed:@"tile.ring.png"];
          break;
       case 1:
-         texture = [SKTexture textureWithImageNamed:@"tile.cylinder.png"];
+         texture1 = [SKTexture textureWithImageNamed:@"tile.cylinder.png"];
          break;
       case 2:
-         texture = [SKTexture textureWithImageNamed:@"tile.spiral.png"];
+         texture1 = [SKTexture textureWithImageNamed:@"tile.spiral.png"];
          break;
       case 3:
-         texture = [SKTexture textureWithImageNamed:@"tile.buldge.png"];
+         texture1 = [SKTexture textureWithImageNamed:@"tile.buldge.png"];
          break;
       case 4:
-         texture = [SKTexture textureWithImageNamed:@"tile.ring3d.png"];
+         texture1 = [SKTexture textureWithImageNamed:@"tile.ring3d.png"];
+         break;
+      case 5:
+         texture1 = [SKTexture textureWithImageNamed:@"tile.frowny.png"];
+         texture2 = [SKTexture textureWithImageNamed:@"tile.smiley.png"];
          break;
       default:
-         texture = [SKTexture textureWithImageNamed:@"tile.circle.png"];
+         texture1 = [SKTexture textureWithImageNamed:@"tile.circle.png"];
    }
    
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
    {
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
       {
-         GLTileNode *tile = [GLTileNode tileWithTextureNamed:texture
-                                                        rect:CGRectMake(xPos + 0.5,
-                                                                        yPos + 0.5,
-                                                                        TILESIZE.width - 1,
-                                                                        TILESIZE.height - 1)];
+         GLTileNode *tile = [GLTileNode tileWithTexture:texture1
+                                                   rect:CGRectMake(xPos + 0.5,
+                                                                   yPos + 0.5,
+                                                                   TILESIZE.width - 1,
+                                                                   TILESIZE.height - 1)];
+         if (texture2)
+            tile.liveTexture = texture2;
+         
          tile.delegate = self;
          [self addChild:tile];
       }

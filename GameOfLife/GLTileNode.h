@@ -20,6 +20,8 @@
 @property (nonatomic, assign) float dyingDuration;
 @property (nonatomic, assign) CrayolaColorName liveColorName;
 @property (nonatomic, assign) CrayolaColorName deadColorName;
+@property (nonatomic, retain) SKTexture * liveTexture;
+@property (nonatomic, retain) SKTexture * deadTexture;
 
 @property (nonatomic, assign) float boardMaxDistance; // should be global, not per tile
 
@@ -30,7 +32,7 @@
 
 //+ (id)tileWithRect:(CGRect)rect;
 //+ (id)tileWithImageNamed:(NSString *)imageName rect:(CGRect)rect;
-+ (id)tileWithTextureNamed:(SKTexture *)texture rect:(CGRect)rect;
++ (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect;
 
 - (void)updateLivingAndColor:(BOOL)living;
 - (void)updateColor;

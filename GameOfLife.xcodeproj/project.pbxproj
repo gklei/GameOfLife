@@ -89,6 +89,8 @@
 		8ECA89AC182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
 		8ECA89B4182371AE009D906F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8ECA89B2182371AE009D906F /* InfoPlist.strings */; };
 		8ECA89B6182371AE009D906F /* GameOfLifeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECA89B5182371AE009D906F /* GameOfLifeTests.m */; };
+		ED292D1A185C90650031696D /* tile.frowny.png in Resources */ = {isa = PBXBuildFile; fileRef = ED292D18185C90650031696D /* tile.frowny.png */; };
+		ED292D1B185C90650031696D /* tile.smiley.png in Resources */ = {isa = PBXBuildFile; fileRef = ED292D19185C90650031696D /* tile.smiley.png */; };
 		ED2CB965185C01BE00319DE5 /* tile.ring.png in Resources */ = {isa = PBXBuildFile; fileRef = ED2CB964185C01BE00319DE5 /* tile.ring.png */; };
 		ED2CB967185C090100319DE5 /* tile.cylinder.png in Resources */ = {isa = PBXBuildFile; fileRef = ED2CB966185C090100319DE5 /* tile.cylinder.png */; };
 		ED2CB96C185C105200319DE5 /* tile.buldge.png in Resources */ = {isa = PBXBuildFile; fileRef = ED2CB96A185C105200319DE5 /* tile.buldge.png */; };
@@ -207,6 +209,8 @@
 		8ECA89B1182371AE009D906F /* GameOfLifeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GameOfLifeTests-Info.plist"; sourceTree = "<group>"; };
 		8ECA89B3182371AE009D906F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8ECA89B5182371AE009D906F /* GameOfLifeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameOfLifeTests.m; sourceTree = "<group>"; };
+		ED292D18185C90650031696D /* tile.frowny.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.frowny.png; path = Images/tile.frowny.png; sourceTree = SOURCE_ROOT; };
+		ED292D19185C90650031696D /* tile.smiley.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.smiley.png; path = Images/tile.smiley.png; sourceTree = SOURCE_ROOT; };
 		ED2CB964185C01BE00319DE5 /* tile.ring.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.ring.png; path = Images/tile.ring.png; sourceTree = SOURCE_ROOT; };
 		ED2CB966185C090100319DE5 /* tile.cylinder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.cylinder.png; path = Images/tile.cylinder.png; sourceTree = SOURCE_ROOT; };
 		ED2CB96A185C105200319DE5 /* tile.buldge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.buldge.png; path = Images/tile.buldge.png; sourceTree = SOURCE_ROOT; };
@@ -286,8 +290,10 @@
 				ED2CB96A185C105200319DE5 /* tile.buldge.png */,
 				8EAA5A11184C22BE008E34D9 /* tile.circle.png */,
 				ED2CB966185C090100319DE5 /* tile.cylinder.png */,
+				ED292D18185C90650031696D /* tile.frowny.png */,
 				ED2CB964185C01BE00319DE5 /* tile.ring.png */,
 				ED2CB970185C157500319DE5 /* tile.ring3d.png */,
+				ED292D19185C90650031696D /* tile.smiley.png */,
 				ED2CB96B185C105200319DE5 /* tile.spiral.png */,
 				8EA265451859927100351F5E /* toggle-ring-outer@2x.png */,
 				8EA2652318596BBF00351F5E /* undo2.png */,
@@ -542,11 +548,13 @@
 				8EA2652218596A7D00351F5E /* cancel-circle@2x.png in Resources */,
 				8EA2653618596FC800351F5E /* camera2@2x.png in Resources */,
 				8E75B03D1841C909000AEEB8 /* drop@2x.png in Resources */,
+				ED292D1A185C90650031696D /* tile.frowny.png in Resources */,
 				8EA2653018596F3E00351F5E /* cog@2x.png in Resources */,
 				8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */,
 				8EAA59BF184B03C7008E34D9 /* down.finger.on.tile.wav in Resources */,
 				EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */,
 				8E99B2C1182F7A1200C7AEDB /* stop@2x.png in Resources */,
+				ED292D1B185C90650031696D /* tile.smiley.png in Resources */,
 				8E75B04718466F7F000AEEB8 /* camera@2x.png in Resources */,
 				8EA265391859723500351F5E /* droplet.png in Resources */,
 				8EA265051858033A00351F5E /* flash.wav in Resources */,
