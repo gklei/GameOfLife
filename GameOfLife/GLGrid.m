@@ -54,7 +54,7 @@
          maxRowHeight -= TILESIZE.height;
    
    SKTexture *texture;
-   int i = arc4random_uniform(3);
+   int i = arc4random_uniform(6);
    switch (i)
    {
       case 0:
@@ -62,6 +62,15 @@
          break;
       case 1:
          texture = [SKTexture textureWithImageNamed:@"tile.cylinder.png"];
+         break;
+      case 2:
+         texture = [SKTexture textureWithImageNamed:@"tile.spiral.png"];
+         break;
+      case 3:
+         texture = [SKTexture textureWithImageNamed:@"tile.buldge.png"];
+         break;
+      case 4:
+         texture = [SKTexture textureWithImageNamed:@"tile.ring3d.png"];
          break;
       default:
          texture = [SKTexture textureWithImageNamed:@"tile.circle.png"];
