@@ -28,8 +28,8 @@
 
 @property (strong, nonatomic) id<GLTileColorDelegate> delegate;
 
-+ (id)tileWithRect:(CGRect)rect;
-+ (id)tileWithImageNamed:(NSString *)imageName rect:(CGRect)rect;
+//+ (id)tileWithRect:(CGRect)rect;
+//+ (id)tileWithImageNamed:(NSString *)imageName rect:(CGRect)rect;
 + (id)tileWithTextureNamed:(SKTexture *)texture rect:(CGRect)rect;
 
 - (void)updateLivingAndColor:(BOOL)living;

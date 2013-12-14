@@ -10,31 +10,29 @@
 
 @implementation GLTileNode
 
-+ (id)tileWithRect:(CGRect)rect
-{
-   GLTileNode *tile = [GLTileNode node];
-   
-   tile.size = rect.size;
-   tile.position = rect.origin;
-   tile.anchorPoint = CGPointZero;
-   
-   tile.isLiving = NO;
-   tile.color = [SKColor crayolaCoconutColor];
-   tile.liveColorName = CCN_crayolaMulberryColor - 1;
-   tile.deadColorName = CCN_crayolaCoconutColor;
-   tile.boardMaxDistance = 1000;
-   tile.maxColorDistance = tile.boardMaxDistance;
-   
-   return tile;
-}
+//+ (id)tileWithRect:(CGRect)rect
+//{
+//   GLTileNode *tile = [GLTileNode node];
+//   
+//   tile.size = rect.size;
+//   tile.position = rect.origin;
+//   tile.isLiving = NO;
+//   tile.color = [SKColor crayolaCoconutColor];
+//   tile.liveColorName = CCN_crayolaMulberryColor - 1;
+//   tile.deadColorName = CCN_crayolaCoconutColor;
+//   tile.boardMaxDistance = 1000;
+//   tile.maxColorDistance = tile.boardMaxDistance;
+//   
+//   return tile;
+//}
 
 + (id)tileWithTextureNamed:(SKTexture *)texture rect:(CGRect)rect
 {
    GLTileNode *tile = [GLTileNode spriteNodeWithTexture:texture size:rect.size];
    
-   tile.position = rect.origin;
-   tile.anchorPoint = CGPointZero;
-   
+   tile.position = CGPointMake(rect.origin.x + rect.size.width * 0.5,
+                               rect.origin.y + rect.size.height * 0.5);
+   tile.size = rect.size;
    tile.colorBlendFactor = 1.0;
    tile.isLiving = NO;
    tile.color = [SKColor crayolaCoconutColor];
@@ -46,24 +44,24 @@
    return tile;
 }
 
-+ (id)tileWithImageNamed:(NSString *)imageName rect:(CGRect)rect
-{
-   SKTexture *texture = [SKTexture textureWithImageNamed:imageName];
-   GLTileNode *tile = [GLTileNode spriteNodeWithTexture:texture size:rect.size];
-   
-   tile.position = rect.origin;
-   tile.anchorPoint = CGPointZero;
-
-   tile.colorBlendFactor = 1.0;
-   tile.isLiving = NO;
-   tile.color = [SKColor crayolaCoconutColor];
-   tile.liveColorName = CCN_crayolaMulberryColor - 1;
-   tile.deadColorName = CCN_crayolaCoconutColor;
-   tile.boardMaxDistance = 1000;
-   tile.maxColorDistance = tile.boardMaxDistance;
-
-   return tile;
-}
+//+ (id)tileWithImageNamed:(NSString *)imageName rect:(CGRect)rect
+//{
+//   SKTexture *texture = [SKTexture textureWithImageNamed:imageName];
+//   GLTileNode *tile = [GLTileNode spriteNodeWithTexture:texture size:rect.size];
+//   
+//   tile.position = rect.origin;
+//   tile.anchorPoint = CGPointZero;
+//
+//   tile.colorBlendFactor = 1.0;
+//   tile.isLiving = NO;
+//   tile.color = [SKColor crayolaCoconutColor];
+//   tile.liveColorName = CCN_crayolaMulberryColor - 1;
+//   tile.deadColorName = CCN_crayolaCoconutColor;
+//   tile.boardMaxDistance = 1000;
+//   tile.maxColorDistance = tile.boardMaxDistance;
+//
+//   return tile;
+//}
 
 - (float)calcDistanceFromStart:(CGPoint)start toEnd:(CGPoint)end
 {
@@ -147,6 +145,8 @@
       return;
    
    _isLiving = living;
+  
+   self.zRotation = (_isLiving)? M_PI : 0.0;
 }
 
 - (void)updateLivingAndColor:(BOOL)living
