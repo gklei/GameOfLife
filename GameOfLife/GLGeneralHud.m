@@ -222,7 +222,7 @@
       case GL_RUNNING:
          [self runAction:_startAlgorithmSound];
          _startStopButton.texture = [SKTexture textureWithImageNamed:@"pause"];
-         _startStopButton.color = [SKColor crayolaSizzlingRedColor];
+         _startStopButton.color = [SKColor crayolaRadicalRedColor];
          break;
       case GL_STOPPED:
          [self runAction:_stopAlgorithmSound];

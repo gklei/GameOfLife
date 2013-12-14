@@ -159,7 +159,7 @@ BOOL _decreasing;
    {
       if (_running)
          [_generalHudLayer collapse];
-      else
+      else if (!_generalHudIsAnimating)
          [_generalHudLayer expand];
    }
 }

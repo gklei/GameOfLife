@@ -118,7 +118,7 @@
                                       colorBlendFactor:1.0
                                               duration:duration];
    
-   changeColor.timingMode = SKActionTimingEaseInEaseOut;
+   changeColor.timingMode = SKActionTimingEaseIn;
    [self runAction:changeColor];
 }
 
@@ -157,11 +157,12 @@
 
 - (void)clearTile
 {
-   _isLiving = NO;
+   self.isLiving = NO;
    SKColor *deadColor = [SKColor colorForCrayolaColorName:_deadColorName];
    SKAction *changeColor = [SKAction colorizeWithColor:deadColor
                                       colorBlendFactor:0.0
                                               duration:.25];
+   changeColor.timingMode = SKActionTimingEaseInEaseOut;
    [self runAction:changeColor];
 }
 
