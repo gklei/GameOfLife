@@ -18,7 +18,6 @@
 {
    SKSpriteNode *_innerRing;
    SKSpriteNode *_outerRing;
-//   SKSpriteNode *_hitBox;
 
    SKAction *_enableAnimation;
    SKAction *_disableAnimation;

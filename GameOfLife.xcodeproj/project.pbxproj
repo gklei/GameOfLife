@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		8E254A83185BBB090068A3F9 /* GLUIControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E254A82185BBB090068A3F9 /* GLUIControl.m */; };
 		8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E254A85185BBD600068A3F9 /* GLSliderControl.m */; };
+		8E254A89185C3F980068A3F9 /* slider-end@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E254A87185C3F980068A3F9 /* slider-end@2x.png */; };
+		8E254A8A185C3F980068A3F9 /* slider-middle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E254A88185C3F980068A3F9 /* slider-middle@2x.png */; };
 		8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02B184164F7000AEEB8 /* expand_left.png */; };
 		8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02C184164F7000AEEB8 /* expand_left@2x.png */; };
 		8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B030184169BF000AEEB8 /* GLColorHud.m */; };
@@ -111,6 +113,8 @@
 		8E254A82185BBB090068A3F9 /* GLUIControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLUIControl.m; sourceTree = "<group>"; };
 		8E254A84185BBD600068A3F9 /* GLSliderControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSliderControl.h; sourceTree = "<group>"; };
 		8E254A85185BBD600068A3F9 /* GLSliderControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSliderControl.m; sourceTree = "<group>"; };
+		8E254A87185C3F980068A3F9 /* slider-end@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-end@2x.png"; path = "Images/slider-end@2x.png"; sourceTree = SOURCE_ROOT; };
+		8E254A88185C3F980068A3F9 /* slider-middle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-middle@2x.png"; path = "Images/slider-middle@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02F184169BF000AEEB8 /* GLColorHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorHud.h; sourceTree = "<group>"; };
@@ -240,6 +244,8 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8E254A87185C3F980068A3F9 /* slider-end@2x.png */,
+				8E254A88185C3F980068A3F9 /* slider-middle@2x.png */,
 				8EA2651B185966A600351F5E /* arrow-right.png */,
 				8EA2651C185966A600351F5E /* arrow-right@2x.png */,
 				8E75B04418466F7F000AEEB8 /* camera.png */,
@@ -356,8 +362,6 @@
 				8E75B030184169BF000AEEB8 /* GLColorHud.m */,
 				8E75B03E1842FFE3000AEEB8 /* GLGeneralHud.h */,
 				8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */,
-				8E254A84185BBD600068A3F9 /* GLSliderControl.h */,
-				8E254A85185BBD600068A3F9 /* GLSliderControl.m */,
 				8E75B04C18490C0A000AEEB8 /* GLGrid.h */,
 				8E75B04D18490C0A000AEEB8 /* GLGrid.m */,
 				8E99B29D182BFE7600C7AEDB /* GLGridScene.h */,
@@ -366,6 +370,8 @@
 				8E75B042184577E0000AEEB8 /* GLHud.m */,
 				8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */,
 				8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */,
+				8E254A84185BBD600068A3F9 /* GLSliderControl.h */,
+				8E254A85185BBD600068A3F9 /* GLSliderControl.m */,
 				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
 				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
 				8EA2650C18595C6700351F5E /* GLToggleControl.h */,
@@ -517,12 +523,14 @@
 				8EAA59C1184B03C7008E34D9 /* up.finger.off.tile.wav in Resources */,
 				ED2CB96C185C105200319DE5 /* tile.buldge.png in Resources */,
 				8E75B03C1841C909000AEEB8 /* drop.png in Resources */,
+				8E254A8A185C3F980068A3F9 /* slider-middle@2x.png in Resources */,
 				8E75B03918419670000AEEB8 /* ring@2x.png in Resources */,
 				8EA2651E185966A600351F5E /* arrow-right@2x.png in Resources */,
 				8EA265071858033A00351F5E /* settings.collapse.2.wav in Resources */,
 				8EA2653A1859723500351F5E /* droplet@2x.png in Resources */,
 				ED2CB96D185C105200319DE5 /* tile.spiral.png in Resources */,
 				8E75B04A1846CB23000AEEB8 /* restore.png in Resources */,
+				8E254A89185C3F980068A3F9 /* slider-end@2x.png in Resources */,
 				8E99B2AA182E0ABD00C7AEDB /* gear@2x.png in Resources */,
 				ED2CB971185C157500319DE5 /* tile.ring3d.png in Resources */,
 				8E75B03818419670000AEEB8 /* ring.png in Resources */,

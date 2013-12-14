@@ -8,6 +8,7 @@
 
 #import "GLSettingsLayer.h"
 
+#import "GLSliderControl.h"
 #import "GLToggleControl.h"
 #import "UIColor+Crayola.h"
 
@@ -20,6 +21,7 @@
    CGSize _defaultSize;
    CGPoint _defaultAnchorPoint;
    GLToggleControl *_toggleControl;
+   GLSliderControl *_sliderControl;
 }
 @end
 
@@ -33,7 +35,8 @@
       _defaultSize = size;
       _defaultAnchorPoint = anchorPoint;
       [self setupSettingsLabel];
-      [self setupToggleButton];
+      [self setupToggleControl];
+      [self setupSliderControl];
    }
    return self;
 }
@@ -65,13 +68,21 @@
    [self addChild:settingsLabel];
 }
 
-- (void)setupToggleButton
+- (void)setupToggleControl
 {
    _toggleControl = [[GLToggleControl alloc] init];
    _toggleControl.position =  CGPointMake(_defaultSize.width * 0.5,
                                         -(HEADING_FONT_SIZE + TOP_PADDING + 50));
    _toggleControl.name = @"toggle";
    [self addChild:_toggleControl];
+}
+
+- (void)setupSliderControl
+{
+   _sliderControl = [[GLSliderControl alloc] init];
+   _sliderControl.position = CGPointMake(_toggleControl.position.x,
+                                         _toggleControl.position.y - 100);
+   [self addChild:_sliderControl];
 }
 
 - (void)handleTouchAtPoint:(CGPoint)point
