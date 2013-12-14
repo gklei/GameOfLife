@@ -83,8 +83,6 @@
    enableInnerRingColor.timingMode = SKActionTimingEaseInEaseOut;
    enableOuterRingColor.timingMode = SKActionTimingEaseInEaseOut;
 
-//   [_innerRing runAction:[SKAction group:@[enableSlide, enableInnerRingColor]]];
-//   [_outerRing runAction:enableOuterRingColor];
    _animating = YES;
    [_innerRing runAction:enableSlide
               completion:
@@ -115,8 +113,6 @@
    disableInnerRingColor.timingMode = SKActionTimingEaseInEaseOut;
    disableOuterRingColor.timingMode = SKActionTimingEaseInEaseOut;
 
-//   [_innerRing runAction:[SKAction group:@[disableSlide, disableInnerRingColor]]];
-//   [_outerRing runAction:disableOuterRingColor];
    _animating = YES;
    [_innerRing runAction:disableSlide
               completion:
