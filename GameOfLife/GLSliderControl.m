@@ -12,13 +12,16 @@
 #define DEFAULT_LENGTH 180
 
 // These are dependant on the knob image and track end image sizes
-#define FULLY_EXTENDED_TRACK_SCALE_FACTOR .503318573
-#define HALF_EXTENDED_TRACK_SCALE_FACTOR .23
+#define FULLY_EXTENDED_TRACK_SCALE_FACTOR .5 //.503318573
+#define HALF_EXTENDED_TRACK_SCALE_FACTOR .225
 
 // These assure that the correct regions of the track end images are
 // stretched when adjusting the xScale property
 #define LEFT_TRACK_CENTER_RECT CGRectMake(.75, .25, .25, .5)
 #define RIGHT_TRACK_CENTER_RECT CGRectMake(0, .25, .25, .5)
+
+#define DEFAULT_KNOB_SCALE .6
+#define SELECTED_KNOB_SCALE .74
 
 @interface GLSliderControl()
 {
@@ -33,6 +36,9 @@
    int _sliderLength;
    float _knobSlidingRange;
    float _knobOffsetInAccumulatedFrame;
+
+   SKAction *_grow;
+   SKAction *_shrink;
 }
 @end
 
@@ -130,6 +136,12 @@
    _knobSlidingRange = CGRectGetWidth(self.calculateAccumulatedFrame) - CGRectGetWidth(_knob.frame);
    _knobOffsetInAccumulatedFrame = CGRectGetWidth(self.calculateAccumulatedFrame) / 2 -
                                    CGRectGetWidth(_knob.frame) / 2;
+
+   _grow = [SKAction scaleTo:SELECTED_KNOB_SCALE duration:.1];
+   _grow.timingMode = SKActionTimingEaseInEaseOut;
+
+   _shrink = [SKAction scaleTo:DEFAULT_KNOB_SCALE duration:.1];
+   _shrink.timingMode = SKActionTimingEaseInEaseOut;
 }
 
 - (void)setSliderValue:(float)sliderValue
@@ -166,14 +178,20 @@
    [self updateKnobPositionX:(_knob.position.x + deltaX)];
 }
 
+- (void)handleTouchBegan:(UITouch *)touch
+{
+   [_knob runAction:_grow];
+
+   [super handleTouchBegan:touch];
+}
+
 - (void)handleTouchMoved:(UITouch *)touch
 {
    float convertedX = [touch locationInNode:self].x;
    float convertedPreviousX = [touch previousLocationInNode:self].x;
    float deltaX = convertedX - convertedPreviousX;
 
-   if (_knob.position.x + deltaX <= _leftXBound ||
-       convertedX <= _leftXBound)
+   if (_knob.position.x + deltaX <= _leftXBound)
    {
       [self updateKnobPositionX:_leftXBound];
       _leftTrack.xScale = 0;
@@ -181,8 +199,7 @@
       return;
    }
 
-   if (_knob.position.x + deltaX >= _rightXBound ||
-       convertedX >= _rightXBound)
+   if (_knob.position.x + deltaX >= _rightXBound)
    {
       [self updateKnobPositionX:_rightXBound];
       _leftTrack.xScale = fabs(_leftXBound * FULLY_EXTENDED_TRACK_SCALE_FACTOR);
@@ -196,6 +213,7 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
+   [_knob runAction:_shrink];
    self.hitBox.position = _knob.position;
    [super handleTouchEnded:touch];
 }
