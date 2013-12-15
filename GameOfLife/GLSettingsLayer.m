@@ -84,6 +84,7 @@
    _sliderControl = [[GLSliderControl alloc] initWithLength:250];
    _sliderControl.position = CGPointMake(_toggleControl.position.x,
                                          _toggleControl.position.y - 100);
+   _sliderControl.sliderValue = .25;
 
    [self addChild:_sliderControl];
 }

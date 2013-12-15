@@ -109,7 +109,13 @@
 
 - (void)setSliderValue:(float)sliderValue
 {
+   if (sliderValue < 0 || sliderValue > 1)
+      return;
+
    _sliderValue = sliderValue;
+   float newKnobPositionX = (sliderValue * _knobSlidingRange) - _knobOffsetInAccumulatedFrame;
+
+   [self moveKnobByDeltaX:(newKnobPositionX - _knob.position.x)];
 }
 
 - (void)updateKnobPositionX:(float)x
