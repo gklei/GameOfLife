@@ -11,6 +11,7 @@
 
 #define DEFAULT_LENGTH 180
 
+// These are dependant on the knob image and track end image sizes
 #define FULLY_EXTENDED_TRACK_SCALE_FACTOR .503318573
 #define HALF_EXTENDED_TRACK_SCALE_FACTOR .23
 
@@ -56,11 +57,35 @@
    return [self init];
 }
 
+- (id)initWithValue:(float)value
+{
+   if (self = [self init])
+   {
+      if (value < 0 || value > 1)
+         value = 0;
+
+      self.sliderValue = value;
+   }
+   return self;
+}
+
+- (id)initWithLength:(int)length value:(float)value
+{
+   if (self = [self initWithLength:length])
+   {
+      if (value < 0 || value > 1)
+         value = 0;
+      
+      self.sliderValue = value;
+   }
+   return self;
+}
+
 - (void)setupLeftTrack
 {
    _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-left.png"];
    _leftTrack.anchorPoint = CGPointMake(0, .5);
-   _leftTrack.position = CGPointMake((_sliderLength) ? -_sliderLength/2.0 : -DEFAULT_LENGTH/2.0, 0);
+   _leftTrack.position = CGPointMake((_sliderLength) ? -_sliderLength / 2.0 : -DEFAULT_LENGTH / 2.0, 0);
 
    _leftTrack.centerRect = LEFT_TRACK_CENTER_RECT;
    _leftTrack.xScale = fabs(_leftTrack.position.x * HALF_EXTENDED_TRACK_SCALE_FACTOR);
@@ -72,7 +97,7 @@
 {
    _rightTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-right.png"];
    _rightTrack.anchorPoint = CGPointMake(1, .5);
-   _rightTrack.position = CGPointMake((_sliderLength)? _sliderLength/2.0 : DEFAULT_LENGTH/2.0, 0);
+   _rightTrack.position = CGPointMake((_sliderLength)? _sliderLength / 2.0 : DEFAULT_LENGTH / 2.0, 0);
 
    _rightTrack.centerRect = RIGHT_TRACK_CENTER_RECT;
    _rightTrack.xScale = _rightTrack.position.x * HALF_EXTENDED_TRACK_SCALE_FACTOR;
@@ -99,12 +124,12 @@
 
 - (void)setupVariables
 {
-   _leftXBound = _leftTrack.position.x + CGRectGetWidth(_knob.frame)/2;
-   _rightXBound = _rightTrack.position.x - CGRectGetWidth(_knob.frame)/2;
+   _leftXBound = _leftTrack.position.x + CGRectGetWidth(_knob.frame) / 2;
+   _rightXBound = _rightTrack.position.x - CGRectGetWidth(_knob.frame) / 2;
 
    _knobSlidingRange = CGRectGetWidth(self.calculateAccumulatedFrame) - CGRectGetWidth(_knob.frame);
-   _knobOffsetInAccumulatedFrame = CGRectGetWidth(self.calculateAccumulatedFrame)/2.0 -
-                                   CGRectGetWidth(_knob.frame)/2.0;
+   _knobOffsetInAccumulatedFrame = CGRectGetWidth(self.calculateAccumulatedFrame) / 2.0 -
+                                   CGRectGetWidth(_knob.frame) / 2.0;
 }
 
 - (void)setSliderValue:(float)sliderValue
