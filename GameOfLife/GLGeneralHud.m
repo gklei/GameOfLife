@@ -491,17 +491,7 @@
 #pragma mark GLHud Touch Method
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
-   if (moved)
-      return;
-
-   CGPoint firstTouch = ((GLGridScene *)self.scene).locationOfFirstTouch;
-   SKNode *focusedNode = [self nodeAtPoint:[self convertPoint:firstTouch fromNode:self.scene]];
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
-
-   // do not forward on the touch event if the touch was let up on a node other than the one that
-   // the touch down was on
-   if (![focusedNode isEqual:node])
-      return;
 
    // check to see if the bottom bar should expand or collapse
    if (node == _expandCollapseButton)
@@ -510,15 +500,16 @@
       return;
    }
 
-   if (_settingsAreExpanded)
-      [_settingsLayer handleTouchAtPoint:[touch locationInNode:_settingsLayer]];
-
    // if the hud was somehow pressed elsewhere and the bottom bar is not expanded, return
    if (!self.expanded || ![_buttonHitBoxes containsObject:node])
       return;
 
-   if (node != _settingsButtonHitBox && node != _startStopButtonHitBox && node != _cameraButtonHitBox)
+   if (node != _settingsButtonHitBox &&
+       node != _startStopButtonHitBox &&
+       node != _cameraButtonHitBox)
+   {
       [self runAction:self.defaultButtonPressSound];
+   }
 
    // we know that the bottom bar is expanded and can now check to see where the hud was pressed
    if (node == _settingsButtonHitBox)

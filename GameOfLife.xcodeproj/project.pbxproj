@@ -185,6 +185,7 @@
 		8EA2653C1859841F00351F5E /* close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "close@2x.png"; path = "Images/close@2x.png"; sourceTree = SOURCE_ROOT; };
 		8EA26543185990EA00351F5E /* radio-unchecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "radio-unchecked@2x.png"; path = "Images/radio-unchecked@2x.png"; sourceTree = SOURCE_ROOT; };
 		8EA265451859927100351F5E /* toggle-ring-outer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "toggle-ring-outer@2x.png"; path = "Images/toggle-ring-outer@2x.png"; sourceTree = SOURCE_ROOT; };
+		8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTouchHandler.h; sourceTree = "<group>"; };
 		8EAA59BC184B03C7008E34D9 /* down.finger.on.tile.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = down.finger.on.tile.wav; path = "GL Sound FX/down.finger.on.tile.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = up.finger.off.tile.wav; path = "GL Sound FX/up.finger.off.tile.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSettingsLayer.h; sourceTree = "<group>"; };
@@ -386,6 +387,7 @@
 				8EA2650C18595C6700351F5E /* GLToggleControl.h */,
 				8EA2650D18595C6700351F5E /* GLToggleControl.m */,
 				8E254A81185BBB090068A3F9 /* GLUIControl.h */,
+				8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */,
 				8E254A82185BBB090068A3F9 /* GLUIControl.m */,
 				8ECA899A182371AE009D906F /* GLViewController.h */,
 				8ECA899B182371AE009D906F /* GLViewController.m */,

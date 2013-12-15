@@ -14,7 +14,6 @@
    SKSpriteNode *_rightTrack;
 
    SKSpriteNode *_knob;
-   SKSpriteNode *_knobHitBox;
 }
 @end
 
@@ -27,6 +26,9 @@
       [self setupLeftTrack];
       [self setupRightTrack];
       [self setupKnob];
+      [self setupHitBox];
+
+      self.userInteractionEnabled = YES;
    }
    return self;
 }
@@ -37,7 +39,7 @@
    _leftTrack.anchorPoint = CGPointMake(1, .5);
    _leftTrack.position = CGPointMake(-15, 0);
    _leftTrack.centerRect = CGRectMake(.75, .25, .25, .5);
-   _leftTrack.xScale = 18;
+   _leftTrack.xScale = 20;
 
    [self addChild:_leftTrack];
 }
@@ -49,7 +51,7 @@
    _rightTrack.anchorPoint = CGPointMake(1, .5);
    _rightTrack.position = CGPointMake(15, 0);
    _rightTrack.centerRect = CGRectMake(.5, .25, .5, .5);
-   _rightTrack.xScale = 18;
+   _rightTrack.xScale = 20;
 
    [self addChild:_rightTrack];
 }
@@ -59,17 +61,27 @@
    _knob = [SKSpriteNode spriteNodeWithImageNamed:@"radio-unchecked@2x.png"];
    [_knob setScale:.6];
 
-   CGSize knobHitBoxSize = CGSizeMake(_knob.size.width + 9,
-                                      _knob.size.height + 9);
-
-   _knobHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
-                                              size:knobHitBoxSize];
-   _knobHitBox.position = _knob.position;
-   _knobHitBox.name = @"slider_knob_hit_box";
-   _knobHitBox.alpha = .05;
-
    [self addChild:_knob];
-   [self addChild:_knobHitBox];
+}
+
+- (void)setupHitBox
+{
+   self.hitBox.size = CGSizeMake(_knob.size.width + 9,
+                                 _knob.size.height + 9);
+   self.hitBox.position = _knob.position;
+   [self addChild:self.hitBox];
+}
+
+- (void)decrement
+{
+   _knob.position = CGPointMake(_knob.position.x - 1, _knob.position.y);
+   self.hitBox.position = CGPointMake(self.hitBox.position.x - 1, self.hitBox.position.y);
+}
+
+- (void)increment
+{
+   _knob.position = CGPointMake(_knob.position.x + 1, _knob.position.y);
+   self.hitBox.position = CGPointMake(self.hitBox.position.x + 1, self.hitBox.position.y);
 }
 
 @end

@@ -10,4 +10,7 @@
 
 @interface GLSliderControl : GLUIControl
 
+- (void)decrement;
+- (void)increment;
+
 @end

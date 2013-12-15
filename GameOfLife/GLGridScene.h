@@ -7,7 +7,6 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
-#import "GLTileNode.h"
 
 @interface GLGridScene : SKScene
 

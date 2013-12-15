@@ -18,8 +18,10 @@
 @interface GLSettingsLayer()
 {
    SKSpriteNode *_backgroundLayer;
+
    CGSize _defaultSize;
    CGPoint _defaultAnchorPoint;
+
    GLToggleControl *_toggleControl;
    GLSliderControl *_sliderControl;
 }

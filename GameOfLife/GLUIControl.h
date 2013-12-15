@@ -7,7 +7,11 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "GLTouchHandler.h"
 
-@interface GLUIControl : SKSpriteNode
+@interface GLUIControl : SKSpriteNode <GLTouchHandler>
+
+@property (nonatomic, readwrite) SKSpriteNode *hitBox;
+@property (nonatomic, readwrite) BOOL hasFocus;
 
 @end

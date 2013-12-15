@@ -58,11 +58,9 @@
 
 - (void)setupHitBox
 {
-   _hitBox = [SKSpriteNode node];
-   _hitBox.size = _outerRing.size;
-   _hitBox.position = _outerRing.position;
-   _hitBox.name = @"toggle_hit_box";
-   [self addChild:_hitBox];
+   self.hitBox.size = _outerRing.size;
+   self.hitBox.position = _outerRing.position;
+   [self addChild:self.hitBox];
 }
 
 - (void)runEnableAnimations
@@ -140,6 +138,14 @@
       [self runDisableAnimations];
       _state = e_TOGGLE_CONTROL_DISABLED;
    }
+}
+
+- (void)handleTouchEnded:(UITouch *)touch
+{
+   if ([self.hitBox containsPoint:[touch locationInNode:self]])
+      [self toggle];
+
+   [super handleTouchEnded:touch];
 }
 
 @end

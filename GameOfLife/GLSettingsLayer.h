@@ -12,6 +12,4 @@
 
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint;
-
-- (void)handleTouchAtPoint:(CGPoint)point;
 @end

@@ -7,11 +7,14 @@
 //
 
 #import "GLGridScene.h"
+
 #import "GLGrid.h"
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
-#import "UIColor+Crayola.h"
+#import "GLUIControl.h"
 #import "GLSettingsLayer.h"
+#import "GLTileNode.h"
+#import "UIColor+Crayola.h"
 
 #include <OpenGLES/ES1/glext.h>
 
@@ -44,7 +47,7 @@
    SKAction *_flashAnimation;
    BOOL _firstScreenShotTaken;
 
-   SKNode *_focusedNode;
+   GLUIControl *_focusedUIControl;
    
 // BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
 BOOL _decreasing;
@@ -245,6 +248,15 @@ BOOL _decreasing;
 {
    UITouch *touch = touches.allObjects.lastObject;
    _locationOfFirstTouch = [touch locationInNode:self];
+
+   for (SKNode *node in [self nodesAtPoint:_locationOfFirstTouch])
+      if ([node.name isEqualToString:@"ui_control_hit_box"])
+      {
+         _focusedUIControl = (GLUIControl *)node.parent;
+         [_focusedUIControl handleTouchBegan:touch];
+         return;
+      }
+
    if (!_running)
    {
       [self handleTouch:touches.allObjects.lastObject];
@@ -255,6 +267,10 @@ BOOL _decreasing;
            withEvent:(UIEvent *)event
 {
    UITouch *touch = touches.allObjects.lastObject;
+
+   if (_focusedUIControl)
+      [_focusedUIControl handleTouchMoved:touch];
+
    if (!_running &&
        ![_generalHudLayer containsPoint:_locationOfFirstTouch] &&
        ![_colorHudLayer containsPoint:_locationOfFirstTouch])
@@ -276,6 +292,13 @@ BOOL _decreasing;
            withEvent:(UIEvent *)event
 {
    UITouch *touch = touches.allObjects.lastObject;
+
+   if (_focusedUIControl)
+   {
+      [_focusedUIControl handleTouchEnded:touch];
+      _focusedUIControl = nil;
+   }
+
    if ([_generalHudLayer containsPoint:_locationOfFirstTouch] &&
        [_generalHudLayer containsPoint:[touch locationInNode:self]])
    {
