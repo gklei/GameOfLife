@@ -11,6 +11,14 @@
 
 #define DEFAULT_LENGTH 180
 
+#define FULLY_EXTENDED_TRACK_SCALE_FACTOR .503318573
+#define HALF_EXTENDED_TRACK_SCALE_FACTOR .23
+
+// These assure that the correct regions of the track end images are
+// stretched when adjusting the xScale property
+#define LEFT_TRACK_CENTER_RECT CGRectMake(.75, .25, .25, .5)
+#define RIGHT_TRACK_CENTER_RECT CGRectMake(0, .25, .25, .5)
+
 @interface GLSliderControl()
 {
    SKSpriteNode *_leftTrack;
@@ -22,6 +30,8 @@
    float _rightXBound;
 
    int _sliderLength;
+   float _knobSlidingRange;
+   float _knobOffsetInAccumulatedFrame;
 }
 @end
 
@@ -35,9 +45,7 @@
       [self setupRightTrack];
       [self setupKnob];
       [self setupHitBox];
-
-      _leftXBound = _leftTrack.position.x + CGRectGetWidth(_knob.frame)/2;
-      _rightXBound = _rightTrack.position.x - CGRectGetWidth(_knob.frame)/2;
+      [self setupVariables];
    }
    return self;
 }
@@ -54,8 +62,8 @@
    _leftTrack.anchorPoint = CGPointMake(0, .5);
    _leftTrack.position = CGPointMake((_sliderLength) ? -_sliderLength/2.0 : -DEFAULT_LENGTH/2.0, 0);
 
-   _leftTrack.centerRect = CGRectMake(.75, .25, .25, .5);
-   _leftTrack.xScale = fabs(_leftTrack.position.x * .23);
+   _leftTrack.centerRect = LEFT_TRACK_CENTER_RECT;
+   _leftTrack.xScale = fabs(_leftTrack.position.x * HALF_EXTENDED_TRACK_SCALE_FACTOR);
 
    [self addChild:_leftTrack];
 }
@@ -66,8 +74,8 @@
    _rightTrack.anchorPoint = CGPointMake(1, .5);
    _rightTrack.position = CGPointMake((_sliderLength)? _sliderLength/2.0 : DEFAULT_LENGTH/2.0, 0);
 
-   _rightTrack.centerRect = CGRectMake(0, .25, .25, .5);
-   _rightTrack.xScale = _rightTrack.position.x * .23;
+   _rightTrack.centerRect = RIGHT_TRACK_CENTER_RECT;
+   _rightTrack.xScale = _rightTrack.position.x * HALF_EXTENDED_TRACK_SCALE_FACTOR;
 
    [self addChild:_rightTrack];
 }
@@ -89,20 +97,41 @@
    [self addChild:self.hitBox];
 }
 
+- (void)setupVariables
+{
+   _leftXBound = _leftTrack.position.x + CGRectGetWidth(_knob.frame)/2;
+   _rightXBound = _rightTrack.position.x - CGRectGetWidth(_knob.frame)/2;
+
+   _knobSlidingRange = CGRectGetWidth(self.calculateAccumulatedFrame) - CGRectGetWidth(_knob.frame);
+   _knobOffsetInAccumulatedFrame = CGRectGetWidth(self.calculateAccumulatedFrame)/2.0 -
+                                   CGRectGetWidth(_knob.frame)/2.0;
+}
+
+- (void)setSliderValue:(float)sliderValue
+{
+   _sliderValue = sliderValue;
+}
+
+- (void)updateKnobPositionX:(float)x
+{
+   _knob.position = CGPointMake(x, _knob.position.y);
+   _sliderValue = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
+}
+
 - (void)moveKnobByDeltaX:(float)deltaX
 {
-   if (_leftTrack.xScale + deltaX * .25 > 0)
-      _leftTrack.xScale += deltaX * .25;
+   float scaleAddition = deltaX * .25;
+   if (_leftTrack.xScale + scaleAddition > 0)
+      _leftTrack.xScale += scaleAddition;
    else
       _leftTrack.xScale = 0;
 
-   if (_rightTrack.xScale - deltaX * .25 > 0)
-      _rightTrack.xScale -= deltaX * .25;
+   if (_rightTrack.xScale - scaleAddition > 0)
+      _rightTrack.xScale -= scaleAddition;
    else
       _rightTrack.xScale = 0;
 
-   _knob.position = CGPointMake((_knob.position.x + deltaX),
-                                _knob.position.y);
+   [self updateKnobPositionX:(_knob.position.x + deltaX)];
 }
 
 - (void)handleTouchMoved:(UITouch *)touch
@@ -114,19 +143,17 @@
    if (_knob.position.x + deltaX <= _leftXBound ||
        convertedX <= _leftXBound)
    {
-      _knob.position = CGPointMake(_leftXBound, _leftTrack.position.y);
+      [self updateKnobPositionX:_leftXBound];
       _leftTrack.xScale = 0;
-//      _rightTrack.xScale = 45.5;
-      _rightTrack.xScale = _rightXBound * .503318573;
+      _rightTrack.xScale = _rightXBound * FULLY_EXTENDED_TRACK_SCALE_FACTOR;
       return;
    }
 
    if (_knob.position.x + deltaX >= _rightXBound ||
        convertedX >= _rightXBound)
    {
-      _knob.position = CGPointMake(_rightXBound, _rightTrack.position.y);
-//      _leftTrack.xScale = 45.5;
-      _leftTrack.xScale = fabs(_leftXBound * .503318573);
+      [self updateKnobPositionX:_rightXBound];
+      _leftTrack.xScale = fabs(_leftXBound * FULLY_EXTENDED_TRACK_SCALE_FACTOR);
       _rightTrack.xScale = 0;
       return;
    }

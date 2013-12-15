@@ -10,7 +10,7 @@
 
 @interface GLSliderControl : GLUIControl
 
-@property (nonatomic, readonly) float sliderValue;
+@property (nonatomic, readwrite) float sliderValue;
 
 - (id)initWithLength:(int)length;
 
