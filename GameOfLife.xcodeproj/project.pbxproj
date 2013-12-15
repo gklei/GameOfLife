@@ -71,6 +71,7 @@
 		8EA265461859927100351F5E /* toggle-ring-outer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EA265451859927100351F5E /* toggle-ring-outer@2x.png */; };
 		8EAA38AE185D918F00DA5CED /* slider-end-left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA38AD185D918F00DA5CED /* slider-end-left.png */; };
 		8EAA38B0185D91EB00DA5CED /* slider-end-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA38AF185D91EB00DA5CED /* slider-end-right.png */; };
+		8EAA38B3185E6A6C00DA5CED /* GLSettingsItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA38B2185E6A6C00DA5CED /* GLSettingsItem.m */; };
 		8EAA59BF184B03C7008E34D9 /* down.finger.on.tile.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59BC184B03C7008E34D9 /* down.finger.on.tile.wav */; };
 		8EAA59C1184B03C7008E34D9 /* up.finger.off.tile.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */; };
 		8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */; };
@@ -188,6 +189,8 @@
 		8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GLTouchHandler.h; sourceTree = "<group>"; };
 		8EAA38AD185D918F00DA5CED /* slider-end-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-end-left.png"; path = "Images/slider-end-left.png"; sourceTree = SOURCE_ROOT; };
 		8EAA38AF185D91EB00DA5CED /* slider-end-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-end-right.png"; path = "Images/slider-end-right.png"; sourceTree = SOURCE_ROOT; };
+		8EAA38B1185E6A6C00DA5CED /* GLSettingsItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSettingsItem.h; sourceTree = "<group>"; };
+		8EAA38B2185E6A6C00DA5CED /* GLSettingsItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSettingsItem.m; sourceTree = "<group>"; };
 		8EAA59BC184B03C7008E34D9 /* down.finger.on.tile.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = down.finger.on.tile.wav; path = "GL Sound FX/down.finger.on.tile.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = up.finger.off.tile.wav; path = "GL Sound FX/up.finger.off.tile.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSettingsLayer.h; sourceTree = "<group>"; };
@@ -385,6 +388,8 @@
 				8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */,
 				8E254A84185BBD600068A3F9 /* GLSliderControl.h */,
 				8E254A85185BBD600068A3F9 /* GLSliderControl.m */,
+				8EAA38B1185E6A6C00DA5CED /* GLSettingsItem.h */,
+				8EAA38B2185E6A6C00DA5CED /* GLSettingsItem.m */,
 				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
 				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
 				8EA2650C18595C6700351F5E /* GLToggleControl.h */,
@@ -607,6 +612,7 @@
 				8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */,
 				8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */,
 				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,
+				8EAA38B3185E6A6C00DA5CED /* GLSettingsItem.m in Sources */,
 				8E75B04E18490C0A000AEEB8 /* GLGrid.m in Sources */,
 				8E75B043184577E0000AEEB8 /* GLHud.m in Sources */,
 				8ECA899C182371AE009D906F /* GLViewController.m in Sources */,

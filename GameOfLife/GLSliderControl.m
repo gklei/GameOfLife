@@ -123,7 +123,7 @@
 
 - (void)setupHitBox
 {
-   self.hitBox.size = CGSizeMake(_knob.size.width + 9, _knob.size.height + 9);
+   self.hitBox.size = CGSizeMake(_knob.size.width + 30, _knob.size.height + 30);
    self.hitBox.position = _knob.position;
    [self addChild:self.hitBox];
 }
@@ -158,7 +158,7 @@
    _knob.position = CGPointMake(x, _knob.position.y);
    self.hitBox.position = _knob.position;
    _sliderValue = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
-   NSLog(@"slider value: %f", _sliderValue);
+//   NSLog(@"slider value: %f", _sliderValue);
 }
 
 - (void)moveKnobByDeltaX:(float)deltaX
