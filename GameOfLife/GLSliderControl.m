@@ -28,7 +28,7 @@
       [self setupKnob];
       [self setupHitBox];
 
-      self.userInteractionEnabled = YES;
+      NSLog(@"accumulated frame: %@", NSStringFromCGRect(self.calculateAccumulatedFrame));
    }
    return self;
 }
@@ -66,8 +66,7 @@
 
 - (void)setupHitBox
 {
-   self.hitBox.size = CGSizeMake(_knob.size.width + 9,
-                                 _knob.size.height + 9);
+   self.hitBox.size = CGSizeMake(_knob.size.width + 9, _knob.size.height + 9);
    self.hitBox.position = _knob.position;
    [self addChild:self.hitBox];
 }
@@ -91,7 +90,16 @@
 
 - (void)handleTouchMoved:(UITouch *)touch
 {
-   float deltaX = [touch locationInNode:self].x - [touch previousLocationInNode:self].x;
+   CGPoint convertedPoint = [touch locationInNode:self];
+   CGPoint convertedPreviousPoint = [touch previousLocationInNode:self];
+
+//   NSLog(@"accumulated frame: %@", NSStringFromCGRect(self.calculateAccumulatedFrame));
+//   NSLog(@"%@", NSStringFromCGPoint(convertedPoint));
+//
+//   if (CGRectContainsPoint(self.calculateAccumulatedFrame, convertedPoint))
+//      return;
+
+   float deltaX = convertedPoint.x - convertedPreviousPoint.x;
    [self moveKnobByDeltaX:deltaX];
 }
 

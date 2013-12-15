@@ -10,7 +10,6 @@
 
 @interface GLSliderControl : GLUIControl
 
-- (void)decrement;
-- (void)increment;
+@property (nonatomic, readonly) float sliderValue;
 
 @end

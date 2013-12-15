@@ -491,6 +491,9 @@
 #pragma mark GLHud Touch Method
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
 {
+   if (moved)
+      return;
+   
    SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
 
    // check to see if the bottom bar should expand or collapse
