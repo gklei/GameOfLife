@@ -149,9 +149,7 @@
    if (sliderValue < 0 || sliderValue > 1)
       return;
 
-   _sliderValue = sliderValue;
    float newKnobPositionX = (sliderValue * _knobSlidingRange) - _knobOffsetInAccumulatedFrame;
-
    [self moveKnobByDeltaX:(newKnobPositionX - _knob.position.x)];
 }
 
@@ -160,6 +158,7 @@
    _knob.position = CGPointMake(x, _knob.position.y);
    self.hitBox.position = _knob.position;
    _sliderValue = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
+   NSLog(@"slider value: %f", _sliderValue);
 }
 
 - (void)moveKnobByDeltaX:(float)deltaX
