@@ -14,6 +14,8 @@
    SKSpriteNode *_rightTrack;
 
    SKSpriteNode *_knob;
+   float _leftXBound;
+   float _rightXBound;
 }
 @end
 
@@ -28,30 +30,30 @@
       [self setupKnob];
       [self setupHitBox];
 
-      NSLog(@"accumulated frame: %@", NSStringFromCGRect(self.calculateAccumulatedFrame));
+      _leftXBound = _leftTrack.position.x + CGRectGetWidth(_knob.frame)/2;
+      _rightXBound = _rightTrack.position.x - CGRectGetWidth(_knob.frame)/2;
    }
    return self;
 }
 
 - (void)setupLeftTrack
 {
-   _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-4x4@2x.png"];
-   _leftTrack.anchorPoint = CGPointMake(1, .5);
-   _leftTrack.position = CGPointMake(-15, 0);
+   _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-left.png"];
+   _leftTrack.anchorPoint = CGPointMake(0, .5);
+   _leftTrack.position = CGPointMake(-100, 0);
    _leftTrack.centerRect = CGRectMake(.75, .25, .25, .5);
-   _leftTrack.xScale = 20;
+   _leftTrack.xScale = 22;
 
    [self addChild:_leftTrack];
 }
 
 - (void)setupRightTrack
 {
-   _rightTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-4x4@2x.png"];
-   [_rightTrack setZRotation:M_PI];
+   _rightTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-right.png"];
    _rightTrack.anchorPoint = CGPointMake(1, .5);
-   _rightTrack.position = CGPointMake(15, 0);
-   _rightTrack.centerRect = CGRectMake(.5, .25, .5, .5);
-   _rightTrack.xScale = 20;
+   _rightTrack.position = CGPointMake(100, 0);
+   _rightTrack.centerRect = CGRectMake(0, .25, .25, .5);
+   _rightTrack.xScale = 22;
 
    [self addChild:_rightTrack];
 }
@@ -90,16 +92,24 @@
 
 - (void)handleTouchMoved:(UITouch *)touch
 {
-   CGPoint convertedPoint = [touch locationInNode:self];
-   CGPoint convertedPreviousPoint = [touch previousLocationInNode:self];
+   float convertedX = [touch locationInNode:self].x;
+   float convertedPreviousX = [touch previousLocationInNode:self].x;
+   float deltaX = convertedX - convertedPreviousX;
 
-//   NSLog(@"accumulated frame: %@", NSStringFromCGRect(self.calculateAccumulatedFrame));
-//   NSLog(@"%@", NSStringFromCGPoint(convertedPoint));
-//
-//   if (CGRectContainsPoint(self.calculateAccumulatedFrame, convertedPoint))
-//      return;
+   if (_knob.position.x + deltaX <= _leftXBound ||
+       convertedX <= _leftXBound)
+   {
+      _knob.position = CGPointMake(_leftXBound, _leftTrack.position.y);
+      return;
+   }
 
-   float deltaX = convertedPoint.x - convertedPreviousPoint.x;
+   if (_knob.position.x + deltaX >= _rightXBound ||
+       convertedX >= _rightXBound)
+   {
+      _knob.position = CGPointMake(_rightXBound, _rightTrack.position.y);
+      return;
+   }
+
    [self moveKnobByDeltaX:deltaX];
 }
 
