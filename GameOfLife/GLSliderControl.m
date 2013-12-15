@@ -75,7 +75,7 @@
    {
       if (value < 0 || value > 1)
          value = 0;
-      
+
       self.sliderValue = value;
    }
    return self;
@@ -128,8 +128,8 @@
    _rightXBound = _rightTrack.position.x - CGRectGetWidth(_knob.frame) / 2;
 
    _knobSlidingRange = CGRectGetWidth(self.calculateAccumulatedFrame) - CGRectGetWidth(_knob.frame);
-   _knobOffsetInAccumulatedFrame = CGRectGetWidth(self.calculateAccumulatedFrame) / 2.0 -
-                                   CGRectGetWidth(_knob.frame) / 2.0;
+   _knobOffsetInAccumulatedFrame = CGRectGetWidth(self.calculateAccumulatedFrame) / 2 -
+                                   CGRectGetWidth(_knob.frame) / 2;
 }
 
 - (void)setSliderValue:(float)sliderValue
