@@ -8,9 +8,6 @@
 
 #import "GLSliderControl.h"
 
-#define DEFAULT_SLIDER_FRAME
-#define TRACK_END_DEFAULT_SCALE .125
-
 @interface GLSliderControl()
 {
    SKSpriteNode *_leftTrack;
@@ -74,10 +71,6 @@
 
    [self addChild:_knob];
    [self addChild:_knobHitBox];
-}
-
-- (void)setupSliderFrame
-{
 }
 
 @end

@@ -10,6 +10,4 @@
 
 @interface GLSliderControl : GLUIControl
 
-@property (nonatomic, readonly) CGRect sliderFrame;
-
 @end
