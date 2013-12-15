@@ -7,6 +7,7 @@
 //
 
 #import "GLSliderControl.h"
+#import "UIColor+Crayola.h"
 
 @interface GLSliderControl()
 {
@@ -14,6 +15,7 @@
    SKSpriteNode *_rightTrack;
 
    SKSpriteNode *_knob;
+
    float _leftXBound;
    float _rightXBound;
 }
@@ -42,7 +44,7 @@
    _leftTrack.anchorPoint = CGPointMake(0, .5);
    _leftTrack.position = CGPointMake(-100, 0);
    _leftTrack.centerRect = CGRectMake(.75, .25, .25, .5);
-   _leftTrack.xScale = 22;
+   _leftTrack.xScale = 23;
 
    [self addChild:_leftTrack];
 }
@@ -53,7 +55,7 @@
    _rightTrack.anchorPoint = CGPointMake(1, .5);
    _rightTrack.position = CGPointMake(100, 0);
    _rightTrack.centerRect = CGRectMake(0, .25, .25, .5);
-   _rightTrack.xScale = 22;
+   _rightTrack.xScale = 23;
 
    [self addChild:_rightTrack];
 }
@@ -61,6 +63,8 @@
 - (void)setupKnob
 {
    _knob = [SKSpriteNode spriteNodeWithImageNamed:@"radio-unchecked@2x.png"];
+   _knob.colorBlendFactor = 1;
+   _knob.color = [SKColor crayolaRobinsEggBlueColor];
    [_knob setScale:.6];
 
    [self addChild:_knob];
@@ -83,9 +87,10 @@
    if (_rightTrack.xScale - deltaX * .25 > 0)
       _rightTrack.xScale -= deltaX * .25;
    else
-      _rightTrack.xScale -= deltaX * .25;
+      _rightTrack.xScale = 0;
 
-   _knob.position = CGPointMake(_knob.position.x + deltaX, _knob.position.y);
+   _knob.position = CGPointMake((_knob.position.x + deltaX),
+                                _knob.position.y);
 }
 
 - (void)handleTouchMoved:(UITouch *)touch
@@ -99,6 +104,7 @@
    {
       _knob.position = CGPointMake(_leftXBound, _leftTrack.position.y);
       _leftTrack.xScale = 0;
+      _rightTrack.xScale = 45.5;
       return;
    }
 
@@ -106,11 +112,13 @@
        convertedX >= _rightXBound)
    {
       _knob.position = CGPointMake(_rightXBound, _rightTrack.position.y);
+      _leftTrack.xScale = 45.5;
       _rightTrack.xScale = 0;
       return;
    }
 
    [self moveKnobByDeltaX:deltaX];
+   [super handleTouchMoved:touch];
 }
 
 - (void)handleTouchEnded:(UITouch *)touch
