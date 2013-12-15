@@ -27,7 +27,6 @@
       [self setupLeftTrack];
       [self setupRightTrack];
       [self setupKnob];
-      [self setupSliderFrame];
    }
    return self;
 }
