@@ -73,20 +73,18 @@
    [self addChild:self.hitBox];
 }
 
-- (void)decrementByX:(float)x
-{
-   _knob.position = CGPointMake(_knob.position.x - 1, _knob.position.y);
-   self.hitBox.position = CGPointMake(self.hitBox.position.x - 1, self.hitBox.position.y);
-}
-
-- (void)incrementByX:(float)x
-{
-   _knob.position = CGPointMake(_knob.position.x + 1, _knob.position.y);
-   self.hitBox.position = CGPointMake(self.hitBox.position.x + 1, self.hitBox.position.y);
-}
-
 - (void)moveKnobByDeltaX:(float)deltaX
 {
+   if (_leftTrack.xScale + deltaX * .25 > 0)
+      _leftTrack.xScale += deltaX * .25;
+   else
+      _leftTrack.xScale = 0;
+
+   if (_rightTrack.xScale - deltaX * .25 > 0)
+      _rightTrack.xScale -= deltaX * .25;
+   else
+      _rightTrack.xScale -= deltaX * .25;
+
    _knob.position = CGPointMake(_knob.position.x + deltaX, _knob.position.y);
 }
 
@@ -100,6 +98,7 @@
        convertedX <= _leftXBound)
    {
       _knob.position = CGPointMake(_leftXBound, _leftTrack.position.y);
+      _leftTrack.xScale = 0;
       return;
    }
 
@@ -107,6 +106,7 @@
        convertedX >= _rightXBound)
    {
       _knob.position = CGPointMake(_rightXBound, _rightTrack.position.y);
+      _rightTrack.xScale = 0;
       return;
    }
 
