@@ -146,6 +146,7 @@
 - (void)updateKnobPositionX:(float)x
 {
    _knob.position = CGPointMake(x, _knob.position.y);
+   self.hitBox.position = _knob.position;
    _sliderValue = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
 }
 
