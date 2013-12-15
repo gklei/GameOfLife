@@ -81,7 +81,7 @@
 
 - (void)setupSliderControl
 {
-   _sliderControl = [[GLSliderControl alloc] init];
+   _sliderControl = [[GLSliderControl alloc] initWithLength:250];
    _sliderControl.position = CGPointMake(_toggleControl.position.x,
                                          _toggleControl.position.y - 100);
 

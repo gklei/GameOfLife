@@ -9,6 +9,8 @@
 #import "GLSliderControl.h"
 #import "UIColor+Crayola.h"
 
+#define DEFAULT_LENGTH 180
+
 @interface GLSliderControl()
 {
    SKSpriteNode *_leftTrack;
@@ -18,6 +20,8 @@
 
    float _leftXBound;
    float _rightXBound;
+
+   int _sliderLength;
 }
 @end
 
@@ -38,13 +42,20 @@
    return self;
 }
 
+- (id)initWithLength:(int)length
+{
+   _sliderLength = length;
+   return [self init];
+}
+
 - (void)setupLeftTrack
 {
    _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-left.png"];
    _leftTrack.anchorPoint = CGPointMake(0, .5);
-   _leftTrack.position = CGPointMake(-100, 0);
+   _leftTrack.position = CGPointMake((_sliderLength) ? -_sliderLength/2.0 : -DEFAULT_LENGTH/2.0, 0);
+
    _leftTrack.centerRect = CGRectMake(.75, .25, .25, .5);
-   _leftTrack.xScale = 23;
+   _leftTrack.xScale = fabs(_leftTrack.position.x * .23);
 
    [self addChild:_leftTrack];
 }
@@ -53,9 +64,10 @@
 {
    _rightTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-right.png"];
    _rightTrack.anchorPoint = CGPointMake(1, .5);
-   _rightTrack.position = CGPointMake(100, 0);
+   _rightTrack.position = CGPointMake((_sliderLength)? _sliderLength/2.0 : DEFAULT_LENGTH/2.0, 0);
+
    _rightTrack.centerRect = CGRectMake(0, .25, .25, .5);
-   _rightTrack.xScale = 23;
+   _rightTrack.xScale = _rightTrack.position.x * .23;
 
    [self addChild:_rightTrack];
 }
@@ -104,7 +116,8 @@
    {
       _knob.position = CGPointMake(_leftXBound, _leftTrack.position.y);
       _leftTrack.xScale = 0;
-      _rightTrack.xScale = 45.5;
+//      _rightTrack.xScale = 45.5;
+      _rightTrack.xScale = _rightXBound * .503318573;
       return;
    }
 
@@ -112,7 +125,8 @@
        convertedX >= _rightXBound)
    {
       _knob.position = CGPointMake(_rightXBound, _rightTrack.position.y);
-      _leftTrack.xScale = 45.5;
+//      _leftTrack.xScale = 45.5;
+      _leftTrack.xScale = fabs(_leftXBound * .503318573);
       _rightTrack.xScale = 0;
       return;
    }

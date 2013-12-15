@@ -12,4 +12,6 @@
 
 @property (nonatomic, readonly) float sliderValue;
 
+- (id)initWithLength:(int)length;
+
 @end
