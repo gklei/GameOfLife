@@ -8,15 +8,16 @@
 
 #import "GLSliderControl.h"
 
+#define DEFAULT_SLIDER_FRAME
+#define TRACK_END_DEFAULT_SCALE .125
+
 @interface GLSliderControl()
 {
    SKSpriteNode *_leftTrack;
-   SKSpriteNode *_leftTrackEnd;
-
    SKSpriteNode *_rightTrack;
-   SKSpriteNode *_rightTackEnd;
 
    SKSpriteNode *_knob;
+   SKSpriteNode *_knobHitBox;
 }
 @end
 
@@ -29,42 +30,31 @@
       [self setupLeftTrack];
       [self setupRightTrack];
       [self setupKnob];
+      [self setupSliderFrame];
    }
    return self;
 }
 
 - (void)setupLeftTrack
 {
-   _leftTrackEnd = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end@2x.png"];
-   _leftTrackEnd.anchorPoint = CGPointMake(1, .5);
-   _leftTrackEnd.position = CGPointMake(-70, 0);
-   [_leftTrackEnd setScale:.125];
+   _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-4x4@2x.png"];
+   _leftTrack.anchorPoint = CGPointMake(1, .5);
+   _leftTrack.position = CGPointMake(-12, 0);
+   _leftTrack.centerRect = CGRectMake(.75, .25, .25, .5);
+   _leftTrack.xScale = 15;
 
-   _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-middle@2x.png"];
-   _leftTrack.anchorPoint = CGPointMake(0, .5);
-   _leftTrack.position = _leftTrackEnd.position;
-   _leftTrack.yScale = .125;
-   _leftTrack.xScale = 28;
-
-   [self addChild:_leftTrackEnd];
    [self addChild:_leftTrack];
 }
 
 - (void)setupRightTrack
 {
-   _rightTackEnd = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end@2x.png"];
-   _rightTackEnd.anchorPoint = CGPointMake(1, .5);
-   _rightTackEnd.position = CGPointMake(70, 0);
-   [_rightTackEnd setZRotation:M_PI];
-   [_rightTackEnd setScale:.125];
-
-   _rightTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-middle@2x.png"];
-   _rightTrack.yScale = .125;
-   _rightTrack.xScale = 28;
+   _rightTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-4x4@2x.png"];
+   [_rightTrack setZRotation:M_PI];
    _rightTrack.anchorPoint = CGPointMake(1, .5);
-   _rightTrack.position = _rightTackEnd.position;
+   _rightTrack.position = CGPointMake(12, 0);
+   _rightTrack.centerRect = CGRectMake(.5, .25, .5, .5);
+   _rightTrack.xScale = 15;
 
-   [self addChild:_rightTackEnd];
    [self addChild:_rightTrack];
 }
 
@@ -73,7 +63,21 @@
    _knob = [SKSpriteNode spriteNodeWithImageNamed:@"radio-unchecked@2x.png"];
    [_knob setScale:.6];
 
+   CGSize knobHitBoxSize = CGSizeMake(_knob.size.width + 9,
+                                      _knob.size.height + 9);
+
+   _knobHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
+                                              size:knobHitBoxSize];
+   _knobHitBox.position = _knob.position;
+   _knobHitBox.name = @"slider_knob_hit_box";
+   _knobHitBox.alpha = .05;
+
    [self addChild:_knob];
+   [self addChild:_knobHitBox];
+}
+
+- (void)setupSliderFrame
+{
 }
 
 @end

@@ -55,7 +55,8 @@
    
    SKTexture *texture1 = nil;
    SKTexture *texture2 = nil;
-   int i = arc4random_uniform(7);
+//   int i = arc4random_uniform(7);
+   int i = 6;
    switch (i)
    {
       case 0:

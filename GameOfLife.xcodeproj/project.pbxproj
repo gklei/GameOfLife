@@ -11,6 +11,7 @@
 		8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E254A85185BBD600068A3F9 /* GLSliderControl.m */; };
 		8E254A89185C3F980068A3F9 /* slider-end@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E254A87185C3F980068A3F9 /* slider-end@2x.png */; };
 		8E254A8A185C3F980068A3F9 /* slider-middle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E254A88185C3F980068A3F9 /* slider-middle@2x.png */; };
+		8E254A8C185D58AA0068A3F9 /* slider-end-4x4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E254A8B185D58AA0068A3F9 /* slider-end-4x4@2x.png */; };
 		8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02B184164F7000AEEB8 /* expand_left.png */; };
 		8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02C184164F7000AEEB8 /* expand_left@2x.png */; };
 		8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B030184169BF000AEEB8 /* GLColorHud.m */; };
@@ -117,6 +118,7 @@
 		8E254A85185BBD600068A3F9 /* GLSliderControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSliderControl.m; sourceTree = "<group>"; };
 		8E254A87185C3F980068A3F9 /* slider-end@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-end@2x.png"; path = "Images/slider-end@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E254A88185C3F980068A3F9 /* slider-middle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-middle@2x.png"; path = "Images/slider-middle@2x.png"; sourceTree = SOURCE_ROOT; };
+		8E254A8B185D58AA0068A3F9 /* slider-end-4x4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-end-4x4@2x.png"; path = "Images/slider-end-4x4@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02F184169BF000AEEB8 /* GLColorHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorHud.h; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8E254A8B185D58AA0068A3F9 /* slider-end-4x4@2x.png */,
 				8E254A87185C3F980068A3F9 /* slider-end@2x.png */,
 				8E254A88185C3F980068A3F9 /* slider-middle@2x.png */,
 				8EA2651B185966A600351F5E /* arrow-right.png */,
@@ -562,6 +565,7 @@
 				8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */,
 				8E75B04618466F7F000AEEB8 /* camera.png in Resources */,
 				8EA2653518596FC800351F5E /* camera2.png in Resources */,
+				8E254A8C185D58AA0068A3F9 /* slider-end-4x4@2x.png in Resources */,
 				8EA2652518596BBF00351F5E /* undo2.png in Resources */,
 				8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */,
 				8EA2652A18596C4E00351F5E /* play2@2x.png in Resources */,
