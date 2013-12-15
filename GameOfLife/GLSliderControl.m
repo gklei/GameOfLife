@@ -35,9 +35,9 @@
 {
    _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-4x4@2x.png"];
    _leftTrack.anchorPoint = CGPointMake(1, .5);
-   _leftTrack.position = CGPointMake(-12, 0);
+   _leftTrack.position = CGPointMake(-15, 0);
    _leftTrack.centerRect = CGRectMake(.75, .25, .25, .5);
-   _leftTrack.xScale = 15;
+   _leftTrack.xScale = 18;
 
    [self addChild:_leftTrack];
 }
@@ -47,9 +47,9 @@
    _rightTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-4x4@2x.png"];
    [_rightTrack setZRotation:M_PI];
    _rightTrack.anchorPoint = CGPointMake(1, .5);
-   _rightTrack.position = CGPointMake(12, 0);
+   _rightTrack.position = CGPointMake(15, 0);
    _rightTrack.centerRect = CGRectMake(.5, .25, .5, .5);
-   _rightTrack.xScale = 15;
+   _rightTrack.xScale = 18;
 
    [self addChild:_rightTrack];
 }
