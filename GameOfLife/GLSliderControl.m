@@ -72,16 +72,33 @@
    [self addChild:self.hitBox];
 }
 
-- (void)decrement
+- (void)decrementByX:(float)x
 {
    _knob.position = CGPointMake(_knob.position.x - 1, _knob.position.y);
    self.hitBox.position = CGPointMake(self.hitBox.position.x - 1, self.hitBox.position.y);
 }
 
-- (void)increment
+- (void)incrementByX:(float)x
 {
    _knob.position = CGPointMake(_knob.position.x + 1, _knob.position.y);
    self.hitBox.position = CGPointMake(self.hitBox.position.x + 1, self.hitBox.position.y);
+}
+
+- (void)moveKnobByDeltaX:(float)deltaX
+{
+   _knob.position = CGPointMake(_knob.position.x + deltaX, _knob.position.y);
+}
+
+- (void)handleTouchMoved:(UITouch *)touch
+{
+   float deltaX = [touch locationInNode:self].x - [touch previousLocationInNode:self].x;
+   [self moveKnobByDeltaX:deltaX];
+}
+
+- (void)handleTouchEnded:(UITouch *)touch
+{
+   self.hitBox.position = _knob.position;
+   [super handleTouchEnded:touch];
 }
 
 @end
