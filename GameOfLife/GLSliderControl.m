@@ -181,7 +181,6 @@
 - (void)handleTouchBegan:(UITouch *)touch
 {
    [_knob runAction:_grow];
-
    [super handleTouchBegan:touch];
 }
 
@@ -208,13 +207,15 @@
    }
 
    [self moveKnobByDeltaX:deltaX];
-   [super handleTouchMoved:touch];
+
+   // Currently this does not need to be called
+   //   [super handleTouchMoved:touch];
 }
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
-   [_knob runAction:_shrink];
    self.hitBox.position = _knob.position;
+   [_knob runAction:_shrink];
    [super handleTouchEnded:touch];
 }
 
