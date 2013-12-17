@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Gregory Klein. All rights reserved.
 //
 
+@import AVFoundation;
+
 #import "GLSliderControl.h"
 #import "UIColor+Crayola.h"
 
@@ -42,6 +44,8 @@
 
    SKAction *_slidingSoundFX;
    SKAction *_releaseSoundFX;
+
+   AVAudioPlayer *_slidingSoundAudioPlayer;
 }
 @end
 
@@ -56,6 +60,7 @@
       [self setupKnob];
       [self setupHitBox];
       [self setupVariables];
+      [self setupSlidingSoundPlayer];
    }
    return self;
 }
@@ -88,6 +93,26 @@
       self.sliderValue = value;
    }
    return self;
+}
+
+- (void)setupSlidingSoundPlayer
+{
+   NSError *err;
+   NSURL *file = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"slider.on.wav"
+                                                                        ofType:nil]];
+   _slidingSoundAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:file
+                                                                     error:&err];
+   if (err)
+   {
+      NSLog(@"error in audio play %@",[err userInfo]);
+      return;
+   }
+   [_slidingSoundAudioPlayer prepareToPlay];
+
+   // this will play the music infinitely
+//   _slidingSoundAudioPlayer.numberOfLoops = -1;
+//   [_slidingSoundAudioPlayer setVolume:1.0];
+//   [_slidingSoundAudioPlayer play];
 }
 
 - (NSString *)stringValue
@@ -153,8 +178,8 @@
    _shrink = [SKAction scaleTo:DEFAULT_KNOB_SCALE duration:.1];
    _shrink.timingMode = SKActionTimingEaseInEaseOut;
 
-   _slidingSoundFX = [SKAction playSoundFileNamed:@"slider.on.wav" waitForCompletion:NO];
-   _releaseSoundFX = [SKAction playSoundFileNamed:@"slider.off.wav" waitForCompletion:NO];
+   _slidingSoundFX = [SKAction playSoundFileNamed:@"slider.on.wav" waitForCompletion:YES];
+   _releaseSoundFX = [SKAction playSoundFileNamed:@"slider.off.wav" waitForCompletion:YES];
 }
 
 - (void)setSliderValue:(float)sliderValue
@@ -193,10 +218,8 @@
 
 - (void)handleTouchBegan:(UITouch *)touch
 {
-//   [self addChild:_knobBlur];
-//   [_knobBlur runAction:_grow];
    [_knob runAction:_grow];
-//   [self runAction:_slidingSoundFX withKey:@"sliding_sound_fx"];
+   [_slidingSoundAudioPlayer play];
    [super handleTouchBegan:touch];
 }
 
@@ -230,16 +253,14 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
-//   [self removeActionForKey:@"sliding_sound_fx"];
-//   [self runAction:_releaseSoundFX];
+   [_slidingSoundAudioPlayer stop];
+   [self runAction:_releaseSoundFX];
 
    self.hitBox.position = _knob.position;
 
-//   [_knobBlur removeFromParent];
-//   [_knobBlur setScale:DEFAULT_KNOB_SCALE];
-
    [_knob runAction:_shrink];
    _knob.texture = [SKTexture textureWithImageNamed:@"radio-unchecked@2x.png"];
+   [_slidingSoundAudioPlayer prepareToPlay];
    [super handleTouchEnded:touch];
 }
 
