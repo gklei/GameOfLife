@@ -29,6 +29,7 @@
    SKSpriteNode *_rightTrack;
 
    SKSpriteNode *_knob;
+//   SKSpriteNode *_knobBlur;
 
    float _leftXBound;
    float _rightXBound;
@@ -87,6 +88,11 @@
    return self;
 }
 
+- (NSString *)stringValue
+{
+   return [NSString stringWithFormat:@"%d%%", (int)(_sliderValue * 100)];
+}
+
 - (void)setupLeftTrack
 {
    _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-left.png"];
@@ -102,6 +108,8 @@
 - (void)setupRightTrack
 {
    _rightTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-right.png"];
+   _rightTrack.colorBlendFactor = 1.0;
+   _rightTrack.color = [SKColor crayolaCadetBlueColor];
    _rightTrack.anchorPoint = CGPointMake(1, .5);
    _rightTrack.position = CGPointMake((_sliderLength)? _sliderLength / 2.0 : DEFAULT_LENGTH / 2.0, 0);
 
@@ -117,6 +125,11 @@
    _knob.colorBlendFactor = 1;
    _knob.color = [SKColor crayolaRobinsEggBlueColor];
    [_knob setScale:.6];
+
+//   _knobBlur = [SKSpriteNode spriteNodeWithImageNamed:@"radio-unchecked-glow.png"];
+//   _knob.colorBlendFactor = 1;
+//   _knob.color = [SKColor crayolaRobinsEggBlueColor];
+//   [_knob setScale:.6];
 
    [self addChild:_knob];
 }
@@ -158,7 +171,10 @@
    _knob.position = CGPointMake(x, _knob.position.y);
    self.hitBox.position = _knob.position;
    _sliderValue = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
-//   NSLog(@"slider value: %f", _sliderValue);
+   
+   [self.delegate controlValueChanged];
+   //   NSLog(@"slider value: %f", _sliderValue);
+//   NSLog(@"slider value: %@", [self stringValue]);
 }
 
 - (void)moveKnobByDeltaX:(float)deltaX
@@ -179,6 +195,8 @@
 
 - (void)handleTouchBegan:(UITouch *)touch
 {
+//   [self addChild:_knobBlur];
+//   [_knobBlur runAction:_grow];
    [_knob runAction:_grow];
    [super handleTouchBegan:touch];
 }
@@ -214,7 +232,12 @@
 - (void)handleTouchEnded:(UITouch *)touch
 {
    self.hitBox.position = _knob.position;
+
+//   [_knobBlur removeFromParent];
+//   [_knobBlur setScale:DEFAULT_KNOB_SCALE];
+
    [_knob runAction:_shrink];
+   _knob.texture = [SKTexture textureWithImageNamed:@"radio-unchecked@2x.png"];
    [super handleTouchEnded:touch];
 }
 

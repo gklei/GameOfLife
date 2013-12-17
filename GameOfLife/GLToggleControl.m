@@ -63,7 +63,12 @@
    [self addChild:self.hitBox];
 }
 
-- (void)runEnableAnimations
+- (NSString *)stringValue
+{
+   return (_state)? @"ON" : @"OFF";
+}
+
+- (void)runEnableAnimationsWithCompletion:(void (^)())completion
 {
    SKAction *enableSlide = [SKAction moveByX:INNER_RING_X_ANIMATION
                                            y:0
@@ -90,10 +95,11 @@
         ^{
            _animating = NO;
         }];
+       completion();
     }];
 }
 
-- (void)runDisableAnimations
+- (void)runDisableAnimationsWithCompletion:(void (^)())completion
 {
    SKAction *disableSlide = [SKAction moveByX:-INNER_RING_X_ANIMATION
                                             y:0
@@ -120,6 +126,7 @@
         ^{
            _animating = NO;
         }];
+       completion();
     }];
 }
 
@@ -128,16 +135,19 @@
    if (_animating)
       return;
 
+   void (^completion) (void) = ^{[self.delegate controlValueChanged];};
+
    if (_state == e_TOGGLE_CONTROL_DISABLED)
    {
-      [self runEnableAnimations];
+      [self runEnableAnimationsWithCompletion:completion];
       _state = e_TOGGLE_CONTROL_ENABLED;
    }
    else
    {
-      [self runDisableAnimations];
+      [self runDisableAnimationsWithCompletion:completion];
       _state = e_TOGGLE_CONTROL_DISABLED;
    }
+//   NSLog(@"%@", [self stringValue]);
 }
 
 - (void)handleTouchEnded:(UITouch *)touch

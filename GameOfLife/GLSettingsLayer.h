@@ -12,4 +12,5 @@
 
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint;
+
 @end

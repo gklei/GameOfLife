@@ -20,6 +20,11 @@
    return self;
 }
 
+- (NSString *)stringValue
+{
+   return nil;
+}
+
 - (void)handleTouchBegan:(UITouch *)touch
 {
    _hasFocus = YES;

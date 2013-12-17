@@ -8,6 +8,7 @@
 
 #import "GLSettingsLayer.h"
 
+#import "GLSettingsItem.h"
 #import "GLSliderControl.h"
 #import "GLToggleControl.h"
 #import "UIColor+Crayola.h"
@@ -37,8 +38,9 @@
       _defaultSize = size;
       _defaultAnchorPoint = anchorPoint;
       [self setupSettingsLabel];
-      [self setupToggleControl];
-      [self setupSliderControl];
+      [self setupSoundFXItem];
+      [self setupSmartMenuItem];
+      [self setupSpeedSliderItem];
    }
    return self;
 }
@@ -57,7 +59,6 @@
 
 - (void)setupSettingsLabel
 {
-//   NSLog(@"%@", [UIFont fontNamesForFamilyName:@"Futura"]);
    SKLabelNode *settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-Medium"];
 
    settingsLabel.text = @"S E T T I N G S";
@@ -70,32 +71,31 @@
    [self addChild:settingsLabel];
 }
 
-- (void)setupToggleControl
+- (void)setupSoundFXItem
 {
-   _toggleControl = [[GLToggleControl alloc] init];
-   _toggleControl.position =  CGPointMake(_defaultSize.width * 0.5,
-                                        -(HEADING_FONT_SIZE + TOP_PADDING + 50));
-   _toggleControl.name = @"toggle";
-   [self addChild:_toggleControl];
+   GLToggleControl *toggleControl = [[GLToggleControl alloc] init];
+   GLSettingsItem *soundFXItem = [[GLSettingsItem alloc] initWithTitle:@"SOUND FX"
+                                                               control:toggleControl];
+   soundFXItem.position = CGPointMake(0, -(HEADING_FONT_SIZE + TOP_PADDING + 50));
+   [self addChild:soundFXItem];
 }
 
-- (void)setupSliderControl
+- (void)setupSmartMenuItem
 {
-   _sliderControl = [[GLSliderControl alloc] initWithValue:.25];
-   _sliderControl.position = CGPointMake(_toggleControl.position.x,
-                                         _toggleControl.position.y - 100);
-//   _sliderControl.sliderValue = .25;
-
-   [self addChild:_sliderControl];
+   GLToggleControl *toggleControl = [[GLToggleControl alloc] init];
+   GLSettingsItem *smartMenuItem = [[GLSettingsItem alloc] initWithTitle:@"SMART MENU"
+                                                                 control:toggleControl];
+   smartMenuItem.position = CGPointMake(0, -(HEADING_FONT_SIZE + TOP_PADDING + 100));
+   [self addChild:smartMenuItem];
 }
 
-- (void)handleTouchAtPoint:(CGPoint)point
+- (void)setupSpeedSliderItem
 {
-   CGPoint convertedPoint = [self convertPoint:point toNode:_toggleControl];
-   if ([_toggleControl.hitBox containsPoint:convertedPoint])
-   {
-      [_toggleControl toggle];
-   }
+   GLSliderControl *sliderControl = [[GLSliderControl alloc] initWithLength:180 value:.5];
+   GLSettingsItem *speedSliderItem = [[GLSettingsItem alloc] initWithTitle:@"SPEED"
+                                                                   control:sliderControl];
+   speedSliderItem.position = CGPointMake(0, -(HEADING_FONT_SIZE + TOP_PADDING + 150));
+   [self addChild:speedSliderItem];
 }
 
 @end

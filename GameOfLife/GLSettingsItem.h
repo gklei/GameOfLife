@@ -8,6 +8,11 @@
 
 #import <SpriteKit/SpriteKit.h>
 
+@class GLUIControl;
+
 @interface GLSettingsItem : SKSpriteNode
+
+- (id)initWithTitle:(NSString *)title
+            control:(GLUIControl *)control;
 
 @end

@@ -13,7 +13,7 @@
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 44
 #define COLOR_DROP_CAPACITY 6
-#define COLOR_DROP_SCALE .95
+#define COLOR_DROP_SCALE .85
 #define SELECTED_COLOR_DROP_SCALE 1.15
 #define HIT_DIST_FROM_POSITION 4
 
@@ -94,7 +94,7 @@
    {
       SKSpriteNode *drop = ([self usingRetinaDisplay]) ? [SKSpriteNode spriteNodeWithImageNamed:@"droplet@2x.png"] :
                                                          [SKSpriteNode spriteNodeWithImageNamed:@"droplet.png"];
-//      [drop setScale:COLOR_DROP_SCALE];
+      [drop setScale:COLOR_DROP_SCALE];
       drop.position = CGPointMake(i*COLOR_DROP_PADDING + 23, -drop.size.height/2.0);
       drop.colorBlendFactor = 1.0;
       drop.color = colorDropColors[i];
