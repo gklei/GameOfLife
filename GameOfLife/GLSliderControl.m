@@ -29,7 +29,6 @@
    SKSpriteNode *_rightTrack;
 
    SKSpriteNode *_knob;
-//   SKSpriteNode *_knobBlur;
 
    float _leftXBound;
    float _rightXBound;
@@ -40,6 +39,9 @@
 
    SKAction *_grow;
    SKAction *_shrink;
+
+   SKAction *_slidingSoundFX;
+   SKAction *_releaseSoundFX;
 }
 @end
 
@@ -126,11 +128,6 @@
    _knob.color = [SKColor crayolaRobinsEggBlueColor];
    [_knob setScale:.6];
 
-//   _knobBlur = [SKSpriteNode spriteNodeWithImageNamed:@"radio-unchecked-glow.png"];
-//   _knob.colorBlendFactor = 1;
-//   _knob.color = [SKColor crayolaRobinsEggBlueColor];
-//   [_knob setScale:.6];
-
    [self addChild:_knob];
 }
 
@@ -155,6 +152,9 @@
 
    _shrink = [SKAction scaleTo:DEFAULT_KNOB_SCALE duration:.1];
    _shrink.timingMode = SKActionTimingEaseInEaseOut;
+
+   _slidingSoundFX = [SKAction playSoundFileNamed:@"slider.on.wav" waitForCompletion:NO];
+   _releaseSoundFX = [SKAction playSoundFileNamed:@"slider.off.wav" waitForCompletion:NO];
 }
 
 - (void)setSliderValue:(float)sliderValue
@@ -173,8 +173,6 @@
    _sliderValue = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
    
    [self.delegate controlValueChanged];
-   //   NSLog(@"slider value: %f", _sliderValue);
-//   NSLog(@"slider value: %@", [self stringValue]);
 }
 
 - (void)moveKnobByDeltaX:(float)deltaX
@@ -198,6 +196,7 @@
 //   [self addChild:_knobBlur];
 //   [_knobBlur runAction:_grow];
    [_knob runAction:_grow];
+//   [self runAction:_slidingSoundFX withKey:@"sliding_sound_fx"];
    [super handleTouchBegan:touch];
 }
 
@@ -231,6 +230,9 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
+//   [self removeActionForKey:@"sliding_sound_fx"];
+//   [self runAction:_releaseSoundFX];
+
    self.hitBox.position = _knob.position;
 
 //   [_knobBlur removeFromParent];

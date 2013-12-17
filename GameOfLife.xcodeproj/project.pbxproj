@@ -73,6 +73,8 @@
 		8EAA38B0185D91EB00DA5CED /* slider-end-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA38AF185D91EB00DA5CED /* slider-end-right.png */; };
 		8EAA38B3185E6A6C00DA5CED /* GLSettingsItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA38B2185E6A6C00DA5CED /* GLSettingsItem.m */; };
 		8EAA38B5185EC32300DA5CED /* radio-unchecked-glow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA38B4185EC32300DA5CED /* radio-unchecked-glow.png */; };
+		8EAA38B818601D3A00DA5CED /* slider.off.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA38B618601D3A00DA5CED /* slider.off.wav */; };
+		8EAA38B918601D3A00DA5CED /* slider.on.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA38B718601D3A00DA5CED /* slider.on.wav */; };
 		8EAA59BF184B03C7008E34D9 /* down.finger.on.tile.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59BC184B03C7008E34D9 /* down.finger.on.tile.wav */; };
 		8EAA59C1184B03C7008E34D9 /* up.finger.off.tile.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */; };
 		8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */; };
@@ -193,6 +195,8 @@
 		8EAA38B1185E6A6C00DA5CED /* GLSettingsItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSettingsItem.h; sourceTree = "<group>"; };
 		8EAA38B2185E6A6C00DA5CED /* GLSettingsItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSettingsItem.m; sourceTree = "<group>"; };
 		8EAA38B4185EC32300DA5CED /* radio-unchecked-glow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "radio-unchecked-glow.png"; path = "Images/radio-unchecked-glow.png"; sourceTree = SOURCE_ROOT; };
+		8EAA38B618601D3A00DA5CED /* slider.off.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = slider.off.wav; path = "GL Sound FX/slider.off.wav"; sourceTree = SOURCE_ROOT; };
+		8EAA38B718601D3A00DA5CED /* slider.on.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = slider.on.wav; path = "GL Sound FX/slider.on.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59BC184B03C7008E34D9 /* down.finger.on.tile.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = down.finger.on.tile.wav; path = "GL Sound FX/down.finger.on.tile.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59BE184B03C7008E34D9 /* up.finger.off.tile.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = up.finger.off.tile.wav; path = "GL Sound FX/up.finger.off.tile.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSettingsLayer.h; sourceTree = "<group>"; };
@@ -319,6 +323,8 @@
 		8EAA59BB184B0218008E34D9 /* SoundFX */ = {
 			isa = PBXGroup;
 			children = (
+				8EAA38B618601D3A00DA5CED /* slider.off.wav */,
+				8EAA38B718601D3A00DA5CED /* slider.on.wav */,
 				8EA2650A1858045800351F5E /* start.algorithm.2.wav */,
 				8EA265001858033A00351F5E /* flash.wav */,
 				8EA265021858033A00351F5E /* settings.collapse.2.wav */,
@@ -555,6 +561,7 @@
 				8EAA38AE185D918F00DA5CED /* slider-end-left.png in Resources */,
 				8E254A89185C3F980068A3F9 /* slider-end@2x.png in Resources */,
 				8E99B2AA182E0ABD00C7AEDB /* gear@2x.png in Resources */,
+				8EAA38B818601D3A00DA5CED /* slider.off.wav in Resources */,
 				ED2CB971185C157500319DE5 /* tile.ring3d.png in Resources */,
 				8E75B03818419670000AEEB8 /* ring.png in Resources */,
 				8EAA5A10184B29EC008E34D9 /* button.press.wav in Resources */,
@@ -581,6 +588,7 @@
 				8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */,
 				8E75B04618466F7F000AEEB8 /* camera.png in Resources */,
 				8EA2653518596FC800351F5E /* camera2.png in Resources */,
+				8EAA38B918601D3A00DA5CED /* slider.on.wav in Resources */,
 				8EA2652518596BBF00351F5E /* undo2.png in Resources */,
 				8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */,
 				8EA2652A18596C4E00351F5E /* play2@2x.png in Resources */,

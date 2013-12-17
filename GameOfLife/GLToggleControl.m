@@ -24,6 +24,8 @@
 
    BOOL _animating;
    BOOL _firstTouchInHitBox;
+
+   SKAction *_toggleSound;
 }
 @end
 
@@ -34,6 +36,7 @@
    if (self = [super init])
    {
       _state = e_TOGGLE_CONTROL_DISABLED;
+      _toggleSound = [SKAction playSoundFileNamed:@"button.press.wav" waitForCompletion:NO];
       [self setupButtonImages];
       [self setupHitBox];
    }
@@ -152,6 +155,8 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
+   [self runAction:_toggleSound];
+   
    if ([self.hitBox containsPoint:[touch locationInNode:self]])
       [self toggle];
 
