@@ -58,8 +58,20 @@ BOOL _decreasing;
 #pragma mark GLGridScene
 @implementation GLGridScene
 
+- (void)registerDefaultValues
+{
+   NSDictionary * defaults =
+      [NSDictionary dictionaryWithObjectsAndKeys:
+       [NSNumber numberWithBool:YES], @"SoundFX",
+       [NSNumber numberWithInt:YES], @"SmartMenu",
+       [NSNumber numberWithFloat:DEFAULT_GENERATION_DURATION], @"GenerationDuration",
+       nil];
+   
+   [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+}
+
 #pragma mark Initializer Method
--(id)initWithSize:(CGSize)size
+- (id)initWithSize:(CGSize)size
 {
    if (self = [super initWithSize:size])
    {
@@ -73,14 +85,14 @@ BOOL _decreasing;
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
 
       self.userInteractionEnabled = YES;
-
-      // TODO:LEA set these from preferences
-      _autoShowHideHudForStartStop = YES;
-      _generationDuration = DEFAULT_GENERATION_DURATION;
       
+      // register a set of default values
+      [self registerDefaultValues];
+      
+      // now load in the current values
       [self settingsValueChangedForKey:@"SoundFX"];
       [self settingsValueChangedForKey:@"SmartMenu"];
-      [self settingsValueChangedForKey:@"GeneralDuration"];
+      [self settingsValueChangedForKey:@"GenerationDuration"];
    }
    return self;
 }
