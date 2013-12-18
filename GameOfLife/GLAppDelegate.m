@@ -48,4 +48,17 @@
    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (id<GLSettingsItemValueChangedDelegate>)settingsDelegate
+{
+   SKView *view = (SKView *)self.window.rootViewController.view;
+   return (id<GLSettingsItemValueChangedDelegate>)(view.scene);
+}
+
+- (void)settingsValueChangedForKey:(NSString *)key
+{
+   id<GLSettingsItemValueChangedDelegate> delegate = [self settingsDelegate];
+   if (delegate)
+       [delegate settingsValueChangedForKey:key];
+}
+
 @end

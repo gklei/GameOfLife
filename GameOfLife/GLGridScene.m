@@ -77,6 +77,10 @@ BOOL _decreasing;
       // TODO:LEA set these from preferences
       _autoShowHideHudForStartStop = YES;
       _generationDuration = DEFAULT_GENERATION_DURATION;
+      
+      [self settingsValueChangedForKey:@"SoundFX"];
+      [self settingsValueChangedForKey:@"SmartMenu"];
+      [self settingsValueChangedForKey:@"GeneralDuration"];
    }
    return self;
 }
@@ -498,24 +502,54 @@ BOOL _decreasing;
       else
          [self toggleRunningButtonPressed];
       
-// BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
-//        _generationDuration should be set in the UI
-if ([_grid generationCount] % 10 == 0)
-{
-   _generationDuration += (_decreasing)? -0.1 : 0.1;
-
-   if (_generationDuration < 0.1)
-   {
-      _generationDuration = 0.2;
-      _decreasing = false;
-   }
-   else if (_generationDuration > 1)
-   {
-      _generationDuration = 0.9;
-      _decreasing = true;
+//// BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
+////        _generationDuration should be set in the UI
+//if ([_grid generationCount] % 10 == 0)
+//{
+//   _generationDuration += (_decreasing)? -0.1 : 0.1;
+//
+//   if (_generationDuration < 0.1)
+//   {
+//      _generationDuration = 0.2;
+//      _decreasing = false;
+//   }
+//   else if (_generationDuration > 1)
+//   {
+//      _generationDuration = 0.9;
+//      _decreasing = true;
+//   }
+//}
+//// END: tmp code to change generation speed from 0.1 <-> 1.0
    }
 }
-// END: tmp code to change generation speed from 0.1 <-> 1.0
+
+- (void)settingsValueChangedForKey:(NSString *)key
+{
+   if ([key compare:@"GenerationDuration"] == NSOrderedSame)
+   {
+      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+      float value = [defaults floatForKey:key];
+      value = fmin(1.0, fmax(0.1, value));
+      
+//      NSLog(@"settingsValueChangedForKey:key = %@, value = %0.2f", key, value);
+      
+      _generationDuration = (1.0 - value);
+   }
+   else if ([key compare:@"SmartMenu"] == NSOrderedSame)
+   {
+      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+      BOOL value = [defaults boolForKey:key];
+      
+//      NSLog(@"settingsValueChangedForKey:key = %@, value = %d", key, value);
+      
+      _autoShowHideHudForStartStop = value;
+   }
+   else if ([key compare:@"SoundFX"] == NSOrderedSame)
+   {
+      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+      BOOL value = [defaults boolForKey:key];
+      
+//      NSLog(@"settingsValueChangedForKey:key = %@, value = %d", key, value);
    }
 }
 

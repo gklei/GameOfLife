@@ -25,7 +25,8 @@
    BOOL _animating;
    BOOL _firstTouchInHitBox;
 
-   SKAction *_toggleSound;
+   SKAction * _toggleSound;
+   NSString * _preferenceKey;
 }
 @end
 
@@ -41,6 +42,37 @@
       [self setupHitBox];
    }
    return self;
+}
+
+- (id)initWithPreferenceKey:(NSString *)key
+{
+   if ([self init])
+   {
+      _preferenceKey = key;
+      
+      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+      BOOL state = [defaults boolForKey:_preferenceKey];
+      if (state == e_TOGGLE_CONTROL_ENABLED)
+         [self toggle];
+   }
+   
+   return self;
+}
+
+- (void)updateUserDefaults:(BOOL)value
+{
+   NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+   [defaults setBool:value forKey:_preferenceKey];
+   [defaults synchronize];
+}
+
+- (void)setState:(BOOL)state
+{
+   if (_state != state)
+   {
+      _state = state;
+      [self updateUserDefaults:_state];
+   }
 }
 
 - (void)setupButtonImages
@@ -138,17 +170,17 @@
    if (_animating)
       return;
 
-   void (^completion) (void) = ^{[self.delegate controlValueChanged];};
+   void (^completion) (void) = ^{[self.delegate controlValueChangedForKey:_preferenceKey];};
 
    if (_state == e_TOGGLE_CONTROL_DISABLED)
    {
       [self runEnableAnimationsWithCompletion:completion];
-      _state = e_TOGGLE_CONTROL_ENABLED;
+      [self setState:e_TOGGLE_CONTROL_ENABLED];
    }
    else
    {
       [self runDisableAnimationsWithCompletion:completion];
-      _state = e_TOGGLE_CONTROL_DISABLED;
+      [self setState:e_TOGGLE_CONTROL_DISABLED];
    }
 //   NSLog(@"%@", [self stringValue]);
 }

@@ -10,7 +10,7 @@
 #import "GLTouchHandler.h"
 
 @protocol GLUIControlValueChangedDelegate <NSObject>
-   - (void)controlValueChanged;
+   - (void)controlValueChangedForKey:(NSString *)key;
 @end
 
 @interface GLUIControl : SKSpriteNode <GLTouchHandler>

@@ -46,6 +46,7 @@
    SKAction *_releaseSoundFX;
 
    AVAudioPlayer *_slidingSoundAudioPlayer;
+   NSString * _preferenceKey;
 }
 @end
 
@@ -86,10 +87,19 @@
 - (id)initWithLength:(int)length value:(float)value
 {
    if (self = [self initWithLength:length])
-   {
-      if (value < 0 || value > 1)
-         value = 0;
+      self.sliderValue = value;
+   
+   return self;
+}
 
+- (id)initWithLength:(int)length preferenceKey:(NSString *)prefKey
+{
+   if (self = [self initWithLength:length])
+   {
+      _preferenceKey = prefKey;
+   
+      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+      float value = [defaults floatForKey:_preferenceKey];
       self.sliderValue = value;
    }
    return self;
@@ -182,13 +192,22 @@
    _releaseSoundFX = [SKAction playSoundFileNamed:@"slider.off.wav" waitForCompletion:YES];
 }
 
-- (void)setSliderValue:(float)sliderValue
+- (void)setSliderValue:(float)value
 {
-   if (sliderValue < 0 || sliderValue > 1)
-      return;
+   value = fmin(1.0, fmax(0.1, value));
+   
+   if (_sliderValue != value)
+   {
+      float newKnobPositionX = (value * _knobSlidingRange) - _knobOffsetInAccumulatedFrame;
+      [self moveKnobByDeltaX:(newKnobPositionX - _knob.position.x)];
+   }
+}
 
-   float newKnobPositionX = (sliderValue * _knobSlidingRange) - _knobOffsetInAccumulatedFrame;
-   [self moveKnobByDeltaX:(newKnobPositionX - _knob.position.x)];
+- (void)updateUserDefaults:(float)value
+{
+   NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+   [defaults setFloat:value forKey:_preferenceKey];
+   [defaults synchronize];
 }
 
 - (void)updateKnobPositionX:(float)x
@@ -197,7 +216,9 @@
    self.hitBox.position = _knob.position;
    _sliderValue = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
    
-   [self.delegate controlValueChanged];
+   [self updateUserDefaults:_sliderValue];
+   
+   [self.delegate controlValueChangedForKey:_preferenceKey];
 }
 
 - (void)moveKnobByDeltaX:(float)deltaX

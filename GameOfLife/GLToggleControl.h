@@ -19,6 +19,7 @@ typedef NS_ENUM(int, GL_TOGGLE_CONTROL_STATE)
 
 @property (nonatomic, readonly) GL_TOGGLE_CONTROL_STATE state;
 
+- (id)initWithPreferenceKey:(NSString *)key;
 - (void)toggle;
 
 @end
