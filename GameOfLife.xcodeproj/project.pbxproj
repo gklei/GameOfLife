@@ -11,6 +11,7 @@
 		8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E254A85185BBD600068A3F9 /* GLSliderControl.m */; };
 		8E254A89185C3F980068A3F9 /* slider-end@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E254A87185C3F980068A3F9 /* slider-end@2x.png */; };
 		8E254A8A185C3F980068A3F9 /* slider-middle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E254A88185C3F980068A3F9 /* slider-middle@2x.png */; };
+		8E2FA2841862ABE20021A471 /* GLSelectionControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2FA2831862ABE20021A471 /* GLSelectionControl.m */; };
 		8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02B184164F7000AEEB8 /* expand_left.png */; };
 		8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02C184164F7000AEEB8 /* expand_left@2x.png */; };
 		8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B030184169BF000AEEB8 /* GLColorHud.m */; };
@@ -124,6 +125,8 @@
 		8E254A85185BBD600068A3F9 /* GLSliderControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSliderControl.m; sourceTree = "<group>"; };
 		8E254A87185C3F980068A3F9 /* slider-end@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-end@2x.png"; path = "Images/slider-end@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E254A88185C3F980068A3F9 /* slider-middle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-middle@2x.png"; path = "Images/slider-middle@2x.png"; sourceTree = SOURCE_ROOT; };
+		8E2FA2821862ABE20021A471 /* GLSelectionControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSelectionControl.h; sourceTree = "<group>"; };
+		8E2FA2831862ABE20021A471 /* GLSelectionControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSelectionControl.m; sourceTree = "<group>"; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02F184169BF000AEEB8 /* GLColorHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorHud.h; sourceTree = "<group>"; };
@@ -398,6 +401,8 @@
 				8E75B042184577E0000AEEB8 /* GLHud.m */,
 				ED581D9A186276880016F98D /* GLHUDSettingsManager.h */,
 				ED581D9B186276880016F98D /* GLHUDSettingsManager.m */,
+				8E2FA2821862ABE20021A471 /* GLSelectionControl.h */,
+				8E2FA2831862ABE20021A471 /* GLSelectionControl.m */,
 				8EAA38B1185E6A6C00DA5CED /* GLSettingsItem.h */,
 				8EAA38B2185E6A6C00DA5CED /* GLSettingsItem.m */,
 				8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */,
@@ -632,6 +637,7 @@
 				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,
 				8EAA38B3185E6A6C00DA5CED /* GLSettingsItem.m in Sources */,
 				8E75B04E18490C0A000AEEB8 /* GLGrid.m in Sources */,
+				8E2FA2841862ABE20021A471 /* GLSelectionControl.m in Sources */,
 				8E75B043184577E0000AEEB8 /* GLHud.m in Sources */,
 				8ECA899C182371AE009D906F /* GLViewController.m in Sources */,
 				8ECA8996182371AE009D906F /* GLAppDelegate.m in Sources */,
