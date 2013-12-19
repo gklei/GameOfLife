@@ -29,6 +29,7 @@ typedef enum
    HVT_LONG       = 9,
    HVT_ULONG      = 10,
    HVT_LONGLONG   = 11,
+   HVT_ULONGLONG  = 12,
 } HUDValueType;
 
 @protocol HUDSettingsObserver <NSObject>
