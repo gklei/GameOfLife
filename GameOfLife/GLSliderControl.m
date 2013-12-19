@@ -240,7 +240,6 @@
 - (void)handleTouchBegan:(UITouch *)touch
 {
    [_knob runAction:_grow];
-//   [_slidingSoundAudioPlayer play];
    [super handleTouchBegan:touch];
 }
 
