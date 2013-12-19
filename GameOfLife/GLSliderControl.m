@@ -240,7 +240,7 @@
 - (void)handleTouchBegan:(UITouch *)touch
 {
    [_knob runAction:_grow];
-   [_slidingSoundAudioPlayer play];
+//   [_slidingSoundAudioPlayer play];
    [super handleTouchBegan:touch];
 }
 
@@ -274,14 +274,14 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
-   [_slidingSoundAudioPlayer stop];
-   [self runAction:_releaseSoundFX];
+//   [_slidingSoundAudioPlayer stop];
+//   [self runAction:_releaseSoundFX];
 
    self.hitBox.position = _knob.position;
 
    [_knob runAction:_shrink];
    _knob.texture = [SKTexture textureWithImageNamed:@"radio-unchecked@2x.png"];
-   [_slidingSoundAudioPlayer prepareToPlay];
+//   [_slidingSoundAudioPlayer prepareToPlay];
    [super handleTouchEnded:touch];
 }
 
