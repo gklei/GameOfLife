@@ -15,15 +15,15 @@
 @interface GLHUDSettingsManager()
 {
    NSMutableDictionary * _hudItems;
+   NSMutableDictionary * _lastValueForKey;
    NSMutableDictionary * _observersForKey;
 }
 
 @end
 
-// TODO:LEA: store last known value and only notifiy observers if the value
-//           differs from the last known value
 @implementation GLHUDSettingsManager
 
+#pragma mark - internal helper functions
 - (NSInteger)indexOfObserver:(id<HUDSettingsObserver>)observer inArray:(NSMutableArray *) observers
 {
    __block NSInteger result = NSNotFound;
@@ -41,6 +41,63 @@
    return result;
 }
 
+- (BOOL)item:(HUDItemDescription *)item valueHasChanged:(NSNumber *)value
+{
+   if (item == nil)
+      return NO;
+   
+   NSNumber * lastValue = [_lastValueForKey objectForKey:item.keyPath];
+   if (lastValue == nil)
+      return YES;
+   
+   switch (item.valueType)
+   {
+      case HVT_BOOL:
+         if (lastValue.boolValue == value.boolValue) return YES;
+         break;
+      case HVT_FLOAT:
+         if (lastValue.floatValue == value.floatValue) return YES;
+         return YES;
+         break;
+      case HVT_DOUBLE:
+         if (lastValue.doubleValue == value.doubleValue) return YES;
+         break;
+      case HVT_CHAR:
+         if (lastValue.charValue == value.charValue) return YES;
+         break;
+      case HVT_UCHAR:
+         if (lastValue.unsignedCharValue == value.unsignedCharValue) return YES;
+         break;
+      case HVT_SHORT:
+         if (lastValue.shortValue == value.shortValue) return YES;
+         break;
+      case HVT_USHORT:
+         if (lastValue.unsignedShortValue == value.unsignedShortValue) return YES;
+         break;
+      case HVT_INT:
+         if (lastValue.intValue == value.intValue) return YES;
+         break;
+      case HVT_UINT:
+         if (lastValue.unsignedIntValue == value.unsignedIntValue) return YES;
+         break;
+      case HVT_LONG:
+         if (lastValue.longValue == value.longValue) return YES;
+         break;
+      case HVT_ULONG:
+         if (lastValue.unsignedLongValue == value.unsignedLongValue) return YES;
+         break;
+      case HVT_LONGLONG:
+         if (lastValue.longLongValue == value.longLongValue) return YES;
+         break;
+      case HVT_ULONGLONG:
+         if (lastValue.unsignedLongLongValue == value.unsignedLongLongValue) return YES;
+         break;
+   }
+   
+   return NO;
+}
+
+#pragma mark - initialization
 - (id)init
 {
    if ((self = [super init]))
@@ -55,18 +112,10 @@
    return self;
 }
 
-- (BOOL)addHudItem:(HUDItemDescription *)item
-{
-   if ([_hudItems objectForKey:item.keyPath])
-      return NO;
-   
-   [_hudItems setObject:item forKey:item.keyPath];
-   return YES;
-}
-
+#pragma mark - notification handler
 - (void)defaultsChanged:(NSNotification *)notification
 {
-   NSUserDefaults *defaults = (NSUserDefaults *)[notification object];
+   NSUserDefaults * defaults = (NSUserDefaults *)[notification object];
    NSArray * keys = [[defaults dictionaryRepresentation] allKeys];
    for (NSString * keyPath in keys)
    {
@@ -75,12 +124,51 @@
       {
          NSMutableDictionary * observers = [_observersForKey objectForKey:keyPath];
          NSNumber * value = (NSNumber *)[defaults valueForKey:keyPath];
-         for (id<HUDSettingsObserver> observer in observers)
-            [observer settingChanged:value ofType:item.valueType forKeyPath:keyPath];
+         if ([self item:item valueHasChanged:value])
+         {
+            // save the current value
+            [_lastValueForKey setObject:value forKey:item.keyPath];
+            
+            // notify observers
+            for (id<HUDSettingsObserver> observer in observers)
+               [observer settingChanged:value ofType:item.valueType forKeyPath:keyPath];
+         }
       }
    }
 }
 
+#pragma mark - public functions
+#pragma mark -
+- (BOOL)addHudItem:(HUDItemDescription *)item
+{
+   if (item.keyPath == nil)
+      return NO;
+   
+   if ([_hudItems objectForKey:item.keyPath])
+      return NO;  // key already exists
+   
+   if (item.defaultvalue == nil)
+      return NO;
+   
+   NSDictionary * tmpDict =
+      [NSDictionary dictionaryWithObject:item.defaultvalue forKey:item.keyPath];
+   
+   NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+   [defaults registerDefaults:tmpDict];
+   
+   NSNumber * value = (NSNumber *)[defaults objectForKey:item.keyPath];
+   if ([value isKindOfClass:[NSNumber class]])
+   {
+      // store the item and the current value of the key
+      [_hudItems setObject:item forKey:item.keyPath];
+      [_lastValueForKey setObject:value forKey:item.keyPath];
+      return YES;
+   }
+   
+   return NO;
+}
+
+#pragma mark adding observers
 - (BOOL)addObserver:(id<HUDSettingsObserver>)observer forKeyPath:(NSString *)keyPath
 {
    HUDItemDescription * item = [_hudItems objectForKey:keyPath];
@@ -128,6 +216,7 @@
    return result;
 }
 
+#pragma mark removing observers
 - (void)removeObserver:(id<HUDSettingsObserver>)observer forKeyPath:(NSString *)keyPath
 {
    HUDItemDescription * item = [_hudItems objectForKey:keyPath];
