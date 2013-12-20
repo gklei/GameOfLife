@@ -12,7 +12,7 @@
 #define TOGGLE_ANIMATION_DURATION .1
 #define TOGGLE_COLOR_ANIMATION_DURATION .2
 #define INNER_RING_OFFSET_FROM_CENTER 8
-#define INNER_RING_X_ANIMATION 16
+#define INNER_RING_X_ANIMATION 18
 
 @interface GLToggleControl()
 {
@@ -30,15 +30,13 @@
 
    float _leftXBound;
    float _rightXBound;
+   float _innerRingSlidingRange;
 
    BOOL _animating;
-   BOOL _firstTouchInHitBox;
+   BOOL _stateSetFromSlide;
 
    SKAction * _toggleSound;
    NSString * _preferenceKey;
-
-   float _innerRingOffsetInAccumulatedFrame;
-   float _innerRingSlidingRange;
 }
 @end
 
@@ -69,7 +67,6 @@
    _outerRingEnabledColor = [SKColor crayolaCaribbeanGreenPearlColor];
 
    _innerRingSlidingRange = INNER_RING_OFFSET_FROM_CENTER * 2;
-   _innerRingOffsetInAccumulatedFrame = INNER_RING_OFFSET_FROM_CENTER;
 }
 
 - (id)initWithPreferenceKey:(NSString *)key
@@ -81,7 +78,7 @@
       NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
       BOOL state = [defaults boolForKey:_preferenceKey];
       if (state == e_TOGGLE_CONTROL_ENABLED)
-         [self toggle];
+         [self toggle:YES];
    }
    
    return self;
@@ -148,9 +145,11 @@
 
 - (void)runEnableAnimationsWithCompletion:(void (^)())completion
 {
-   SKAction *enableSlide = [SKAction moveByX:INNER_RING_X_ANIMATION
-                                           y:0
+   SKAction *enableSlide = [SKAction moveToX:INNER_RING_X_ANIMATION - CGRectGetWidth(_innerRing.calculateAccumulatedFrame)/2
                                     duration:TOGGLE_ANIMATION_DURATION];
+   /*[SKAction moveByX:INNER_RING_X_ANIMATION
+                                           y:0
+                                    duration:TOGGLE_ANIMATION_DURATION];*/
 
    SKAction *enableInnerRingColor = [SKAction colorizeWithColor:_innerRingEnabledColor
                                                colorBlendFactor:1
@@ -179,9 +178,11 @@
 
 - (void)runDisableAnimationsWithCompletion:(void (^)())completion
 {
-   SKAction *disableSlide = [SKAction moveByX:-INNER_RING_X_ANIMATION
-                                            y:0
+   SKAction *disableSlide = [SKAction moveToX:-INNER_RING_X_ANIMATION + CGRectGetWidth(_innerRing.calculateAccumulatedFrame)/2
                                      duration:TOGGLE_ANIMATION_DURATION];
+   /*[SKAction moveByX:-INNER_RING_X_ANIMATION
+                                            y:0
+                                     duration:TOGGLE_ANIMATION_DURATION];*/
    
    SKAction *disableInnerRingColor = [SKAction colorizeWithColor:_innerRingDisabledColor
                                                 colorBlendFactor:1
@@ -208,7 +209,7 @@
     }];
 }
 
-- (void)toggle
+- (void)toggle:(BOOL)switchState
 {
    if (_animating)
       return;
@@ -217,13 +218,15 @@
 
    if (_state == e_TOGGLE_CONTROL_DISABLED)
    {
-      [self runEnableAnimationsWithCompletion:completion];
-      [self setState:e_TOGGLE_CONTROL_ENABLED];
+      if (switchState)
+         [self runEnableAnimationsWithCompletion:completion];
+      [self setState:(switchState)? e_TOGGLE_CONTROL_ENABLED : e_TOGGLE_CONTROL_DISABLED];
    }
    else
    {
-      [self runDisableAnimationsWithCompletion:completion];
-      [self setState:e_TOGGLE_CONTROL_DISABLED];
+      if (switchState)
+         [self runDisableAnimationsWithCompletion:completion];
+      [self setState:(switchState)? e_TOGGLE_CONTROL_DISABLED : e_TOGGLE_CONTROL_ENABLED];
    }
 }
 
@@ -233,12 +236,10 @@
    self.hitBox.position = _innerRing.position;
 }
 
-- (UIColor *)colorLerpFrom:(UIColor *)start
-                        to:(UIColor *)end
-              withDuration:(float)t
+- (UIColor *)colorLerpFromStartColor:(UIColor *)start toEndColor:(UIColor *)end withDuration:(float)t
 {
-   if(t < 0.0f) t = 0.0f;
-   if(t > 1.0f) t = 1.0f;
+   t = (t < 0.0f)? 0.0f : t;
+   t = (t > 1.0f)? 1.0f : t;
 
    const CGFloat *startComponent = CGColorGetComponents(start.CGColor);
    const CGFloat *endComponent = CGColorGetComponents(end.CGColor);
@@ -256,27 +257,23 @@
 
 - (void)moveInnerRingByDeltaX:(float)deltaX
 {
-   float percentage = (_innerRing.position.x + _innerRingOffsetInAccumulatedFrame) / _innerRingSlidingRange;
-   if (deltaX > 0)
-   {
-      _innerRing.color = [self colorLerpFrom:_innerRingDisabledColor
-                                          to:_innerRingEnabledColor
-                                withDuration:percentage];
-      _outerRing.color = [self colorLerpFrom:_outerRingDisabledColor
-                                          to:_outerRingEnabledColor
-                                withDuration:percentage];
-   }
-   else
-   {
-      _innerRing.color = [self colorLerpFrom:_innerRingEnabledColor
-                                          to:_innerRingDisabledColor
-                                withDuration:percentage];
-      _outerRing.color = [self colorLerpFrom:_outerRingEnabledColor
-                                          to:_outerRingDisabledColor
-                                withDuration:percentage];
-   }
+   float duration =
+      (_innerRing.position.x + INNER_RING_OFFSET_FROM_CENTER) / _innerRingSlidingRange;
 
+   _innerRing.color = [self colorLerpFromStartColor:_innerRingDisabledColor
+                                         toEndColor:_innerRingEnabledColor
+                                       withDuration:duration];
+   _outerRing.color = [self colorLerpFromStartColor:_outerRingDisabledColor
+                                         toEndColor:_outerRingEnabledColor
+                                       withDuration:duration];
+
+   _stateSetFromSlide = NO;
    [self updateInnerRingPositionX:_innerRing.position.x + deltaX];
+}
+
+- (void)handleTouchBegan:(UITouch *)touch
+{
+   _stateSetFromSlide = NO;
 }
 
 - (void)handleTouchMoved:(UITouch *)touch
@@ -290,7 +287,12 @@
       _innerRing.color = _innerRingDisabledColor;
       _outerRing.color = _outerRingDisabledColor;
       [self updateInnerRingPositionX:_leftXBound];
+
+      if (_state != e_TOGGLE_CONTROL_DISABLED)
+         _stateSetFromSlide = YES;
+
       self.state = e_TOGGLE_CONTROL_DISABLED;
+      [self.delegate controlValueChangedForKey:_preferenceKey];
       return;
    }
 
@@ -299,7 +301,12 @@
       _innerRing.color = _innerRingEnabledColor;
       _outerRing.color = _outerRingEnabledColor;
       [self updateInnerRingPositionX:_rightXBound];
+
+      if (_state != e_TOGGLE_CONTROL_ENABLED)
+         _stateSetFromSlide = YES;
+
       self.state = e_TOGGLE_CONTROL_ENABLED;
+      [self.delegate controlValueChangedForKey:_preferenceKey];
       return;
    }
 
@@ -310,8 +317,10 @@
 {
    [self runAction:_toggleSound];
    
-   if ([self.hitBox containsPoint:[touch locationInNode:self]])
-      [self toggle];
+   if (/*[self.hitBox containsPoint:[touch locationInNode:self]] && */!_stateSetFromSlide)
+      [self toggle:YES];
+   else
+      [self toggle:NO];
 
    [super handleTouchEnded:touch];
 }
