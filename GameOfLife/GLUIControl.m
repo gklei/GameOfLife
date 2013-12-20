@@ -25,6 +25,16 @@
    return nil;
 }
 
+- (NSString *)longestPossibleStringValue
+{
+   return nil;
+}
+
+- (CGRect)largestPossibleAccumulatedFrame
+{
+   return self.calculateAccumulatedFrame;
+}
+
 - (void)handleTouchBegan:(UITouch *)touch
 {
    _hasFocus = YES;

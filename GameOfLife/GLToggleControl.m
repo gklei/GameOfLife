@@ -103,6 +103,21 @@
    return (_state)? @"ON" : @"OFF";
 }
 
+- (NSString *)longestPossibleStringValue
+{
+   return @"OFF";
+}
+
+- (CGRect)largestPossibleAccumulatedFrame
+{
+   float x = self.calculateAccumulatedFrame.origin.x;
+   float y = self.calculateAccumulatedFrame.origin.y;
+   float largeWidth = CGRectGetWidth(self.calculateAccumulatedFrame) + 25;
+   float largeHeight = CGRectGetHeight(self.calculateAccumulatedFrame);
+
+   return CGRectMake(x, y, largeWidth, largeHeight);
+}
+
 - (void)runEnableAnimationsWithCompletion:(void (^)())completion
 {
    SKAction *enableSlide = [SKAction moveByX:INNER_RING_X_ANIMATION

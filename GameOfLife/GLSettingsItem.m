@@ -33,7 +33,7 @@
    if (self = [super init])
    {
       [self setupTitle:title];
-      [self setupStatusLabel:control.stringValue];
+      [self setupStatusLabelWithControl:control];
       [self setupControl:control];
    }
    return self;
@@ -70,10 +70,10 @@
    [self addChild:_itemTitleLabel];
 }
 
-- (void)setupStatusLabel:(NSString *)statusLabel
+- (void)setupStatusLabelWithControl:(GLUIControl *)control
 {
    _itemStatusLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
-   _itemStatusLabel.text = [self futurizedString:statusLabel];
+   _itemStatusLabel.text = control.longestPossibleStringValue;
    _itemStatusLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
    _itemStatusLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
    _itemStatusLabel.colorBlendFactor = 1.0;
@@ -86,8 +86,8 @@
                   CGRectGetWidth(_itemStatusLabel.calculateAccumulatedFrame)/2 -
                   RIGHT_STATUS_LABEL_LABEL_PADDING, 0);
 
+   _itemStatusLabel.text = [self futurizedString:control.stringValue];
    [self addChild:_itemStatusLabel];
-
 }
 
 - (void)setupControl:(GLUIControl *)control
@@ -95,11 +95,13 @@
    _itemUIControl = control;
    _itemUIControl.delegate = self;
 
+   _itemStatusLabel.text = [self futurizedString:control.longestPossibleStringValue];
    _itemUIControl.position =
    CGPointMake(_itemStatusLabel.position.x -
                CGRectGetWidth(_itemStatusLabel.calculateAccumulatedFrame)/2 -
-               CGRectGetWidth(_itemUIControl.calculateAccumulatedFrame)/2, 0);
+               CGRectGetWidth(_itemUIControl.largestPossibleAccumulatedFrame)/2, 0);
 
+   _itemStatusLabel.text = [self futurizedString:control.stringValue];
    [self addChild:_itemUIControl];
 }
 
