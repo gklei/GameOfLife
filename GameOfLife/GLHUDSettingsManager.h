@@ -57,6 +57,9 @@ typedef enum
 - (id)init;
 
 - (BOOL)addHudItem:(HUDItemDescription *)item;
+- (NSDictionary *)getHudItems;
+- (HUDItemDescription *)getHudItemforKeyPath:(NSString *)keyPath;
+- (NSDictionary *)getHudItemsforKeyPaths:(NSArray *)keyPaths;
 
 - (BOOL)addObserver:(id<HUDSettingsObserver>)observer forKeyPath:(NSString *)keyPath;
 - (BOOL)addObserver:(id<HUDSettingsObserver>)observer forKeyPaths:(NSArray *)keyPaths;
