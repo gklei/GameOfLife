@@ -139,6 +139,7 @@
 
 #pragma mark - public functions
 #pragma mark -
+
 - (BOOL)addHudItem:(HUDItemDescription *)item
 {
    if (item.keyPath == nil)
@@ -166,6 +167,29 @@
    }
    
    return NO;
+}
+
+- (NSDictionary *)getHudItems
+{
+   return _hudItems;
+}
+
+- (HUDItemDescription *)getHudItemforKeyPath:(NSString *)keyPath
+{
+   return [_hudItems objectForKey:keyPath];
+}
+
+- (NSDictionary *)getHudItemsforKeyPaths:(NSArray *)keyPaths
+{
+   NSMutableDictionary * result = [[NSMutableDictionary alloc] init];
+   for (NSString * key in keyPaths)
+   {
+      HUDItemDescription * item = [self getHudItemforKeyPath:key];
+      if (item)
+         [result setObject:item forKey:key];
+   }
+   
+   return result;
 }
 
 #pragma mark adding observers
