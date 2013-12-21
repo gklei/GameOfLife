@@ -78,6 +78,12 @@
    return self.calculateAccumulatedFrame;
 }
 
+- (void)loseFocus
+{
+   _glowEffect.shouldEnableEffects = NO;
+   _hasFocus = NO;
+}
+
 - (void)handleTouchBegan:(UITouch *)touch
 {
    _glowEffect.shouldEnableEffects = YES;
@@ -97,7 +103,10 @@
 - (void)setColor:(UIColor *)color
 {
    if (_sprite)
+   {
       _sprite.color = color;
+      return;
+   }
    [super setColor:color];
 }
 
@@ -177,6 +186,53 @@
    if (_sprite)
       return _sprite.size;
    return super.size;
+}
+
+- (void)setScale:(CGFloat)scale
+{
+   [self.hitBox setScale:scale];
+   if (_sprite)
+   {
+      [_sprite setScale:scale];
+      return;
+   }
+   [super setScale:scale];
+}
+
+- (void)setXScale:(CGFloat)xScale
+{
+   self.hitBox.xScale = xScale;
+   if (_sprite)
+   {
+      _sprite.xScale = xScale;
+      return;
+   }
+   super.xScale = xScale;
+}
+
+- (CGFloat)xScale
+{
+   if (_sprite)
+      return _sprite.xScale;
+   return super.xScale;
+}
+
+- (void)setYScale:(CGFloat)yScale
+{
+   self.hitBox.yScale = yScale;
+   if (_sprite)
+   {
+      _sprite.yScale = yScale;
+      return;
+   }
+   super.yScale = yScale;
+}
+
+- (CGFloat)yScale
+{
+   if (_sprite)
+      return _sprite.yScale;
+   return super.yScale;
 }
 
 - (void)setTexture:(SKTexture *)texture

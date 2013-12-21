@@ -143,10 +143,10 @@ BOOL _decreasing;
       [self setupColorHud];
       [self setupSoundFX];
       [self setupFlashLayerAndAnimation];
-
+      
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
-
+      
       self.userInteractionEnabled = YES;
    }
    return self;
@@ -324,11 +324,17 @@ BOOL _decreasing;
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-   UITouch *touch = touches.allObjects.lastObject;
+   UITouch *touch = touches.allObjects.firstObject;
    _locationOfFirstTouch = [touch locationInNode:self];
 
+   if (_focusedButton)
+   {
+      [_focusedButton loseFocus];
+      _focusedButton = nil;
+   }
+
    for (SKNode *node in [self nodesAtPoint:_locationOfFirstTouch])
-      if ([node.name isEqualToString:@"ui_control_hit_box"])
+      if ([node.name isEqualToString:@"ui_control_hit_box"] && !node.parent.parent.hidden)
       {
          _focusedButton = (GLUIButton *)node.parent.parent;
          [_focusedButton handleTouchBegan:touch];
@@ -345,7 +351,6 @@ BOOL _decreasing;
            withEvent:(UIEvent *)event
 {
    UITouch *touch = touches.allObjects.lastObject;
-
    if (_focusedButton)
       [_focusedButton handleTouchMoved:touch];
 
@@ -355,37 +360,16 @@ BOOL _decreasing;
    {
       [self toggleLivingForTileAtTouch:touch withSoundFX:_fingerUpSoundFX];
    }
-
-   if ([_colorHudLayer containsPoint:_locationOfFirstTouch])
-   {
-      [_colorHudLayer handleTouch:touch moved:YES];
-   }
-   else if ([_generalHudLayer containsPoint:_locationOfFirstTouch])
-   {
-      [_generalHudLayer handleTouch:touch moved:YES];
-   }
 }
 
 - (void)touchesEnded:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
    UITouch *touch = touches.allObjects.lastObject;
-
    if (_focusedButton)
    {
       [_focusedButton handleTouchEnded:touch];
-   }
-
-//   if ([_generalHudLayer containsPoint:_locationOfFirstTouch] &&
-//       [_generalHudLayer containsPoint:[touch locationInNode:self]])
-//   {
-////      [self generalHudPressedWithTouch:touch focusedNode:_focusedButton];
-////      [_generalHudLayer handleTouch:touch forButton:_focusedButton];
-//   }
-   if ([_colorHudLayer containsPoint:_locationOfFirstTouch] &&
-       [_colorHudLayer containsPoint:[touch locationInNode:self]])
-   {
-      [self colorHudPressedWithTouch:touch];
+      _focusedButton = nil;
    }
 
    if (_oneTileTouched)
@@ -394,19 +378,6 @@ BOOL _decreasing;
       _oneTileTouched = NO;
    }
    _currentTileBeingTouched = nil;
-   _focusedButton = nil;
-}
-
-- (void)colorHudPressedWithTouch:(UITouch *)touch
-{
-   if (!_colorHudIsAnimating)
-      [_colorHudLayer handleTouch:touch moved:NO];
-}
-
-- (void)generalHudPressedWithTouch:(UITouch *)touch focusedNode:(GLUIButton *)focusedNode
-{
-   if (!_generalHudIsAnimating)
-      [_generalHudLayer handleTouch:touch moved:NO];
 }
 
 #pragma mark GLHud Delegate Methods
@@ -456,7 +427,8 @@ BOOL _decreasing;
       reposition.timingMode = SKActionTimingEaseInEaseOut;
 
       [_generalHudLayer setCoreFunctionButtonsHidden:YES];
-      [_generalHudLayer runAction:reposition];
+      _generalHudLayer.animating = YES;
+      [_generalHudLayer runAction:reposition completion:^{_generalHudLayer.animating = NO;}];
    }
    _colorHudIsAnimating = YES;
 }
@@ -474,7 +446,8 @@ BOOL _decreasing;
       reposition.timingMode = SKActionTimingEaseInEaseOut;
 
       [_colorHudLayer setColorDropsHidden:YES];
-      [_colorHudLayer runAction:reposition];
+      _colorHudLayer.animating = YES;
+      [_colorHudLayer runAction:reposition completion:^{_colorHudLayer.animating = NO;}];
    }
    _generalHudIsAnimating = YES;
 }

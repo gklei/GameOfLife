@@ -41,21 +41,11 @@
    NSArray *_buttonHitBoxes;
 
    GLUIActionButton *_expandCollapseButton;
-
    GLUIActionButton*_clearButton;
-   SKSpriteNode *_clearButtonHitBox;
-
    GLUIActionButton *_restoreButton;
-   SKSpriteNode *_restoreButtonHitBox;
-
    GLUIActionButton *_startStopButton;
-   SKSpriteNode *_startStopButtonHitBox;
-
    GLUIActionButton *_cameraButton;
-   SKSpriteNode *_cameraButtonHitBox;
-
    GLUIActionButton *_settingsButton;
-   SKSpriteNode *_settingsButtonHitBox;
 
    SKAction *_expandSettingsSound;
    SKAction *_collapseSettingsSound;
@@ -159,11 +149,15 @@
 
    _expandCollapseButton.position =
       CGPointMake(_defaultSize.width - _expandCollapseButton.size.width/2 - 15,
-                  HUD_BUTTON_EDGE_PADDING - _expandCollapseButton.size.height/2);
+                  HUD_BUTTON_EDGE_PADDING - _expandCollapseButton.size.height/2 - 4);
 
    _expandCollapseButton.name = @"expand_collapse";
 
-   void (^actionBlock)() = ^{[self toggle];};
+   void (^actionBlock)() = ^
+   {
+      if (!self.isAnimating)
+         [self toggle];
+   };
    _expandCollapseButton.actionBlock = actionBlock;
    [self addChild:_expandCollapseButton];
 }
@@ -174,8 +168,8 @@
    for (GLUIActionButton *button in buttons)
    {
       [self addChild:button];
-      button.position = CGPointMake(++multiplier * CORE_FUNCTION_BUTTON_PADDING + 120,
-                                    -button.size.height / 2.0);
+      button.position = CGPointMake(++multiplier * CORE_FUNCTION_BUTTON_PADDING + 80,
+                                    -button.size.height);
    }
 }
 
@@ -199,7 +193,11 @@
    _cameraButton.actionBlock = cameraButtonActionBlock;
 
    _settingsButton = [self buttonWithFilename:@"cog" buttonName:@"settings"];
-   void (^settingsButtonActionBlock)() = ^{[self toggleSettings];};
+   void (^settingsButtonActionBlock)() = ^
+   {
+      if (!self.isAnimating)
+         [self toggleSettings];
+   };
    _settingsButton.actionBlock = settingsButtonActionBlock;
 
    _coreFunctionButtons = @[_clearButton,
@@ -245,6 +243,7 @@
 #pragma mark HUD Toggling Methods
 - (void)expandSettingsWithCompletionBlock:(void (^)())completionBlock
 {
+   self.animating = YES;
    _settingsAreExpanded = YES;
 
    SKAction *expand = [SKAction moveByX:0
@@ -268,21 +267,23 @@
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
    changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
 
-   [self.delegate settingsWillExpandWithRepositioningAction:expand];
 
    [self runAction:_expandSettingsSound];
    [_backgroundLayer runAction:backgroundActions
                     completion:
     ^{
        [self.delegate settingsDidExpand];
+       self.animating = NO;
     }];
 
+   [self.delegate settingsWillExpandWithRepositioningAction:expand];
    [_settingsButton runAction:buttonActions completion:completionBlock];
 
 }
 
 - (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
 {
+   self.animating = YES;
    _settingsAreExpanded = NO;
    _settingsLayer.hidden = YES;
 
@@ -307,10 +308,16 @@
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
    changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
 
-   [self.delegate settingsWillCollapseWithRepositioningAction:collapse];
 
    [self runAction:_collapseSettingsSound];
-   [_backgroundLayer runAction:backgroundActions completion:^{[self.delegate settingsDidCollapse];}];
+   [_backgroundLayer runAction:backgroundActions
+                    completion:
+    ^{
+       [self.delegate settingsDidCollapse];
+       self.animating = NO;
+    }];
+
+   [self.delegate settingsWillCollapseWithRepositioningAction:collapse];
    [_settingsButton runAction:buttonActions completion:completionBlock];
 }
 
@@ -335,6 +342,7 @@
 
 - (void)expandBottomBar
 {
+   self.animating = YES;
    CFTimeInterval waitPeriod = 0.0;
    [self.delegate hud:self willExpandAfterPeriod:&waitPeriod];
 
@@ -394,12 +402,14 @@
           }
 
           [self.delegate hudDidExpand:self];
+          self.animating = NO;
        }];
    }];
 }
 
 - (void)collapseBottomBar
 {
+   self.animating = YES;
    [self.delegate hudWillCollapse:self];
 
    SKAction *wait = [SKAction waitForDuration:WAIT_BEFORE_COLORIZE_DURATION];
@@ -460,6 +470,7 @@
        }
 
        [self.delegate hudDidCollapse:self];
+       self.animating = NO;
     }];
 }
 
