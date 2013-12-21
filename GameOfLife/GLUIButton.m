@@ -135,10 +135,10 @@
       _sprite.alpha = alpha;
       return;
    }
-   [super setAlpha:alpha];
+   super.alpha = alpha;
 }
 
-- (float)alpha
+- (CGFloat)alpha
 {
    if (_sprite)
       return _sprite.alpha;
@@ -152,10 +152,10 @@
       _sprite.colorBlendFactor = colorBlendFactor;
       return;
    }
-   [super setColorBlendFactor:colorBlendFactor];
+   super.colorBlendFactor = colorBlendFactor;
 }
 
-- (float)colorBlendFactor
+- (CGFloat)colorBlendFactor
 {
    if (_sprite)
       return _sprite.colorBlendFactor;
@@ -169,7 +169,7 @@
       _sprite.size = size;
       return;
    }
-   [super setSize:size];
+   super.size = size;
 }
 
 - (CGSize)size
@@ -186,7 +186,7 @@
       _sprite.texture = texture;
       return;
    }
-   [super setTexture:texture];
+   super.texture = texture;
 }
 
 - (SKTexture *)texture

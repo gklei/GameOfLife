@@ -318,7 +318,7 @@ BOOL _decreasing;
        [_generalHudLayer containsPoint:[touch locationInNode:self]])
    {
 //      [self generalHudPressedWithTouch:touch focusedNode:_focusedButton];
-      [_generalHudLayer handleTouch:touch forButton:_focusedButton];
+//      [_generalHudLayer handleTouch:touch forButton:_focusedButton];
    }
    if ([_colorHudLayer containsPoint:_locationOfFirstTouch] &&
        [_colorHudLayer containsPoint:[touch locationInNode:self]])
