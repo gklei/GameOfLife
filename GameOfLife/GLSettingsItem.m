@@ -108,8 +108,8 @@
 - (void)controlValueChangedForKey:(NSString *)key;
 {
    _itemStatusLabel.text = [self futurizedString:_itemUIControl.stringValue];
-   if (_delegate)
-      [_delegate settingsValueChangedForKey:key];
+//   if (_delegate)
+//      [_delegate settingsValueChangedForKey:key];
 }
 
 @end

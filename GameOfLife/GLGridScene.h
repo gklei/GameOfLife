@@ -9,8 +9,9 @@
 #import <SpriteKit/SpriteKit.h>
 
 #import "GLSettingsItem.h"
+#import "GLHUDSettingsManager.h"
 
-@interface GLGridScene : SKScene<GLSettingsItemValueChangedDelegate>
+@interface GLGridScene : SKScene<HUDSettingsObserver>
 
 @property (nonatomic, readonly) CGPoint locationOfFirstTouch;
 

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GLSettingsItem.h"
 
-@interface GLAppDelegate : UIResponder <UIApplicationDelegate, GLSettingsItemValueChangedDelegate>
+@interface GLAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

@@ -63,8 +63,6 @@ typedef enum
 
 - (BOOL)addObserver:(id<HUDSettingsObserver>)observer forKeyPath:(NSString *)keyPath;
 - (BOOL)addObserver:(id<HUDSettingsObserver>)observer forKeyPaths:(NSArray *)keyPaths;
-- (BOOL)addObserver:(id<HUDSettingsObserver>)observer;
-
 
 - (void)removeObserver:(id<HUDSettingsObserver>)observer forKeyPath:(NSString *)keyPath;
 - (void)removeObserver:(id<HUDSettingsObserver>)observer forKeyPaths:(NSArray *)keyPaths;

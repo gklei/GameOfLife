@@ -11,7 +11,6 @@
 #import "GLGrid.h"
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
-#import "GLHUDSettingsManager.h"
 #import "GLUIButton.h"
 #import "GLSettingsLayer.h"
 #import "GLTileNode.h"
@@ -59,7 +58,8 @@ BOOL _decreasing;
 #pragma mark GLGridScene
 @implementation GLGridScene
 
-- (void)registerGeneralDuration
+#pragma mark - registration methods
+- (void)registerGeneralDurationHUD
 {
    HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
    hudItem.keyPath = @"GenerationDuration";
@@ -101,16 +101,43 @@ BOOL _decreasing;
 {
    [self registerSoundFxHUD];
    [self registerSmartMenuHUD];
-   [self registerGeneralDuration];
+   [self registerGeneralDurationHUD];
 }
 
-#pragma mark Initializer Method
+#pragma mark - observation methods
+- (void)observeSoundFxChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
+
+- (void)observeSmartMenuChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SmartMenu"];
+}
+
+- (void)observeGeneralDurationChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"GenerationDuration"];
+}
+
+- (void)observeHudParameterChanges
+{
+   [self observeSoundFxChanges];
+   [self observeSmartMenuChanges];
+   [self observeGeneralDurationChanges];
+}
+
+#pragma mark - Initializer Method
 - (id)initWithSize:(CGSize)size
 {
    if (self = [super initWithSize:size])
    {
-      // register a set of default values
+      [self observeHudParameterChanges];
       [self registerHudParameters];
+      
       
       [self setupGridWithSize:size];
       [self setupGeneralHud];
@@ -122,16 +149,11 @@ BOOL _decreasing;
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
 
       self.userInteractionEnabled = YES;
-      
-      // now load in the current values
-      [self settingsValueChangedForKey:@"SoundFX"];
-      [self settingsValueChangedForKey:@"SmartMenu"];
-      [self settingsValueChangedForKey:@"GenerationDuration"];
    }
    return self;
 }
 
-#pragma mark Setup Methods
+#pragma mark - Setup Methods
 - (void)setupGridWithSize:(CGSize)size
 {
    _grid = [[GLGrid alloc] initWithSize:size];
@@ -185,7 +207,7 @@ BOOL _decreasing;
    [_generalHudLayer expand];
 }
 
-#pragma mark GLGeneralHud Delegate Methods
+#pragma mark - GLGeneralHud Delegate Methods
 - (void)clearButtonPressed
 {
    [_grid clearGrid];
@@ -528,34 +550,27 @@ BOOL _decreasing;
    }
 }
 
-- (void)settingsValueChangedForKey:(NSString *)key
-{
-   if ([key compare:@"GenerationDuration"] == NSOrderedSame)
-   {
-      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-      float value = [defaults floatForKey:key];
-      value = fmin(1.0, fmax(0.1, value));
-      
-//      NSLog(@"settingsValueChangedForKey:key = %@, value = %0.2f", key, value);
-      
-      _generationDuration = (1.0 - value);
-   }
-   else if ([key compare:@"SmartMenu"] == NSOrderedSame)
-   {
-      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-      BOOL value = [defaults boolForKey:key];
-      
-//      NSLog(@"settingsValueChangedForKey:key = %@, value = %d", key, value);
-      
-      _autoShowHideHudForStartStop = value;
-   }
-   else if ([key compare:@"SoundFX"] == NSOrderedSame)
-   {
-      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-      BOOL value = [defaults boolForKey:key];
-      
-//      NSLog(@"settingsValueChangedForKey:key = %@, value = %d", key, value);
-   }
-}
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+ {
+    NSLog(@"settingChanged:%@ ofType:%d forKeyPath:%@", value, type, keyPath);
+    if ([keyPath compare:@"GenerationDuration"] == NSOrderedSame)
+    {
+       assert(type == HVT_FLOAT);
+       float fValue = fmin(1.0, fmax(0.1, [value floatValue]));
+       
+       _generationDuration = (1.0 - fValue);
+    }
+    
+    if ([keyPath compare:@"SmartMenu"] == NSOrderedSame)
+    {
+       assert(type == HVT_BOOL);
+       _autoShowHideHudForStartStop = [value boolValue];
+    }
+    
+    if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+    {
+       
+    }
+ }
 
 @end

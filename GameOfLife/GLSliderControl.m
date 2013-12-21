@@ -47,6 +47,7 @@
 
    AVAudioPlayer *_slidingSoundAudioPlayer;
    NSString * _preferenceKey;
+   NSRange    _range;
 }
 @end
 
@@ -92,16 +93,17 @@
    return self;
 }
 
-- (id)initWithLength:(int)length preferenceKey:(NSString *)prefKey
+- (id)initWithLength:(int)length range:(NSRange)range andPreferenceKey:(NSString *)prefKey
 {
    if (self = [self initWithLength:length])
    {
       _preferenceKey = prefKey;
-   
+      _range = range;
       NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
       float value = [defaults floatForKey:_preferenceKey];
       self.sliderValue = value;
    }
+   
    return self;
 }
 
@@ -230,9 +232,8 @@
    self.hitBox.position = _knob.position;
    _sliderValue = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
    
-   [self updateUserDefaults:_sliderValue];
-   
    [self.delegate controlValueChangedForKey:_preferenceKey];
+   [self updateUserDefaults:_sliderValue];
 }
 
 - (void)moveKnobByDeltaX:(float)deltaX
@@ -292,6 +293,8 @@
    [_knob runAction:_shrink];
    _knob.texture = [SKTexture textureWithImageNamed:@"radio-unchecked@2x.png"];
    [super handleTouchEnded:touch];
+   
+   [self updateUserDefaults:_sliderValue];
 }
 
 @end

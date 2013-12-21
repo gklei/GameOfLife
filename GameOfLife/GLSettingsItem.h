@@ -8,9 +8,9 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@protocol GLSettingsItemValueChangedDelegate <NSObject>
-- (void)settingsValueChangedForKey:(NSString *)key;
-@end
+//@protocol GLSettingsItemValueChangedDelegate <NSObject>
+//- (void)settingsValueChangedForKey:(NSString *)key;
+//@end
 
 @class GLUIButton;
 
@@ -19,6 +19,6 @@
 - (id)initWithTitle:(NSString *)title
             control:(GLUIButton *)control;
 
-@property (retain, readwrite) id<GLSettingsItemValueChangedDelegate> delegate;
+//@property (retain, readwrite) id<GLSettingsItemValueChangedDelegate> delegate;
 
 @end
