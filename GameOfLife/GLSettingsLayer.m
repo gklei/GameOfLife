@@ -29,8 +29,6 @@
    CGPoint _defaultAnchorPoint;
 
    CGPoint _nextControlPosition;
-   
-   id<GLSettingsItemValueChangedDelegate> _settingsDelegate;
 }
 @end
 
@@ -44,20 +42,19 @@
    toggleItem.position = _nextControlPosition;
    _nextControlPosition.y -= CONTROL_HEIGHT;
    
-   toggleItem.delegate = _settingsDelegate;
    [self addChild:toggleItem];
 }
 
 - (void)addSliderControl:(HUDItemDescription *)item
 {
-   GLSliderControl * sliderControl = [[GLSliderControl alloc]
-                                      initWithLength:180 preferenceKey:item.keyPath];
+   GLSliderControl * sliderControl = [[GLSliderControl alloc] initWithLength:180
+                                                                       range:item.range
+                                                            andPreferenceKey:item.keyPath];
    GLSettingsItem * sliderItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                                control:sliderControl];
    sliderItem.position = _nextControlPosition;
    _nextControlPosition.y -= CONTROL_HEIGHT;
    
-   sliderItem.delegate = _settingsDelegate;
    [self addChild:sliderItem];
 }
 
@@ -99,9 +96,6 @@
 {
    if (self = [super init])
    {
-      _settingsDelegate =
-         ((id<GLSettingsItemValueChangedDelegate>)[[UIApplication sharedApplication] delegate]);
-      
       _defaultSize = size;
       _defaultAnchorPoint = anchorPoint;
       [self setupSettingsLabel];

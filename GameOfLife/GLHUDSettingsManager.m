@@ -67,44 +67,43 @@ GLHUDSettingsManager * g_globalHUDSettigsManager = nil;
    switch (item.valueType)
    {
       case HVT_BOOL:
-         if (lastValue.boolValue == value.boolValue) return YES;
+         if (lastValue.boolValue != value.boolValue) return YES;
          break;
       case HVT_FLOAT:
-         if (lastValue.floatValue == value.floatValue) return YES;
-         return YES;
+         if (lastValue.floatValue != value.floatValue) return YES;
          break;
       case HVT_DOUBLE:
-         if (lastValue.doubleValue == value.doubleValue) return YES;
+         if (lastValue.doubleValue != value.doubleValue) return YES;
          break;
       case HVT_CHAR:
-         if (lastValue.charValue == value.charValue) return YES;
+         if (lastValue.charValue != value.charValue) return YES;
          break;
       case HVT_UCHAR:
-         if (lastValue.unsignedCharValue == value.unsignedCharValue) return YES;
+         if (lastValue.unsignedCharValue != value.unsignedCharValue) return YES;
          break;
       case HVT_SHORT:
-         if (lastValue.shortValue == value.shortValue) return YES;
+         if (lastValue.shortValue != value.shortValue) return YES;
          break;
       case HVT_USHORT:
-         if (lastValue.unsignedShortValue == value.unsignedShortValue) return YES;
+         if (lastValue.unsignedShortValue != value.unsignedShortValue) return YES;
          break;
       case HVT_INT:
-         if (lastValue.intValue == value.intValue) return YES;
+         if (lastValue.intValue != value.intValue) return YES;
          break;
       case HVT_UINT:
-         if (lastValue.unsignedIntValue == value.unsignedIntValue) return YES;
+         if (lastValue.unsignedIntValue != value.unsignedIntValue) return YES;
          break;
       case HVT_LONG:
-         if (lastValue.longValue == value.longValue) return YES;
+         if (lastValue.longValue != value.longValue) return YES;
          break;
       case HVT_ULONG:
-         if (lastValue.unsignedLongValue == value.unsignedLongValue) return YES;
+         if (lastValue.unsignedLongValue != value.unsignedLongValue) return YES;
          break;
       case HVT_LONGLONG:
-         if (lastValue.longLongValue == value.longLongValue) return YES;
+         if (lastValue.longLongValue != value.longLongValue) return YES;
          break;
       case HVT_ULONGLONG:
-         if (lastValue.unsignedLongLongValue == value.unsignedLongLongValue) return YES;
+         if (lastValue.unsignedLongLongValue != value.unsignedLongLongValue) return YES;
          break;
    }
    
@@ -126,7 +125,7 @@ GLHUDSettingsManager * g_globalHUDSettigsManager = nil;
    {
       NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
       [center addObserver:self
-                 selector:@selector(defaultsChanged:)
+                 selector:@selector(settingsChanged:)
                      name:NSUserDefaultsDidChangeNotification
                    object:nil];
       
@@ -139,7 +138,30 @@ GLHUDSettingsManager * g_globalHUDSettigsManager = nil;
 }
 
 #pragma mark - notification handler
-- (void)defaultsChanged:(NSNotification *)notification
+- (void)notifyObserversThatItem:(HUDItemDescription *)item valueChanged:(NSNumber *)value
+                   alwaysNotify:(BOOL)alwaysNotify
+{
+   if (item == nil || value == nil)
+      return;
+   
+   NSMutableDictionary * observers = [_observersForKey objectForKey:item.keyPath];
+   if (alwaysNotify || [self item:item valueHasChanged:value])
+   {
+      // save the current value
+      [_lastValueForKey setObject:value forKey:item.keyPath];
+      
+      // notify observers of the new value
+      for (id<HUDSettingsObserver> observer in observers)
+         [observer settingChanged:value ofType:item.valueType forKeyPath:item.keyPath];
+   }
+}
+
+- (void)notifyInitialValue:(NSNumber *) value forItem:(HUDItemDescription *) item
+{
+   [self notifyObserversThatItem:item valueChanged:value alwaysNotify:true];
+}
+
+- (void)settingsChanged:(NSNotification *)notification
 {
    NSUserDefaults * defaults = (NSUserDefaults *)[notification object];
    NSArray * keys = [[defaults dictionaryRepresentation] allKeys];
@@ -148,17 +170,8 @@ GLHUDSettingsManager * g_globalHUDSettigsManager = nil;
       HUDItemDescription * item = [_hudItems objectForKey:keyPath];
       if (item)
       {
-         NSMutableDictionary * observers = [_observersForKey objectForKey:keyPath];
-         NSNumber * value = (NSNumber *)[defaults valueForKey:keyPath];
-         if ([self item:item valueHasChanged:value])
-         {
-            // save the current value
-            [_lastValueForKey setObject:value forKey:item.keyPath];
-            
-            // notify observers of the new value
-            for (id<HUDSettingsObserver> observer in observers)
-               [observer settingChanged:value ofType:item.valueType forKeyPath:keyPath];
-         }
+         NSNumber * value = (NSNumber *)[defaults valueForKey:item.keyPath];
+         [self notifyObserversThatItem:item valueChanged:value alwaysNotify:false];
       }
    }
 }
@@ -192,6 +205,8 @@ GLHUDSettingsManager * g_globalHUDSettigsManager = nil;
       {
          [_hudItems setObject:item forKey:item.keyPath];
          [_lastValueForKey setObject:value forKey:item.keyPath];
+         
+         [self notifyInitialValue:value forItem:item];
          return YES;
       }
    }
@@ -229,25 +244,37 @@ GLHUDSettingsManager * g_globalHUDSettigsManager = nil;
 }
 
 #pragma mark adding observers
+- (void)updateObserver:(id<HUDSettingsObserver>)observer forKeyPath:(NSString *)keyPath
+{
+   if (observer == nil || keyPath == nil)
+      return;
+   
+   HUDItemDescription * item = [self getHudItemforKeyPath:keyPath];
+   if (item)
+   {
+      NSNumber * lastValue = [_lastValueForKey objectForKey:item.keyPath];
+      if (lastValue)
+         [observer settingChanged:lastValue ofType:item.valueType forKeyPath:item.keyPath];
+   }
+}
+
 - (BOOL)addObserver:(id<HUDSettingsObserver>)observer forKeyPath:(NSString *)keyPath
 {
-   HUDItemDescription * item = [_hudItems objectForKey:keyPath];
-   if (item == nil)
-      return NO;  // no item with this keyPath to observe
-   
    // get the list of observers for this key
    NSMutableArray * observers = [_observersForKey objectForKey:keyPath];
    if (observers == nil)
    {
-      // create an observer array and add the observer - one does not exist
-      observers = [NSMutableArray arrayWithObject:observer];
+      // add an observer array for the key
+      observers = [[NSMutableArray alloc] init];
       [_observersForKey setObject:observers forKey:keyPath];
-      return YES;
    }
    
    // if the observer isn't in the list, add it
    if (NSNotFound == [self indexOfObserver:observer inArray:observers])
+   {
       [observers addObject:observer];
+      [self updateObserver:observer forKeyPath:keyPath];
+   }
    
    return YES;
 }
@@ -258,19 +285,6 @@ GLHUDSettingsManager * g_globalHUDSettigsManager = nil;
    
    for (NSString * keyPath in keyPaths)
       if ([self addObserver:observer forKeyPath:keyPath])
-         result = YES;
-   
-   return result;
-}
-
-- (BOOL)addObserver:(id<HUDSettingsObserver>)observer
-{
-   BOOL result = NO;
-   
-   // observe all keys
-   NSArray * keys = [_hudItems allKeys];
-   for (NSString * key in keys)
-      if ([self addObserver:observer forKeyPath:key])
          result = YES;
    
    return result;

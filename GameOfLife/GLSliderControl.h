@@ -15,6 +15,6 @@
 - (id)initWithLength:(int)length;
 - (id)initWithValue:(float)value;
 - (id)initWithLength:(int)length value:(float)value;
-- (id)initWithLength:(int)length preferenceKey:(NSString *)prefKey;
+- (id)initWithLength:(int)length range:(NSRange)range andPreferenceKey:(NSString *)prefKey;
 
 @end
