@@ -8,8 +8,6 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-#import "GLSettingsItem.h"
-
 @interface GLSettingsLayer : SKNode
 
 - (id)initWithSize:(CGSize)size

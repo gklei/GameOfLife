@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8E254A83185BBB090068A3F9 /* GLUIControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E254A82185BBB090068A3F9 /* GLUIControl.m */; };
+		8E254A83185BBB090068A3F9 /* GLUIButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E254A82185BBB090068A3F9 /* GLUIButton.m */; };
 		8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E254A85185BBD600068A3F9 /* GLSliderControl.m */; };
 		8E254A89185C3F980068A3F9 /* slider-end@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E254A87185C3F980068A3F9 /* slider-end@2x.png */; };
 		8E254A8A185C3F980068A3F9 /* slider-middle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E254A88185C3F980068A3F9 /* slider-middle@2x.png */; };
@@ -119,8 +119,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8E254A81185BBB090068A3F9 /* GLUIControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLUIControl.h; sourceTree = "<group>"; };
-		8E254A82185BBB090068A3F9 /* GLUIControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLUIControl.m; sourceTree = "<group>"; };
+		8E254A81185BBB090068A3F9 /* GLUIButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLUIButton.h; sourceTree = "<group>"; };
+		8E254A82185BBB090068A3F9 /* GLUIButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLUIButton.m; sourceTree = "<group>"; };
 		8E254A84185BBD600068A3F9 /* GLSliderControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSliderControl.h; sourceTree = "<group>"; };
 		8E254A85185BBD600068A3F9 /* GLSliderControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSliderControl.m; sourceTree = "<group>"; };
 		8E254A87185C3F980068A3F9 /* slider-end@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "slider-end@2x.png"; path = "Images/slider-end@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -414,8 +414,8 @@
 				8EA2650C18595C6700351F5E /* GLToggleControl.h */,
 				8EA2650D18595C6700351F5E /* GLToggleControl.m */,
 				8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */,
-				8E254A81185BBB090068A3F9 /* GLUIControl.h */,
-				8E254A82185BBB090068A3F9 /* GLUIControl.m */,
+				8E254A81185BBB090068A3F9 /* GLUIButton.h */,
+				8E254A82185BBB090068A3F9 /* GLUIButton.m */,
 				8ECA899A182371AE009D906F /* GLViewController.h */,
 				8ECA899B182371AE009D906F /* GLViewController.m */,
 				8ECA89A2182371AE009D906F /* Images.xcassets */,
@@ -627,7 +627,7 @@
 				8EA2650E18595C6700351F5E /* GLToggleControl.m in Sources */,
 				ED581D9C186276880016F98D /* GLHUDSettingsManager.m in Sources */,
 				8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */,
-				8E254A83185BBB090068A3F9 /* GLUIControl.m in Sources */,
+				8E254A83185BBB090068A3F9 /* GLUIButton.m in Sources */,
 				8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */,
 				8ECA8992182371AE009D906F /* main.m in Sources */,
 				8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */,

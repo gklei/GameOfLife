@@ -130,6 +130,20 @@
    return [NSString stringWithFormat:@"%d%%", (int)(_sliderValue * 100)];
 }
 
+- (NSString *)longestPossibleStringValue
+{
+   return @"100%";
+}
+
+- (CGRect)largestPossibleAccumulatedFrame
+{
+   float currentValue = _sliderValue;
+   self.sliderValue = 1;
+   CGRect largestPossibleAccumulatedFrame = self.calculateAccumulatedFrame;
+   self.sliderValue = currentValue;
+   return largestPossibleAccumulatedFrame;
+}
+
 - (void)setupLeftTrack
 {
    _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-left.png"];

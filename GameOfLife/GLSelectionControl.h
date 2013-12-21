@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Gregory Klein. All rights reserved.
 //
 
-#import "GLUIControl.h"
+#import "GLUIButton.h"
 
-@interface GLSelectionControl : GLUIControl
+@interface GLSelectionControl : GLUIButton
 
 @end

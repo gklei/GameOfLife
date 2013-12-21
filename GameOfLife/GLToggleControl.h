@@ -7,7 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
-#import "GLUIControl.h"
+#import "GLUIButton.h"
 
 typedef NS_ENUM(int, GL_TOGGLE_CONTROL_STATE)
 {
@@ -15,11 +15,11 @@ typedef NS_ENUM(int, GL_TOGGLE_CONTROL_STATE)
    e_TOGGLE_CONTROL_ENABLED
 };
 
-@interface GLToggleControl : GLUIControl
+@interface GLToggleControl : GLUIButton
 
 @property (nonatomic, readonly) GL_TOGGLE_CONTROL_STATE state;
 
 - (id)initWithPreferenceKey:(NSString *)key;
-- (void)toggle;
+- (void)toggle:(BOOL)switchState;
 
 @end

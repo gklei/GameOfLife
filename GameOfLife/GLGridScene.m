@@ -12,7 +12,7 @@
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
 #import "GLHUDSettingsManager.h"
-#import "GLUIControl.h"
+#import "GLUIButton.h"
 #import "GLSettingsLayer.h"
 #import "GLTileNode.h"
 #import "UIColor+Crayola.h"
@@ -48,11 +48,7 @@
    SKAction *_flashAnimation;
    BOOL _firstScreenShotTaken;
 
-   GLUIControl *_focusedUIControl;
-   
-// BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
-BOOL _decreasing;
-// END: tmp code to change generation speed from 0.1 <-> 1.0
+   GLUIButton *_focusedUIControl;
 }
 @end
 
@@ -302,7 +298,7 @@ BOOL _decreasing;
    for (SKNode *node in [self nodesAtPoint:_locationOfFirstTouch])
       if ([node.name isEqualToString:@"ui_control_hit_box"])
       {
-         _focusedUIControl = (GLUIControl *)node.parent;
+         _focusedUIControl = (GLUIButton *)node.parent.parent;
          [_focusedUIControl handleTouchBegan:touch];
          return;
       }
@@ -547,25 +543,6 @@ BOOL _decreasing;
          [_grid updateNextGeneration];
       else
          [self toggleRunningButtonPressed];
-      
-//// BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
-////        _generationDuration should be set in the UI
-//if ([_grid generationCount] % 10 == 0)
-//{
-//   _generationDuration += (_decreasing)? -0.1 : 0.1;
-//
-//   if (_generationDuration < 0.1)
-//   {
-//      _generationDuration = 0.2;
-//      _decreasing = false;
-//   }
-//   else if (_generationDuration > 1)
-//   {
-//      _generationDuration = 0.9;
-//      _decreasing = true;
-//   }
-//}
-//// END: tmp code to change generation speed from 0.1 <-> 1.0
    }
 }
 

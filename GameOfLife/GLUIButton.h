@@ -1,5 +1,5 @@
 //
-//  GLUIControl.h
+//  GLUIButton.h
 //  GameOfLife
 //
 //  Created by Gregory Klein on 12/13/13.
@@ -13,9 +13,11 @@
    - (void)controlValueChangedForKey:(NSString *)key;
 @end
 
-@interface GLUIControl : SKSpriteNode <GLTouchHandler>
+@interface GLUIButton : SKSpriteNode <GLTouchHandler>
 
 - (NSString *)stringValue;
+- (NSString *)longestPossibleStringValue;
+- (CGRect)largestPossibleAccumulatedFrame;
 
 @property (nonatomic, readwrite) SKSpriteNode *hitBox;
 @property (nonatomic, readwrite) BOOL hasFocus;

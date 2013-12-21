@@ -12,6 +12,7 @@
 #import "GLSettingsItem.h"
 #import "GLSliderControl.h"
 #import "GLToggleControl.h"
+#import "GLSettingsItem.h"
 #import "UIColor+Crayola.h"
 
 #import "GLAppDelegate.h"

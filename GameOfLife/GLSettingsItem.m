@@ -7,7 +7,7 @@
 //
 
 #import "GLSettingsItem.h"
-#import "GLUIControl.h"
+#import "GLUIButton.h"
 
 #define TOP_TITLE_LABEL_PADDING 10
 #define LEFT_TITLE_LABEL_PADDING 10
@@ -21,19 +21,19 @@
 {
    SKLabelNode *_itemTitleLabel;
    SKLabelNode *_itemStatusLabel;
-   GLUIControl *_itemUIControl;
+   GLUIButton *_itemUIControl;
 }
 @end
 
 @implementation GLSettingsItem
 
 - (id)initWithTitle:(NSString *)title
-            control:(GLUIControl *)control
+            control:(GLUIButton *)control
 {
    if (self = [super init])
    {
       [self setupTitle:title];
-      [self setupStatusLabel:control.stringValue];
+      [self setupStatusLabelWithControl:control];
       [self setupControl:control];
    }
    return self;
@@ -70,10 +70,10 @@
    [self addChild:_itemTitleLabel];
 }
 
-- (void)setupStatusLabel:(NSString *)statusLabel
+- (void)setupStatusLabelWithControl:(GLUIButton *)control
 {
    _itemStatusLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
-   _itemStatusLabel.text = [self futurizedString:statusLabel];
+   _itemStatusLabel.text = control.longestPossibleStringValue;
    _itemStatusLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
    _itemStatusLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
    _itemStatusLabel.colorBlendFactor = 1.0;
@@ -86,20 +86,22 @@
                   CGRectGetWidth(_itemStatusLabel.calculateAccumulatedFrame)/2 -
                   RIGHT_STATUS_LABEL_LABEL_PADDING, 0);
 
+   _itemStatusLabel.text = [self futurizedString:control.stringValue];
    [self addChild:_itemStatusLabel];
-
 }
 
-- (void)setupControl:(GLUIControl *)control
+- (void)setupControl:(GLUIButton *)control
 {
    _itemUIControl = control;
    _itemUIControl.delegate = self;
 
+   _itemStatusLabel.text = [self futurizedString:control.longestPossibleStringValue];
    _itemUIControl.position =
    CGPointMake(_itemStatusLabel.position.x -
                CGRectGetWidth(_itemStatusLabel.calculateAccumulatedFrame)/2 -
-               CGRectGetWidth(_itemUIControl.calculateAccumulatedFrame)/2, 0);
+               CGRectGetWidth(_itemUIControl.largestPossibleAccumulatedFrame)/2, 0);
 
+   _itemStatusLabel.text = [self futurizedString:control.stringValue];
    [self addChild:_itemUIControl];
 }
 
