@@ -12,9 +12,9 @@
 #import "GLUIActionButton.h"
 
 #define HUD_BUTTON_EDGE_PADDING 48
-#define COLOR_DROP_PADDING 44
+#define COLOR_DROP_PADDING 42
 #define COLOR_DROP_CAPACITY 6
-#define COLOR_DROP_SCALE .85
+#define COLOR_DROP_SCALE .75
 #define SELECTED_COLOR_DROP_SCALE 1.15
 #define HIT_DIST_FROM_POSITION 4
 
@@ -23,7 +23,7 @@
    CGSize _defaultSize;
    SKSpriteNode *_backgroundLayer;
    GLUIActionButton *_splashButton;
-   GLUIButton *_currentColorDrop;
+   GLUIActionButton *_currentColorDrop;
 
    NSMutableArray *_colorDrops;
    NSMutableArray *_colorDropHitBoxes;
@@ -45,7 +45,6 @@
       [self setupBackgorundWithSize:_defaultSize];
       [self setupButtons];
       [self addColorDrops];
-      [self addColorDropHitBoxes];
    }
    return self;
 }
@@ -75,10 +74,14 @@
    _splashButton.colorBlendFactor = 1.0;
    _splashButton.alpha = _backgroundLayer.alpha;
    [_splashButton setScale:.25];
-   _splashButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING + 55 - _splashButton.size.width/2.0,
-                                        HUD_BUTTON_EDGE_PADDING + 55 - _splashButton.size.height/2.0);
+   _splashButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - _splashButton.size.width/2.0,
+                                        HUD_BUTTON_EDGE_PADDING - _splashButton.size.height/2.0);
    _splashButton.name = @"splash";
-   void (^splashButtonActionBlock)() = ^{[self toggle];};
+   void (^splashButtonActionBlock)() = ^
+   {
+      if (!self.isAnimating)
+         [self toggle];
+   };
    _splashButton.actionBlock = splashButtonActionBlock;
    
    [self addChild:_splashButton];
@@ -88,7 +91,7 @@
 {
    _colorDrops = [NSMutableArray arrayWithCapacity:COLOR_DROP_CAPACITY];
    NSArray *colorDropColors = @[[SKColor crayolaCaribbeanGreenColor],
-                                [SKColor crayolaBlueColor],
+                                [SKColor crayolaRobinsEggBlueColor],
                                 [SKColor crayolaRazzleDazzleRoseColor],
                                 [SKColor crayolaSizzlingRedColor],
                                 [SKColor crayolaNeonCarrotColor],
@@ -96,38 +99,23 @@
 
    for (int i=0; i<COLOR_DROP_CAPACITY; ++i)
    {
-      GLUIButton *drop = ([self usingRetinaDisplay]) ? [GLUIButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
-                                                         [GLUIButton spriteNodeWithImageNamed:@"droplet.png"];
+      GLUIActionButton *drop = ([self usingRetinaDisplay]) ? [GLUIActionButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
+                                                             [GLUIActionButton spriteNodeWithImageNamed:@"droplet.png"];
       [drop setScale:COLOR_DROP_SCALE];
-      drop.position = CGPointMake(i*COLOR_DROP_PADDING - 18, -drop.size.height/2.0 + 5);
+      drop.position = CGPointMake(i*COLOR_DROP_PADDING + 30, -drop.size.height/2.0 - 5);
       drop.colorBlendFactor = 1.0;
       drop.color = colorDropColors[i];
       drop.alpha = .75;
-      drop.hitBox.size = CGSizeMake(drop.hitBox.size.width - 5, drop.hitBox.size.height - 10);
+      drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
+
+      void (^colorDropActionBlock)() = ^{[self updateCurrentColorDrop:drop];};
+      drop.actionBlock = colorDropActionBlock;
+
       [_colorDrops insertObject:drop atIndex:i];
       [self addChild:drop];
    }
    _currentColorDrop = _colorDrops.firstObject;
    _currentColor = _currentColorDrop.color;
-}
-
-- (void)addColorDropHitBoxes
-{
-   _colorDropHitBoxes = [NSMutableArray arrayWithCapacity:COLOR_DROP_CAPACITY];
-   for (int i=0; i<COLOR_DROP_CAPACITY; ++i)
-   {
-      SKSpriteNode *dropHitBox =
-         [SKSpriteNode spriteNodeWithColor:[SKColor crayolaSizzlingRedColor]
-                                      size:CGSizeMake(_defaultSize.width/(_colorDrops.count + 2),
-                                                      60)];
-      
-      dropHitBox.position = CGPointMake(i*COLOR_DROP_PADDING + 23, -dropHitBox.size.height/2.0);
-      dropHitBox.colorBlendFactor = 1.0;
-      dropHitBox.color = ((SKSpriteNode *)_colorDrops[i]).color;
-      dropHitBox.alpha = 0;
-      [_colorDropHitBoxes insertObject:dropHitBox atIndex:i];
-      [self addChild:dropHitBox];
-   }
 }
 
 - (void)setColorDropsHidden:(BOOL)hidden
@@ -136,10 +124,9 @@
       node.hidden = hidden;
 }
 
-- (void)updateCurrentColorDrop:(GLUIButton *)hitBox
+- (void)updateCurrentColorDrop:(GLUIActionButton *)colorDropButton
 {
-   GLUIButton *drop = _colorDrops[[_colorDropHitBoxes indexOfObject:hitBox]];
-   if (_currentColorDrop != drop)
+   if (_currentColorDrop != colorDropButton)
    {
       [self runAction:_colorDropButtonSound];
       SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
@@ -152,8 +139,12 @@
       SKAction *deselectAnimation = [SKAction group:@[deselectScaleAction, deselectAlphaAction]];
 
       [_currentColorDrop runAction:deselectAnimation];
-      [drop runAction:selectAnimation];
-      _currentColorDrop = drop;
+//      [_currentColorDrop.hitBox runAction:deselectAnimation];
+
+      [colorDropButton runAction:selectAnimation];
+//      [colorDropButton.hitBox runAction:selectAnimation];
+
+      _currentColorDrop = colorDropButton;
       [self.delegate setCurrentColor:_currentColorDrop.color];
    }
 }
@@ -230,24 +221,9 @@
    return newClr;
 }
 
-- (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
-{
-//   CGPoint firstTouch = ((GLGridScene *)self.scene).locationOfFirstTouch;
-//   SKNode *focusedNode = [self nodeAtPoint:[self convertPoint:firstTouch fromNode:self.scene]];
-//   SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
-//
-////   if ([node.name isEqualToString:@"splash"] && !moved && [focusedNode isEqual:node])
-////   {
-////      [self toggle];
-////   }
-//   if ([_colorDropHitBoxes containsObject:node] && self.isExpanded)
-//   {
-//      [self updateCurrentColorDrop:(GLUIButton *)node];
-//   }
-}
-
 - (void)expand
 {
+   self.animating = YES;
    CFTimeInterval waitPeriod = 0.0;
    [self.delegate hud:self willExpandAfterPeriod:&waitPeriod];
 
@@ -290,9 +266,6 @@
          [button.hitBox runAction:slide];
       }
 
-//      for (SKNode *hitBox in _colorDropHitBoxes)
-//         [hitBox runAction:slide];
-
       [_splashButton runAction:buttonActions
                     completion:^
       {
@@ -305,9 +278,6 @@
             [drop.hitBox runAction:moveDrop];
          }
 
-//         for (SKNode *hitBox in _colorDropHitBoxes)
-//            [hitBox runAction:moveDropHitBox];
-
          if (_currentColorDrop)
          {
             SKAction *wait = [SKAction waitForDuration:.2];
@@ -319,12 +289,14 @@
          {
             [self.delegate hudDidExpand:self];
          }
+         self.animating = NO;
       }];
    }];
 }
 
 - (void)collapse
 {
+   self.animating = YES;
    [self.delegate hudWillCollapse:self];
 
    SKAction *wait = [SKAction waitForDuration:.25];
@@ -364,9 +336,6 @@
       [button.hitBox runAction:slide];
    }
 
-//   for (SKNode *hitBox in _colorDropHitBoxes)
-//      [hitBox runAction:slide];
-
    [self runAction:self.defaultCollapsingSoundFX];
    
    [_backgroundLayer runAction:hudBackgroundActions
@@ -380,10 +349,8 @@
          [drop.hitBox runAction:moveDrop];
       }
 
-//      for (SKNode *hitBox in _colorDropHitBoxes)
-//         [hitBox runAction:moveDropHitBox];
-
       [self.delegate hudDidCollapse:self];
+      self.animating = NO;
    }];
 }
 

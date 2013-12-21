@@ -28,16 +28,6 @@
 }
 
 // empty implementation -- this should be overridden by subclasses
-- (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
-{
-}
-
-// empty implementation -- this should be overridden by subclasses
-- (void)handleTouch:(UITouch *)touch forButton:(GLUIButton *)button
-{
-}
-
-// empty implementation -- this should be overridden by subclasses
 - (void)collapse
 {
 }
