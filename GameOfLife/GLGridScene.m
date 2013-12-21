@@ -137,8 +137,7 @@ BOOL _decreasing;
    {
       [self observeHudParameterChanges];
       [self registerHudParameters];
-      
-      
+
       [self setupGridWithSize:size];
       [self setupGeneralHud];
       [self setupColorHud];
@@ -318,7 +317,6 @@ BOOL _decreasing;
 - (void)touchesBegan:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-   NSLog(@"touch began: %d", touches.allObjects.count);
    UITouch *touch = touches.allObjects.firstObject;
    _locationOfFirstTouch = [touch locationInNode:self];
 
@@ -346,7 +344,6 @@ BOOL _decreasing;
            withEvent:(UIEvent *)event
 {
    UITouch *touch = touches.allObjects.lastObject;
-
    if (_focusedButton)
       [_focusedButton handleTouchMoved:touch];
 
@@ -361,9 +358,7 @@ BOOL _decreasing;
 - (void)touchesEnded:(NSSet *)touches
            withEvent:(UIEvent *)event
 {
-   NSLog(@"touches ended: %d", touches.allObjects.count);
    UITouch *touch = touches.allObjects.lastObject;
-
    if (_focusedButton)
    {
       [_focusedButton handleTouchEnded:touch];
