@@ -23,6 +23,7 @@
 @property (nonatomic, readwrite) SKSpriteNode *hitBox;
 @property (nonatomic, readwrite) BOOL hasFocus;
 @property (retain, readwrite) id<GLUIControlValueChangedDelegate> delegate;
+@property (nonatomic, readwrite) BOOL glowEnabled;
 
 @property (nonatomic, retain) SKSpriteNode *sprite;
 

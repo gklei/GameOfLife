@@ -10,7 +10,6 @@
 #import "GLGridScene.h"
 
 #import "GLUIActionButton.h"
-#import "GLUIButton.h"
 
 #import "GLSettingsLayer.h"
 #import "UIColor+Crayola.h"
@@ -21,10 +20,10 @@
 #define HEADING_FONT_SIZE 25
 
 #define BACKGROUND_ALPHA_SETTINGS_COLLAPSED .7
-#define BACKGROUND_ALPHA_SETTINGS_EXPANDED .8
+#define BACKGROUND_ALPHA_SETTINGS_EXPANDED .85
 
 #define BOTTOM_BAR_HEIGHT 60
-#define SETTINGS_HEIGHT (BOTTOM_BAR_HEIGHT * 5)
+#define SETTINGS_HEIGHT [UIScreen mainScreen].bounds.size.height - BOTTOM_BAR_HEIGHT//(BOTTOM_BAR_HEIGHT * 7)
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
 #define REPOSITION_BUTTONS_DURATION .25

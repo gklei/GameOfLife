@@ -22,6 +22,7 @@
    {
       _hitBox = [SKSpriteNode node];
       _hitBox.name = @"ui_control_hit_box";
+      _glowEnabled = YES;
 
       [self setupGlowEffect];
    }
@@ -86,7 +87,7 @@
 
 - (void)handleTouchBegan:(UITouch *)touch
 {
-   _glowEffect.shouldEnableEffects = YES;
+   _glowEffect.shouldEnableEffects = (_glowEnabled)? YES : NO;
    _hasFocus = YES;
 }
 

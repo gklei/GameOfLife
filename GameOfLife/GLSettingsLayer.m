@@ -17,7 +17,7 @@
 
 #import "GLAppDelegate.h"
 
-#define TOP_PADDING 10
+#define TOP_PADDING 20
 #define HEADING_FONT_SIZE 16
 #define CONTROL_HEIGHT 50
 
