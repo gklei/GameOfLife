@@ -30,7 +30,6 @@
 #define REPOSITION_BUTTONS_DURATION .25
 #define WAIT_BEFORE_COLORIZE_DURATION .25
 
-
 @interface GLGeneralHud()
 {
    CGSize _defaultSize;
@@ -168,7 +167,7 @@
    for (GLUIActionButton *button in buttons)
    {
       [self addChild:button];
-      button.position = CGPointMake(++multiplier * CORE_FUNCTION_BUTTON_PADDING + 80,
+      button.position = CGPointMake(++multiplier * CORE_FUNCTION_BUTTON_PADDING + 82,
                                     -button.size.height);
    }
 }
