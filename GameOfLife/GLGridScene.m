@@ -194,8 +194,8 @@ BOOL _decreasing;
    _flashLayer.anchorPoint = CGPointZero;
    _flashLayer.position = CGPointZero;
 
-   SKAction *flashIn = [SKAction fadeAlphaTo:1 duration:0.125 * _generationDuration];
-   SKAction *flashOut = [SKAction fadeAlphaTo:0 duration:0.625 * _generationDuration];
+   SKAction *flashIn = [SKAction fadeAlphaTo:1 duration:0.125];
+   SKAction *flashOut = [SKAction fadeAlphaTo:0 duration:0.625];
    _flashAnimation = [SKAction sequence:@[flashIn, flashOut]];
 
    [self addChild:_flashLayer];
