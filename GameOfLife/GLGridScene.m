@@ -47,7 +47,7 @@
    SKAction *_flashAnimation;
    BOOL _firstScreenShotTaken;
 
-   GLUIButton *_focusedUIControl;
+   GLUIButton *_focusedButton;
    
 // BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
 BOOL _decreasing;
@@ -268,8 +268,8 @@ BOOL _decreasing;
    for (SKNode *node in [self nodesAtPoint:_locationOfFirstTouch])
       if ([node.name isEqualToString:@"ui_control_hit_box"])
       {
-         _focusedUIControl = (GLUIButton *)node.parent.parent;
-         [_focusedUIControl handleTouchBegan:touch];
+         _focusedButton = (GLUIButton *)node.parent.parent;
+         [_focusedButton handleTouchBegan:touch];
          return;
       }
 
@@ -284,8 +284,8 @@ BOOL _decreasing;
 {
    UITouch *touch = touches.allObjects.lastObject;
 
-   if (_focusedUIControl)
-      [_focusedUIControl handleTouchMoved:touch];
+   if (_focusedButton)
+      [_focusedButton handleTouchMoved:touch];
 
    if (!_running &&
        ![_generalHudLayer containsPoint:_locationOfFirstTouch] &&
@@ -309,16 +309,16 @@ BOOL _decreasing;
 {
    UITouch *touch = touches.allObjects.lastObject;
 
-   if (_focusedUIControl)
+   if (_focusedButton)
    {
-      [_focusedUIControl handleTouchEnded:touch];
-      _focusedUIControl = nil;
+      [_focusedButton handleTouchEnded:touch];
    }
 
    if ([_generalHudLayer containsPoint:_locationOfFirstTouch] &&
        [_generalHudLayer containsPoint:[touch locationInNode:self]])
    {
-      [self generalHudPressedWithTouch:touch];
+//      [self generalHudPressedWithTouch:touch focusedNode:_focusedButton];
+      [_generalHudLayer handleTouch:touch forButton:_focusedButton];
    }
    if ([_colorHudLayer containsPoint:_locationOfFirstTouch] &&
        [_colorHudLayer containsPoint:[touch locationInNode:self]])
@@ -332,6 +332,7 @@ BOOL _decreasing;
       _oneTileTouched = NO;
    }
    _currentTileBeingTouched = nil;
+   _focusedButton = nil;
 }
 
 - (void)colorHudPressedWithTouch:(UITouch *)touch
@@ -340,7 +341,7 @@ BOOL _decreasing;
       [_colorHudLayer handleTouch:touch moved:NO];
 }
 
-- (void)generalHudPressedWithTouch:(UITouch *)touch
+- (void)generalHudPressedWithTouch:(UITouch *)touch focusedNode:(GLUIButton *)focusedNode
 {
    if (!_generalHudIsAnimating)
       [_generalHudLayer handleTouch:touch moved:NO];

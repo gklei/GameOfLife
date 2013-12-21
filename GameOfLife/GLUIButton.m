@@ -28,12 +28,20 @@
    return self;
 }
 
-- (id)initWithImageNamed:(NSString *)name
++ (instancetype)spriteNodeWithImageNamed:(NSString *)name
 {
-   if (self = [super initWithImageNamed:name])
-   {
-   }
-   return self;
+   GLUIButton *button = [[GLUIButton alloc] init];
+   SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:name];
+
+//   button.hitBox.color = [SKColor redColor];
+//   button.hitBox.alpha = .5;
+   button.hitBox.size = CGSizeMake(CGRectGetWidth(sprite.frame) + 20,
+                                   CGRectGetHeight(sprite.frame) + 20);
+   button.hitBox.position = sprite.position;
+   button.sprite = sprite;
+   [button addChild:sprite];
+   [button addChild:button.hitBox];
+   return button;
 }
 
 - (void)setupGlowEffect
@@ -84,6 +92,108 @@
 
 - (void)handleTouchMoved:(UITouch *)touch
 {
+}
+
+- (void)setColor:(UIColor *)color
+{
+   if (_sprite)
+      _sprite.color = color;
+   [super setColor:color];
+}
+
+- (UIColor *)color
+{
+   if (_sprite)
+      return _sprite.color;
+   return [super color];
+}
+
+- (void)runAction:(SKAction *)action
+{
+   if (_sprite)
+   {
+      [_sprite runAction:action];
+      return;
+   }
+   [super runAction:action];
+}
+
+- (void)runAction:(SKAction *)action completion:(void (^)())block
+{
+   if (_sprite)
+   {
+      [_sprite runAction:action completion:block];
+      return;
+   }
+   [super runAction:action completion:block];
+}
+
+- (void)setAlpha:(CGFloat)alpha
+{
+   if (_sprite)
+   {
+      _sprite.alpha = alpha;
+      return;
+   }
+   [super setAlpha:alpha];
+}
+
+- (float)alpha
+{
+   if (_sprite)
+      return _sprite.alpha;
+   return super.alpha;
+}
+
+- (void)setColorBlendFactor:(CGFloat)colorBlendFactor
+{
+   if (_sprite)
+   {
+      _sprite.colorBlendFactor = colorBlendFactor;
+      return;
+   }
+   [super setColorBlendFactor:colorBlendFactor];
+}
+
+- (float)colorBlendFactor
+{
+   if (_sprite)
+      return _sprite.colorBlendFactor;
+   return super.colorBlendFactor;
+}
+
+- (void)setSize:(CGSize)size
+{
+   if (_sprite)
+   {
+      _sprite.size = size;
+      return;
+   }
+   [super setSize:size];
+}
+
+- (CGSize)size
+{
+   if (_sprite)
+      return _sprite.size;
+   return super.size;
+}
+
+- (void)setTexture:(SKTexture *)texture
+{
+   if (_sprite)
+   {
+      _sprite.texture = texture;
+      return;
+   }
+   [super setTexture:texture];
+}
+
+- (SKTexture *)texture
+{
+   if (_sprite)
+      return _sprite.texture;
+   return [super texture];
 }
 
 @end

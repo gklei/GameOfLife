@@ -127,6 +127,7 @@
    SKSpriteNode *buttonHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
                                                              size:hitBoxSize];
    button.hitBox = buttonHitBox;
+   [button addChild:button.hitBox];
 //   button.hitBox.size = CGSizeMake(button.size.width + 20, BOTTOM_BAR_HEIGHT);
 }
 
@@ -184,10 +185,10 @@
 - (void)setButtonPositionsAndAddToLayer:(NSArray *)buttons
 {
    int multiplier = -1;
-   for (SKSpriteNode * button in buttons)
+   for (GLUIButton *button in buttons)
    {
       [self addChild:button];
-      button.position = CGPointMake(++multiplier * CORE_FUNCTION_BUTTON_PADDING + 80,
+      button.position = CGPointMake(++multiplier * CORE_FUNCTION_BUTTON_PADDING + 120,
                                     -button.size.height / 2.0);
    }
 }
@@ -219,22 +220,19 @@
 //   for (GLUIButton *button in _coreFunctionButtons)
 //      [self setupHitBoxForButton:button];
 
-   _buttonHitBoxes = @[_clearButtonHitBox,
-                       _restoreButtonHitBox,
-                       _startStopButtonHitBox,
-                       _cameraButtonHitBox,
-                       _settingsButtonHitBox];
+//   _buttonHitBoxes = @[_clearButtonHitBox,
+//                       _restoreButtonHitBox,
+//                       _startStopButtonHitBox,
+//                       _cameraButtonHitBox,
+//                       _settingsButtonHitBox];
 
-//   _buttonHitBoxes = @[_clearButton.hitBox,
-//                       _restoreButton.hitBox,
-//                       _startStopButton.hitBox,
-//                       _clearButton.hitBox,
-//                       _settingsButton.hitBox];
+   _buttonHitBoxes = @[_clearButton.hitBox,
+                       _restoreButton.hitBox,
+                       _startStopButton.hitBox,
+                       _clearButton.hitBox,
+                       _settingsButton.hitBox];
 
    [self setButtonPositionsAndAddToLayer:_coreFunctionButtons];
-
-   // need to add the hit boxes as children to this layer after the core function buttons
-   [self setButtonPositionsAndAddToLayer:_buttonHitBoxes];
 }
 
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state
@@ -258,10 +256,7 @@
 
 - (void)setCoreFunctionButtonsHidden:(BOOL)hidden
 {
-   for (SKSpriteNode *button in _coreFunctionButtons)
-      button.hidden = hidden;
-   
-   for (SKSpriteNode *button in _buttonHitBoxes)
+   for (GLUIButton *button in _coreFunctionButtons)
       button.hidden = hidden;
 }
 
@@ -391,34 +386,29 @@
       [self runAction:self.defaultExpandingSoundFX];
       [_backgroundLayer runAction:slide];
       
-      for (SKNode *button in _coreFunctionButtons)
+      for (GLUIButton *button in _coreFunctionButtons)
+      {
          [button runAction:slide];
-
-      for (SKNode *button in _buttonHitBoxes)
-         [button runAction:slide];
+         [button.hitBox runAction:slide];
+      }
 
       [_backgroundLayer runAction:changeHudColor];
       [_expandCollapseButton runAction:buttonActions
                             completion:^
        {
           SKAction *moveButton = [SKAction moveByX:0
-                                                 y:HUD_BUTTON_EDGE_PADDING
+                                                 y:HUD_BUTTON_EDGE_PADDING + 10
                                           duration:REPOSITION_BUTTONS_DURATION];
           SKAction *moveButtonHitBox = [SKAction moveByX:0
                                                        y:HUD_BUTTON_EDGE_PADDING + 10
                                                 duration:REPOSITION_BUTTONS_DURATION];
           moveButton.timingMode = SKActionTimingEaseInEaseOut;
 
-          for (SKNode *button in _coreFunctionButtons)
+          for (GLUIButton *button in _coreFunctionButtons)
           {
              button.hidden = NO;
              [button runAction:moveButton];
-          }
-
-          for (SKNode *button in _buttonHitBoxes)
-          {
-             button.hidden = NO;
-             [button runAction:moveButtonHitBox];
+             [button.hitBox runAction:moveButtonHitBox];
           }
 
           [self.delegate hudDidExpand:self];
@@ -465,27 +455,27 @@
    [self runAction:self.defaultCollapsingSoundFX];
    [_backgroundLayer runAction:slide];
 
-   for (SKNode *button in _coreFunctionButtons)
+   for (GLUIButton *button in _coreFunctionButtons)
+   {
       [button runAction:slide];
-
-   for (SKNode *button in _buttonHitBoxes)
-      [button runAction:slide];
+      [button.hitBox runAction:slide];
+   }
 
    [_expandCollapseButton runAction:buttonActions];
    [_backgroundLayer runAction:hudBackgroundColorSequence
                     completion:^
     {
        SKAction *moveButton = [SKAction moveByX:0
-                                              y:-HUD_BUTTON_EDGE_PADDING
+                                              y:-(HUD_BUTTON_EDGE_PADDING + 10)
                                        duration:REPOSITION_BUTTONS_DURATION];
        SKAction *moveButtonHitBox = [SKAction moveByX:0
                                                     y:-(HUD_BUTTON_EDGE_PADDING + 10)
                                              duration:REPOSITION_BUTTONS_DURATION];
-       for (SKNode *button in _coreFunctionButtons)
+       for (GLUIButton *button in _coreFunctionButtons)
+       {
           [button runAction:moveButton];
-
-       for (SKNode *button in _buttonHitBoxes)
-          [button runAction:moveButtonHitBox];
+          [button.hitBox runAction:moveButtonHitBox];
+       }
 
        [self.delegate hudDidCollapse:self];
     }];
@@ -536,7 +526,7 @@
    }
 
    // if the hud was somehow pressed elsewhere and the bottom bar is not expanded, return
-   if (!self.expanded || ![_buttonHitBoxes containsObject:node])
+   if (!self.expanded || ![_coreFunctionButtons containsObject:node])
       return;
 
    if (node != _settingsButtonHitBox &&
@@ -547,20 +537,40 @@
    }
 
    // we know that the bottom bar is expanded and can now check to see where the hud was pressed
-   if (node == _settingsButtonHitBox)
-//   if (node == _settingsButton.hitBox)
+//   if (node == _settingsButtonHitBox)
+   if (node == _settingsButton)
       [self toggleSettings];
-   else if (node == _startStopButtonHitBox)
-//   else if (node == _startStopButton.hitBox)
+//   else if (node == _startStopButtonHitBox)
+   else if (node == _startStopButton)
       [self.delegate toggleRunningButtonPressed];
-   else if (node == _clearButtonHitBox)
-//   else if (node == _clearButton.hitBox)
+//   else if (node == _clearButtonHitBox)
+   else if (node == _clearButton)
       [self.delegate clearButtonPressed];
-   else if (node == _restoreButtonHitBox)
-//   else if (node == _restoreButton.hitBox)
+//   else if (node == _restoreButtonHitBox)
+   else if (node == _restoreButton)
       [self.delegate restoreButtonPressed];
-   else if (node == _cameraButtonHitBox)
-//   else if (node == _cameraButton.hitBox)
+//   else if (node == _cameraButtonHitBox)
+   else if (node == _cameraButton)
+      [self.delegate screenShotButtonPressed];
+}
+
+- (void)handleTouch:(UITouch *)touch forButton:(GLUIButton *)button
+{
+   if (button == _expandCollapseButton)
+      [self toggle];
+   else if (button == _settingsButton)
+      [self toggleSettings];
+   //   else if (button == _startStopButtonHitBox)
+   else if (button == _startStopButton)
+      [self.delegate toggleRunningButtonPressed];
+   //   else if (button == _clearButtonHitBox)
+   else if (button == _clearButton)
+      [self.delegate clearButtonPressed];
+   //   else if (button == _restoreButtonHitBox)
+   else if (button == _restoreButton)
+      [self.delegate restoreButtonPressed];
+   //   else if (button == _cameraButtonHitBox)
+   else if (button == _cameraButton)
       [self.delegate screenShotButtonPressed];
 }
 

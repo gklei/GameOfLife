@@ -9,6 +9,7 @@
 #import <SpriteKit/SpriteKit.h>
 
 @class GLHud;
+@class GLUIButton;
 
 @protocol GLHudDelegate <NSObject>
    - (void)hud:(GLHud *)hud willExpandAfterPeriod:(CFTimeInterval *)waitPeriod;
@@ -27,6 +28,7 @@
 @property (strong, nonatomic) SKAction *defaultCollapsingSoundFX;
 
 - (void)handleTouch:(UITouch *)touch moved:(BOOL)moved;
+- (void)handleTouch:(UITouch *)touch forButton:(GLUIButton *)button;
 - (void)collapse;
 - (void)setupSoundFX;
 
