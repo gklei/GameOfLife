@@ -274,6 +274,7 @@
 - (void)handleTouchBegan:(UITouch *)touch
 {
    _stateSetFromSlide = NO;
+   [super handleTouchBegan:touch];
 }
 
 - (void)handleTouchMoved:(UITouch *)touch

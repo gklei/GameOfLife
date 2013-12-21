@@ -12,12 +12,12 @@
 - (void)settingsValueChangedForKey:(NSString *)key;
 @end
 
-@class GLUIControl;
+@class GLUIButton;
 
 @interface GLSettingsItem : SKSpriteNode
 
 - (id)initWithTitle:(NSString *)title
-            control:(GLUIControl *)control;
+            control:(GLUIButton *)control;
 
 @property (retain, readwrite) id<GLSettingsItemValueChangedDelegate> delegate;
 

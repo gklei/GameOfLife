@@ -9,6 +9,8 @@
 #import "GLGeneralHud.h"
 #import "GLGridScene.h"
 
+#import "GLUIButton.h"
+
 #import "GLSettingsLayer.h"
 #import "UIColor+Crayola.h"
 
@@ -37,22 +39,21 @@
    NSArray *_coreFunctionButtons;
    NSArray *_buttonHitBoxes;
 
-   SKSpriteNode *_expandCollapseButton;
-   SKSpriteNode *_expandCollapseButtonBackground;
+   GLUIButton *_expandCollapseButton;
 
-   SKSpriteNode *_clearButton;
+   GLUIButton*_clearButton;
    SKSpriteNode *_clearButtonHitBox;
 
-   SKSpriteNode *_restoreButton;
+   GLUIButton *_restoreButton;
    SKSpriteNode *_restoreButtonHitBox;
 
-   SKSpriteNode *_startStopButton;
+   GLUIButton *_startStopButton;
    SKSpriteNode *_startStopButtonHitBox;
 
-   SKSpriteNode *_cameraButton;
+   GLUIButton *_cameraButton;
    SKSpriteNode *_cameraButtonHitBox;
 
-   SKSpriteNode *_settingsButton;
+   GLUIButton *_settingsButton;
    SKSpriteNode *_settingsButtonHitBox;
 
    SKAction *_expandSettingsSound;
@@ -98,27 +99,35 @@
            ([UIScreen mainScreen].scale == 2.0));
 }
 
-- (SKSpriteNode *)buttonWithFilename:(NSString *)fileName buttonName:(NSString *)buttonName
+- (GLUIButton *)buttonWithFilename:(NSString *)fileName buttonName:(NSString *)buttonName
 {
    if ([self usingRetinaDisplay])
       fileName = [fileName stringByAppendingString:@"@2x"];
 
-   SKSpriteNode *button = [SKSpriteNode spriteNodeWithImageNamed:fileName];
+   GLUIButton *button = [GLUIButton spriteNodeWithImageNamed:fileName];
    button.color = [SKColor whiteColor];
    button.colorBlendFactor = 1.0;
-//   [button setScale:.20];
    [button setScale:.85];
    button.name = buttonName;
 
    return button;
 }
 
-- (SKSpriteNode *)hitBoxForButton:(SKSpriteNode *)button
+- (SKSpriteNode *)hitBoxForButton:(GLUIButton *)button
 {
    CGSize hitBoxSize = CGSizeMake(button.size.width + 20, BOTTOM_BAR_HEIGHT);
    SKSpriteNode *buttonHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
                                                              size:hitBoxSize];
    return buttonHitBox;
+}
+
+- (void)setupHitBoxForButton:(GLUIButton *)button
+{
+   CGSize hitBoxSize = CGSizeMake(button.size.width + 20, BOTTOM_BAR_HEIGHT);
+   SKSpriteNode *buttonHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
+                                                             size:hitBoxSize];
+   button.hitBox = buttonHitBox;
+//   button.hitBox.size = CGSizeMake(button.size.width + 20, BOTTOM_BAR_HEIGHT);
 }
 
 #pragma mark Setup Methods
@@ -155,9 +164,9 @@
 - (void)setupExpandCollapseButton
 {
    if ([self usingRetinaDisplay])
-      _expandCollapseButton = [SKSpriteNode spriteNodeWithImageNamed:@"arrow-right@2x"];
+      _expandCollapseButton = [GLUIButton spriteNodeWithImageNamed:@"arrow-right@2x"];
    else
-      _expandCollapseButton = [SKSpriteNode spriteNodeWithImageNamed:@"arrow-right"];
+      _expandCollapseButton = [GLUIButton spriteNodeWithImageNamed:@"arrow-right"];
 
    _expandCollapseButton.color = [SKColor crayolaBlackCoralPearlColor];
    _expandCollapseButton.alpha = _backgroundLayer.alpha;
@@ -207,11 +216,20 @@
                             _cameraButton,
                             _settingsButton];
 
+//   for (GLUIButton *button in _coreFunctionButtons)
+//      [self setupHitBoxForButton:button];
+
    _buttonHitBoxes = @[_clearButtonHitBox,
                        _restoreButtonHitBox,
                        _startStopButtonHitBox,
                        _cameraButtonHitBox,
                        _settingsButtonHitBox];
+
+//   _buttonHitBoxes = @[_clearButton.hitBox,
+//                       _restoreButton.hitBox,
+//                       _startStopButton.hitBox,
+//                       _clearButton.hitBox,
+//                       _settingsButton.hitBox];
 
    [self setButtonPositionsAndAddToLayer:_coreFunctionButtons];
 
@@ -530,14 +548,19 @@
 
    // we know that the bottom bar is expanded and can now check to see where the hud was pressed
    if (node == _settingsButtonHitBox)
+//   if (node == _settingsButton.hitBox)
       [self toggleSettings];
    else if (node == _startStopButtonHitBox)
+//   else if (node == _startStopButton.hitBox)
       [self.delegate toggleRunningButtonPressed];
    else if (node == _clearButtonHitBox)
+//   else if (node == _clearButton.hitBox)
       [self.delegate clearButtonPressed];
    else if (node == _restoreButtonHitBox)
+//   else if (node == _restoreButton.hitBox)
       [self.delegate restoreButtonPressed];
    else if (node == _cameraButtonHitBox)
+//   else if (node == _cameraButton.hitBox)
       [self.delegate screenShotButtonPressed];
 }
 

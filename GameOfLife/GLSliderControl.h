@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Gregory Klein. All rights reserved.
 //
 
-#import "GLUIControl.h"
+#import "GLUIButton.h"
 
-@interface GLSliderControl : GLUIControl
+@interface GLSliderControl : GLUIButton
 
 @property (nonatomic, readwrite) float sliderValue;
 

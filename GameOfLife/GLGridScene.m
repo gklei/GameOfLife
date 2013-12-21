@@ -11,7 +11,7 @@
 #import "GLGrid.h"
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
-#import "GLUIControl.h"
+#import "GLUIButton.h"
 #import "GLSettingsLayer.h"
 #import "GLTileNode.h"
 #import "UIColor+Crayola.h"
@@ -47,7 +47,7 @@
    SKAction *_flashAnimation;
    BOOL _firstScreenShotTaken;
 
-   GLUIControl *_focusedUIControl;
+   GLUIButton *_focusedUIControl;
    
 // BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
 BOOL _decreasing;
@@ -268,7 +268,7 @@ BOOL _decreasing;
    for (SKNode *node in [self nodesAtPoint:_locationOfFirstTouch])
       if ([node.name isEqualToString:@"ui_control_hit_box"])
       {
-         _focusedUIControl = (GLUIControl *)node.parent;
+         _focusedUIControl = (GLUIButton *)node.parent.parent;
          [_focusedUIControl handleTouchBegan:touch];
          return;
       }

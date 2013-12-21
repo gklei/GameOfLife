@@ -7,7 +7,7 @@
 //
 
 #import "GLSettingsItem.h"
-#import "GLUIControl.h"
+#import "GLUIButton.h"
 
 #define TOP_TITLE_LABEL_PADDING 10
 #define LEFT_TITLE_LABEL_PADDING 10
@@ -21,14 +21,14 @@
 {
    SKLabelNode *_itemTitleLabel;
    SKLabelNode *_itemStatusLabel;
-   GLUIControl *_itemUIControl;
+   GLUIButton *_itemUIControl;
 }
 @end
 
 @implementation GLSettingsItem
 
 - (id)initWithTitle:(NSString *)title
-            control:(GLUIControl *)control
+            control:(GLUIButton *)control
 {
    if (self = [super init])
    {
@@ -70,7 +70,7 @@
    [self addChild:_itemTitleLabel];
 }
 
-- (void)setupStatusLabelWithControl:(GLUIControl *)control
+- (void)setupStatusLabelWithControl:(GLUIButton *)control
 {
    _itemStatusLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
    _itemStatusLabel.text = control.longestPossibleStringValue;
@@ -90,7 +90,7 @@
    [self addChild:_itemStatusLabel];
 }
 
-- (void)setupControl:(GLUIControl *)control
+- (void)setupControl:(GLUIButton *)control
 {
    _itemUIControl = control;
    _itemUIControl.delegate = self;
