@@ -33,7 +33,7 @@
    GLUIButton *button = [[GLUIButton alloc] init];
    SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:name];
 
-//   button.hitBox.color = [SKColor redColor];
+//   button.hitBox.color = [SKColor orangeColor];
 //   button.hitBox.alpha = .5;
    button.hitBox.size = CGSizeMake(CGRectGetWidth(sprite.frame) + 20,
                                    CGRectGetHeight(sprite.frame) + 20);

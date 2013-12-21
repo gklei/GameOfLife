@@ -348,12 +348,12 @@ BOOL _decreasing;
       [_focusedButton handleTouchEnded:touch];
    }
 
-   if ([_generalHudLayer containsPoint:_locationOfFirstTouch] &&
-       [_generalHudLayer containsPoint:[touch locationInNode:self]])
-   {
-//      [self generalHudPressedWithTouch:touch focusedNode:_focusedButton];
-//      [_generalHudLayer handleTouch:touch forButton:_focusedButton];
-   }
+//   if ([_generalHudLayer containsPoint:_locationOfFirstTouch] &&
+//       [_generalHudLayer containsPoint:[touch locationInNode:self]])
+//   {
+////      [self generalHudPressedWithTouch:touch focusedNode:_focusedButton];
+////      [_generalHudLayer handleTouch:touch forButton:_focusedButton];
+//   }
    if ([_colorHudLayer containsPoint:_locationOfFirstTouch] &&
        [_colorHudLayer containsPoint:[touch locationInNode:self]])
    {
@@ -487,7 +487,7 @@ BOOL _decreasing;
    [_colorHudLayer runAction:[SKAction sequence:@[wait, reposition]]
                   completion:^
    {
-      [_colorHudLayer setColorDropsHidden:NO];
+      [_colorHudLayer setColorDropsHidden:YES];
    }];
 }
 

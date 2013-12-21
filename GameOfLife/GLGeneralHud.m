@@ -114,24 +114,6 @@
    return button;
 }
 
-- (SKSpriteNode *)hitBoxForButton:(GLUIActionButton *)button
-{
-   CGSize hitBoxSize = CGSizeMake(button.size.width + 20, BOTTOM_BAR_HEIGHT);
-   SKSpriteNode *buttonHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
-                                                             size:hitBoxSize];
-   return buttonHitBox;
-}
-
-- (void)setupHitBoxForButton:(GLUIActionButton *)button
-{
-   CGSize hitBoxSize = CGSizeMake(button.size.width + 20, BOTTOM_BAR_HEIGHT);
-   SKSpriteNode *buttonHitBox = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
-                                                             size:hitBoxSize];
-   button.hitBox = buttonHitBox;
-   [button addChild:button.hitBox];
-//   button.hitBox.size = CGSizeMake(button.size.width + 20, BOTTOM_BAR_HEIGHT);
-}
-
 #pragma mark Setup Methods
 - (void)setupBackgroundWithSize:(CGSize)size
 {
@@ -508,68 +490,6 @@
       [self collapse];
    else
       [self expandBottomBar];
-}
-
-#pragma mark GLHud Touch Method
-- (void)handleTouch:(UITouch *)touch moved:(BOOL)moved
-{
-   if (moved)
-      return;
-   
-   SKNode *node = [self nodeAtPoint:[touch locationInNode:self]];
-
-   // check to see if the bottom bar should expand or collapse
-   if (node == _expandCollapseButton)
-   {
-      [self toggle];
-      return;
-   }
-
-   // if the hud was somehow pressed elsewhere and the bottom bar is not expanded, return
-   if (!self.expanded || ![_coreFunctionButtons containsObject:node])
-      return;
-
-   if (node != _settingsButtonHitBox &&
-       node != _startStopButtonHitBox &&
-       node != _cameraButtonHitBox)
-   {
-      [self runAction:self.defaultButtonPressSound];
-   }
-
-   // we know that the bottom bar is expanded and can now check to see where the hud was pressed
-//   if (node == _settingsButtonHitBox)
-   if (node == _settingsButton)
-      [self toggleSettings];
-//   else if (node == _startStopButtonHitBox)
-   else if (node == _startStopButton)
-      [self.delegate toggleRunningButtonPressed];
-//   else if (node == _clearButtonHitBox)
-   else if (node == _clearButton)
-      [self.delegate clearButtonPressed];
-//   else if (node == _restoreButtonHitBox)
-   else if (node == _restoreButton)
-      [self.delegate restoreButtonPressed];
-//   else if (node == _cameraButtonHitBox)
-   else if (node == _cameraButton)
-      [self.delegate screenShotButtonPressed];
-}
-
-- (void)handleTouch:(UITouch *)touch forButton:(GLUIActionButton *)button
-{
-//   if (button == _settingsButton)
-//      [self toggleSettings];
-   //   else if (button == _startStopButtonHitBox)
-//   if (button == _startStopButton)
-//      [self.delegate toggleRunningButtonPressed];
-   //   else if (button == _clearButtonHitBox)
-//   else if (button == _clearButton)
-//      [self.delegate clearButtonPressed];
-   //   else if (button == _restoreButtonHitBox)
-//   else if (button == _restoreButton)
-//      [self.delegate restoreButtonPressed];
-   //   else if (button == _cameraButtonHitBox)
-//   else if (button == _cameraButton)
-//      [self.delegate screenShotButtonPressed];
 }
 
 @end
