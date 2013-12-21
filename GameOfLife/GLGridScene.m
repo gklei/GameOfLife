@@ -11,6 +11,7 @@
 #import "GLGrid.h"
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
+#import "GLHUDSettingsManager.h"
 #import "GLUIControl.h"
 #import "GLSettingsLayer.h"
 #import "GLTileNode.h"
@@ -58,16 +59,49 @@ BOOL _decreasing;
 #pragma mark GLGridScene
 @implementation GLGridScene
 
-- (void)registerDefaultValues
+- (void)registerGeneralDuration
 {
-   NSDictionary * defaults =
-      [NSDictionary dictionaryWithObjectsAndKeys:
-       [NSNumber numberWithBool:YES], @"SoundFX",
-       [NSNumber numberWithInt:YES], @"SmartMenu",
-       [NSNumber numberWithFloat:DEFAULT_GENERATION_DURATION], @"GenerationDuration",
-       nil];
+   HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
+   hudItem.keyPath = @"GenerationDuration";
+   hudItem.label = @"SPEED";
+   hudItem.range = NSMakeRange(1.0, 0.1);
+   hudItem.type = HIT_SLIDER;
+   hudItem.defaultvalue = [NSNumber numberWithFloat:DEFAULT_GENERATION_DURATION];
+   hudItem.valueType = HVT_FLOAT;
    
-   [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addHudItem:hudItem];
+}
+
+- (void)registerToggleItemWithLabel:(NSString *)label andKeyPath:(NSString *)keyPath
+{
+   HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
+   hudItem.keyPath = keyPath;
+   hudItem.label = label;
+   hudItem.range = NSMakeRange(0, 1);
+   hudItem.type = HIT_TOGGLER;
+   hudItem.defaultvalue = [NSNumber numberWithBool:YES];
+   hudItem.valueType = HVT_BOOL;
+   
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addHudItem:hudItem];
+}
+
+- (void)registerSoundFxHUD
+{
+   [self registerToggleItemWithLabel:@"SOUND FX" andKeyPath:@"SoundFX"];
+}
+
+- (void)registerSmartMenuHUD
+{
+   [self registerToggleItemWithLabel:@"SMART MENU" andKeyPath:@"SmartMenu"];
+}
+
+- (void)registerHudParameters
+{
+   [self registerSoundFxHUD];
+   [self registerSmartMenuHUD];
+   [self registerGeneralDuration];
 }
 
 #pragma mark Initializer Method
@@ -75,6 +109,9 @@ BOOL _decreasing;
 {
    if (self = [super initWithSize:size])
    {
+      // register a set of default values
+      [self registerHudParameters];
+      
       [self setupGridWithSize:size];
       [self setupGeneralHud];
       [self setupColorHud];
@@ -85,9 +122,6 @@ BOOL _decreasing;
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
 
       self.userInteractionEnabled = YES;
-      
-      // register a set of default values
-      [self registerDefaultValues];
       
       // now load in the current values
       [self settingsValueChangedForKey:@"SoundFX"];

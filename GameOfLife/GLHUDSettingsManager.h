@@ -54,7 +54,7 @@ typedef enum
 
 @interface GLHUDSettingsManager : NSObject
 
-- (id)init;
++ (GLHUDSettingsManager *)sharedSettingsManager;
 
 - (BOOL)addHudItem:(HUDItemDescription *)item;
 - (NSDictionary *)getHudItems;

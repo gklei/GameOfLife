@@ -8,10 +8,24 @@
 
 #import "GLHUDSettingsManager.h"
 
+
+//
+// the one and only GLHUDSettingsManager
+//
+GLHUDSettingsManager * g_globalHUDSettigsManager = nil;
+
+
+//
+// class HUDItemDescription
+//
 @implementation HUDItemDescription
 
 @end
 
+
+//
+// class GLHUDSettingsManager
+//
 @interface GLHUDSettingsManager()
 {
    NSMutableDictionary * _hudItems;
@@ -98,6 +112,14 @@
 }
 
 #pragma mark - initialization
++ (GLHUDSettingsManager *)sharedSettingsManager;
+{
+   if (g_globalHUDSettigsManager == nil)
+      g_globalHUDSettigsManager = [[GLHUDSettingsManager alloc] init];
+      
+   return g_globalHUDSettigsManager;
+}
+
 - (id)init
 {
    if ((self = [super init]))
@@ -107,6 +129,10 @@
                  selector:@selector(defaultsChanged:)
                      name:NSUserDefaultsDidChangeNotification
                    object:nil];
+      
+      _hudItems        = [[NSMutableDictionary alloc] init];
+      _lastValueForKey = [[NSMutableDictionary alloc] init];
+      _observersForKey = [[NSMutableDictionary alloc] init];
    }
    
    return self;
@@ -129,7 +155,7 @@
             // save the current value
             [_lastValueForKey setObject:value forKey:item.keyPath];
             
-            // notify observers
+            // notify observers of the new value
             for (id<HUDSettingsObserver> observer in observers)
                [observer settingChanged:value ofType:item.valueType forKeyPath:keyPath];
          }
@@ -151,18 +177,28 @@
    if (item.defaultvalue == nil)
       return NO;
    
-   NSDictionary * tmpDict =
-      [NSDictionary dictionaryWithObject:item.defaultvalue forKey:item.keyPath];
-   
-   NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-   [defaults registerDefaults:tmpDict];
-   
-   NSNumber * value = (NSNumber *)[defaults objectForKey:item.keyPath];
-   if ([value isKindOfClass:[NSNumber class]])
+   NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+   if (userDefaults)
    {
-      // store the item and the current value of the key
+      // register the default value for the key
+      NSDictionary * tmpDict =
+         [NSDictionary dictionaryWithObject:item.defaultvalue forKey:item.keyPath];
+      
+      [userDefaults registerDefaults:tmpDict];
+      
+      // query the last saved value
+      NSNumber * value = (NSNumber *)[userDefaults objectForKey:item.keyPath];
+      if ([value isKindOfClass:[NSNumber class]])
+      {
+         [_hudItems setObject:item forKey:item.keyPath];
+         [_lastValueForKey setObject:value forKey:item.keyPath];
+         return YES;
+      }
+   }
+   else
+   {
       [_hudItems setObject:item forKey:item.keyPath];
-      [_lastValueForKey setObject:value forKey:item.keyPath];
+      [_lastValueForKey setObject:item.defaultvalue forKey:item.keyPath];
       return YES;
    }
    
