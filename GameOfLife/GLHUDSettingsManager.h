@@ -38,13 +38,27 @@ typedef enum
 
 @end
 
+typedef struct HUDItemRange
+{
+   float location;
+   float length;
+} HUDItemRange;
+
+NS_INLINE HUDItemRange HUDItemRangeMake(float location, float length)
+{
+   HUDItemRange result;
+   result.location = location;
+   result.length = length;
+   return result;
+}
+
 @interface HUDItemDescription : NSObject
 {
 }
 
 @property (nonatomic, strong) NSString *   keyPath;
 @property (nonatomic, strong) NSString *   label;
-@property (nonatomic, assign) NSRange      range;
+@property (nonatomic, assign) HUDItemRange range;
 @property (nonatomic, assign) HUDItemType  type;
 @property (nonatomic, assign) NSNumber *   defaultvalue;
 @property (nonatomic, assign) HUDValueType valueType;

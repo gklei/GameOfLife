@@ -11,6 +11,7 @@
 #import "GLSliderControl.h"
 #import "UIColor+Crayola.h"
 
+
 #define DEFAULT_LENGTH 180
 
 // These are dependant on the knob image and track end image sizes
@@ -35,6 +36,8 @@
    float _leftXBound;
    float _rightXBound;
 
+   float _sliderPosition;
+   
    int _sliderLength;
    float _knobSlidingRange;
    float _knobOffsetInAccumulatedFrame;
@@ -46,8 +49,8 @@
    SKAction *_releaseSoundFX;
 
    AVAudioPlayer *_slidingSoundAudioPlayer;
-   NSString * _preferenceKey;
-   NSRange    _range;
+   NSString *_preferenceKey;
+   HUDItemRange _range;
 }
 @end
 
@@ -73,27 +76,7 @@
    return [self init];
 }
 
-- (id)initWithValue:(float)value
-{
-   if (self = [self init])
-   {
-      if (value < 0 || value > 1)
-         value = 0;
-
-      self.sliderValue = value;
-   }
-   return self;
-}
-
-- (id)initWithLength:(int)length value:(float)value
-{
-   if (self = [self initWithLength:length])
-      self.sliderValue = value;
-   
-   return self;
-}
-
-- (id)initWithLength:(int)length range:(NSRange)range andPreferenceKey:(NSString *)prefKey
+- (id)initWithLength:(int)length range:(HUDItemRange)range andPreferenceKey:(NSString *)prefKey
 {
    if (self = [self initWithLength:length])
    {
@@ -129,7 +112,7 @@
 
 - (NSString *)stringValue
 {
-   return [NSString stringWithFormat:@"%d%%", (int)(_sliderValue * 100)];
+   return [NSString stringWithFormat:@"%d%%", (int)(_sliderPosition * 100)];
 }
 
 - (NSString *)longestPossibleStringValue
@@ -139,10 +122,10 @@
 
 - (CGRect)largestPossibleAccumulatedFrame
 {
-   float currentValue = _sliderValue;
-   self.sliderValue = 1;
+   float currentPosition = _sliderPosition;
+   _sliderPosition = 1;
    CGRect largestPossibleAccumulatedFrame = self.calculateAccumulatedFrame;
-   self.sliderValue = currentValue;
+   _sliderPosition = currentPosition;
    return largestPossibleAccumulatedFrame;
 }
 
@@ -210,30 +193,44 @@
 
 - (void)setSliderValue:(float)value
 {
-   value = fmin(1.0, fmax(0.1, value));
-   
    if (_sliderValue != value)
    {
-      float newKnobPositionX = (value * _knobSlidingRange) - _knobOffsetInAccumulatedFrame;
+      _sliderValue = value;
+      _sliderPosition = [self valueToPosition:value];
+      
+      float newKnobPositionX = (_sliderPosition * _knobSlidingRange) - _knobOffsetInAccumulatedFrame;
       [self moveKnobByDeltaX:(newKnobPositionX - _knob.position.x)];
    }
 }
 
-- (void)updateUserDefaults:(float)value
+- (void)updateUserDefaults:(float)position
 {
    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-   [defaults setFloat:value forKey:_preferenceKey];
+   [defaults setFloat:[self positionToValue:position] forKey:_preferenceKey];
    [defaults synchronize];
+}
+
+- (float)valueToPosition:(float)value
+{
+   if (_range.length)
+      return (value - _range.location) / _range.length;
+   
+   return 0;
+}
+
+- (float)positionToValue:(float)position
+{
+   return position * _range.length + _range.location;
 }
 
 - (void)updateKnobPositionX:(float)x
 {
    _knob.position = CGPointMake(x, _knob.position.y);
    self.hitBox.position = _knob.position;
-   _sliderValue = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
+   _sliderPosition = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
    
    [self.delegate controlValueChangedForKey:_preferenceKey];
-   [self updateUserDefaults:_sliderValue];
+   [self updateUserDefaults:_sliderPosition];
 }
 
 - (void)moveKnobByDeltaX:(float)deltaX
@@ -294,7 +291,7 @@
    _knob.texture = [SKTexture textureWithImageNamed:@"radio-unchecked@2x.png"];
    [super handleTouchEnded:touch];
    
-   [self updateUserDefaults:_sliderValue];
+   [self updateUserDefaults:_sliderPosition];
 }
 
 @end

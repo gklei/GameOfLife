@@ -64,7 +64,7 @@ BOOL _decreasing;
    HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
    hudItem.keyPath = @"GenerationDuration";
    hudItem.label = @"SPEED";
-   hudItem.range = NSMakeRange(1.0, 0.1);
+   hudItem.range = HUDItemRangeMake(1.0, -0.9);
    hudItem.type = HIT_SLIDER;
    hudItem.defaultvalue = [NSNumber numberWithFloat:DEFAULT_GENERATION_DURATION];
    hudItem.valueType = HVT_FLOAT;
@@ -78,7 +78,7 @@ BOOL _decreasing;
    HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
    hudItem.keyPath = keyPath;
    hudItem.label = label;
-   hudItem.range = NSMakeRange(0, 1);
+   hudItem.range = HUDItemRangeMake(0, 1);
    hudItem.type = HIT_TOGGLER;
    hudItem.defaultvalue = [NSNumber numberWithBool:YES];
    hudItem.valueType = HVT_BOOL;
@@ -135,9 +135,8 @@ BOOL _decreasing;
 {
    if (self = [super initWithSize:size])
    {
-      [self observeHudParameterChanges];
       [self registerHudParameters];
-      
+      [self observeHudParameterChanges];
       
       [self setupGridWithSize:size];
       [self setupGeneralHud];
@@ -218,14 +217,21 @@ BOOL _decreasing;
    [_grid restoreGrid];
 }
 
+- (void)updateGenerationDuration:(float)duration
+{
+   float bdDuration = (_running)? 0.1875 * duration : 0.4375 * duration;
+   [_grid setTilesBirthingDuration:bdDuration
+                     dyingDuration:bdDuration];
+   
+   _generationDuration = duration;
+}
+
 - (void)toggleRunningButtonPressed
 {
    if (![_grid currentStateIsRunnable] && !_running)
       return;
    
-   float duration = (_running)? 0.1875 * _generationDuration : 0.4375 * _generationDuration;
-   [_grid setTilesBirthingDuration:duration
-                     dyingDuration:duration];
+   [self updateGenerationDuration:_generationDuration];
 
    [_grid toggleRunning:!_running];
    _running = !_running;
@@ -575,13 +581,11 @@ BOOL _decreasing;
 
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
  {
-    NSLog(@"settingChanged:%@ ofType:%d forKeyPath:%@", value, type, keyPath);
+//    NSLog(@"settingChanged:%@ ofType:%d forKeyPath:%@", value, type, keyPath);
     if ([keyPath compare:@"GenerationDuration"] == NSOrderedSame)
     {
        assert(type == HVT_FLOAT);
-       float fValue = fmin(1.0, fmax(0.1, [value floatValue]));
-       
-       _generationDuration = (1.0 - fValue);
+       [self updateGenerationDuration:[value floatValue]];
     }
     
     if ([keyPath compare:@"SmartMenu"] == NSOrderedSame)

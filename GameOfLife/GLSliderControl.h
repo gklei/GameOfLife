@@ -7,14 +7,12 @@
 //
 
 #import "GLUIButton.h"
+#import "GLHUDSettingsManager.h"
 
 @interface GLSliderControl : GLUIButton
 
 @property (nonatomic, readwrite) float sliderValue;
 
-- (id)initWithLength:(int)length;
-- (id)initWithValue:(float)value;
-- (id)initWithLength:(int)length value:(float)value;
-- (id)initWithLength:(int)length range:(NSRange)range andPreferenceKey:(NSString *)prefKey;
+- (id)initWithLength:(int)length range:(HUDItemRange)range andPreferenceKey:(NSString *)prefKey;
 
 @end
