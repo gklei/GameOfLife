@@ -48,6 +48,8 @@
    BOOL _firstScreenShotTaken;
 
    GLUIButton *_focusedButton;
+
+   CGPoint _locationOfFirstTouch;
    
 // BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
 BOOL _decreasing;
@@ -235,7 +237,8 @@ BOOL _decreasing;
 
    [_grid toggleRunning:!_running];
    _running = !_running;
-   [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED];
+   [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
+                                         withSound:!_autoShowHideHudForStartStop];
    
    if (_autoShowHideHudForStartStop)
    {

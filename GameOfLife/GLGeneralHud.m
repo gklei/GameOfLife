@@ -23,7 +23,7 @@
 #define BACKGROUND_ALPHA_SETTINGS_EXPANDED .85
 
 #define BOTTOM_BAR_HEIGHT 60
-#define SETTINGS_HEIGHT [UIScreen mainScreen].bounds.size.height - BOTTOM_BAR_HEIGHT//(BOTTOM_BAR_HEIGHT * 7)
+#define SETTINGS_HEIGHT (BOTTOM_BAR_HEIGHT * 4)
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
 #define REPOSITION_BUTTONS_DURATION .25
@@ -88,7 +88,8 @@
            ([UIScreen mainScreen].scale == 2.0));
 }
 
-- (GLUIActionButton *)buttonWithFilename:(NSString *)fileName buttonName:(NSString *)buttonName
+- (GLUIActionButton *)buttonWithFilename:(NSString *)fileName
+                              buttonName:(NSString *)buttonName
 {
    if ([self usingRetinaDisplay])
       fileName = [fileName stringByAppendingString:@"@2x"];
@@ -174,11 +175,19 @@
 - (void)setupCoreFunctionButtons
 {
    _clearButton = [self buttonWithFilename:@"cancel-circle" buttonName:@"clear"];
-   void (^clearButtonActionBlock)() = ^{[self.delegate clearButtonPressed];};
+   void (^clearButtonActionBlock)() = ^
+   {
+      [self runAction:self.defaultButtonPressSound];
+      [self.delegate clearButtonPressed];
+   };
    _clearButton.actionBlock = clearButtonActionBlock;
 
    _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
-   void (^restoreButtonActionBlock)() = ^{[self.delegate restoreButtonPressed];};
+   void (^restoreButtonActionBlock)() = ^
+   {
+      [self runAction:self.defaultButtonPressSound];
+      [self.delegate restoreButtonPressed];
+   };
    _restoreButton.actionBlock = restoreButtonActionBlock;
 
    _startStopButton = [self buttonWithFilename:@"play2" buttonName:@"start_stop"];
@@ -214,11 +223,14 @@
 }
 
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state
+                            withSound:(BOOL)sound
 {
    switch (state)
    {
       case GL_RUNNING:
-         [self runAction:_startAlgorithmSound];
+         if (sound)
+            [self runAction:_startAlgorithmSound];
+         
          _startStopButton.texture = [SKTexture textureWithImageNamed:@"pause"];
          _startStopButton.color = [SKColor crayolaRadicalRedColor];
          break;

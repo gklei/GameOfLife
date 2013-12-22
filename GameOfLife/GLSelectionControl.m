@@ -7,17 +7,27 @@
 //
 
 #import "GLSelectionControl.h"
+#import "GLUIButton.h"
+
+@interface GLSelectionControl()
+{
+   NSMutableArray *_selectableItems;
+}
+@end
 
 @implementation GLSelectionControl
 
-- (id)init
+- (id)initWithSelectableItems:(NSArray *)items
 {
+   for (NSObject *item in items)
+      NSAssert([item isKindOfClass:[GLUIButton class]], @"GLSelectionControl must use GLUIButtons");
+   
    if (self = [super init])
    {
+      _selectableItems = [NSMutableArray arrayWithArray:items];
+      self.glowEnabled = NO;
    }
    return self;
 }
-
-
 
 @end

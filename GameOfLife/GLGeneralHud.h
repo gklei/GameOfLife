@@ -31,7 +31,8 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
 @property (readonly, nonatomic) BOOL settingsAreExpanded;
 @property (strong, nonatomic) id<GLGeneralHudDelegate> delegate;
 
-- (void)updateStartStopButtonForState:(GL_GAME_STATE)state;
+- (void)updateStartStopButtonForState:(GL_GAME_STATE)state
+                            withSound:(BOOL)sound;
 - (void)collapse;
 - (void)expand;
 

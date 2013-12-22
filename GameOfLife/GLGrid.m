@@ -55,8 +55,8 @@
    
    SKTexture *texture1 = nil;
    SKTexture *texture2 = nil;
-   int i = arc4random_uniform(7);
-//   int i = 6;
+//   int i = arc4random_uniform(7);
+   int i = 7;
    switch (i)
    {
       case 0:
@@ -78,8 +78,10 @@
          texture1 = [SKTexture textureWithImageNamed:@"tile.frowny.png"];
          texture2 = [SKTexture textureWithImageNamed:@"tile.smiley.png"];
          break;
-      default:
+      case 6:
          texture1 = [SKTexture textureWithImageNamed:@"tile.circle.png"];
+      default:
+         texture1 = [SKTexture textureWithImageNamed:@"tile.square.png"];
    }
    
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)

@@ -10,4 +10,6 @@
 
 @interface GLSelectionControl : GLUIButton
 
+- (id)initWithSelectableItems:(NSArray *)items;
+
 @end
