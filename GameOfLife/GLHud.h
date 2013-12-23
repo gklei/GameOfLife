@@ -30,5 +30,7 @@
 
 - (void)collapse;
 - (void)setupSoundFX;
+- (void)hide;
+- (void)show;
 
 @end

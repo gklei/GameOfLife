@@ -13,24 +13,38 @@
 
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 42
-#define COLOR_DROP_CAPACITY 6
+#define COLOR_DROP_CAPACITY 5
 #define COLOR_DROP_SCALE .75
 #define SELECTED_COLOR_DROP_SCALE 1.15
 #define HIT_DIST_FROM_POSITION 4
+
+#define BACKGROUND_ALPHA_SETTINGS_COLLAPSED .7
+#define BACKGROUND_ALPHA_SETTINGS_EXPANDED .85
+
+#define BOTTOM_BAR_HEIGHT 60
+#define SETTINGS_HEIGHT BOTTOM_BAR_HEIGHT * 6//CGRectGetHeight([UIScreen mainScreen].bounds) - BOTTOM_BAR_HEIGHT
+#define SETTINGS_EXPAND_COLLAPSE_DUATION .25
+#define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
+#define REPOSITION_BUTTONS_DURATION .25
+#define WAIT_BEFORE_COLORIZE_DURATION .25
 
 @interface GLColorHud()
 {
    CGSize _defaultSize;
    SKSpriteNode *_backgroundLayer;
+
    GLUIActionButton *_splashButton;
+   GLUIActionButton *_paletteButton;
    GLUIActionButton *_currentColorDrop;
 
    NSMutableArray *_colorDrops;
    NSMutableArray *_colorDropHitBoxes;
 
    SKAction *_colorDropButtonSound;
+   SKAction *_expandColorGridSound;
+   SKAction *_collapseColorGridSound;
 
-   int _colorDropVerticalOffset;
+//   BOOL _colorGridIsExpanded;
 }
 @end
 
@@ -40,11 +54,15 @@
 {
    if (self = [super init])
    {
-      _defaultSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, 60.0);
+      _defaultSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds),
+                                CGRectGetHeight([UIScreen mainScreen].bounds));
       _colorDropButtonSound = [SKAction playSoundFileNamed:@"color.change.wav" waitForCompletion:NO];
+      _expandColorGridSound = [SKAction playSoundFileNamed:@"settings.expand.2.wav" waitForCompletion:NO];
+      _collapseColorGridSound = [SKAction playSoundFileNamed:@"settings.collapse.2.wav" waitForCompletion:NO];
       [self setupBackgorundWithSize:_defaultSize];
-      [self setupButtons];
+      [self setupSplashButton];
       [self addColorDrops];
+      [self setupPaletteButton];
    }
    return self;
 }
@@ -67,14 +85,14 @@
            ([UIScreen mainScreen].scale == 2.0));
 }
 
-- (void)setupButtons
+- (void)setupSplashButton
 {
-   _splashButton = [GLUIActionButton spriteNodeWithImageNamed:@"splash"];
+   _splashButton = [GLUIActionButton spriteNodeWithImageNamed:@"splash2_48.png"];
    [_splashButton setColor:[SKColor crayolaBlackCoralPearlColor]];
+   [_splashButton setScale:.66666666667];
    _splashButton.colorBlendFactor = 1.0;
    _splashButton.alpha = _backgroundLayer.alpha;
-   [_splashButton setScale:.25];
-   _splashButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - _splashButton.size.width/2.0,
+   _splashButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - _splashButton.size.width/2.0 - 2,
                                         HUD_BUTTON_EDGE_PADDING - _splashButton.size.height/2.0);
    _splashButton.name = @"splash";
    void (^splashButtonActionBlock)() = ^
@@ -85,6 +103,27 @@
    _splashButton.actionBlock = splashButtonActionBlock;
    
    [self addChild:_splashButton];
+}
+
+- (void)setupPaletteButton
+{
+   _paletteButton = [GLUIActionButton spriteNodeWithImageNamed:@"palette_48.png"];
+   _paletteButton.colorBlendFactor = 1.0;
+   _paletteButton.alpha = 1.0;
+   _paletteButton.color = [SKColor whiteColor];
+   [_paletteButton setScale:.66666666667];
+   _paletteButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - _splashButton.size.width/2.0 - 2,
+                                         -_splashButton.size.height/2.0);
+   _paletteButton.name = @"palette";
+
+   void (^paletteButtonActionBlock)() = ^
+   {
+      if (!self.isAnimating)
+         [self toggleColorGrid];
+   };
+   _paletteButton.actionBlock = paletteButtonActionBlock;
+   
+   [self addChild:_paletteButton];
 }
 
 -(void)addColorDrops
@@ -102,7 +141,7 @@
       GLUIActionButton *drop = ([self usingRetinaDisplay]) ? [GLUIActionButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
                                                              [GLUIActionButton spriteNodeWithImageNamed:@"droplet.png"];
       [drop setScale:COLOR_DROP_SCALE];
-      drop.position = CGPointMake(i*COLOR_DROP_PADDING + 30, -drop.size.height/2.0 - 5);
+      drop.position = CGPointMake(i*COLOR_DROP_PADDING + 78, -drop.size.height/2.0 - 5);
       drop.colorBlendFactor = 1.0;
       drop.color = colorDropColors[i];
       drop.alpha = .75;
@@ -122,6 +161,8 @@
 {
    for (GLUIButton *node in _colorDrops)
       node.hidden = hidden;
+
+   _paletteButton.hidden = hidden;
 }
 
 - (void)updateCurrentColorDrop:(GLUIActionButton *)colorDropButton
@@ -139,86 +180,114 @@
       SKAction *deselectAnimation = [SKAction group:@[deselectScaleAction, deselectAlphaAction]];
 
       [_currentColorDrop runAction:deselectAnimation];
-//      [_currentColorDrop.hitBox runAction:deselectAnimation];
-
       [colorDropButton runAction:selectAnimation];
-//      [colorDropButton.hitBox runAction:selectAnimation];
 
       _currentColorDrop = colorDropButton;
       [self.delegate setCurrentColor:_currentColorDrop.color];
    }
 }
-
-- (CGFloat)horizontalDistanceFromNode:(SKNode *)node toPoint:(CGPoint)touchPt
+- (void)expandColorGridWithCompletionBlock:(void (^)())completionBlock
 {
-   CGFloat result = FLT_MAX;
-   
-   if (node)
-   {
-      CGPoint nodePt = node.position;
-      result = fabs(touchPt.x - nodePt.x);
-   }
-   
-   return result;
+   self.animating = YES;
+   _colorGridIsExpanded = YES;
+
+   SKAction *expand = [SKAction moveByX:0
+                                      y:SETTINGS_HEIGHT
+                               duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+   SKAction *spin = [SKAction rotateByAngle:-M_PI
+                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+//   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor crayolaRobinsEggBlueColor]
+//                                      colorBlendFactor:1.0
+//                                              duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+   SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_EXPANDED
+                                                  duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+   SKAction *backgroundActions = [SKAction group:@[expand, changeBackgroundAlpha]];
+
+   expand.timingMode = SKActionTimingEaseInEaseOut;
+   spin.timingMode = SKActionTimingEaseInEaseOut;
+//   changeColor.timingMode = SKActionTimingEaseInEaseOut;
+   changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
+
+
+   [self runAction:_expandColorGridSound];
+   [_backgroundLayer runAction:backgroundActions
+                    completion:
+    ^{
+       [self.delegate colorGridDidExpand];
+       self.animating = NO;
+    }];
+
+   [self.delegate colorGridWillExpandWithRepositioningAction:expand];
+   [_paletteButton runAction:spin completion:completionBlock];
 }
 
-- (CGFloat)getDistanceFromNearest:(NSUInteger *)nearestIdx
-                      andNeighbor:(NSUInteger *)neighborIdx
-                        FromTouch:(CGPoint)touchPt
+- (void)collapseColorGridWithCompletionBlock:(void (^)())completionBlock
 {
-   // find the nearest and neighbor indeces and the distance to the nearest
-   CGFloat result = FLT_MAX;
-   *nearestIdx = UINT_MAX;
-   *neighborIdx = UINT_MAX;
-   for (SKNode *node in _colorDropHitBoxes)
-   {
-      double thisDist = [self horizontalDistanceFromNode:node toPoint:touchPt];
-      if (thisDist < result)
-      {
-         result = thisDist;
-         *nearestIdx = [_colorDropHitBoxes indexOfObject:node];
-         
-         if (touchPt.x < node.position.x)
-            *neighborIdx = (*nearestIdx > 0)? *nearestIdx - 1 : UINT_MAX;
-         else
-            *neighborIdx = (*nearestIdx < _colorDropHitBoxes.count - 2)? *nearestIdx + 1 : UINT_MAX;
-      }
-   }
-   
-   return result;
+   self.animating = YES;
+   _colorGridIsExpanded = NO;
+//   _settingsLayer.hidden = YES;
+
+   SKAction *collapse = [SKAction moveByX:0
+                                        y:-(SETTINGS_HEIGHT)
+                                 duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+   SKAction *spin = [SKAction rotateByAngle:M_PI
+                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+//   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor whiteColor]
+//                                      colorBlendFactor:1.0
+//                                              duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+   SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_COLLAPSED
+                                                  duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
+//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+   SKAction *backgroundActions = [SKAction group:@[collapse, changeBackgroundAlpha]];
+
+   collapse.timingMode = SKActionTimingEaseInEaseOut;
+   spin.timingMode = SKActionTimingEaseInEaseOut;
+//   changeColor.timingMode = SKActionTimingEaseInEaseOut;
+   changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
+
+
+   [self runAction:_collapseColorGridSound];
+   [_backgroundLayer runAction:backgroundActions
+                    completion:
+    ^{
+       [self.delegate colorGridDidExpand];
+       self.animating = NO;
+    }];
+
+   [self.delegate colorGridWillCollapseWithRepositioningAction:collapse];
+   [_paletteButton runAction:spin completion:completionBlock];
 }
 
-- (SKColor *) interpolatedColorFromIndex:(NSUInteger)idx
-                             andDistance:(CGFloat)distance
-                             toNeighbor:(NSUInteger)nextIdx
+- (void)toggleColorGrid
 {
-   // interpolate a color between two nodes
-   SKColor * newClr = nil;
-   
-   SKNode * nearest = [_colorDropHitBoxes objectAtIndex:idx];
-   SKNode * neighbor = [_colorDropHitBoxes objectAtIndex:nextIdx];
-   if (nearest && neighbor)
+   if (_colorGridIsExpanded)
    {
-      CGFloat interpolateDist = fabs(distance) / fabs(neighbor.position.x - nearest.position.x);
-      
-      SKColor * nearClr = ((SKSpriteNode *)_colorDrops[idx]).color;
-      SKColor * nextClr = ((SKSpriteNode *)_colorDrops[nextIdx]).color;
-      
-      CGFloat nearRed, nearGreen, nearBlue;
-      CGFloat nextRed, nextGreen, nextBlue;
-      
-      if ([nearClr getRed:&nearRed green:&nearGreen blue:&nearBlue alpha:nil] &&
-          [nextClr getRed:&nextRed green:&nextGreen blue:&nextBlue alpha:nil])
-      {
-         CGFloat newRed = nearRed + interpolateDist * (nextRed - nearRed);
-         CGFloat newGreen = nearGreen + interpolateDist * (nextGreen - nearGreen);
-         CGFloat newBlue = nearBlue + interpolateDist * (nextBlue - nearBlue);
-         
-         newClr = [UIColor colorWithRed:newRed green:newGreen blue:newBlue alpha:1.0];
-      }
+      _paletteButton.persistGlow = NO;
+      [self collapseColorGridWithCompletionBlock:^
+       {
+//          _paletteButton.color = [SKColor whiteColor];
+//          _settingsLayer.hidden = YES;
+       }];
    }
-   
-   return newClr;
+   else
+   {
+      _paletteButton.persistGlow = YES;
+      [self expandColorGridWithCompletionBlock:^
+       {
+          if (_colorGridIsExpanded)
+          {
+//             _paletteButton.color = [SKColor crayolaRobinsEggBlueColor];
+//             _settingsLayer.hidden = NO;
+          }
+       }];
+   }
 }
 
 - (void)expand
@@ -265,6 +334,8 @@
          [button runAction:slide];
          [button.hitBox runAction:slide];
       }
+      [_paletteButton runAction:slide];
+      [_paletteButton.hitBox runAction:slide];
 
       [_splashButton runAction:buttonActions
                     completion:^
@@ -277,6 +348,10 @@
             [drop runAction:moveDrop];
             [drop.hitBox runAction:moveDrop];
          }
+
+         _paletteButton.hidden = NO;
+         [_paletteButton runAction:moveDrop];
+         [_paletteButton.hitBox runAction:moveDrop];
 
          if (_currentColorDrop)
          {
@@ -294,7 +369,7 @@
    }];
 }
 
-- (void)collapse
+- (void)collapseBottomBar
 {
    self.animating = YES;
    [self.delegate hudWillCollapse:self];
@@ -336,6 +411,9 @@
       [button.hitBox runAction:slide];
    }
 
+   [_paletteButton runAction:slide];
+   [_paletteButton.hitBox runAction:slide];
+
    [self runAction:self.defaultCollapsingSoundFX];
    
    [_backgroundLayer runAction:hudBackgroundActions
@@ -349,9 +427,31 @@
          [drop.hitBox runAction:moveDrop];
       }
 
+      [_paletteButton runAction:moveDrop];
+      [_paletteButton.hitBox runAction:moveDrop];
+
       [self.delegate hudDidCollapse:self];
       self.animating = NO;
    }];
+}
+
+- (void)collapse
+{
+   if (_colorGridIsExpanded)
+   {
+      [_paletteButton loseFocus];
+      SKAction *scaleDown = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
+      scaleDown.timingMode = SKActionTimingEaseInEaseOut;
+      [_currentColorDrop runAction:scaleDown];
+      [self collapseColorGridWithCompletionBlock:^
+       {
+          [self collapseBottomBar];
+       }];
+   }
+   else
+   {
+      [self collapseBottomBar];
+   }
 }
 
 - (void)toggle
@@ -360,6 +460,22 @@
       [self expand];
    else
       [self collapse];
+}
+
+- (void)hide
+{
+   [self setColorDropsHidden:YES];
+   _backgroundLayer.hidden = YES;
+   _splashButton.hidden = YES;
+   _paletteButton.hidden = YES;
+}
+
+- (void)show
+{
+   [self setColorDropsHidden:NO];
+   _backgroundLayer.hidden = NO;
+   _splashButton.hidden = NO;
+   _paletteButton.hidden = NO;
 }
 
 @end

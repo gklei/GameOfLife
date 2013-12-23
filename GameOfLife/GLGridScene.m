@@ -34,6 +34,7 @@
    BOOL _colorHudIsAnimating;
    BOOL _running;
    BOOL _autoShowHideHudForStartStop;
+   BOOL _autoHideHUDLayersForScreenshot;
    BOOL _generalHudShouldExpand;
 
    SKAction *_fingerDownSoundFX;
@@ -99,11 +100,17 @@ BOOL _decreasing;
    [self registerToggleItemWithLabel:@"SMART MENU" andKeyPath:@"SmartMenu"];
 }
 
+- (void)registerSmartCameraHUD
+{
+   [self registerToggleItemWithLabel:@"SMART CAMERA" andKeyPath:@"SmartCamera"];
+}
+
 - (void)registerHudParameters
 {
    [self registerSoundFxHUD];
    [self registerSmartMenuHUD];
    [self registerGeneralDurationHUD];
+   [self registerSmartCameraHUD];
 }
 
 #pragma mark - observation methods
@@ -119,6 +126,12 @@ BOOL _decreasing;
    [hudManager addObserver:self forKeyPath:@"SmartMenu"];
 }
 
+- (void)observeSmartCameraChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SmartCamera"];
+}
+
 - (void)observeGeneralDurationChanges
 {
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
@@ -129,6 +142,7 @@ BOOL _decreasing;
 {
    [self observeSoundFxChanges];
    [self observeSmartMenuChanges];
+   [self observeSmartCameraChanges];
    [self observeGeneralDurationChanges];
 }
 
@@ -148,7 +162,6 @@ BOOL _decreasing;
       
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
-      
       self.userInteractionEnabled = YES;
    }
    return self;
@@ -255,6 +268,11 @@ BOOL _decreasing;
 {
    // weird work around for the first screen shot that's taken being slow
    [self runAction:_flashSound];
+
+   if (_autoHideHUDLayersForScreenshot)
+   {
+      // hide HUDs
+   }
    if (!_firstScreenShotTaken)
    {
       [_flashLayer runAction:_flashAnimation
@@ -287,6 +305,10 @@ BOOL _decreasing;
 
       [_flashLayer runAction:_flashAnimation];
    }
+   if (_autoHideHUDLayersForScreenshot)
+   {
+      // show HUDS
+   }
 }
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
@@ -307,10 +329,28 @@ BOOL _decreasing;
 {
 }
 
-#pragma GLColorHud Delegate Method
+#pragma mark GLColorHud Delegate Method
 - (void)setCurrentColor:(SKColor *)currentColor
 {
    [_grid setCurrentColor:currentColor];
+}
+
+- (void)colorGridWillExpandWithRepositioningAction:(SKAction *)action
+{
+   [_generalHudLayer runAction:action];
+}
+
+- (void)colorGridDidExpand
+{
+}
+
+- (void)colorGridWillCollapseWithRepositioningAction:(SKAction *)action
+{
+   [_generalHudLayer runAction:action];
+}
+
+- (void)colorGridDidCollapse
+{
 }
 
 #pragma mark Touch Methods
@@ -440,7 +480,7 @@ BOOL _decreasing;
 {
    if (_colorHudLayer.isExpanded)
    {
-      *waitPeriod = 0.25;
+      *waitPeriod = (_colorHudLayer.colorGridIsExpanded)? 0.5 : 0.25;
       [_colorHudLayer collapse];
    }
    else
@@ -572,7 +612,12 @@ BOOL _decreasing;
     
     if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
     {
-       
+    }
+
+    if ([keyPath compare:@"SmartCamera"] == NSOrderedSame)
+    {
+       assert(type == HVT_BOOL);
+       _autoHideHUDLayersForScreenshot = [value boolValue];
     }
  }
 

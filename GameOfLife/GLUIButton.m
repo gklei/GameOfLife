@@ -93,7 +93,7 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
-   _glowEffect.shouldEnableEffects = NO;
+   _glowEffect.shouldEnableEffects = (_persistGlow)? YES : NO;
    _hasFocus = NO;
 }
 

@@ -23,7 +23,7 @@
 #define BACKGROUND_ALPHA_SETTINGS_EXPANDED .85
 
 #define BOTTOM_BAR_HEIGHT 60
-#define SETTINGS_HEIGHT (BOTTOM_BAR_HEIGHT * 4)
+#define SETTINGS_HEIGHT (BOTTOM_BAR_HEIGHT * 5) - 20
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
 #define REPOSITION_BUTTONS_DURATION .25
@@ -253,6 +253,7 @@
 #pragma mark HUD Toggling Methods
 - (void)expandSettingsWithCompletionBlock:(void (^)())completionBlock
 {
+   _settingsButton.persistGlow = YES;
    self.animating = YES;
    _settingsAreExpanded = YES;
 
@@ -287,12 +288,12 @@
     }];
 
    [self.delegate settingsWillExpandWithRepositioningAction:expand];
-   [_settingsButton runAction:buttonActions completion:completionBlock];
-
+   [_settingsButton runAction:spin completion:completionBlock];
 }
 
 - (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
 {
+   _settingsButton.persistGlow = NO;
    self.animating = YES;
    _settingsAreExpanded = NO;
    _settingsLayer.hidden = YES;
@@ -328,26 +329,30 @@
     }];
 
    [self.delegate settingsWillCollapseWithRepositioningAction:collapse];
-   [_settingsButton runAction:buttonActions completion:completionBlock];
+   [_settingsButton runAction:spin completion:completionBlock];
 }
 
 - (void)toggleSettings
 {
    if (_settingsAreExpanded)
+   {
       [self collapseSettingsWithCompletionBlock:^
        {
-          _settingsButton.color = [SKColor whiteColor];
+//          _settingsButton.color = [SKColor whiteColor];
           _settingsLayer.hidden = YES;
        }];
+   }
    else
+   {
       [self expandSettingsWithCompletionBlock:^
        {
           if (_settingsAreExpanded)
           {
-             _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
+//             _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
              _settingsLayer.hidden = NO;
           }
        }];
+   }
 }
 
 - (void)expandBottomBar
@@ -488,6 +493,7 @@
 {
    if (_settingsAreExpanded)
    {
+      [_settingsButton loseFocus];
       [self collapseSettingsWithCompletionBlock:^
       {
          [self collapseBottomBar];
@@ -511,6 +517,21 @@
       [self collapse];
    else
       [self expandBottomBar];
+}
+
+
+- (void)hide
+{
+   [self setCoreFunctionButtonsHidden:YES];
+   _backgroundLayer.hidden = YES;
+   _expandCollapseButton.hidden = YES;
+}
+
+- (void)show
+{
+   [self setCoreFunctionButtonsHidden:NO];
+   _backgroundLayer.hidden = NO;
+   _expandCollapseButton.hidden = NO;
 }
 
 @end
