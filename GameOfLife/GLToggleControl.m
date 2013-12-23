@@ -56,7 +56,7 @@
 - (void)setupVariables
 {
    _state = e_TOGGLE_CONTROL_DISABLED;
-   _toggleSound = [SKAction playSoundFileNamed:@"button.press.wav" waitForCompletion:NO];
+   _toggleSound = [SKAction playSoundFileNamed:@"toggle.1.wav" waitForCompletion:NO];
    _leftXBound = -INNER_RING_OFFSET_FROM_CENTER;
    _rightXBound = INNER_RING_OFFSET_FROM_CENTER;
 
@@ -316,10 +316,11 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
-   [self runAction:_toggleSound];
-   
    if (/*[self.hitBox containsPoint:[touch locationInNode:self]] && */!_stateSetFromSlide)
+   {
+      [self runAction:_toggleSound];
       [self toggle:YES];
+   }
    else
       [self toggle:NO];
 

@@ -48,6 +48,8 @@
    SKAction *_collapseSettingsSound;
    SKAction *_startAlgorithmSound;
    SKAction *_stopAlgorithmSound;
+   SKAction *_clearSound;
+   SKAction *_restoreSound;
 }
 @end
 
@@ -72,6 +74,8 @@
    _collapseSettingsSound = [SKAction playSoundFileNamed:@"settings.collapse.2.wav" waitForCompletion:NO];
    _startAlgorithmSound = [SKAction playSoundFileNamed:@"start.algorithm.2.wav" waitForCompletion:NO];
    _stopAlgorithmSound = [SKAction playSoundFileNamed:@"stop.algorithm.2.wav" waitForCompletion:NO];
+   _clearSound = [SKAction playSoundFileNamed:@"clear.1.wav" waitForCompletion:NO];
+   _restoreSound = [SKAction playSoundFileNamed:@"reset.1.wav" waitForCompletion:NO];
 
    [super setupSoundFX];
 }
@@ -176,7 +180,7 @@
    _clearButton = [self buttonWithFilename:@"cancel-circle" buttonName:@"clear"];
    void (^clearButtonActionBlock)() = ^
    {
-      [self runAction:self.defaultButtonPressSound];
+      [self runAction:_clearSound];
       [self.delegate clearButtonPressed];
    };
    _clearButton.actionBlock = clearButtonActionBlock;
@@ -184,7 +188,7 @@
    _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
    void (^restoreButtonActionBlock)() = ^
    {
-      [self runAction:self.defaultButtonPressSound];
+      [self runAction:_restoreSound];
       [self.delegate restoreButtonPressed];
    };
    _restoreButton.actionBlock = restoreButtonActionBlock;

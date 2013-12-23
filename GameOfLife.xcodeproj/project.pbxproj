@@ -21,6 +21,9 @@
 		8E2FA2961867B23B0021A471 /* palette_48.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2951867B23B0021A471 /* palette_48.png */; };
 		8E2FA2991867BB080021A471 /* GLColorSelectionLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2FA2981867BB080021A471 /* GLColorSelectionLayer.m */; };
 		8E2FA29C1867BBED0021A471 /* GLMenuLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2FA29B1867BBED0021A471 /* GLMenuLayer.m */; };
+		8E2FA2A01867C7B70021A471 /* clear.1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA29D1867C7B70021A471 /* clear.1.wav */; };
+		8E2FA2A11867C7B70021A471 /* reset.1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA29E1867C7B70021A471 /* reset.1.wav */; };
+		8E2FA2A21867C7B70021A471 /* toggle.1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA29F1867C7B70021A471 /* toggle.1.wav */; };
 		8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02B184164F7000AEEB8 /* expand_left.png */; };
 		8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02C184164F7000AEEB8 /* expand_left@2x.png */; };
 		8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B030184169BF000AEEB8 /* GLColorHud.m */; };
@@ -148,6 +151,9 @@
 		8E2FA2981867BB080021A471 /* GLColorSelectionLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorSelectionLayer.m; sourceTree = "<group>"; };
 		8E2FA29A1867BBED0021A471 /* GLMenuLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMenuLayer.h; sourceTree = "<group>"; };
 		8E2FA29B1867BBED0021A471 /* GLMenuLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLMenuLayer.m; sourceTree = "<group>"; };
+		8E2FA29D1867C7B70021A471 /* clear.1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = clear.1.wav; path = "GL Sound FX/clear.1.wav"; sourceTree = SOURCE_ROOT; };
+		8E2FA29E1867C7B70021A471 /* reset.1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = reset.1.wav; path = "GL Sound FX/reset.1.wav"; sourceTree = SOURCE_ROOT; };
+		8E2FA29F1867C7B70021A471 /* toggle.1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = toggle.1.wav; path = "GL Sound FX/toggle.1.wav"; sourceTree = SOURCE_ROOT; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02F184169BF000AEEB8 /* GLColorHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorHud.h; sourceTree = "<group>"; };
@@ -356,6 +362,9 @@
 		8EAA59BB184B0218008E34D9 /* SoundFX */ = {
 			isa = PBXGroup;
 			children = (
+				8E2FA29D1867C7B70021A471 /* clear.1.wav */,
+				8E2FA29E1867C7B70021A471 /* reset.1.wav */,
+				8E2FA29F1867C7B70021A471 /* toggle.1.wav */,
 				8EAA38B618601D3A00DA5CED /* slider.off.wav */,
 				8EAA38B718601D3A00DA5CED /* slider.on.wav */,
 				8EA2650A1858045800351F5E /* start.algorithm.2.wav */,
@@ -609,8 +618,10 @@
 				8E99B2AA182E0ABD00C7AEDB /* gear@2x.png in Resources */,
 				8EAA38B818601D3A00DA5CED /* slider.off.wav in Resources */,
 				8E2FA2961867B23B0021A471 /* palette_48.png in Resources */,
+				8E2FA2A21867C7B70021A471 /* toggle.1.wav in Resources */,
 				ED2CB971185C157500319DE5 /* tile.ring3d.png in Resources */,
 				8E75B03818419670000AEEB8 /* ring.png in Resources */,
+				8E2FA2A01867C7B70021A471 /* clear.1.wav in Resources */,
 				8EAA5A10184B29EC008E34D9 /* button.press.wav in Resources */,
 				8EA264FC1850229100351F5E /* settings.collapse.wav in Resources */,
 				8ECA8999182371AE009D906F /* Main.storyboard in Resources */,
@@ -634,6 +645,7 @@
 				8EA265051858033A00351F5E /* flash.wav in Resources */,
 				8E75B03418419630000AEEB8 /* splash.png in Resources */,
 				8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */,
+				8E2FA2A11867C7B70021A471 /* reset.1.wav in Resources */,
 				8E75B04618466F7F000AEEB8 /* camera.png in Resources */,
 				8EA2653518596FC800351F5E /* camera2.png in Resources */,
 				8EAA38B918601D3A00DA5CED /* slider.on.wav in Resources */,
