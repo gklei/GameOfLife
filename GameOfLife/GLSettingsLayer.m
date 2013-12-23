@@ -17,17 +17,12 @@
 
 #import "GLAppDelegate.h"
 
-#define TOP_PADDING 20
-#define HEADING_FONT_SIZE 16
+//#define TOP_PADDING 20
+//#define HEADING_FONT_SIZE 16
 #define CONTROL_HEIGHT 50
 
 @interface GLSettingsLayer()
 {
-   SKSpriteNode *_backgroundLayer;
-
-   CGSize _defaultSize;
-   CGPoint _defaultAnchorPoint;
-
    CGPoint _nextControlPosition;
 }
 @end
@@ -94,12 +89,10 @@
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint
 {
-   if (self = [super init])
+   if (self = [super initWithSize:size
+                      anchorPoint:anchorPoint])
    {
-      _defaultSize = size;
-      _defaultAnchorPoint = anchorPoint;
       [self setupSettingsLabel];
-      
       NSArray * keyPaths = [NSArray arrayWithObjects:@"GenerationDuration",
                                                      @"SoundFX",
                                                      @"SmartMenu",
@@ -108,18 +101,6 @@
       [self setupHudItemsforKeys:keyPaths];
    }
    return self;
-}
-
-- (void)setupBackground
-{
-   _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor crayolaBlackCoralPearlColor]
-                                                   size:_defaultSize];
-   _backgroundLayer.colorBlendFactor = 1.0;
-   _backgroundLayer.alpha = .7;
-   _backgroundLayer.anchorPoint = _defaultAnchorPoint;
-   _backgroundLayer.name = @"settings_background";
-
-   [self addChild:_backgroundLayer];
 }
 
 - (void)setupSettingsLabel
@@ -131,7 +112,7 @@
    settingsLabel.color = [SKColor whiteColor];
    settingsLabel.alpha = 1;
    settingsLabel.fontSize = HEADING_FONT_SIZE;
-   settingsLabel.position = CGPointMake(_defaultSize.width * 0.5,
+   settingsLabel.position = CGPointMake(self.size.width * 0.5,
                                         -(HEADING_FONT_SIZE + TOP_PADDING));
    [self addChild:settingsLabel];
    

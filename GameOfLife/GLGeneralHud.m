@@ -17,7 +17,6 @@
 #define CORE_FUNCTION_BUTTON_PADDING 52
 #define HUD_BUTTON_EDGE_PADDING 48
 #define HUD_BUTTON_PADDING 50
-#define HEADING_FONT_SIZE 25
 
 #define BACKGROUND_ALPHA_SETTINGS_COLLAPSED .7
 #define BACKGROUND_ALPHA_SETTINGS_EXPANDED .85
@@ -270,7 +269,7 @@
    SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_EXPANDED
                                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
 
-   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
    SKAction *backgroundActions = [SKAction group:@[expand, changeBackgroundAlpha]];
 
    expand.timingMode = SKActionTimingEaseInEaseOut;
@@ -311,7 +310,7 @@
    SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_COLLAPSED
                                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
 
-   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
    SKAction *backgroundActions = [SKAction group:@[collapse, changeBackgroundAlpha]];
 
    collapse.timingMode = SKActionTimingEaseInEaseOut;

@@ -7,9 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "GLMenuLayer.h"
 
-@interface GLColorSelectionLayer : SKNode
-
-- (id)initWithSize:(CGSize)size
-       anchorPoint:(CGPoint)anchorPoint;
+@interface GLColorSelectionLayer : GLMenuLayer
 @end

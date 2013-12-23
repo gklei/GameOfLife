@@ -10,6 +10,7 @@
 #import "UIColor+Crayola.h"
 #import "GLGridScene.h"
 #import "GLUIActionButton.h"
+#import "GLColorSelectionLayer.h"
 
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 42
@@ -44,6 +45,7 @@
    SKAction *_expandColorGridSound;
    SKAction *_collapseColorGridSound;
 
+   GLColorSelectionLayer *_colorSelectionLayer;
 //   BOOL _colorGridIsExpanded;
 }
 @end
@@ -60,6 +62,7 @@
       _expandColorGridSound = [SKAction playSoundFileNamed:@"settings.expand.2.wav" waitForCompletion:NO];
       _collapseColorGridSound = [SKAction playSoundFileNamed:@"settings.collapse.2.wav" waitForCompletion:NO];
       [self setupBackgorundWithSize:_defaultSize];
+      [self setupColorSelectionLayerWithSize:_defaultSize];
       [self setupSplashButton];
       [self addColorDrops];
       [self setupPaletteButton];
@@ -77,6 +80,17 @@
    _backgroundLayer.position = CGPointMake(0, 60);
    _backgroundLayer.name = @"color_hud_background";
    [self addChild:_backgroundLayer];
+}
+
+- (void)setupColorSelectionLayerWithSize:(CGSize)size
+{
+   CGSize colorSelectionLayerSize = CGSizeMake(size.width, SETTINGS_HEIGHT);
+   _colorSelectionLayer = [[GLColorSelectionLayer alloc] initWithSize:colorSelectionLayerSize
+                                                          anchorPoint:_backgroundLayer.anchorPoint];
+   _colorSelectionLayer.alpha = 5;
+   _colorSelectionLayer.hidden = YES;
+   _colorSelectionLayer.name = @"settings_layer";
+   [_backgroundLayer addChild:_colorSelectionLayer];
 }
 
 - (BOOL)usingRetinaDisplay
@@ -229,6 +243,7 @@
 {
    self.animating = YES;
    _colorGridIsExpanded = NO;
+   _colorSelectionLayer.hidden = YES;
 //   _settingsLayer.hidden = YES;
 
    SKAction *collapse = [SKAction moveByX:0
@@ -274,6 +289,7 @@
        {
 //          _paletteButton.color = [SKColor whiteColor];
 //          _settingsLayer.hidden = YES;
+          _colorSelectionLayer.hidden = YES;
        }];
    }
    else
@@ -285,6 +301,7 @@
           {
 //             _paletteButton.color = [SKColor crayolaRobinsEggBlueColor];
 //             _settingsLayer.hidden = NO;
+             _colorSelectionLayer.hidden = NO;
           }
        }];
    }

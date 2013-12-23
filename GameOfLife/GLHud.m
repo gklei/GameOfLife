@@ -32,4 +32,12 @@
 {
 }
 
+- (void)hide
+{
+}
+
+- (void)show
+{
+}
+
 @end
