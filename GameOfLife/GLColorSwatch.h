@@ -15,5 +15,7 @@ typedef NS_ENUM(int, GL_COLOR_SWATCH_STATE)
 };
 
 @interface GLColorSwatch : GLUIActionButton
+
 @property (nonatomic, readonly) GL_COLOR_SWATCH_STATE state;
+
 @end

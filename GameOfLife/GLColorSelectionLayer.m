@@ -7,7 +7,7 @@
 //
 
 #import "GLColorSelectionLayer.h"
-#import "GLColorSwatch.h"
+#import "GLColorGrid.h"
 
 @implementation GLColorSelectionLayer
 
@@ -39,10 +39,9 @@
 
 - (void)setupColorGrid
 {
-   GLColorSwatch *colorSwatch = [[GLColorSwatch alloc] init];
-   colorSwatch.position = CGPointMake(self.size.width * 0.5,
-                                      -(HEADING_FONT_SIZE + TOP_PADDING*3));
-   [self addChild:colorSwatch];
+   GLColorGrid *colorGrid = [[GLColorGrid alloc] initWithSize:CGSizeMake(5, 6)];
+   colorGrid.position = CGPointMake(45, -self.size.height + 85);
+   [self addChild:colorGrid];
 }
 
 @end

@@ -8,6 +8,18 @@
 
 #import <SpriteKit/SpriteKit.h>
 
+@class GLColorSwatch;
+
+typedef struct {
+   int rows;
+   int columns;
+} ColorGridDimensions;
+
 @interface GLColorGrid : SKNode
+
+@property (nonatomic, readonly) ColorGridDimensions dimensions;
+@property (nonatomic, readwrite) GLColorSwatch *selectedSwatch;
+
+- (id)initWithSize:(CGSize)size;
 
 @end
