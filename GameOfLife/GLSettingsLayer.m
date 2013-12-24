@@ -97,6 +97,7 @@
                                                      @"SoundFX",
                                                      @"SmartMenu",
                                                      @"SmartCamera",
+                                                     @"LoopDetection",
                                                      nil];
       [self setupHudItemsforKeys:keyPaths];
    }

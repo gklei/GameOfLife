@@ -22,7 +22,7 @@
 #define BACKGROUND_ALPHA_SETTINGS_EXPANDED .85
 
 #define BOTTOM_BAR_HEIGHT 60
-#define SETTINGS_HEIGHT (BOTTOM_BAR_HEIGHT * 5) - 20
+#define SETTINGS_HEIGHT (BOTTOM_BAR_HEIGHT * 6) - 20
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
 #define REPOSITION_BUTTONS_DURATION .25
@@ -50,6 +50,8 @@
    SKAction *_stopAlgorithmSound;
    SKAction *_clearSound;
    SKAction *_restoreSound;
+
+   SKEmitterNode *_particleGenerator;
 }
 @end
 
@@ -59,6 +61,9 @@
 {
    if (self = [super init])
    {
+      NSString *spartPath = [[NSBundle mainBundle] pathForResource:@"Spark" ofType:@"sks"];
+      _particleGenerator = [NSKeyedUnarchiver unarchiveObjectWithFile:spartPath];
+
       _defaultSize = [UIScreen mainScreen].bounds.size;
       [self setupSoundFX];
       [self setupBackgroundWithSize:_defaultSize];
@@ -173,6 +178,7 @@
       button.position = CGPointMake(++multiplier * CORE_FUNCTION_BUTTON_PADDING + 82,
                                     -button.size.height);
    }
+   _particleGenerator.position = _settingsButton.position;
 }
 
 - (void)setupCoreFunctionButtons
@@ -339,6 +345,7 @@
 {
    if (_settingsAreExpanded)
    {
+//      [_particleGenerator removeFromParent];
       [self collapseSettingsWithCompletionBlock:^
        {
 //          _settingsButton.color = [SKColor whiteColor];
@@ -351,6 +358,8 @@
        {
           if (_settingsAreExpanded)
           {
+//             _particleGenerator.numParticlesToEmit = 100000;
+//             [self addChild:_particleGenerator];
 //             _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
              _settingsLayer.hidden = NO;
           }
@@ -399,6 +408,7 @@
          [button runAction:slide];
          [button.hitBox runAction:slide];
       }
+      [_particleGenerator runAction:slide];
 
       [_backgroundLayer runAction:changeHudColor];
       [_expandCollapseButton runAction:buttonActions
@@ -418,6 +428,7 @@
              [button runAction:moveButton];
              [button.hitBox runAction:moveButtonHitBox];
           }
+          [_particleGenerator runAction:moveButton];
 
           [self.delegate hudDidExpand:self];
           self.animating = NO;
@@ -470,6 +481,7 @@
       [button runAction:slide];
       [button.hitBox runAction:slide];
    }
+   [_particleGenerator runAction:slide];
 
    [_expandCollapseButton runAction:buttonActions];
    [_backgroundLayer runAction:hudBackgroundColorSequence
@@ -486,6 +498,7 @@
           [button runAction:moveButton];
           [button.hitBox runAction:moveButtonHitBox];
        }
+       [_particleGenerator runAction:slide];
 
        [self.delegate hudDidCollapse:self];
        self.animating = NO;
@@ -521,7 +534,6 @@
    else
       [self expandBottomBar];
 }
-
 
 - (void)hide
 {

@@ -167,7 +167,7 @@
 {
    for (int i = 0; i < _tiles.count; ++i)
       if (((GLTileNode *)_tiles[i]).isLiving != _nextGenerationTileStates[i])
-         return NO;
+         return (_considersContinuousBiLoops)? [self currentlyInContinuousBiLoop] : NO;
 
    return YES;
 }

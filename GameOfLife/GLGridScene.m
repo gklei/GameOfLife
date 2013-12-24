@@ -100,6 +100,11 @@ BOOL _decreasing;
    [self registerToggleItemWithLabel:@"SMART MENU" andKeyPath:@"SmartMenu"];
 }
 
+- (void)registerLoopDetectionHUD
+{
+   [self registerToggleItemWithLabel:@"LOOP DETECTION" andKeyPath:@"LoopDetection"];
+}
+
 - (void)registerSmartCameraHUD
 {
    [self registerToggleItemWithLabel:@"SMART CAMERA" andKeyPath:@"SmartCamera"];
@@ -111,6 +116,7 @@ BOOL _decreasing;
    [self registerSmartMenuHUD];
    [self registerGeneralDurationHUD];
    [self registerSmartCameraHUD];
+   [self registerLoopDetectionHUD];
 }
 
 #pragma mark - observation methods
@@ -124,6 +130,12 @@ BOOL _decreasing;
 {
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
    [hudManager addObserver:self forKeyPath:@"SmartMenu"];
+}
+
+- (void)observeLoopDetectionChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"LoopDetection"];
 }
 
 - (void)observeSmartCameraChanges
@@ -143,6 +155,7 @@ BOOL _decreasing;
    [self observeSoundFxChanges];
    [self observeSmartMenuChanges];
    [self observeSmartCameraChanges];
+   [self observeLoopDetectionChanges];
    [self observeGeneralDurationChanges];
 }
 
@@ -618,6 +631,12 @@ BOOL _decreasing;
     {
        assert(type == HVT_BOOL);
        _autoHideHUDLayersForScreenshot = [value boolValue];
+    }
+
+    if ([keyPath compare:@"LoopDetection"] == NSOrderedSame)
+    {
+       assert(type == HVT_BOOL);
+       _grid.considersContinuousBiLoops = [value boolValue];
     }
  }
 

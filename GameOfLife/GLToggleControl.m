@@ -95,6 +95,7 @@
 {
    if (_state != state)
    {
+      [self runAction:_toggleSound];
       _state = state;
       [self updateUserDefaults:_state];
    }
@@ -318,7 +319,7 @@
 {
    if (/*[self.hitBox containsPoint:[touch locationInNode:self]] && */!_stateSetFromSlide)
    {
-      [self runAction:_toggleSound];
+//      [self runAction:_toggleSound];
       [self toggle:YES];
    }
    else

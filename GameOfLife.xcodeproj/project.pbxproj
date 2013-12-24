@@ -24,6 +24,9 @@
 		8E2FA2A01867C7B70021A471 /* clear.1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA29D1867C7B70021A471 /* clear.1.wav */; };
 		8E2FA2A11867C7B70021A471 /* reset.1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA29E1867C7B70021A471 /* reset.1.wav */; };
 		8E2FA2A21867C7B70021A471 /* toggle.1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA29F1867C7B70021A471 /* toggle.1.wav */; };
+		8E2FA2A518695C480021A471 /* Spark.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2A318695C480021A471 /* Spark.sks */; };
+		8E2FA2A618695C480021A471 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2A418695C480021A471 /* spark.png */; };
+		8E2FA2A91869DC750021A471 /* GLColorSwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2FA2A81869DC750021A471 /* GLColorSwatch.m */; };
 		8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02B184164F7000AEEB8 /* expand_left.png */; };
 		8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02C184164F7000AEEB8 /* expand_left@2x.png */; };
 		8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B030184169BF000AEEB8 /* GLColorHud.m */; };
@@ -154,6 +157,10 @@
 		8E2FA29D1867C7B70021A471 /* clear.1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = clear.1.wav; path = "GL Sound FX/clear.1.wav"; sourceTree = SOURCE_ROOT; };
 		8E2FA29E1867C7B70021A471 /* reset.1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = reset.1.wav; path = "GL Sound FX/reset.1.wav"; sourceTree = SOURCE_ROOT; };
 		8E2FA29F1867C7B70021A471 /* toggle.1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = toggle.1.wav; path = "GL Sound FX/toggle.1.wav"; sourceTree = SOURCE_ROOT; };
+		8E2FA2A318695C480021A471 /* Spark.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Spark.sks; sourceTree = "<group>"; };
+		8E2FA2A418695C480021A471 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		8E2FA2A71869DC750021A471 /* GLColorSwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorSwatch.h; sourceTree = "<group>"; };
+		8E2FA2A81869DC750021A471 /* GLColorSwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorSwatch.m; sourceTree = "<group>"; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02F184169BF000AEEB8 /* GLColorHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorHud.h; sourceTree = "<group>"; };
@@ -429,6 +436,8 @@
 				8E75B030184169BF000AEEB8 /* GLColorHud.m */,
 				8E2FA2971867BB080021A471 /* GLColorSelectionLayer.h */,
 				8E2FA2981867BB080021A471 /* GLColorSelectionLayer.m */,
+				8E2FA2A71869DC750021A471 /* GLColorSwatch.h */,
+				8E2FA2A81869DC750021A471 /* GLColorSwatch.m */,
 				8E75B03E1842FFE3000AEEB8 /* GLGeneralHud.h */,
 				8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */,
 				8E75B04C18490C0A000AEEB8 /* GLGrid.h */,
@@ -436,6 +445,8 @@
 				8E99B29D182BFE7600C7AEDB /* GLGridScene.h */,
 				8E99B29E182BFE7600C7AEDB /* GLGridScene.m */,
 				8E75B041184577E0000AEEB8 /* GLHud.h */,
+				8E2FA2A318695C480021A471 /* Spark.sks */,
+				8E2FA2A418695C480021A471 /* spark.png */,
 				8E75B042184577E0000AEEB8 /* GLHud.m */,
 				ED581D9A186276880016F98D /* GLHUDSettingsManager.h */,
 				ED581D9B186276880016F98D /* GLHUDSettingsManager.m */,
@@ -610,6 +621,7 @@
 				8E75B03918419670000AEEB8 /* ring@2x.png in Resources */,
 				8EA2651E185966A600351F5E /* arrow-right@2x.png in Resources */,
 				8EA265071858033A00351F5E /* settings.collapse.2.wav in Resources */,
+				8E2FA2A518695C480021A471 /* Spark.sks in Resources */,
 				8EA2653A1859723500351F5E /* droplet@2x.png in Resources */,
 				ED2CB96D185C105200319DE5 /* tile.spiral.png in Resources */,
 				8E75B04A1846CB23000AEEB8 /* restore.png in Resources */,
@@ -647,6 +659,7 @@
 				8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */,
 				8E2FA2A11867C7B70021A471 /* reset.1.wav in Resources */,
 				8E75B04618466F7F000AEEB8 /* camera.png in Resources */,
+				8E2FA2A618695C480021A471 /* spark.png in Resources */,
 				8EA2653518596FC800351F5E /* camera2.png in Resources */,
 				8EAA38B918601D3A00DA5CED /* slider.on.wav in Resources */,
 				8EA2652518596BBF00351F5E /* undo2.png in Resources */,
@@ -676,6 +689,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EA2650E18595C6700351F5E /* GLToggleControl.m in Sources */,
+				8E2FA2A91869DC750021A471 /* GLColorSwatch.m in Sources */,
 				ED581D9C186276880016F98D /* GLHUDSettingsManager.m in Sources */,
 				8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */,
 				8E254A83185BBB090068A3F9 /* GLUIButton.m in Sources */,
