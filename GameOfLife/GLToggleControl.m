@@ -317,14 +317,15 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
-   if (/*[self.hitBox containsPoint:[touch locationInNode:self]] && */!_stateSetFromSlide)
+   float touchX = [touch locationInNode:self].x;
+   if (touchX < -CGRectGetWidth(self.calculateAccumulatedFrame) * .5 ||
+       touchX > CGRectGetWidth(self.calculateAccumulatedFrame) * .5)
    {
-//      [self runAction:_toggleSound];
-      [self toggle:YES];
+      [super handleTouchEnded:touch];
+      return;
    }
-   else
-      [self toggle:NO];
 
+   [self toggle:(_stateSetFromSlide)? NO : YES];
    [super handleTouchEnded:touch];
 }
 

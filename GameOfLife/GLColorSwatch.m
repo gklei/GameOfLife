@@ -8,6 +8,37 @@
 
 #import "GLColorSwatch.h"
 
+@interface GLColorSwatch()
+{
+   SKSpriteNode *_outerRing;
+   SKSpriteNode *_innerFill;
+}
+@end
+
 @implementation GLColorSwatch
+
+- (id)init
+{
+   if (self = [super init])
+   {
+      [self setupSwatchImages];
+      [self setupHitBox];
+   }
+   return self;
+}
+
+- (void)setupSwatchImages
+{
+   _outerRing = [SKSpriteNode spriteNodeWithImageNamed:@"color-swatch-ring-outer.png"];
+   _outerRing.colorBlendFactor = 1.0;
+   [self addChild:_outerRing];
+}
+
+- (void)setupHitBox
+{
+   self.hitBox.size = _outerRing.size;
+   self.hitBox.position = _outerRing.position;
+   [self addChild:self.hitBox];
+}
 
 @end

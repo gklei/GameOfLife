@@ -27,6 +27,7 @@
 		8E2FA2A518695C480021A471 /* Spark.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2A318695C480021A471 /* Spark.sks */; };
 		8E2FA2A618695C480021A471 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2A418695C480021A471 /* spark.png */; };
 		8E2FA2A91869DC750021A471 /* GLColorSwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2FA2A81869DC750021A471 /* GLColorSwatch.m */; };
+		8E2FA2AB1869DDD90021A471 /* color-swatch-ring-outer.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2AA1869DDD90021A471 /* color-swatch-ring-outer.png */; };
 		8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02B184164F7000AEEB8 /* expand_left.png */; };
 		8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02C184164F7000AEEB8 /* expand_left@2x.png */; };
 		8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B030184169BF000AEEB8 /* GLColorHud.m */; };
@@ -161,6 +162,7 @@
 		8E2FA2A418695C480021A471 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		8E2FA2A71869DC750021A471 /* GLColorSwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorSwatch.h; sourceTree = "<group>"; };
 		8E2FA2A81869DC750021A471 /* GLColorSwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorSwatch.m; sourceTree = "<group>"; };
+		8E2FA2AA1869DDD90021A471 /* color-swatch-ring-outer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "color-swatch-ring-outer.png"; path = "Images/color-swatch-ring-outer.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02F184169BF000AEEB8 /* GLColorHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorHud.h; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8E2FA2AA1869DDD90021A471 /* color-swatch-ring-outer.png */,
 				8E2FA2951867B23B0021A471 /* palette_48.png */,
 				8E2FA29318679CAE0021A471 /* splash2_48.png */,
 				8E2FA2911866B4640021A471 /* splash2.png */,
@@ -652,6 +655,7 @@
 				8E99B2C1182F7A1200C7AEDB /* stop@2x.png in Resources */,
 				ED292D1B185C90650031696D /* tile.smiley.png in Resources */,
 				8E75B04718466F7F000AEEB8 /* camera@2x.png in Resources */,
+				8E2FA2AB1869DDD90021A471 /* color-swatch-ring-outer.png in Resources */,
 				8EA265391859723500351F5E /* droplet.png in Resources */,
 				8EAA38B0185D91EB00DA5CED /* slider-end-right.png in Resources */,
 				8EA265051858033A00351F5E /* flash.wav in Resources */,
