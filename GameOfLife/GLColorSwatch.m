@@ -31,6 +31,9 @@
 {
    _outerRing = [SKSpriteNode spriteNodeWithImageNamed:@"color-swatch-ring-outer.png"];
    _outerRing.colorBlendFactor = 1.0;
+   _outerRing.color = [SKColor whiteColor];
+   [_outerRing setScale:.75];
+
    [self addChild:_outerRing];
 }
 

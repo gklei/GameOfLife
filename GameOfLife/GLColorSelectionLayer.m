@@ -7,6 +7,7 @@
 //
 
 #import "GLColorSelectionLayer.h"
+#import "GLColorSwatch.h"
 
 @implementation GLColorSelectionLayer
 
@@ -17,6 +18,7 @@
                       anchorPoint:anchorPoint])
    {
       [self setupTitleLabel];
+      [self setupColorGrid];
    }
    return self;
 }
@@ -31,8 +33,16 @@
    titleLabel.alpha = 1;
    titleLabel.fontSize = HEADING_FONT_SIZE;
    titleLabel.position = CGPointMake(self.size.width * 0.5,
-                                        -(HEADING_FONT_SIZE + TOP_PADDING));
+                                     -(HEADING_FONT_SIZE + TOP_PADDING));
    [self addChild:titleLabel];
+}
+
+- (void)setupColorGrid
+{
+   GLColorSwatch *colorSwatch = [[GLColorSwatch alloc] init];
+   colorSwatch.position = CGPointMake(self.size.width * 0.5,
+                                      -(HEADING_FONT_SIZE + TOP_PADDING*3));
+   [self addChild:colorSwatch];
 }
 
 @end
