@@ -78,7 +78,11 @@
       NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
       BOOL state = [defaults boolForKey:_preferenceKey];
       if (state == e_TOGGLE_CONTROL_ENABLED)
+      {
+         _toggleSound = nil;
          [self toggle:YES];
+         _toggleSound = [SKAction playSoundFileNamed:@"toggle.1.wav" waitForCompletion:NO];
+      }
    }
    
    return self;

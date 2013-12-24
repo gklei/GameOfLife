@@ -8,6 +8,11 @@
 
 #import "GLUIActionButton.h"
 
-@interface GLColorSwatch : GLUIActionButton
+typedef NS_ENUM(int, GL_COLOR_SWATCH_STATE)
+{
+   e_COLOR_SWATCH_DISABLED = 0,
+   e_COLOR_SWATCH_ENABLED
+};
 
+@interface GLColorSwatch : GLUIActionButton
 @end

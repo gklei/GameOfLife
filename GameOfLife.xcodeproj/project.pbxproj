@@ -28,6 +28,8 @@
 		8E2FA2A618695C480021A471 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2A418695C480021A471 /* spark.png */; };
 		8E2FA2A91869DC750021A471 /* GLColorSwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2FA2A81869DC750021A471 /* GLColorSwatch.m */; };
 		8E2FA2AB1869DDD90021A471 /* color-swatch-ring-outer.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2AA1869DDD90021A471 /* color-swatch-ring-outer.png */; };
+		8E2FA2AE1869E3ED0021A471 /* GLColorGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */; };
+		8E2FA2B01869E4BA0021A471 /* color-swatch-fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2AF1869E4BA0021A471 /* color-swatch-fill.png */; };
 		8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02B184164F7000AEEB8 /* expand_left.png */; };
 		8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02C184164F7000AEEB8 /* expand_left@2x.png */; };
 		8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B030184169BF000AEEB8 /* GLColorHud.m */; };
@@ -163,6 +165,9 @@
 		8E2FA2A71869DC750021A471 /* GLColorSwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorSwatch.h; sourceTree = "<group>"; };
 		8E2FA2A81869DC750021A471 /* GLColorSwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorSwatch.m; sourceTree = "<group>"; };
 		8E2FA2AA1869DDD90021A471 /* color-swatch-ring-outer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "color-swatch-ring-outer.png"; path = "Images/color-swatch-ring-outer.png"; sourceTree = SOURCE_ROOT; };
+		8E2FA2AC1869E3ED0021A471 /* GLColorGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorGrid.h; sourceTree = "<group>"; };
+		8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorGrid.m; sourceTree = "<group>"; };
+		8E2FA2AF1869E4BA0021A471 /* color-swatch-fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "color-swatch-fill.png"; path = "Images/color-swatch-fill.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02F184169BF000AEEB8 /* GLColorHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorHud.h; sourceTree = "<group>"; };
@@ -304,6 +309,7 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8E2FA2AF1869E4BA0021A471 /* color-swatch-fill.png */,
 				8E2FA2AA1869DDD90021A471 /* color-swatch-ring-outer.png */,
 				8E2FA2951867B23B0021A471 /* palette_48.png */,
 				8E2FA29318679CAE0021A471 /* splash2_48.png */,
@@ -439,6 +445,8 @@
 				8E75B030184169BF000AEEB8 /* GLColorHud.m */,
 				8E2FA2971867BB080021A471 /* GLColorSelectionLayer.h */,
 				8E2FA2981867BB080021A471 /* GLColorSelectionLayer.m */,
+				8E2FA2AC1869E3ED0021A471 /* GLColorGrid.h */,
+				8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */,
 				8E2FA2A71869DC750021A471 /* GLColorSwatch.h */,
 				8E2FA2A81869DC750021A471 /* GLColorSwatch.m */,
 				8E75B03E1842FFE3000AEEB8 /* GLGeneralHud.h */,
@@ -621,6 +629,7 @@
 				ED2CB96C185C105200319DE5 /* tile.buldge.png in Resources */,
 				8E75B03C1841C909000AEEB8 /* drop.png in Resources */,
 				8E254A8A185C3F980068A3F9 /* slider-middle@2x.png in Resources */,
+				8E2FA2B01869E4BA0021A471 /* color-swatch-fill.png in Resources */,
 				8E75B03918419670000AEEB8 /* ring@2x.png in Resources */,
 				8EA2651E185966A600351F5E /* arrow-right@2x.png in Resources */,
 				8EA265071858033A00351F5E /* settings.collapse.2.wav in Resources */,
@@ -702,6 +711,7 @@
 				8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */,
 				8E75B0401842FFE3000AEEB8 /* GLGeneralHud.m in Sources */,
 				8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */,
+				8E2FA2AE1869E3ED0021A471 /* GLColorGrid.m in Sources */,
 				8E2FA29C1867BBED0021A471 /* GLMenuLayer.m in Sources */,
 				8E2FA2991867BB080021A471 /* GLColorSelectionLayer.m in Sources */,
 				8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */,
