@@ -99,6 +99,11 @@
 
 - (void)handleTouchMoved:(UITouch *)touch
 {
+   if ([self.hitBox containsPoint:[touch locationInNode:self]])
+   {
+      _glowEffect.shouldEnableEffects = (_persistGlow)? YES : NO;
+      _hasFocus = NO;
+   }
 }
 
 - (void)setColor:(UIColor *)color
