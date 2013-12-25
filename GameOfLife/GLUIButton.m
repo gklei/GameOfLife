@@ -49,10 +49,10 @@
 {
    _glowEffect = [SKEffectNode node];
    CIFilter *filter = [CIFilter filterWithName:@"CIBloom"];
-   [filter setValue:[NSNumber numberWithFloat:1.5f] forKey:@"inputIntensity"];
+   [filter setValue:[NSNumber numberWithFloat:2.0f] forKey:@"inputIntensity"];
 
    // Large radius makes result EVEN SMALLER:
-   [filter setValue:[NSNumber numberWithFloat:10.f] forKey:@"inputRadius"];
+   [filter setValue:[NSNumber numberWithFloat:2.5f] forKey:@"inputRadius"];
 
    _glowEffect.filter = filter;
    _glowEffect.shouldEnableEffects = NO;
@@ -79,6 +79,11 @@
    return self.calculateAccumulatedFrame;
 }
 
+- (void)glow
+{
+   _glowEffect.shouldEnableEffects = YES;
+}
+
 - (void)loseFocus
 {
    _glowEffect.shouldEnableEffects = NO;
@@ -99,7 +104,7 @@
 
 - (void)handleTouchMoved:(UITouch *)touch
 {
-   if ([self.hitBox containsPoint:[touch locationInNode:self]])
+   if (![self.hitBox containsPoint:[touch locationInNode:self]])
    {
       _glowEffect.shouldEnableEffects = (_persistGlow)? YES : NO;
       _hasFocus = NO;

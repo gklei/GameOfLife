@@ -166,7 +166,7 @@
 		8E2FA2A81869DC750021A471 /* GLColorSwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorSwatch.m; sourceTree = "<group>"; };
 		8E2FA2AA1869DDD90021A471 /* color-swatch-ring-outer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "color-swatch-ring-outer.png"; path = "Images/color-swatch-ring-outer.png"; sourceTree = SOURCE_ROOT; };
 		8E2FA2AC1869E3ED0021A471 /* GLColorGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorGrid.h; sourceTree = "<group>"; };
-		8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorGrid.m; sourceTree = "<group>"; };
+		8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLColorGrid.m; sourceTree = "<group>"; };
 		8E2FA2AF1869E4BA0021A471 /* color-swatch-fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "color-swatch-fill.png"; path = "Images/color-swatch-fill.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };

@@ -16,7 +16,7 @@
 #define COLOR_DROP_PADDING 42
 #define COLOR_DROP_CAPACITY 5
 #define COLOR_DROP_SCALE .75
-#define SELECTED_COLOR_DROP_SCALE 1.15
+#define SELECTED_COLOR_DROP_SCALE 1
 #define HIT_DIST_FROM_POSITION 4
 
 #define BACKGROUND_ALPHA_SETTINGS_COLLAPSED .7
@@ -143,12 +143,11 @@
 -(void)addColorDrops
 {
    _colorDrops = [NSMutableArray arrayWithCapacity:COLOR_DROP_CAPACITY];
-   NSArray *colorDropColors = @[[SKColor crayolaCaribbeanGreenColor],
-                                [SKColor crayolaRobinsEggBlueColor],
-                                [SKColor crayolaRazzleDazzleRoseColor],
-                                [SKColor crayolaSizzlingRedColor],
-                                [SKColor crayolaNeonCarrotColor],
-                                [SKColor crayolaLemonYellowColor]];
+   NSArray *colorDropColors = @[[SKColor crayolaCeruleanColor],
+                                [SKColor crayolaCaribbeanGreenColor],
+                                [SKColor crayolaLimeColor],
+                                [SKColor crayolaOrangeRedColor],
+                                [SKColor crayolaPinkFlamingoColor]];
 
    for (int i=0; i<COLOR_DROP_CAPACITY; ++i)
    {
@@ -161,7 +160,10 @@
       drop.alpha = .75;
       drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
 
-      void (^colorDropActionBlock)() = ^{[self updateCurrentColorDrop:drop];};
+      void (^colorDropActionBlock)() = ^
+      {
+         [self updateCurrentColorDrop:drop];
+      };
       drop.actionBlock = colorDropActionBlock;
 
       [_colorDrops insertObject:drop atIndex:i];
@@ -183,6 +185,10 @@
 {
    if (_currentColorDrop != colorDropButton)
    {
+      colorDropButton.persistGlow = YES;
+      _currentColorDrop.persistGlow = NO;
+      [_currentColorDrop loseFocus];
+
       [self runAction:_colorDropButtonSound];
       SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
       SKAction *deselectScaleAction = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
@@ -375,7 +381,11 @@
             SKAction *wait = [SKAction waitForDuration:.2];
             SKAction *rescaleSelectedDrop = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
             SKAction *scaleSequence = [SKAction sequence:@[wait, rescaleSelectedDrop]];
-            [_currentColorDrop runAction:scaleSequence completion:^{[self.delegate hudDidExpand:self];}];
+            [_currentColorDrop runAction:scaleSequence completion:^
+            {
+               [_currentColorDrop glow];
+               [self.delegate hudDidExpand:self];
+            }];
          }
          else
          {

@@ -190,6 +190,7 @@
       [self.delegate clearButtonPressed];
    };
    _clearButton.actionBlock = clearButtonActionBlock;
+   _clearButton.color = [SKColor crayolaSizzlingRedColor];
 
    _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
    void (^restoreButtonActionBlock)() = ^
@@ -279,7 +280,7 @@
    SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_EXPANDED
                                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
 
-//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
    SKAction *backgroundActions = [SKAction group:@[expand, changeBackgroundAlpha]];
 
    expand.timingMode = SKActionTimingEaseInEaseOut;
@@ -297,7 +298,7 @@
     }];
 
    [self.delegate settingsWillExpandWithRepositioningAction:expand];
-   [_settingsButton runAction:spin completion:completionBlock];
+   [_settingsButton runAction:buttonActions completion:completionBlock];
 }
 
 - (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
@@ -320,7 +321,7 @@
    SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_COLLAPSED
                                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
 
-//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
+   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
    SKAction *backgroundActions = [SKAction group:@[collapse, changeBackgroundAlpha]];
 
    collapse.timingMode = SKActionTimingEaseInEaseOut;
@@ -338,7 +339,7 @@
     }];
 
    [self.delegate settingsWillCollapseWithRepositioningAction:collapse];
-   [_settingsButton runAction:spin completion:completionBlock];
+   [_settingsButton runAction:buttonActions completion:completionBlock];
 }
 
 - (void)toggleSettings
@@ -348,7 +349,7 @@
 //      [_particleGenerator removeFromParent];
       [self collapseSettingsWithCompletionBlock:^
        {
-//          _settingsButton.color = [SKColor whiteColor];
+          _settingsButton.color = [SKColor whiteColor];
           _settingsLayer.hidden = YES;
        }];
    }
@@ -360,7 +361,7 @@
           {
 //             _particleGenerator.numParticlesToEmit = 100000;
 //             [self addChild:_particleGenerator];
-//             _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
+             _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
              _settingsLayer.hidden = NO;
           }
        }];

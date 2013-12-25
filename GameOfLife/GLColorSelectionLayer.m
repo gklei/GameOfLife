@@ -39,8 +39,8 @@
 
 - (void)setupColorGrid
 {
-   GLColorGrid *colorGrid = [[GLColorGrid alloc] initWithSize:CGSizeMake(5, 6)];
-   colorGrid.position = CGPointMake(45, -self.size.height + 85);
+   GLColorGrid *colorGrid = [[GLColorGrid alloc] initWithSize:CGSizeMake(5, 5)];
+   colorGrid.position = CGPointMake(44, -self.size.height + 70);
    [self addChild:colorGrid];
 }
 

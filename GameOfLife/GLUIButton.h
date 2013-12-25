@@ -18,6 +18,7 @@
 - (NSString *)stringValue;
 - (NSString *)longestPossibleStringValue;
 - (CGRect)largestPossibleAccumulatedFrame;
+- (void)glow;
 - (void)loseFocus;
 
 @property (nonatomic, readwrite) SKSpriteNode *hitBox;

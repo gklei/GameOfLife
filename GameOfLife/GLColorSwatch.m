@@ -8,8 +8,8 @@
 
 #import "GLColorSwatch.h"
 
-#define COLOR_SWATCH_OUTER_RING_SCALE .65
-#define COLOR_SWATCH_INNER_FILL_SCALE .65
+#define COLOR_SWATCH_OUTER_RING_SCALE .60
+#define COLOR_SWATCH_INNER_FILL_SCALE .60
 #define COLOR_SWATCH_FILL_EMPTY_DURATION .25
 
 @interface GLColorSwatch()
@@ -58,10 +58,10 @@
    _innerFill.colorBlendFactor = 1.0;
    _innerFill.color = [SKColor whiteColor];
    _innerFill.position = _outerRing.position;
-   [_innerFill setScale:0];
+   [_innerFill setScale:COLOR_SWATCH_INNER_FILL_SCALE];
 
+//   [self addChild:_outerRing];
    [self addChild:_innerFill];
-   [self addChild:_outerRing];
 }
 
 - (void)setupHitBox
@@ -73,7 +73,7 @@
 
 - (void)setColor:(UIColor *)color
 {
-   _outerRing.color = color;
+//   _outerRing.color = color;
    _innerFill.color = color;
 }
 
@@ -87,12 +87,14 @@
    if (_state == e_COLOR_SWATCH_DISABLED)
    {
       _state = e_COLOR_SWATCH_ENABLED;
-      [_innerFill runAction:_fillAnimation];
+//      [_innerFill runAction:_fillAnimation];
+//      self.persistGlow = YES;
    }
    else
    {
       _state = e_COLOR_SWATCH_DISABLED;
-      [_innerFill runAction:_emptyAnimation];
+//      [_innerFill runAction:_emptyAnimation];
+//      self.persistGlow = NO;
    }
 }
 
