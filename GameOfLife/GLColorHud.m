@@ -8,6 +8,7 @@
 
 #import "GLColorHud.h"
 #import "UIColor+Crayola.h"
+#import "GLColorGrid.h"
 #import "GLGridScene.h"
 #import "GLUIActionButton.h"
 #import "GLColorSelectionLayer.h"
@@ -16,7 +17,7 @@
 #define COLOR_DROP_PADDING 42
 #define COLOR_DROP_CAPACITY 5
 #define COLOR_DROP_SCALE .75
-#define SELECTED_COLOR_DROP_SCALE 1
+#define SELECTED_COLOR_DROP_SCALE 1.15
 #define HIT_DIST_FROM_POSITION 4
 
 #define BACKGROUND_ALPHA_SETTINGS_COLLAPSED .7
@@ -29,7 +30,7 @@
 #define REPOSITION_BUTTONS_DURATION .25
 #define WAIT_BEFORE_COLORIZE_DURATION .25
 
-@interface GLColorHud()
+@interface GLColorHud() <GLColorGridDelegate>
 {
    CGSize _defaultSize;
    SKSpriteNode *_backgroundLayer;
@@ -89,7 +90,8 @@
                                                           anchorPoint:_backgroundLayer.anchorPoint];
    _colorSelectionLayer.alpha = 5;
    _colorSelectionLayer.hidden = YES;
-   _colorSelectionLayer.name = @"settings_layer";
+   _colorSelectionLayer.name = @"color_selection_layer";
+   _colorSelectionLayer.colorGrid.colorGridDelegate = self;
    [_backgroundLayer addChild:_colorSelectionLayer];
 }
 
@@ -160,10 +162,7 @@
       drop.alpha = .75;
       drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
 
-      void (^colorDropActionBlock)() = ^
-      {
-         [self updateCurrentColorDrop:drop];
-      };
+      void (^colorDropActionBlock)() = ^{[self updateCurrentColorDrop:drop];};
       drop.actionBlock = colorDropActionBlock;
 
       [_colorDrops insertObject:drop atIndex:i];
@@ -171,6 +170,7 @@
    }
    _currentColorDrop = _colorDrops.firstObject;
    _currentColor = _currentColorDrop.color;
+   [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
 }
 
 - (void)setColorDropsHidden:(BOOL)hidden
@@ -185,10 +185,6 @@
 {
    if (_currentColorDrop != colorDropButton)
    {
-      colorDropButton.persistGlow = YES;
-      _currentColorDrop.persistGlow = NO;
-      [_currentColorDrop loseFocus];
-
       [self runAction:_colorDropButtonSound];
       SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
       SKAction *deselectScaleAction = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
@@ -203,7 +199,9 @@
       [colorDropButton runAction:selectAnimation];
 
       _currentColorDrop = colorDropButton;
-      [self.delegate setCurrentColor:_currentColorDrop.color];
+      _currentColor = _currentColorDrop.color;
+      [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColorDrop.color];
+//      [self.delegate setCurrentColor:_currentColorDrop.color];
    }
 }
 - (void)expandColorGridWithCompletionBlock:(void (^)())completionBlock
@@ -381,11 +379,7 @@
             SKAction *wait = [SKAction waitForDuration:.2];
             SKAction *rescaleSelectedDrop = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
             SKAction *scaleSequence = [SKAction sequence:@[wait, rescaleSelectedDrop]];
-            [_currentColorDrop runAction:scaleSequence completion:^
-            {
-               [_currentColorDrop glow];
-               [self.delegate hudDidExpand:self];
-            }];
+            [_currentColorDrop runAction:scaleSequence completion:^{[self.delegate hudDidExpand:self];}];
          }
          else
          {
@@ -503,6 +497,13 @@
    _backgroundLayer.hidden = NO;
    _splashButton.hidden = NO;
    _paletteButton.hidden = NO;
+}
+
+- (void)colorGridColorChanged:(UIColor *)newColor
+{
+   _currentColorDrop.color = newColor;
+   _currentColor = newColor;
+   [self.delegate setCurrentColor:newColor];
 }
 
 @end

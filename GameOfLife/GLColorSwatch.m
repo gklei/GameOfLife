@@ -79,7 +79,7 @@
 
 - (UIColor *)color
 {
-   return _outerRing.color;
+   return _innerFill.color;
 }
 
 - (void)toggle
@@ -96,6 +96,7 @@
 //      [_innerFill runAction:_emptyAnimation];
 //      self.persistGlow = NO;
    }
+   [_swatchSelectionDelegate swatchSelected:self];
 }
 
 - (void)handleTouchEnded:(UITouch *)touch

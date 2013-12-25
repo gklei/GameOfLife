@@ -9,5 +9,8 @@
 #import <SpriteKit/SpriteKit.h>
 #import "GLMenuLayer.h"
 
+@class GLColorGrid;
 @interface GLColorSelectionLayer : GLMenuLayer
+
+@property (nonatomic, readonly) GLColorGrid *colorGrid;
 @end

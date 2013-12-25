@@ -15,11 +15,17 @@ typedef struct {
    int columns;
 } ColorGridDimensions;
 
+@protocol GLColorGridDelegate <NSObject>
+- (void)colorGridColorChanged:(SKColor *)newColor;
+@end
+
 @interface GLColorGrid : SKNode
 
 @property (nonatomic, readonly) ColorGridDimensions dimensions;
-@property (nonatomic, readwrite) GLColorSwatch *selectedSwatch;
+//@property (nonatomic, readwrite) GLColorSwatch *selectedSwatch;
+@property (nonatomic, retain) id<GLColorGridDelegate> colorGridDelegate;
 
 - (id)initWithSize:(CGSize)size;
+- (void)updateSelectedColor:(SKColor *)newColor;
 
 @end

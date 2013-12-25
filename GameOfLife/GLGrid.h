@@ -14,7 +14,6 @@ typedef struct {
 } GridDimensions;
 
 @class GLTileNode;
-
 @interface GLGrid : SKNode
 
 @property (nonatomic, readonly) NSUInteger generationCount;

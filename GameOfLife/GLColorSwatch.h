@@ -8,14 +8,21 @@
 
 #import "GLUIActionButton.h"
 
+@class GLColorSwatch;
+
 typedef NS_ENUM(int, GL_COLOR_SWATCH_STATE)
 {
    e_COLOR_SWATCH_DISABLED = 0,
    e_COLOR_SWATCH_ENABLED
 };
 
+@protocol GLColorSwatchSelection <NSObject>
+   - (void)swatchSelected:(GLColorSwatch *)swatch;
+@end
+
 @interface GLColorSwatch : GLUIActionButton
 
-@property (nonatomic, readonly) GL_COLOR_SWATCH_STATE state;
+@property (nonatomic, readwrite) GL_COLOR_SWATCH_STATE state;
+@property (nonatomic, retain) id<GLColorSwatchSelection> swatchSelectionDelegate;
 
 @end
