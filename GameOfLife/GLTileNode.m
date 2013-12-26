@@ -8,6 +8,9 @@
 
 #import "GLTileNode.h"
 
+#define TILE_SCALE_DEFAULT 1
+#define TILE_SCALE_FOCUSED 1.3
+
 @implementation GLTileNode
 
 + (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect
@@ -21,10 +24,43 @@
    tile.isLiving = NO;
    tile.glowEnabled = YES;
 
-   BeganFocusActionBlock beganFocusActionBlock = ^{NSLog(@"tile touched");};
+   BeganFocusActionBlock beganFocusActionBlock = ^
+   {
+      if (!tile.isLiving)
+      {
+         SKNode *parent = tile.parent;
+         [tile removeFromParent];
+         [parent addChild:tile];
+         SKAction *rotateRight = [SKAction rotateByAngle:-M_PI_2 duration:.2];
+         SKAction *scaleUp = [SKAction scaleTo:TILE_SCALE_FOCUSED duration:.2];
+
+         rotateRight.timingMode = SKActionTimingEaseInEaseOut;
+         scaleUp.timingMode = SKActionTimingEaseInEaseOut;
+
+         [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
+              completion:^
+         {
+            [tile setScale:TILE_SCALE_FOCUSED];
+            tile.zRotation = -M_PI_2;
+         }];
+      }
+   };
+
    tile.beganFocusActionBlock = beganFocusActionBlock;
 
-   LoseFocusActionBlock loseFocusActionBlock = ^{NSLog(@"tile released");};
+   LoseFocusActionBlock loseFocusActionBlock = ^
+   {
+      SKAction *scaleDown = [SKAction scaleTo:TILE_SCALE_DEFAULT duration:.2];
+      scaleDown.timingMode = SKActionTimingEaseInEaseOut;
+
+      [tile runAction:scaleDown
+           completion:^
+      {
+         if (tile.xScale != TILE_SCALE_DEFAULT || tile.yScale != TILE_SCALE_DEFAULT)
+            [tile setScale:TILE_SCALE_DEFAULT];
+      }];
+   };
+
    tile.loseFocusActionBlock = loseFocusActionBlock;
 
    tile.color = [SKColor crayolaCoconutColor];
