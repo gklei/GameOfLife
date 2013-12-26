@@ -105,17 +105,11 @@ BOOL _decreasing;
    [self registerToggleItemWithLabel:@"LOOP DETECTION" andKeyPath:@"LoopDetection"];
 }
 
-- (void)registerSmartCameraHUD
-{
-   [self registerToggleItemWithLabel:@"SMART CAMERA" andKeyPath:@"SmartCamera"];
-}
-
 - (void)registerHudParameters
 {
    [self registerSoundFxHUD];
    [self registerSmartMenuHUD];
    [self registerGeneralDurationHUD];
-   [self registerSmartCameraHUD];
    [self registerLoopDetectionHUD];
 }
 
@@ -138,12 +132,6 @@ BOOL _decreasing;
    [hudManager addObserver:self forKeyPath:@"LoopDetection"];
 }
 
-- (void)observeSmartCameraChanges
-{
-   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
-   [hudManager addObserver:self forKeyPath:@"SmartCamera"];
-}
-
 - (void)observeGeneralDurationChanges
 {
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
@@ -154,7 +142,6 @@ BOOL _decreasing;
 {
    [self observeSoundFxChanges];
    [self observeSmartMenuChanges];
-   [self observeSmartCameraChanges];
    [self observeLoopDetectionChanges];
    [self observeGeneralDurationChanges];
 }
@@ -433,6 +420,8 @@ BOOL _decreasing;
       [self runAction:_fingerUpSoundFX];
       _oneTileTouched = NO;
    }
+
+   [_currentTileBeingTouched handleTouchEnded:touch];
    _currentTileBeingTouched = nil;
 }
 
@@ -587,6 +576,10 @@ BOOL _decreasing;
    if (_currentTileBeingTouched != tile)
    {
       _oneTileTouched = (_currentTileBeingTouched == nil);
+
+      [_currentTileBeingTouched handleTouchEnded:touch];
+      [tile handleTouchBegan:touch];
+      
       _currentTileBeingTouched = tile;
       [self runAction:soundFX];
       [tile updateLivingAndColor:!tile.isLiving];
@@ -625,12 +618,6 @@ BOOL _decreasing;
     
     if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
     {
-    }
-
-    if ([keyPath compare:@"SmartCamera"] == NSOrderedSame)
-    {
-       assert(type == HVT_BOOL);
-       _autoHideHUDLayersForScreenshot = [value boolValue];
     }
 
     if ([keyPath compare:@"LoopDetection"] == NSOrderedSame)

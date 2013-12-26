@@ -8,12 +8,13 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "UIColor+Crayola.h"
+#import "GLUIActionButton.h"
 
 @protocol GLTileColorDelegate <NSObject>
    - (SKColor *)currentTileColor;
 @end
 
-@interface GLTileNode : SKSpriteNode
+@interface GLTileNode : GLUIActionButton
 
 @property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
 @property (nonatomic, assign) float birthingDuration;
@@ -28,7 +29,7 @@
 @property (nonatomic, assign) float maxColorDistance;
 @property (nonatomic, assign) CGPoint colorCenter;
 
-@property (strong, nonatomic) id<GLTileColorDelegate> delegate;
+@property (strong, nonatomic) id<GLTileColorDelegate> tileColorDelegate;
 
 //+ (id)tileWithRect:(CGRect)rect;
 //+ (id)tileWithImageNamed:(NSString *)imageName rect:(CGRect)rect;

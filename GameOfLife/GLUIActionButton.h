@@ -10,9 +10,13 @@
 #import "GLUIButton.h"
 
 typedef void (^ActionBlock)();
+typedef void (^BeganFocusActionBlock)();
+typedef void (^LoseFocusActionBlock)();
 
 @interface GLUIActionButton : GLUIButton
 
 @property (readwrite, copy) ActionBlock actionBlock;
+@property (readwrite, copy) BeganFocusActionBlock beganFocusActionBlock;
+@property (readwrite, copy) LoseFocusActionBlock loseFocusActionBlock;
 
 @end

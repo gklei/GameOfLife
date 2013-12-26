@@ -19,6 +19,14 @@
    tile.size = rect.size;
    tile.colorBlendFactor = 1.0;
    tile.isLiving = NO;
+   tile.glowEnabled = YES;
+
+   BeganFocusActionBlock beganFocusActionBlock = ^{NSLog(@"tile touched");};
+   tile.beganFocusActionBlock = beganFocusActionBlock;
+
+   LoseFocusActionBlock loseFocusActionBlock = ^{NSLog(@"tile released");};
+   tile.loseFocusActionBlock = loseFocusActionBlock;
+
    tile.color = [SKColor crayolaCoconutColor];
    tile.liveColorName = CCN_crayolaMulberryColor - 1;
    tile.deadColorName = CCN_crayolaCoconutColor;
@@ -59,7 +67,7 @@
 //                          alpha:1.0];
 
    float dist = [self colorDistance] * 1.2;
-   SKColor *currentColor = [_delegate currentTileColor];
+   SKColor *currentColor = [_tileColorDelegate currentTileColor];
 
    CGFloat r, g, b;
 

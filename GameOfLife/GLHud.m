@@ -32,10 +32,12 @@
 {
 }
 
+// empty implementation -- this should be overridden by subclasses
 - (void)hide
 {
 }
 
+// empty implementation -- this should be overridden by subclasses
 - (void)show
 {
 }

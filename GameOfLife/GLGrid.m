@@ -96,7 +96,7 @@
          if (texture2)
             tile.liveTexture = texture2;
          
-         tile.delegate = self;
+         tile.tileColorDelegate = self;
          [self addChild:tile];
       }
    }

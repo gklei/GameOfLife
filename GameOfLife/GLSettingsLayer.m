@@ -96,7 +96,6 @@
       NSArray * keyPaths = [NSArray arrayWithObjects:@"GenerationDuration",
                                                      @"SoundFX",
                                                      @"SmartMenu",
-                                                     @"SmartCamera",
                                                      @"LoopDetection",
                                                      nil];
       [self setupHudItemsforKeys:keyPaths];

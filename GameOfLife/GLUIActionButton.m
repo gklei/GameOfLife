@@ -26,11 +26,22 @@
    return button;
 }
 
+- (void)handleTouchBegan:(UITouch *)touch
+{
+   if (_beganFocusActionBlock)
+      _beganFocusActionBlock();
+
+   [super handleTouchBegan:touch];
+}
+
 - (void)handleTouchEnded:(UITouch *)touch
 {
    CGPoint convertedPoint = [touch locationInNode:self];
    if ([self.hitBox containsPoint:convertedPoint] && _actionBlock)
       _actionBlock();
+
+   if (_loseFocusActionBlock)
+      _loseFocusActionBlock();
 
    [super handleTouchEnded:touch];
 }
