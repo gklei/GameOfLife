@@ -190,7 +190,7 @@
       [self.delegate clearButtonPressed];
    };
    _clearButton.actionBlock = clearButtonActionBlock;
-   _clearButton.color = [SKColor crayolaRustyRedColor];
+//   _clearButton.color = [SKColor crayolaRustyRedColor];
 
    _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
    void (^restoreButtonActionBlock)() = ^
