@@ -77,7 +77,6 @@
 {
    _swatchSelectionRing = [SKSpriteNode spriteNodeWithImageNamed:@"color-swatch-ring-outer.png"];
    [_swatchSelectionRing setScale:.7];
-//   _swatchSelectionRing.hidden = NO;
 
    SKEffectNode *glowEffect = [SKEffectNode node];
    CIFilter *filter = [CIFilter filterWithName:@"CIBloom"];
@@ -130,19 +129,14 @@
 {
    GLColorSwatch *nextSwatch = nil;
    for (GLColorSwatch *swatch in _colorSwatches)
-   {
       if ([swatch.color isEqual:newColor])
       {
          nextSwatch = swatch;
          break;
       }
-   }
 
    if (nextSwatch)
-   {
-      [self moveSelectionRingToSwatch:nextSwatch];
-      [_colorGridDelegate colorGridColorChanged:_selectedColorSwatch.color];
-   }
+      [self swatchSelected:nextSwatch];
 }
 
 @end

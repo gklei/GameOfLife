@@ -67,6 +67,7 @@
       [self setupSplashButton];
       [self addColorDrops];
       [self setupPaletteButton];
+      [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
    }
    return self;
 }
@@ -170,7 +171,7 @@
    }
    _currentColorDrop = _colorDrops.firstObject;
    _currentColor = _currentColorDrop.color;
-   [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
+//   [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
 }
 
 - (void)setColorDropsHidden:(BOOL)hidden
@@ -501,7 +502,20 @@
 
 - (void)colorGridColorChanged:(UIColor *)newColor
 {
-   _currentColorDrop.color = newColor;
+   BOOL colorExistsInCurrentPalette = NO;
+   for (GLUIActionButton *drop in _colorDrops)
+   {
+      if ([drop.color isEqual:newColor])
+      {
+         colorExistsInCurrentPalette = YES;
+         [self updateCurrentColorDrop:drop];
+         break;
+      }
+   }
+
+   if (!colorExistsInCurrentPalette)
+      _currentColorDrop.color = newColor;
+   
    _currentColor = newColor;
    [self.delegate setCurrentColor:newColor];
 }

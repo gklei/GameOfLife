@@ -190,7 +190,7 @@
       [self.delegate clearButtonPressed];
    };
    _clearButton.actionBlock = clearButtonActionBlock;
-   _clearButton.color = [SKColor crayolaSizzlingRedColor];
+   _clearButton.color = [SKColor crayolaRustyRedColor];
 
    _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
    void (^restoreButtonActionBlock)() = ^
@@ -242,7 +242,7 @@
             [self runAction:_startAlgorithmSound];
          
          _startStopButton.texture = [SKTexture textureWithImageNamed:@"pause"];
-         _startStopButton.color = [SKColor crayolaRadicalRedColor];
+         _startStopButton.color = [SKColor crayolaRustyRedColor];
          break;
       case GL_STOPPED:
          [self runAction:_stopAlgorithmSound];
