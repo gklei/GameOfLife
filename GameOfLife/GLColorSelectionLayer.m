@@ -25,9 +25,9 @@
 
 - (void)setupTitleLabel
 {
-   SKLabelNode *titleLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-Medium"];
+   SKLabelNode *titleLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
 
-   titleLabel.text = @"S E L E C T  A  C O L O R";
+   titleLabel.text = @"C  O  L  O  R  S";
    titleLabel.colorBlendFactor = 1.0;
    titleLabel.color = [SKColor whiteColor];
    titleLabel.alpha = 1;

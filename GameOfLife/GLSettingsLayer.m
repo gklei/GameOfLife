@@ -105,9 +105,9 @@
 
 - (void)setupSettingsLabel
 {
-   SKLabelNode *settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-Medium"];
+   SKLabelNode *settingsLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
 
-   settingsLabel.text = @"S E T T I N G S";
+   settingsLabel.text = @"S  E  T  T  I  N  G  S";
    settingsLabel.colorBlendFactor = 1.0;
    settingsLabel.color = [SKColor whiteColor];
    settingsLabel.alpha = 1;

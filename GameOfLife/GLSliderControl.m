@@ -45,8 +45,7 @@
    SKAction *_grow;
    SKAction *_shrink;
 
-   SKAction *_slidingSoundFX;
-   SKAction *_releaseSoundFX;
+   SKAction *_pressReleaseSoundFX;
 
    AVAudioPlayer *_slidingSoundAudioPlayer;
    NSString *_preferenceKey;
@@ -65,7 +64,7 @@
       [self setupKnob];
       [self setupHitBox];
       [self setupVariables];
-      [self setupSlidingSoundPlayer];
+      [self setupSoundFX];
    }
    return self;
 }
@@ -90,26 +89,6 @@
    return self;
 }
 
-- (void)setupSlidingSoundPlayer
-{
-   NSError *err;
-   NSURL *file = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"slider.on.wav"
-                                                                        ofType:nil]];
-   _slidingSoundAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:file
-                                                                     error:&err];
-   if (err)
-   {
-      NSLog(@"error in audio play %@",[err userInfo]);
-      return;
-   }
-   [_slidingSoundAudioPlayer prepareToPlay];
-
-   // this will play the music infinitely
-//   _slidingSoundAudioPlayer.numberOfLoops = -1;
-//   [_slidingSoundAudioPlayer setVolume:1.0];
-//   [_slidingSoundAudioPlayer play];
-}
-
 - (NSString *)stringValue
 {
    return [NSString stringWithFormat:@"%d%%", (int)(_sliderPosition * 100)];
@@ -127,6 +106,11 @@
    CGRect largestPossibleAccumulatedFrame = self.calculateAccumulatedFrame;
    _sliderPosition = currentPosition;
    return largestPossibleAccumulatedFrame;
+}
+
+- (void)setupSoundFX
+{
+   _pressReleaseSoundFX = [SKAction playSoundFileNamed:@"toggle.1.wav" waitForCompletion:NO];
 }
 
 - (void)setupLeftTrack
@@ -186,9 +170,6 @@
 
    _shrink = [SKAction scaleTo:DEFAULT_KNOB_SCALE duration:.1];
    _shrink.timingMode = SKActionTimingEaseInEaseOut;
-
-   _slidingSoundFX = [SKAction playSoundFileNamed:@"slider.on.wav" waitForCompletion:YES];
-   _releaseSoundFX = [SKAction playSoundFileNamed:@"slider.off.wav" waitForCompletion:YES];
 }
 
 - (void)setSliderValue:(float)value
@@ -251,6 +232,7 @@
 
 - (void)handleTouchBegan:(UITouch *)touch
 {
+   [self runAction:_pressReleaseSoundFX];
    [_knob runAction:_grow];
    [super handleTouchBegan:touch];
 }
@@ -285,6 +267,7 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
+   [self runAction:_pressReleaseSoundFX];
    self.hitBox.position = _knob.position;
 
    [_knob runAction:_shrink];
