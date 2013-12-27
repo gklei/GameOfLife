@@ -108,7 +108,7 @@
    [_splashButton setColor:[SKColor crayolaBlackCoralPearlColor]];
    [_splashButton setScale:.66666666667];
    _splashButton.colorBlendFactor = 1.0;
-   _splashButton.alpha = _backgroundLayer.alpha;
+//   _splashButton.alpha = _backgroundLayer.alpha;
    _splashButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - _splashButton.size.width/2.0 - 2,
                                         HUD_BUTTON_EDGE_PADDING - _splashButton.size.height/2.0);
    _splashButton.name = @"splash";
@@ -323,8 +323,8 @@
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                       colorBlendFactor:1.0
                                               duration:.5];
-   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:1.0
-                                              duration:.5];
+//   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:1.0
+//                                              duration:.5];
    SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor whiteColor]
                                             colorBlendFactor:1.0
                                                     duration:.5];
@@ -334,11 +334,11 @@
 
    slide.timingMode = SKActionTimingEaseInEaseOut;
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
-   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
+//   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
    maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
-   SKAction *buttonActions = [SKAction group:@[changeButtonAlpha,
+   SKAction *buttonActions = [SKAction group:@[//changeButtonAlpha,
                                                changeButtonColor,
                                                rotate]];
    SKAction *backgroundActions = [SKAction group:@[changeHudColor,
@@ -404,8 +404,8 @@
    SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                             colorBlendFactor:1.0
                                                     duration:.25];
-   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:_backgroundLayer.alpha
-                                              duration:.25];
+//   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:_backgroundLayer.alpha
+//                                              duration:.25];
    SKAction *maintainPosition = [SKAction moveByX:-(_defaultSize.width - 60) y:0
                                          duration:.5];
    SKAction *rotate = [SKAction rotateByAngle:-M_PI*2 duration:.5];
@@ -413,13 +413,13 @@
    slide.timingMode = SKActionTimingEaseInEaseOut;
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
    changeButtonColor.timingMode = SKActionTimingEaseInEaseOut;
-   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
+//   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
    maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
    SKAction *hudBackgroundColorSequence = [SKAction sequence:@[wait, changeHudColor]];
    SKAction *hudBackgroundActions = [SKAction group:@[hudBackgroundColorSequence, slide]];
-   SKAction *buttonColorAnimations = [SKAction group:@[changeButtonAlpha, changeButtonColor]];
+   SKAction *buttonColorAnimations = [SKAction group:@[/*changeButtonAlpha,*/ changeButtonColor]];
    SKAction *buttonColorSequence = [SKAction sequence:@[wait, buttonColorAnimations]];
    SKAction *buttonActions = [SKAction group:@[rotate, buttonColorSequence]];
 
