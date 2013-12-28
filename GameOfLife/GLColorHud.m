@@ -61,20 +61,27 @@
 {
    if (self = [super init])
    {
-      _defaultSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds),
-                                CGRectGetHeight([UIScreen mainScreen].bounds));
-      _colorDropButtonSound = [SKAction playSoundFileNamed:@"color.change.wav" waitForCompletion:NO];
-      _expandColorGridSound = [SKAction playSoundFileNamed:@"settings.expand.2.wav" waitForCompletion:NO];
-      _collapseColorGridSound = [SKAction playSoundFileNamed:@"settings.collapse.2.wav" waitForCompletion:NO];
+      [self setupVariables];
       [self setupBackgorundWithSize:_defaultSize];
       [self setupColorSelectionLayerWithSize:_defaultSize];
       [self setupSplashButton];
       [self setupSplashButtonColorChangingAnimation];
       [self addColorDrops];
       [self setupPaletteButton];
+
       [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
+      [self runSplashButtonColorChangeAnimation];
    }
    return self;
+}
+
+- (void)setupVariables
+{
+   _defaultSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds),
+                             CGRectGetHeight([UIScreen mainScreen].bounds));
+   _colorDropButtonSound = [SKAction playSoundFileNamed:@"color.change.wav" waitForCompletion:NO];
+   _expandColorGridSound = [SKAction playSoundFileNamed:@"settings.expand.2.wav" waitForCompletion:NO];
+   _collapseColorGridSound = [SKAction playSoundFileNamed:@"settings.collapse.2.wav" waitForCompletion:NO];
 }
 
 - (void)setupBackgorundWithSize:(CGSize)size
@@ -113,7 +120,6 @@
    [_splashButton setColor:[SKColor crayolaBlackCoralPearlColor]];
    [_splashButton setScale:.66666666667];
    _splashButton.colorBlendFactor = 1.0;
-//   _splashButton.alpha = _backgroundLayer.alpha;
    _splashButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - _splashButton.size.width/2.0 - 2,
                                         HUD_BUTTON_EDGE_PADDING - _splashButton.size.height/2.0);
    _splashButton.name = @"splash";
@@ -140,17 +146,14 @@
                            [SKColor crayolaOrangeRedColor], [SKColor crayolaBigDipORubyColor], [SKColor crayolaMelonColor],
                            [SKColor crayolaMauvelousColor], [SKColor crayolaOrchidColor], [SKColor crayolaPinkFlamingoColor],
                            [SKColor crayolaWinterSkyColor]];
-
-   _splashButtonColorChangingAnimation = [SKAction performSelector:@selector(runSplashButtonColorChangeAnimation)
-                                                           onTarget:self];
-   [self runAction:_splashButtonColorChangingAnimation];
 }
 
 - (void)runSplashButtonColorChangeAnimation
 {
    if (_shouldRunSplashButtonColorChangingAnimation)
    {
-      [_splashButton runAction:[SKAction colorizeWithColor:[_splashButtonColors objectAtIndex:(_splashButtonColorIndex++ % _splashButtonColors.count)]
+      SKColor *nextColor = [_splashButtonColors objectAtIndex:(_splashButtonColorIndex++ % _splashButtonColors.count)];
+      [_splashButton runAction:[SKAction colorizeWithColor:nextColor
                                           colorBlendFactor:1.0
                                                   duration:1.5]
                     completion:
@@ -215,7 +218,6 @@
    }
    _currentColorDrop = _colorDrops.firstObject;
    _currentColor = _currentColorDrop.color;
-//   [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
 }
 
 - (void)setColorDropsHidden:(BOOL)hidden
@@ -246,7 +248,6 @@
       _currentColorDrop = colorDropButton;
       _currentColor = _currentColorDrop.color;
       [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColorDrop.color];
-//      [self.delegate setCurrentColor:_currentColorDrop.color];
    }
 }
 - (void)expandColorGridWithCompletionBlock:(void (^)())completionBlock
@@ -259,20 +260,13 @@
                                duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
    SKAction *spin = [SKAction rotateByAngle:-M_PI
                                    duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-
-//   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor crayolaRobinsEggBlueColor]
-//                                      colorBlendFactor:1.0
-//                                              duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-
    SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_EXPANDED
                                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
 
-//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
    SKAction *backgroundActions = [SKAction group:@[expand, changeBackgroundAlpha]];
 
    expand.timingMode = SKActionTimingEaseInEaseOut;
    spin.timingMode = SKActionTimingEaseInEaseOut;
-//   changeColor.timingMode = SKActionTimingEaseInEaseOut;
    changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
 
 
@@ -293,27 +287,19 @@
    self.animating = YES;
    _colorGridIsExpanded = NO;
    _colorSelectionLayer.hidden = YES;
-//   _settingsLayer.hidden = YES;
 
    SKAction *collapse = [SKAction moveByX:0
                                         y:-(SETTINGS_HEIGHT)
                                  duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
    SKAction *spin = [SKAction rotateByAngle:M_PI
                                    duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-
-//   SKAction *changeColor = [SKAction colorizeWithColor:[SKColor whiteColor]
-//                                      colorBlendFactor:1.0
-//                                              duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
-
    SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_COLLAPSED
                                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
 
-//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
    SKAction *backgroundActions = [SKAction group:@[collapse, changeBackgroundAlpha]];
 
    collapse.timingMode = SKActionTimingEaseInEaseOut;
    spin.timingMode = SKActionTimingEaseInEaseOut;
-//   changeColor.timingMode = SKActionTimingEaseInEaseOut;
    changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
 
 
@@ -336,8 +322,6 @@
       _paletteButton.persistGlow = NO;
       [self collapseColorGridWithCompletionBlock:^
        {
-//          _paletteButton.color = [SKColor whiteColor];
-//          _settingsLayer.hidden = YES;
           _colorSelectionLayer.hidden = YES;
        }];
    }
@@ -348,8 +332,6 @@
        {
           if (_colorGridIsExpanded)
           {
-//             _paletteButton.color = [SKColor crayolaRobinsEggBlueColor];
-//             _settingsLayer.hidden = NO;
              _colorSelectionLayer.hidden = NO;
           }
        }];
@@ -367,8 +349,6 @@
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                       colorBlendFactor:1.0
                                               duration:.5];
-//   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:1.0
-//                                              duration:.5];
    SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor whiteColor]
                                             colorBlendFactor:1.0
                                                     duration:.5];
@@ -378,12 +358,10 @@
 
    slide.timingMode = SKActionTimingEaseInEaseOut;
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
-//   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
    maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
-   SKAction *buttonActions = [SKAction group:@[//changeButtonAlpha,
-                                               changeButtonColor,
+   SKAction *buttonActions = [SKAction group:@[changeButtonColor,
                                                rotate]];
    SKAction *backgroundActions = [SKAction group:@[changeHudColor,
                                                    slide]];
@@ -445,7 +423,7 @@
 - (void)collapseBottomBar
 {
    _shouldRunSplashButtonColorChangingAnimation = YES;
-   [self runAction:_splashButtonColorChangingAnimation];
+   [self runSplashButtonColorChangeAnimation];
 
    self.animating = YES;
    [self.delegate hudWillCollapse:self];
@@ -455,26 +433,17 @@
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor clearColor]
                                       colorBlendFactor:1.0
                                               duration:.25];
-//   SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
-//                                            colorBlendFactor:1.0
-//                                                    duration:.25];
-//   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:_backgroundLayer.alpha
-//                                              duration:.25];
    SKAction *maintainPosition = [SKAction moveByX:-(_defaultSize.width - 60) y:0
                                          duration:.5];
    SKAction *rotate = [SKAction rotateByAngle:-M_PI*2 duration:.5];
 
    slide.timingMode = SKActionTimingEaseInEaseOut;
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
-//   changeButtonColor.timingMode = SKActionTimingEaseInEaseOut;
-//   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
    maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
    SKAction *hudBackgroundColorSequence = [SKAction sequence:@[wait, changeHudColor]];
    SKAction *hudBackgroundActions = [SKAction group:@[hudBackgroundColorSequence, slide]];
-//   SKAction *buttonColorAnimations = [SKAction group:@[/*changeButtonAlpha,*/ changeButtonColor]];
-//   SKAction *buttonColorSequence = [SKAction sequence:@[wait, buttonColorAnimations]];
    SKAction *buttonActions = [SKAction group:@[rotate, wait]];
 
    self.expanded = NO;
