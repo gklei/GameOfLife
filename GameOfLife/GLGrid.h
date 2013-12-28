@@ -21,6 +21,7 @@ typedef struct {
 @property (nonatomic, strong) NSArray *tiles;
 @property (nonatomic, readonly, getter = isInContinuousLoop) BOOL inContinuousLoop;
 @property (nonatomic, readwrite) BOOL considersContinuousBiLoops;
+@property (nonatomic, readwrite) BOOL usesMultiColors;
 
 - (id)initWithSize:(CGSize)size;
 - (GLTileNode *)tileAtTouch:(UITouch *)touch;

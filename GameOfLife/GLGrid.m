@@ -55,8 +55,8 @@
    
    SKTexture *texture1 = nil;
    SKTexture *texture2 = nil;
-//   int i = arc4random_uniform(7);
-   int i = 7;
+   int i = arc4random_uniform(7);
+//   int i = 6;
    switch (i)
    {
       case 0:
@@ -80,6 +80,7 @@
          break;
       case 6:
          texture1 = [SKTexture textureWithImageNamed:@"tile.circle.png"];
+         break;
       default:
          texture1 = [SKTexture textureWithImageNamed:@"tile.square.png"];
    }
@@ -222,8 +223,10 @@
 - (void)setCurrentColor:(UIColor *)color
 {
    _currentColor = color;
-   for (GLTileNode *tile in _tiles)
-      [tile updateColor];
+
+   if (_usesMultiColors)
+      for (GLTileNode *tile in _tiles)
+         [tile updateColor];
 }
 
 - (void)setTilesBirthingDuration:(float)bDuration

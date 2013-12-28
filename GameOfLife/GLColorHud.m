@@ -152,9 +152,8 @@
    if (_shouldRunSplashButtonColorChangingAnimation)
    {
       SKColor *nextColor = [_splashButtonColors objectAtIndex:(_splashButtonColorIndex++ % _splashButtonColors.count)];
-      [_splashButton runAction:[SKAction colorizeWithColor:nextColor
-                                          colorBlendFactor:1.0
-                                                  duration:1.5]
+      SKAction *changeColor = [SKAction colorizeWithColor:nextColor colorBlendFactor:1.0 duration:1.5];
+      [_splashButton runAction:changeColor
                     completion:
        ^{
           [self runSplashButtonColorChangeAnimation];
@@ -162,9 +161,10 @@
    }
    else
    {
-      [_splashButton runAction:[SKAction colorizeWithColor:[SKColor whiteColor]
-                                          colorBlendFactor:1.0
-                                                  duration:.25]];
+      SKAction *colorizeToWhite = [SKAction colorizeWithColor:[SKColor whiteColor]
+                                             colorBlendFactor:1.0
+                                                     duration:.25];
+      [_splashButton runAction:colorizeToWhite];
    }
 }
 
@@ -330,9 +330,7 @@
       [self expandColorGridWithCompletionBlock:^
        {
           if (_colorGridIsExpanded)
-          {
              _colorSelectionLayer.hidden = NO;
-          }
        }];
    }
 }
