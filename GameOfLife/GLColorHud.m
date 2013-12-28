@@ -49,7 +49,6 @@
    GLColorSelectionLayer *_colorSelectionLayer;
 
    BOOL _shouldRunSplashButtonColorChangingAnimation;
-   SKAction *_splashButtonColorChangingAnimation;
    NSArray *_splashButtonColors;
    NSUInteger _splashButtonColorIndex;
 }
