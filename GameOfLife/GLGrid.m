@@ -255,22 +255,21 @@
    [self addChild:tile];
 
    SKAction *scaleUp = [SKAction scaleTo:1.2 duration:.3];
+   scaleUp.timingMode = SKActionTimingEaseIn;
    SKAction *scaleDown = [SKAction scaleTo:1 duration:.1];
    SKAction *decreaseAlpha = [SKAction fadeAlphaTo:0 duration:.3];
+   decreaseAlpha.timingMode = SKActionTimingEaseIn;
    SKAction *rotateAndScaleUp = [SKAction group:@[scaleUp, decreaseAlpha]];
+   SKAction *tileActions = [SKAction sequence:@[rotateAndScaleUp, scaleDown]];
 
-   [tile runAction:rotateAndScaleUp
-        completion:^
-   {
-      [tile runAction:scaleDown
-           completion:
-       ^{
-          tile.alpha = 1;
-          tile.color = [SKColor crayolaCoconutColor];
-          tile.isLiving = NO;
-          [dummyTile removeFromParent];
-      }];
-   }];
+   [tile runAction:tileActions
+        completion:
+    ^{
+       tile.alpha = 1;
+       tile.color = [SKColor crayolaCoconutColor];
+       tile.isLiving = NO;
+       [dummyTile removeFromParent];
+    }];
 
    [self resetTilesWithTileArray:tileArray index:++tileIndex];
 }
