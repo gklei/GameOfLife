@@ -99,6 +99,7 @@
 		8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */; };
 		8EAA5A10184B29EC008E34D9 /* button.press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA5A0F184B29EC008E34D9 /* button.press.wav */; };
 		8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA5A11184C22BE008E34D9 /* tile.circle.png */; };
+		8EB738CB18709E5300BB58C0 /* UIColor+CrossFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */; };
 		8ECA8984182371AE009D906F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8983182371AE009D906F /* Foundation.framework */; };
 		8ECA8986182371AE009D906F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8985182371AE009D906F /* CoreGraphics.framework */; };
 		8ECA8988182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
@@ -248,6 +249,8 @@
 		8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSettingsLayer.m; sourceTree = "<group>"; };
 		8EAA5A0F184B29EC008E34D9 /* button.press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = button.press.wav; path = "GL Sound FX/button.press.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA5A11184C22BE008E34D9 /* tile.circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.circle.png; path = Images/tile.circle.png; sourceTree = SOURCE_ROOT; };
+		8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CrossFade.h"; sourceTree = "<group>"; };
+		8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CrossFade.m"; sourceTree = "<group>"; };
 		8ECA8980182371AE009D906F /* GameOfLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ECA8983182371AE009D906F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8ECA8985182371AE009D906F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -439,6 +442,8 @@
 		8ECA898B182371AE009D906F /* GameOfLife */ = {
 			isa = PBXGroup;
 			children = (
+				8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */,
+				8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */,
 				8ECA8994182371AE009D906F /* GLAppDelegate.h */,
 				8ECA8995182371AE009D906F /* GLAppDelegate.m */,
 				8E2FA2AC1869E3ED0021A471 /* GLColorGrid.h */,
@@ -711,6 +716,7 @@
 				8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */,
 				8E75B0401842FFE3000AEEB8 /* GLGeneralHud.m in Sources */,
 				8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */,
+				8EB738CB18709E5300BB58C0 /* UIColor+CrossFade.m in Sources */,
 				8E2FA2AE1869E3ED0021A471 /* GLColorGrid.m in Sources */,
 				8E2FA29C1867BBED0021A471 /* GLMenuLayer.m in Sources */,
 				8E2FA2991867BB080021A471 /* GLColorSelectionLayer.m in Sources */,

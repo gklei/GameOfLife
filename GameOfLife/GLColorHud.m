@@ -140,7 +140,7 @@
                            [SKColor crayolaIndigoColor], [SKColor crayolaOceanBluePearlColor], [SKColor crayolaGrannySmithAppleColor],
                            [SKColor crayolaScreaminGreenColor], [SKColor crayolaMagicMintColor] , [SKColor crayolaCaribbeanGreenColor],
                            [SKColor crayolaMetallicSeaweedColor], [SKColor crayolaPeachColor], [SKColor crayolaKeyLimePearlColor],
-                           [SKColor crayolaElectricLimeColor], [SKColor crayolaLimeColor], [SKColor crayolaChocolateColor],
+                           /*[SKColor crayolaElectricLimeColor],*/ [SKColor crayolaLimeColor], [SKColor crayolaChocolateColor],
                            [SKColor crayolaDandelionColor], [SKColor crayolaSunglowColor], [SKColor crayolaMangoTangoColor],
                            [SKColor crayolaOrangeRedColor], [SKColor crayolaBigDipORubyColor], [SKColor crayolaMelonColor],
                            [SKColor crayolaMauvelousColor], [SKColor crayolaOrchidColor], [SKColor crayolaPinkFlamingoColor],
@@ -246,7 +246,7 @@
 
       _currentColorDrop = colorDropButton;
       _currentColor = _currentColorDrop.color;
-      [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColorDrop.color];
+      [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
    }
 }
 - (void)expandColorGridWithCompletionBlock:(void (^)())completionBlock

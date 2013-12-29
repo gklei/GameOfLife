@@ -29,6 +29,9 @@
    std::vector<BOOL> _priorGenerationTileStates;
 
    BOOL _clearingGrid;
+   BOOL _running;
+
+   NSMutableArray *_potentialTileColors;
 
    SKColor *_currentColor;
 }
@@ -40,6 +43,7 @@
 {
    if (self = [super init])
    {
+      _potentialTileColors = [NSMutableArray new];
       [self setupGridWithSize:size];
    }
    return self;
@@ -101,6 +105,7 @@
             tile.liveTexture = texture2;
          
          tile.tileColorDelegate = self;
+         tile.liveColor = [self currentTileColor];
          [self addChild:tile];
       }
    }
@@ -191,6 +196,7 @@
    for (int i = 0; i < _tiles.count; ++i)
    {
       GLTileNode * tile = [_tiles objectAtIndex:i];
+      tile.liveColor = tile.originalColor;
       tile.isLiving = _storedTileStates[i];
       [tile setColorCenter:center];
    }
@@ -220,18 +226,7 @@
    if (!_clearingGrid)
    {
       _clearingGrid = YES;
-      NSMutableArray *livingTiles = [self getLivingTiles];
-      NSUInteger count = livingTiles.count;
-
-      for (NSUInteger i = 0; i < count; ++i)
-      {
-         // Select a random element between i and end of array to swap with.
-         int nElements = (int)count - (int)i;
-         int n = (arc4random() % nElements) + (int)i;
-         [livingTiles exchangeObjectAtIndex:i withObjectAtIndex:n];
-      }
-
-      [self resetTilesWithTileArray:livingTiles index:0];
+      [self resetTilesWithTileArray:[self getLivingTiles] index:0];
    }
 }
 
@@ -239,6 +234,7 @@
 {
    if (tileIndex >= tileArray.count)
    {
+      // wait for the last tile to run the clearing actions
       [self runAction:[SKAction waitForDuration:.4]
            completion:^
       {
@@ -266,7 +262,7 @@
         completion:
     ^{
        tile.alpha = 1;
-       tile.color = [SKColor crayolaCoconutColor];
+       tile.color = [SKColor colorForCrayolaColorName:tile.deadColorName];
        tile.isLiving = NO;
        [dummyTile removeFromParent];
     }];
@@ -289,7 +285,15 @@
 
 - (void)toggleRunning:(BOOL)starting
 {
-   if (starting) [self prepareForNextRun];
+   if (starting)
+   {
+      _running = YES;
+      [self prepareForNextRun];
+   }
+   else
+   {
+      _running = NO;
+   }
 }
 
 - (void)setCurrentColor:(UIColor *)color
@@ -298,9 +302,8 @@
 
    for (GLTileNode *tile in _tiles)
    {
-      tile.liveColor = color;
-      if (_usesMultiColors)
-         [tile updateColor];
+      if (!tile.isLiving)
+         tile.liveColor = [self currentTileColor];
    }
 }
 
@@ -331,57 +334,90 @@
 
 - (SKColor *)currentTileColorForTile:(GLTileNode *)tile
 {
-//   NSArray *neighborTiles = [self getNeighborTilesForTile:tile];
-//   for (GLTileNode *neighborTile in neighborTiles)
-//   {
-//      if (neighborTile.isLiving)
-//      {
-//         NSLog(@"living tile");
-//      }
-//   }
-   return _currentColor;
+   if (!_running)
+      return _currentColor;
+
+   NSArray *neighborTiles = [self getNeighborTilesForTile:tile];
+   for (GLTileNode *neighborTile in neighborTiles)
+   {
+      if (neighborTile.isLiving)
+      {
+         return neighborTile.liveColor;
+      }
+   }
+   return nil;
 }
 
 #pragma mark Helper Methods
 - (NSArray *)getNeighborTilesForTile:(GLTileNode *)tile
 {
+   int tileIndex = [_tiles indexOfObject:tile];
+   NSMutableArray *neighbors = [NSMutableArray arrayWithCapacity:8];
+
+   for (GLTileNode *tile in [self getCenterNeighborTilesForTileAtIndex:tileIndex])
+      [neighbors addObject:tile];
+
+   for (GLTileNode *tile in [self getEastNeighborTilesForTileAtIndex:tileIndex])
+      [neighbors addObject:tile];
+
+   for (GLTileNode *tile in [self getWestNeighborTilesForTileAtIndex:tileIndex])
+      [neighbors addObject:tile];
+
+   return [NSArray arrayWithArray:neighbors];
+}
+
+- (NSArray *)getCenterNeighborTilesForTileAtIndex:(int)index
+{
+   int neighborIndex;
+
    // north
-   int tileIndex = (int)[_tiles indexOfObject:tile];
-   int neighborIndex = tileIndex + _dimensions.columns;
+   neighborIndex = index + _dimensions.columns;
    if (neighborIndex >= _tiles.count)
       neighborIndex -= _tiles.count;
+
    GLTileNode *northTile = [_tiles objectAtIndex:neighborIndex];
 
    // south
-   neighborIndex = tileIndex - _dimensions.columns;
+   neighborIndex = index - _dimensions.columns;
    if (neighborIndex < 0)
       neighborIndex += _tiles.count;
+
    GLTileNode *southTile = [_tiles objectAtIndex:neighborIndex];
 
-   // east
-   neighborIndex = tileIndex + 1;
-   if (neighborIndex / _dimensions.columns > tileIndex / _dimensions.columns)
-      neighborIndex -= _dimensions.columns;
-   GLTileNode *eastTile = [_tiles objectAtIndex:neighborIndex];
-
-   // west
-   neighborIndex = tileIndex - 1;
-   if (neighborIndex < 0 || neighborIndex / _dimensions.columns < tileIndex / _dimensions.columns)
-      neighborIndex += _dimensions.columns;
-   GLTileNode *westTile = [_tiles objectAtIndex:neighborIndex];
-
-   return @[northTile, southTile, eastTile, westTile];
+   return @[northTile, southTile];
 }
 
-- (GLTileNode *)getSouthNeighborTileForTile:(GLTileNode *)tile
+- (NSArray *)getEastNeighborTilesForTileAtIndex:(int)index
 {
+   NSMutableArray *returnTiles = [NSMutableArray arrayWithCapacity:3];
 
-   int index = (int)[_tiles indexOfObject:tile];
-   int neighborIndex = index - _dimensions.columns;
-   if (neighborIndex < 0)
-      neighborIndex += _tiles.count;
+   int neighborIdx = index + 1;
+   if (neighborIdx / _dimensions.columns > index / _dimensions.columns)
+      neighborIdx -= _dimensions.columns;
 
-   return [_tiles objectAtIndex:neighborIndex];
+   GLTileNode *eastTile = [_tiles objectAtIndex:neighborIdx];
+   [returnTiles addObject:eastTile];
+
+   for (GLTileNode *tile in [self getCenterNeighborTilesForTileAtIndex:neighborIdx])
+      [returnTiles addObject:tile];
+
+   return [NSArray arrayWithArray:returnTiles];
+}
+- (NSArray *)getWestNeighborTilesForTileAtIndex:(int)index
+{
+   NSMutableArray *returnTiles = [NSMutableArray new];
+
+   int neighborIdx = index - 1;
+   if (neighborIdx < 0 || neighborIdx / _dimensions.columns < index / _dimensions.columns)
+      neighborIdx += _dimensions.columns;
+
+   GLTileNode *westTile = [_tiles objectAtIndex:neighborIdx];
+   [returnTiles addObject:westTile];
+
+   for (GLTileNode *tile in [self getCenterNeighborTilesForTileAtIndex:neighborIdx])
+      [returnTiles addObject:tile];
+
+   return [NSArray arrayWithArray:returnTiles];
 }
 
 - (int)getNorthSouthTileLiveCountForTileAtIndex:(int)index
@@ -397,7 +433,10 @@
 
    tile = [_tiles objectAtIndex:neighborIndex];
    if (tile.isLiving)
+   {
+      [_potentialTileColors addObject:tile.liveColor];
       ++liveCount;
+   }
 
    // south
    neighborIndex = index - _dimensions.columns;
@@ -406,7 +445,10 @@
 
    tile = [_tiles objectAtIndex:neighborIndex];
    if (tile.isLiving)
+   {
+      [_potentialTileColors addObject:tile.liveColor];
       ++liveCount;
+   }
 
    return liveCount;
 }
@@ -419,8 +461,12 @@
    if (neighborIdx / _dimensions.columns > index / _dimensions.columns)
       neighborIdx -= _dimensions.columns;
 
-   if (((GLTileNode *)[_tiles objectAtIndex:neighborIdx]).isLiving)
+   GLTileNode *eastTile = [_tiles objectAtIndex:neighborIdx];
+   if (eastTile.isLiving)
+   {
+      [_potentialTileColors addObject:eastTile.liveColor];
       ++result;
+   }
 
    result += [self getNorthSouthTileLiveCountForTileAtIndex:neighborIdx];
 
@@ -435,8 +481,12 @@
    if (neighborIdx < 0 || neighborIdx / _dimensions.columns < index / _dimensions.columns)
       neighborIdx += _dimensions.columns;
 
-   if (((GLTileNode *)[_tiles objectAtIndex:neighborIdx]).isLiving)
+   GLTileNode *westTile = [_tiles objectAtIndex:neighborIdx];
+   if (westTile.isLiving)
+   {
+      [_potentialTileColors addObject:westTile.liveColor];
       ++result;
+   }
 
    result += [self getNorthSouthTileLiveCountForTileAtIndex:neighborIdx];
 
@@ -454,6 +504,7 @@
 
 - (BOOL)getIsLivingForNextGenerationAtIndex:(int)index
 {
+   [_potentialTileColors removeAllObjects];
    int liveCount = [self getNorthSouthTileLiveCountForTileAtIndex:index];
    liveCount += [self getEastTileLiveCountForTileAtIndex:index];
 
@@ -464,7 +515,13 @@
    GLTileNode * tile = [_tiles objectAtIndex:index];
 
    // behold, the meaning of life (all in one statement)
-   return ((tile.isLiving && liveCount == 2) || (liveCount == 3))? LIVING : DEAD;
+   if ((tile.isLiving && liveCount == 2) || (liveCount == 3))
+   {
+      tile.liveColor = [_potentialTileColors objectAtIndex:0];
+      return LIVING;
+   }
+   else
+      return DEAD;
 }
 
 - (void)updateColorCenter

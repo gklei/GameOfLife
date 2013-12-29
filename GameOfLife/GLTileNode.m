@@ -13,6 +13,8 @@
 
 @implementation GLTileNode
 
+@synthesize liveColor = _liveColor;
+
 + (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect
 {
    GLTileNode *tile = [GLTileNode spriteNodeWithTexture:texture size:rect.size];
@@ -37,6 +39,8 @@
          rotateRight.timingMode = SKActionTimingEaseInEaseOut;
          scaleUp.timingMode = SKActionTimingEaseInEaseOut;
 
+         tile.color = [tile getLivingTileColor];
+         tile.originalColor = tile.color;
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
          {
@@ -92,14 +96,17 @@
    return dist;
 }
 
+// gets called when turning a tile on
 - (SKColor *)getLivingTileColor
 {
    float dist = [self colorDistance] * 1.2;
-   SKColor *currentColor = [_tileColorDelegate currentTileColor];
+
+   // uses the current selected swatch color as the base color
+   _liveColor = [_tileColorDelegate currentTileColor];
 
    CGFloat r, g, b;
 
-   if ([currentColor getRed:&r green:&g blue:&b alpha:0])
+   if ([_liveColor getRed:&r green:&g blue:&b alpha:0])
       return [SKColor colorWithRed:dist*r green:dist*g blue:dist*b alpha:1.0];
    else
       return [SKColor colorWithHue:[self colorDistance]
@@ -108,25 +115,17 @@
                              alpha:1.0];
 }
 
+// gets called while the algorithm is running
 - (SKColor *)getNextColor:(CrayolaColorName *)colorName
 {
-//   *colorName = [SKColor getNextColorName:*colorName];
-//   if (*colorName == _deadColorName)
-//      *colorName = [SKColor getNextColorName:*colorName];
-//   
-//   return [SKColor colorForCrayolaColorName:*colorName];
-   
-//   return [SKColor colorWithHue:[self colorDistance]
-//                     saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
-//                     brightness:1.0
-//                          alpha:1.0];
-
    float dist = [self colorDistance] * 1.2;
-   SKColor *currentColor = [_tileColorDelegate currentTileColor];
+
+   if (!_liveColor)
+      _liveColor = [_tileColorDelegate currentTileColor];
 
    CGFloat r, g, b;
 
-   if ([currentColor getRed:&r green:&g blue:&b alpha:0])
+   if ([_liveColor getRed:&r green:&g blue:&b alpha:0])
       return [SKColor colorWithRed:dist*r green:dist*g blue:dist*b alpha:1.0];
    else
       return [SKColor colorWithHue:[self colorDistance]
@@ -184,7 +183,10 @@
 {
    if (_isLiving == living)
       return;
-   
+
+   if (!living)
+      _liveColor = nil;
+
    _isLiving = living;
    [self swapTextures];
 }
@@ -198,6 +200,8 @@
 - (void)clearTile
 {
    self.isLiving = NO;
+   _liveColor = [_tileColorDelegate currentTileColor];
+
    SKColor *deadColor = [SKColor colorForCrayolaColorName:_deadColorName];
    SKAction *changeColor = [SKAction colorizeWithColor:deadColor
                                       colorBlendFactor:0.0
