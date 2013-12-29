@@ -224,6 +224,12 @@ BOOL _decreasing;
 #pragma mark - GLGeneralHud Delegate Methods
 - (void)clearButtonPressed
 {
+   if (_running)
+   {
+      _running = NO;
+      [_generalHudLayer updateStartStopButtonForState:GL_STOPPED
+                                            withSound:!_autoShowHideHudForStartStop];
+   }
    [_grid clearGrid];
 }
 

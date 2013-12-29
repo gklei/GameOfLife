@@ -19,10 +19,10 @@
    tile.deadTexture = texture;
    tile.position = CGPointMake(rect.origin.x + rect.size.width * 0.5,
                                rect.origin.y + rect.size.height * 0.5);
+   
    tile.size = rect.size;
    tile.colorBlendFactor = 1.0;
    tile.isLiving = NO;
-   tile.glowEnabled = YES;
 
    BeganFocusActionBlock beganFocusActionBlock = ^
    {
@@ -58,6 +58,9 @@
       {
          if (tile.xScale != TILE_SCALE_DEFAULT || tile.yScale != TILE_SCALE_DEFAULT)
             [tile setScale:TILE_SCALE_DEFAULT];
+         
+         tile.color = (tile.isLiving)? [tile getLivingTileColor] :
+                                       [SKColor colorForCrayolaColorName:tile.deadColorName];
       }];
    };
 
@@ -87,6 +90,22 @@
    dist /= _maxColorDistance;
    dist = 1.0 - dist;
    return dist;
+}
+
+- (SKColor *)getLivingTileColor
+{
+   float dist = [self colorDistance] * 1.2;
+   SKColor *currentColor = [_tileColorDelegate currentTileColor];
+
+   CGFloat r, g, b;
+
+   if ([currentColor getRed:&r green:&g blue:&b alpha:0])
+      return [SKColor colorWithRed:dist*r green:dist*g blue:dist*b alpha:1.0];
+   else
+      return [SKColor colorWithHue:[self colorDistance]
+                        saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
+                        brightness:1.0
+                             alpha:1.0];
 }
 
 - (SKColor *)getNextColor:(CrayolaColorName *)colorName

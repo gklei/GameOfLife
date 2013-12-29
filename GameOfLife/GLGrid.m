@@ -8,6 +8,7 @@
 
 #import "GLGrid.h"
 #import "GLTileNode.h"
+//#import "UIColor+CrossFade.h"
 
 #include <vector>
 
@@ -26,6 +27,8 @@
    std::vector<BOOL> _nextGenerationTileStates;
    std::vector<BOOL> _currentGenerationTileStates;
    std::vector<BOOL> _priorGenerationTileStates;
+
+   BOOL _clearingGrid;
 
    SKColor *_currentColor;
 }
@@ -55,8 +58,8 @@
    
    SKTexture *texture1 = nil;
    SKTexture *texture2 = nil;
-   int i = arc4random_uniform(7);
-//   int i = 6;
+//   int i = arc4random_uniform(7);
+   int i = 7;
    switch (i)
    {
       case 0:
@@ -194,12 +197,82 @@
    _inContinuousLoop = NO;
 }
 
-- (void)clearGrid
+- (void)resetGrid
 {
    for (GLTileNode *tile in _tiles)
       [tile clearTile];
    
    _inContinuousLoop = NO;
+}
+
+- (NSMutableArray *)getLivingTiles
+{
+   NSMutableArray *livingTiles = [NSMutableArray new];
+   for (GLTileNode *tile in _tiles)
+      if (tile.isLiving)
+         [livingTiles addObject:tile];
+
+   return livingTiles;
+}
+
+- (void)clearGrid
+{
+   if (!_clearingGrid)
+   {
+      _clearingGrid = YES;
+      NSMutableArray *livingTiles = [self getLivingTiles];
+      NSUInteger count = livingTiles.count;
+
+      for (NSUInteger i = 0; i < count; ++i)
+      {
+         // Select a random element between i and end of array to swap with.
+         int nElements = (int)count - (int)i;
+         int n = (arc4random() % nElements) + (int)i;
+         [livingTiles exchangeObjectAtIndex:i withObjectAtIndex:n];
+      }
+
+      [self resetTilesWithTileArray:livingTiles index:0];
+   }
+}
+
+- (void)resetTilesWithTileArray:(NSMutableArray *)tileArray index:(NSUInteger)tileIndex
+{
+   if (tileIndex >= tileArray.count)
+   {
+      [self runAction:[SKAction waitForDuration:.4]
+           completion:^
+      {
+         _clearingGrid = NO;
+      }];
+      return;
+   }
+
+   GLTileNode *tile = [tileArray objectAtIndex:tileIndex];
+   GLTileNode *dummyTile = [GLTileNode tileWithTexture:tile.texture rect:tile.frame];
+
+   [tile removeFromParent];
+   [self addChild:dummyTile];
+   [self addChild:tile];
+
+   SKAction *scaleUp = [SKAction scaleTo:1.2 duration:.3];
+   SKAction *scaleDown = [SKAction scaleTo:1 duration:.1];
+   SKAction *decreaseAlpha = [SKAction fadeAlphaTo:0 duration:.3];
+   SKAction *rotateAndScaleUp = [SKAction group:@[scaleUp, decreaseAlpha]];
+
+   [tile runAction:rotateAndScaleUp
+        completion:^
+   {
+      [tile runAction:scaleDown
+           completion:
+       ^{
+          tile.alpha = 1;
+          tile.color = [SKColor crayolaCoconutColor];
+          tile.isLiving = NO;
+          [dummyTile removeFromParent];
+      }];
+   }];
+
+   [self resetTilesWithTileArray:tileArray index:++tileIndex];
 }
 
 - (void)prepareForNextRun
@@ -224,9 +297,12 @@
 {
    _currentColor = color;
 
-   if (_usesMultiColors)
-      for (GLTileNode *tile in _tiles)
+   for (GLTileNode *tile in _tiles)
+   {
+      tile.liveColor = color;
+      if (_usesMultiColors)
          [tile updateColor];
+   }
 }
 
 - (void)setTilesBirthingDuration:(float)bDuration
@@ -254,7 +330,61 @@
    return _currentColor;
 }
 
+- (SKColor *)currentTileColorForTile:(GLTileNode *)tile
+{
+//   NSArray *neighborTiles = [self getNeighborTilesForTile:tile];
+//   for (GLTileNode *neighborTile in neighborTiles)
+//   {
+//      if (neighborTile.isLiving)
+//      {
+//         NSLog(@"living tile");
+//      }
+//   }
+   return _currentColor;
+}
+
 #pragma mark Helper Methods
+- (NSArray *)getNeighborTilesForTile:(GLTileNode *)tile
+{
+   // north
+   int tileIndex = (int)[_tiles indexOfObject:tile];
+   int neighborIndex = tileIndex + _dimensions.columns;
+   if (neighborIndex >= _tiles.count)
+      neighborIndex -= _tiles.count;
+   GLTileNode *northTile = [_tiles objectAtIndex:neighborIndex];
+
+   // south
+   neighborIndex = tileIndex - _dimensions.columns;
+   if (neighborIndex < 0)
+      neighborIndex += _tiles.count;
+   GLTileNode *southTile = [_tiles objectAtIndex:neighborIndex];
+
+   // east
+   neighborIndex = tileIndex + 1;
+   if (neighborIndex / _dimensions.columns > tileIndex / _dimensions.columns)
+      neighborIndex -= _dimensions.columns;
+   GLTileNode *eastTile = [_tiles objectAtIndex:neighborIndex];
+
+   // west
+   neighborIndex = tileIndex - 1;
+   if (neighborIndex < 0 || neighborIndex / _dimensions.columns < tileIndex / _dimensions.columns)
+      neighborIndex += _dimensions.columns;
+   GLTileNode *westTile = [_tiles objectAtIndex:neighborIndex];
+
+   return @[northTile, southTile, eastTile, westTile];
+}
+
+- (GLTileNode *)getSouthNeighborTileForTile:(GLTileNode *)tile
+{
+
+   int index = (int)[_tiles indexOfObject:tile];
+   int neighborIndex = index - _dimensions.columns;
+   if (neighborIndex < 0)
+      neighborIndex += _tiles.count;
+
+   return [_tiles objectAtIndex:neighborIndex];
+}
+
 - (int)getNorthSouthTileLiveCountForTileAtIndex:(int)index
 {
    GLTileNode *tile;
