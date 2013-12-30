@@ -59,6 +59,7 @@
 {
    if (self = [super init])
    {
+      self.scalesOnTouch = NO;
       [self setupLeftTrack];
       [self setupRightTrack];
       [self setupKnob];

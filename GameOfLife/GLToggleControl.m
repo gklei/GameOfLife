@@ -46,6 +46,7 @@
 {
    if (self = [super init])
    {
+      self.scalesOnTouch = NO;
       [self setupVariables];
       [self setupButtonImages];
       [self setupHitBox];

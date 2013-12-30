@@ -8,9 +8,18 @@
 
 #import "GLUIButton.h"
 
+#define ON_TOUCH_SCALE 1.15
+#define OFF_TOUCH_SCALE 1.0/ON_TOUCH_SCALE
+#define SCALING_ANIMATION_DURATION .1
+
 @interface GLUIButton()
 {
    SKEffectNode *_glowEffect;
+   SKAction *_scaleUp;
+   SKAction *_scaleDown;
+
+   CGFloat _defaultXScale;
+   CGFloat _defaultYScale;
 }
 @end
 
@@ -23,6 +32,12 @@
       _hitBox = [SKSpriteNode node];
       _hitBox.name = @"ui_control_hit_box";
       _glowEnabled = YES;
+      _scalesOnTouch = YES;
+      _scaleUp = [SKAction scaleBy:ON_TOUCH_SCALE duration:SCALING_ANIMATION_DURATION];
+      _scaleDown = [SKAction scaleBy:OFF_TOUCH_SCALE duration:SCALING_ANIMATION_DURATION];
+
+      _defaultXScale = 1.0;
+      _defaultYScale = 1.0;
 
       [self setupGlowEffect];
    }
@@ -31,7 +46,7 @@
 
 + (instancetype)spriteNodeWithImageNamed:(NSString *)name
 {
-   GLUIButton *button = [[GLUIButton alloc] init];
+   GLUIButton *button = [[self alloc] init];
    SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:name];
 
 //   button.hitBox.color = [SKColor orangeColor];
@@ -92,20 +107,29 @@
 
 - (void)handleTouchBegan:(UITouch *)touch
 {
+   if (_scalesOnTouch)
+      [self runAction:_scaleUp];
+
    _glowEffect.shouldEnableEffects = (_glowEnabled)? YES : NO;
    _hasFocus = YES;
 }
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
+   if (_hasFocus && _scalesOnTouch)
+      [self runAction:_scaleDown];
+
    _glowEffect.shouldEnableEffects = (_persistGlow)? YES : NO;
    _hasFocus = NO;
 }
 
 - (void)handleTouchMoved:(UITouch *)touch
 {
-   if (![self.hitBox containsPoint:[touch locationInNode:self]])
+   if (_hasFocus && ![self.hitBox containsPoint:[touch locationInNode:self]])
    {
+      if (_scalesOnTouch)
+         [self runAction:_scaleDown];
+
       _glowEffect.shouldEnableEffects = (_persistGlow)? YES : NO;
       _hasFocus = NO;
    }
@@ -201,6 +225,9 @@
 
 - (void)setScale:(CGFloat)scale
 {
+   _defaultXScale = scale;
+   _defaultYScale = scale;
+
    [self.hitBox setScale:scale];
    if (_sprite)
    {
@@ -212,6 +239,8 @@
 
 - (void)setXScale:(CGFloat)xScale
 {
+   _defaultXScale = xScale;
+
    self.hitBox.xScale = xScale;
    if (_sprite)
    {
@@ -230,6 +259,8 @@
 
 - (void)setYScale:(CGFloat)yScale
 {
+   _defaultYScale = yScale;
+
    self.hitBox.yScale = yScale;
    if (_sprite)
    {
