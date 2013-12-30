@@ -24,7 +24,7 @@
 #define BACKGROUND_ALPHA_SETTINGS_EXPANDED .85
 
 #define BOTTOM_BAR_HEIGHT 60
-#define SETTINGS_HEIGHT BOTTOM_BAR_HEIGHT * 6//CGRectGetHeight([UIScreen mainScreen].bounds) - BOTTOM_BAR_HEIGHT
+#define SETTINGS_HEIGHT BOTTOM_BAR_HEIGHT * 6 - 20//CGRectGetHeight([UIScreen mainScreen].bounds) - BOTTOM_BAR_HEIGHT
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
 #define REPOSITION_BUTTONS_DURATION .25
@@ -103,6 +103,7 @@
    _colorSelectionLayer.alpha = 5;
    _colorSelectionLayer.hidden = YES;
    _colorSelectionLayer.name = @"color_selection_layer";
+//   _colorSelectionLayer.position = CGPointMake(0, -30);
    _colorSelectionLayer.colorGrid.colorGridDelegate = self;
    [_backgroundLayer addChild:_colorSelectionLayer];
 }

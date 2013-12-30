@@ -629,6 +629,7 @@ BOOL _decreasing;
     if ([keyPath compare:@"LoopDetection"] == NSOrderedSame)
     {
        assert(type == HVT_BOOL);
+       _grid.inContinuousLoop = NO;
        _grid.considersContinuousBiLoops = [value boolValue];
     }
  }

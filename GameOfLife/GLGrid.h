@@ -19,7 +19,7 @@ typedef struct {
 @property (nonatomic, readonly) NSUInteger generationCount;
 @property (nonatomic, assign) GridDimensions dimensions;
 @property (nonatomic, strong) NSArray *tiles;
-@property (nonatomic, readonly, getter = isInContinuousLoop) BOOL inContinuousLoop;
+@property (nonatomic, readwrite, getter = isInContinuousLoop) BOOL inContinuousLoop;
 @property (nonatomic, readwrite) BOOL considersContinuousBiLoops;
 @property (nonatomic, readwrite) BOOL usesMultiColors;
 
