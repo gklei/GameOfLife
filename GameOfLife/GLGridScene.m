@@ -36,6 +36,7 @@
    BOOL _autoShowHideHudForStartStop;
    BOOL _autoHideHUDLayersForScreenshot;
    BOOL _generalHudShouldExpand;
+   BOOL _usesLoopDetection;
 
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;
@@ -151,10 +152,11 @@ BOOL _decreasing;
 {
    if (self = [super initWithSize:size])
    {
+      [self setupGridWithSize:size];
+
       [self registerHudParameters];
       [self observeHudParameterChanges];
-      
-      [self setupGridWithSize:size];
+
       [self setupGeneralHud];
       [self setupColorHud];
       [self setupSoundFX];
@@ -572,6 +574,11 @@ BOOL _decreasing;
              [_generalHudLayer expand];
           }
        }];
+   }
+   else if (_generalHudShouldExpand)
+   {
+      _generalHudShouldExpand = NO;
+      [_generalHudLayer expand];
    }
 }
 
