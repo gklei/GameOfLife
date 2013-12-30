@@ -8,7 +8,7 @@
 
 #import "GLGrid.h"
 #import "GLTileNode.h"
-//#import "UIColor+CrossFade.h"
+#import "UIColor+CrossFade.h"
 
 #include <vector>
 
@@ -504,7 +504,8 @@
    // behold, the meaning of life (all in one statement)
    if ((tile.isLiving && liveCount == 2) || (liveCount == 3))
    {
-      tile.liveColor = [_potentialTileColors objectAtIndex:0];
+      tile.liveColor = (tile.isLiving)? tile.liveColor :
+                                        [_potentialTileColors objectAtIndex:0];
       return LIVING;
    }
    else
