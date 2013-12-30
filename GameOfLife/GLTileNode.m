@@ -25,6 +25,7 @@
    tile.size = rect.size;
    tile.colorBlendFactor = 1.0;
    tile.isLiving = NO;
+   tile.scalesOnTouch = NO;
 
    BeganFocusActionBlock beganFocusActionBlock = ^
    {
