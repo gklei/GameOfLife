@@ -14,7 +14,6 @@
 
 @interface GLColorSwatch()
 {
-   SKSpriteNode *_outerRing;
    SKSpriteNode *_innerFill;
 
    SKAction *_fillAnimation;
@@ -49,31 +48,24 @@
 
 - (void)setupSwatchImages
 {
-   _outerRing = [SKSpriteNode spriteNodeWithImageNamed:@"color-swatch-ring-outer.png"];
-   _outerRing.colorBlendFactor = 1.0;
-   _outerRing.color = [SKColor whiteColor];
-   [_outerRing setScale:COLOR_SWATCH_OUTER_RING_SCALE];
-
    _innerFill = [SKSpriteNode spriteNodeWithImageNamed:@"color-swatch-fill.png"];
    _innerFill.colorBlendFactor = 1.0;
    _innerFill.color = [SKColor whiteColor];
-   _innerFill.position = _outerRing.position;
+//   _innerFill.position = _outerRing.position;
    [_innerFill setScale:COLOR_SWATCH_INNER_FILL_SCALE];
 
-//   [self addChild:_outerRing];
    [self addChild:_innerFill];
 }
 
 - (void)setupHitBox
 {
-   self.hitBox.size = _outerRing.size;
-   self.hitBox.position = _outerRing.position;
+   self.hitBox.size = _innerFill.size;
+   self.hitBox.position = _innerFill.position;
    [self addChild:self.hitBox];
 }
 
 - (void)setColor:(UIColor *)color
 {
-//   _outerRing.color = color;
    _innerFill.color = color;
 }
 
@@ -85,17 +77,10 @@
 - (void)toggle
 {
    if (_state == e_COLOR_SWATCH_DISABLED)
-   {
       _state = e_COLOR_SWATCH_ENABLED;
-//      [_innerFill runAction:_fillAnimation];
-//      self.persistGlow = YES;
-   }
    else
-   {
       _state = e_COLOR_SWATCH_DISABLED;
-//      [_innerFill runAction:_emptyAnimation];
-//      self.persistGlow = NO;
-   }
+
    [_swatchSelectionDelegate swatchSelected:self];
 }
 

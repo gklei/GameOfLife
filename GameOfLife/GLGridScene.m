@@ -36,7 +36,6 @@
    BOOL _autoShowHideHudForStartStop;
    BOOL _autoHideHUDLayersForScreenshot;
    BOOL _generalHudShouldExpand;
-   BOOL _usesLoopDetection;
 
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;

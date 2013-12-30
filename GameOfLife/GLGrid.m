@@ -231,6 +231,7 @@
       _clearingGrid = YES;
       [self resetTilesWithTileArray:[self getLivingTiles] index:0];
    }
+   _inContinuousLoop = NO;
 }
 
 - (void)resetTilesWithTileArray:(NSMutableArray *)tileArray index:(NSUInteger)tileIndex
