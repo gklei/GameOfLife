@@ -119,7 +119,7 @@
    
    CGPoint boardCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
                                      _dimensions.rows * TILESIZE.height * 0.5);
-   float maxBoardDistance = sqrt(size.width * size.width + size.height * size.height);
+   float maxBoardDistance = sqrt(size.width * size.width * 3.25 + size.height * size.height * 3.25);
    for (GLTileNode *tile in _tiles)
    {
       tile.boardMaxDistance = maxBoardDistance;
@@ -191,16 +191,19 @@
 
 - (void)restoreGrid
 {
-   CGPoint center = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
-                                _dimensions.rows * TILESIZE.height * 0.5);
-   for (int i = 0; i < _tiles.count; ++i)
+   if (!_running)
    {
-      GLTileNode * tile = [_tiles objectAtIndex:i];
-      tile.liveColor = tile.originalColor;
-      tile.isLiving = _storedTileStates[i];
-      [tile setColorCenter:center];
+      CGPoint center = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
+                                   _dimensions.rows * TILESIZE.height * 0.5);
+      for (int i = 0; i < _tiles.count; ++i)
+      {
+         GLTileNode * tile = [_tiles objectAtIndex:i];
+         tile.liveColor = tile.originalColor;
+         tile.isLiving = _storedTileStates[i];
+         [tile setColorCenter:center];
+      }
+      _inContinuousLoop = NO;
    }
-   _inContinuousLoop = NO;
 }
 
 - (void)resetGrid
@@ -332,26 +335,10 @@
    return _currentColor;
 }
 
-- (SKColor *)currentTileColorForTile:(GLTileNode *)tile
-{
-   if (!_running)
-      return _currentColor;
-
-   NSArray *neighborTiles = [self getNeighborTilesForTile:tile];
-   for (GLTileNode *neighborTile in neighborTiles)
-   {
-      if (neighborTile.isLiving)
-      {
-         return neighborTile.liveColor;
-      }
-   }
-   return nil;
-}
-
 #pragma mark Helper Methods
 - (NSArray *)getNeighborTilesForTile:(GLTileNode *)tile
 {
-   int tileIndex = [_tiles indexOfObject:tile];
+   int tileIndex = (int)[_tiles indexOfObject:tile];
    NSMutableArray *neighbors = [NSMutableArray arrayWithCapacity:8];
 
    for (GLTileNode *tile in [self getCenterNeighborTilesForTileAtIndex:tileIndex])

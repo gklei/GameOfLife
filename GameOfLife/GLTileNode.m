@@ -40,7 +40,7 @@
          scaleUp.timingMode = SKActionTimingEaseInEaseOut;
 
          tile.color = [tile getLivingTileColor];
-         tile.originalColor = tile.color;
+         tile.originalColor = [tile.tileColorDelegate currentTileColor];
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
          {
@@ -73,7 +73,7 @@
    tile.color = [SKColor crayolaCoconutColor];
    tile.liveColorName = CCN_crayolaMulberryColor - 1;
    tile.deadColorName = CCN_crayolaCoconutColor;
-   tile.boardMaxDistance = 1000;
+   tile.boardMaxDistance = 10000;
    tile.maxColorDistance = tile.boardMaxDistance;
    
    return tile;
@@ -99,7 +99,7 @@
 // gets called when turning a tile on
 - (SKColor *)getLivingTileColor
 {
-   float dist = [self colorDistance] * 1.2;
+   float dist = [self colorDistance] * 1.15;
 
    // uses the current selected swatch color as the base color
    _liveColor = [_tileColorDelegate currentTileColor];
@@ -118,7 +118,7 @@
 // gets called while the algorithm is running
 - (SKColor *)getNextColor:(CrayolaColorName *)colorName
 {
-   float dist = [self colorDistance] * 1.2;
+   float dist = [self colorDistance] * 1.15;
 
    if (!_liveColor)
       _liveColor = [_tileColorDelegate currentTileColor];

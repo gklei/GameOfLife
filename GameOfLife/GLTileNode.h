@@ -13,7 +13,6 @@
 @class GLTileNode;
 @protocol GLTileColorDelegate <NSObject>
    - (SKColor *)currentTileColor;
-   - (SKColor *)currentTileColorForTile:(GLTileNode *)tile;
 @end
 
 @interface GLTileNode : GLUIActionButton
@@ -38,8 +37,6 @@
 
 @property (strong, nonatomic) id<GLTileColorDelegate> tileColorDelegate;
 
-//+ (id)tileWithRect:(CGRect)rect;
-//+ (id)tileWithImageNamed:(NSString *)imageName rect:(CGRect)rect;
 + (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect;
 
 - (void)updateLivingAndColor:(BOOL)living;
