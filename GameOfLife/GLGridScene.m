@@ -236,6 +236,15 @@ BOOL _decreasing;
 
 - (void)restoreButtonPressed
 {
+   if (_running)
+   {
+      [self updateGenerationDuration:_generationDuration];
+
+      [_grid toggleRunning:!_running];
+      _running = !_running;
+      [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
+                                            withSound:NO];
+   }
    [_grid restoreGrid];
 }
 
