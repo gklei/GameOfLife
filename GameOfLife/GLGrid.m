@@ -88,6 +88,11 @@
       case 6:
          texture1 = [SKTexture textureWithImageNamed:@"tile.circle.png"];
          break;
+      case 7:
+         texture1 = [SKTexture textureWithImageNamed:@"tile.clear.png"];
+         texture2 = [SKTexture textureWithImageNamed:@"tile.snowflake.png"];
+         [self setCurrentColor:[UIColor colorForCrayolaColorName:CCN_crayolaWhiteColor]];
+         break;
       default:
          texture1 = [SKTexture textureWithImageNamed:@"tile.square.png"];
    }
