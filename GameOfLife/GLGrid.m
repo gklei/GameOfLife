@@ -63,7 +63,7 @@
    SKTexture *texture1 = nil;
    SKTexture *texture2 = nil;
 //   int i = arc4random_uniform(7);
-   int i = 7;
+   int i = 8;
    switch (i)
    {
       case 0:
@@ -231,11 +231,12 @@
 
 - (void)clearGrid
 {
-   if (!_clearingGrid)
-   {
-      _clearingGrid = YES;
-      [self resetTilesWithTileArray:[self getLivingTiles] index:0];
-   }
+//   if (!_clearingGrid)
+//   {
+//      _clearingGrid = YES;
+//      [self resetTilesWithTileArray:[self getLivingTiles] index:0];
+//   }
+   [self resetGrid];
    _inContinuousLoop = NO;
 }
 

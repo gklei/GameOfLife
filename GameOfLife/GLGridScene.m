@@ -190,7 +190,7 @@ BOOL _decreasing;
    _colorHudLayer.delegate = self;
    _colorHudLayer.position = CGPointMake(self.size.width - 60, 0);
    
-//   [_grid setCurrentColor:_colorHudLayer.currentColor];
+   [_grid setCurrentColor:_colorHudLayer.currentColor];
    [self addChild:_colorHudLayer];
 }
 

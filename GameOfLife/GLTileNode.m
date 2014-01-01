@@ -206,7 +206,7 @@
    SKColor *deadColor = [SKColor colorForCrayolaColorName:_deadColorName];
    SKAction *changeColor = [SKAction colorizeWithColor:deadColor
                                       colorBlendFactor:0.0
-                                              duration:.25];
+                                              duration:.15];
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
    [self runAction:changeColor];
 }
