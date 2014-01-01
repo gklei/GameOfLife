@@ -227,9 +227,12 @@ BOOL _decreasing;
 {
    if (_running)
    {
-      _running = NO;
-      [_generalHudLayer updateStartStopButtonForState:GL_STOPPED
-                                            withSound:!_autoShowHideHudForStartStop];
+      [self updateGenerationDuration:_generationDuration];
+
+      [_grid toggleRunning:!_running];
+      _running = !_running;
+      [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
+                                            withSound:NO];
    }
    [_grid clearGrid];
 }

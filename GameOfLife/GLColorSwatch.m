@@ -14,10 +14,8 @@
 
 @interface GLColorSwatch()
 {
-   SKSpriteNode *_innerFill;
+   SKSpriteNode *_swatch;
 
-   SKAction *_fillAnimation;
-   SKAction *_emptyAnimation;
 }
 @end
 
@@ -28,50 +26,38 @@
    if (self = [super init])
    {
       _state = e_COLOR_SWATCH_DISABLED;
+
       [self setupSwatchImages];
-      [self setupAnmations];
       [self setupHitBox];
    }
    return self;
 }
 
-- (void)setupAnmations
-{
-   _fillAnimation = [SKAction scaleTo:COLOR_SWATCH_INNER_FILL_SCALE
-                             duration:COLOR_SWATCH_FILL_EMPTY_DURATION];
-   _fillAnimation.timingMode = SKActionTimingEaseInEaseOut;
-
-   _emptyAnimation = [SKAction scaleTo:0
-                              duration:COLOR_SWATCH_FILL_EMPTY_DURATION];
-   _emptyAnimation.timingMode = SKActionTimingEaseInEaseOut;
-}
-
 - (void)setupSwatchImages
 {
-   _innerFill = [SKSpriteNode spriteNodeWithImageNamed:@"color-swatch-fill.png"];
-   _innerFill.colorBlendFactor = 1.0;
-   _innerFill.color = [SKColor whiteColor];
-//   _innerFill.position = _outerRing.position;
-   [_innerFill setScale:COLOR_SWATCH_INNER_FILL_SCALE];
+   _swatch = [SKSpriteNode spriteNodeWithImageNamed:@"color-swatch-fill.png"];
+   _swatch.colorBlendFactor = 1.0;
+   _swatch.color = [SKColor whiteColor];
+   [_swatch setScale:COLOR_SWATCH_INNER_FILL_SCALE];
 
-   [self addChild:_innerFill];
+   [self addChild:_swatch];
 }
 
 - (void)setupHitBox
 {
-   self.hitBox.size = _innerFill.size;
-   self.hitBox.position = _innerFill.position;
+   self.hitBox.size = _swatch.size;
+   self.hitBox.position = _swatch.position;
    [self addChild:self.hitBox];
 }
 
 - (void)setColor:(UIColor *)color
 {
-   _innerFill.color = color;
+   _swatch.color = color;
 }
 
 - (UIColor *)color
 {
-   return _innerFill.color;
+   return _swatch.color;
 }
 
 - (void)toggle
