@@ -9,7 +9,7 @@
 #import "GLUIButton.h"
 #import "GLHUDSettingsManager.h"
 
-@interface GLSliderControl : GLUIButton
+@interface GLSliderControl : GLUIButton<HUDSettingsObserver>
 
 @property (nonatomic, readwrite) float sliderValue;
 

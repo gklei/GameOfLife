@@ -8,6 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "GLHud.h"
+#import "GLHUDSettingsManager.h"
 
 @protocol GLColorHudDelegate <GLHudDelegate>
    - (void)setCurrentColor:(SKColor *)color;
@@ -17,7 +18,7 @@
    - (void)colorGridDidCollapse;
 @end
 
-@interface GLColorHud : GLHud
+@interface GLColorHud : GLHud<HUDSettingsObserver>
 
 @property (readonly, nonatomic) BOOL colorGridIsExpanded;
 @property (strong, nonatomic) SKColor *currentColor;

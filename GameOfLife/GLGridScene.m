@@ -37,6 +37,7 @@
    BOOL _autoHideHUDLayersForScreenshot;
    BOOL _generalHudShouldExpand;
 
+   BOOL _shouldPlaySound;
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;
    SKAction *_flashSound;
@@ -51,10 +52,6 @@
    GLUIButton *_focusedButton;
 
    CGPoint _locationOfFirstTouch;
-   
-// BEGIN: tmp code to change generation speed from 0.1 <-> 1.0
-BOOL _decreasing;
-// END: tmp code to change generation speed from 0.1 <-> 1.0
 }
 @end
 
@@ -164,6 +161,8 @@ BOOL _decreasing;
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
       self.userInteractionEnabled = YES;
+      
+      [self loadLastGrid];
    }
    return self;
 }
@@ -222,6 +221,12 @@ BOOL _decreasing;
    [_generalHudLayer expand];
 }
 
+- (void)loadLastGrid
+{
+   [_grid loadStoredTileStates];
+   [self restoreButtonPressed];
+}
+
 #pragma mark - GLGeneralHud Delegate Methods
 - (void)clearButtonPressed
 {
@@ -248,6 +253,7 @@ BOOL _decreasing;
       [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
                                             withSound:NO];
    }
+   
    [_grid restoreGrid];
 }
 
@@ -286,7 +292,7 @@ BOOL _decreasing;
 - (void)screenShotButtonPressed
 {
    // weird work around for the first screen shot that's taken being slow
-   [self runAction:_flashSound];
+   if (_shouldPlaySound) [self runAction:_flashSound];
 
    if (_autoHideHUDLayersForScreenshot)
    {
@@ -436,7 +442,7 @@ BOOL _decreasing;
 
    if (_oneTileTouched)
    {
-      [self runAction:_fingerUpSoundFX];
+      if (_shouldPlaySound) [self runAction:_fingerUpSoundFX];
       _oneTileTouched = NO;
    }
 
@@ -605,7 +611,7 @@ BOOL _decreasing;
       [tile handleTouchBegan:touch];
       
       _currentTileBeingTouched = tile;
-      [self runAction:soundFX];
+      if (_shouldPlaySound) [self runAction:soundFX];
       [tile updateLivingAndColor:!tile.isLiving];
       [_grid storeGridState];
    }
@@ -626,30 +632,31 @@ BOOL _decreasing;
 }
 
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
- {
-//    NSLog(@"settingChanged:%@ ofType:%d forKeyPath:%@", value, type, keyPath);
-    if ([keyPath compare:@"GenerationDuration"] == NSOrderedSame)
-    {
-       assert(type == HVT_FLOAT);
-       [self updateGenerationDuration:[value floatValue]];
-    }
-    
-    if ([keyPath compare:@"SmartMenu"] == NSOrderedSame)
-    {
-       assert(type == HVT_BOOL);
-       _autoShowHideHudForStartStop = [value boolValue];
-    }
-    
-    if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
-    {
-    }
-
-    if ([keyPath compare:@"LoopDetection"] == NSOrderedSame)
-    {
-       assert(type == HVT_BOOL);
-       _grid.inContinuousLoop = NO;
-       _grid.considersContinuousBiLoops = [value boolValue];
-    }
- }
+{
+   if ([keyPath compare:@"GenerationDuration"] == NSOrderedSame)
+   {
+      assert(type == HVT_FLOAT);
+      [self updateGenerationDuration:[value floatValue]];
+   }
+   
+   if ([keyPath compare:@"SmartMenu"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _autoShowHideHudForStartStop = [value boolValue];
+   }
+   
+   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _shouldPlaySound = [value boolValue];
+   }
+   
+   if ([keyPath compare:@"LoopDetection"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _grid.inContinuousLoop = NO;
+      _grid.considersContinuousBiLoops = [value boolValue];
+   }
+}
 
 @end

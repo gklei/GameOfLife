@@ -8,6 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "GLHud.h"
+#import "GLHUDSettingsManager.h"
 
 typedef NS_ENUM(int, GL_GAME_STATE) {
    GL_RUNNING,
@@ -26,7 +27,7 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
    - (void)settingsDidCollapse;
 @end
 
-@interface GLGeneralHud : GLHud
+@interface GLGeneralHud : GLHud<HUDSettingsObserver>
 
 @property (readonly, nonatomic) BOOL settingsAreExpanded;
 @property (strong, nonatomic) id<GLGeneralHudDelegate> delegate;

@@ -44,6 +44,7 @@
    GLUIActionButton *_cameraButton;
    GLUIActionButton *_settingsButton;
 
+   BOOL _shouldPlaySound;
    SKAction *_expandSettingsSound;
    SKAction *_collapseSettingsSound;
    SKAction *_startAlgorithmSound;
@@ -57,6 +58,12 @@
 
 @implementation GLGeneralHud
 
+- (void)observeSoundFxChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
+
 - (id)init
 {
    if (self = [super init])
@@ -69,6 +76,7 @@
       [self setupBackgroundWithSize:_defaultSize];
       [self setupSettingsWithSize:_defaultSize];
       [self setupButtons];
+      [self observeSoundFxChanges];
    }
    return self;
 }
@@ -185,7 +193,7 @@
    _clearButton = [self buttonWithFilename:@"cancel-circle" buttonName:@"clear"];
    ActionBlock clearButtonActionBlock = ^
    {
-      [self runAction:_clearSound];
+      if (_shouldPlaySound) [self runAction:_clearSound];
       [self.delegate clearButtonPressed];
    };
    _clearButton.actionBlock = clearButtonActionBlock;
@@ -193,7 +201,7 @@
    _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
    ActionBlock restoreButtonActionBlock = ^
    {
-      [self runAction:_restoreSound];
+      if (_shouldPlaySound) [self runAction:_restoreSound];
       [self.delegate restoreButtonPressed];
    };
    _restoreButton.actionBlock = restoreButtonActionBlock;
@@ -236,14 +244,12 @@
    switch (state)
    {
       case GL_RUNNING:
-         if (sound)
-            [self runAction:_startAlgorithmSound];
-         
+         if (sound && _shouldPlaySound) [self runAction:_startAlgorithmSound];
          _startStopButton.texture = [SKTexture textureWithImageNamed:@"pause"];
          _startStopButton.color = [SKColor crayolaRustyRedColor];
          break;
       case GL_STOPPED:
-         [self runAction:_stopAlgorithmSound];
+         if (_shouldPlaySound) [self runAction:_stopAlgorithmSound];
          _startStopButton.texture = [SKTexture textureWithImageNamed:@"play2"];
          _startStopButton.color = [SKColor crayolaLimeColor];
          break;
@@ -284,9 +290,9 @@
    spin.timingMode = SKActionTimingEaseInEaseOut;
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
    changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
-
-
-   [self runAction:_expandSettingsSound];
+   
+   if (_shouldPlaySound) [self runAction:_expandSettingsSound];
+   
    [_backgroundLayer runAction:backgroundActions
                     completion:
     ^{
@@ -324,9 +330,9 @@
    spin.timingMode = SKActionTimingEaseInEaseOut;
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
    changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
-
-
-   [self runAction:_collapseSettingsSound];
+   
+   if (_shouldPlaySound) [self runAction:_collapseSettingsSound];
+   
    [_backgroundLayer runAction:backgroundActions
                     completion:
     ^{
@@ -382,7 +388,8 @@
    [self runAction:wait
         completion:^
    {
-      [self runAction:self.defaultExpandingSoundFX];
+      if (_shouldPlaySound) [self runAction:self.defaultExpandingSoundFX];
+      
       [_backgroundLayer runAction:slide];
       
       for (GLUIActionButton *button in _coreFunctionButtons)
@@ -450,7 +457,8 @@
    self.expanded = NO;
    [self setCoreFunctionButtonsHidden:YES];
 
-   [self runAction:self.defaultCollapsingSoundFX];
+   if (_shouldPlaySound) [self runAction:self.defaultCollapsingSoundFX];
+   
    [_backgroundLayer runAction:slide];
 
    for (GLUIActionButton *button in _coreFunctionButtons)
@@ -524,6 +532,15 @@
    [self setCoreFunctionButtonsHidden:NO];
    _backgroundLayer.hidden = NO;
    _expandCollapseButton.hidden = NO;
+}
+
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+{
+   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _shouldPlaySound = [value boolValue];
+   }
 }
 
 @end
