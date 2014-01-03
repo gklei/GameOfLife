@@ -161,6 +161,8 @@
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
       self.userInteractionEnabled = YES;
+      
+      [self loadLastGrid];
    }
    return self;
 }
@@ -219,6 +221,12 @@
    [_generalHudLayer expand];
 }
 
+- (void)loadLastGrid
+{
+   [_grid loadStoredTileStates];
+   [self restoreButtonPressed];
+}
+
 #pragma mark - GLGeneralHud Delegate Methods
 - (void)clearButtonPressed
 {
@@ -245,6 +253,7 @@
       [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
                                             withSound:NO];
    }
+   
    [_grid restoreGrid];
 }
 

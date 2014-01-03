@@ -27,6 +27,7 @@ typedef struct {
 - (GLTileNode *)tileAtTouch:(UITouch *)touch;
 - (void)updateNextGeneration;
 - (void)storeGridState;
+- (void)loadStoredTileStates;
 - (void)restoreGrid;
 - (void)clearGrid;
 - (void)toggleRunning:(BOOL)starting;

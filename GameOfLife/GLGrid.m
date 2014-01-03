@@ -49,6 +49,15 @@
    return self;
 }
 
+- (void)loadStoredTileStates
+{
+   NSUserDefaults * standardDefaults = [NSUserDefaults standardUserDefaults];
+   NSArray * storedState = ((NSArray *)[standardDefaults objectForKey:@"StoredTileState"]);
+   if (storedState && storedState.count == _tiles.count)
+      for (int i = 0; i < _tiles.count; ++i)
+         _storedTileStates[i] = [((NSNumber *)[storedState objectAtIndex:i]) boolValue];
+}
+
 - (void)setupGridWithSize:(CGSize)size
 {
    _dimensions.rows = size.width/TILESIZE.width;
@@ -188,10 +197,17 @@
 
 - (void)storeGridState
 {
+   NSMutableArray * storedState = [NSMutableArray arrayWithCapacity:_tiles.count];
    for (int i = 0; i < _tiles.count; ++i)
+   {
       _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
-
+      [storedState addObject:[NSNumber numberWithBool:_storedTileStates[i]]];
+   }
+   
    _inContinuousLoop = NO;
+   
+   NSUserDefaults * standardDefaults = [NSUserDefaults standardUserDefaults];
+   [standardDefaults setObject:[NSArray arrayWithArray:storedState] forKey:@"StoredTileState"];
 }
 
 - (void)restoreGrid
