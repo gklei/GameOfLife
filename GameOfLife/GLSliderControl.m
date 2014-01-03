@@ -45,15 +45,21 @@
    SKAction *_grow;
    SKAction *_shrink;
 
+   BOOL _shouldPlaySound;
    SKAction *_pressReleaseSoundFX;
-
-   AVAudioPlayer *_slidingSoundAudioPlayer;
+   
    NSString *_preferenceKey;
    HUDItemRange _range;
 }
 @end
 
 @implementation GLSliderControl
+
+- (void)observeSoundFxChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
 
 - (id)init
 {
@@ -66,6 +72,7 @@
       [self setupHitBox];
       [self setupVariables];
       [self setupSoundFX];
+      [self observeSoundFxChanges];
    }
    return self;
 }
@@ -233,7 +240,7 @@
 
 - (void)handleTouchBegan:(UITouch *)touch
 {
-   [self runAction:_pressReleaseSoundFX];
+   if (_shouldPlaySound) [self runAction:_pressReleaseSoundFX];
    [_knob runAction:_grow];
    [super handleTouchBegan:touch];
 }
@@ -268,7 +275,7 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
-   [self runAction:_pressReleaseSoundFX];
+   if (_shouldPlaySound) [self runAction:_pressReleaseSoundFX];
    self.hitBox.position = _knob.position;
 
    [_knob runAction:_shrink];
@@ -276,6 +283,15 @@
    [super handleTouchEnded:touch];
    
    [self updateUserDefaults:_sliderPosition];
+}
+
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+{
+   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _shouldPlaySound = [value boolValue];
+   }
 }
 
 @end

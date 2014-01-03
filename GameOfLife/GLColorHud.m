@@ -43,6 +43,7 @@
    NSMutableArray *_colorDrops;
    NSMutableArray *_colorDropHitBoxes;
 
+   BOOL _shouldPlaySound;
    SKAction *_colorDropButtonSound;
    SKAction *_expandColorGridSound;
    SKAction *_collapseColorGridSound;
@@ -56,6 +57,12 @@
 @end
 
 @implementation GLColorHud
+
+- (void)observeSoundFxChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
 
 - (id)init
 {
@@ -71,6 +78,7 @@
 
       [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
       [self runSplashButtonColorChangeAnimation];
+      [self observeSoundFxChanges];
    }
    return self;
 }
@@ -245,7 +253,8 @@
 {
    if (_currentColorDrop != colorDropButton)
    {
-      [self runAction:_colorDropButtonSound];
+      if (_shouldPlaySound) [self runAction:_colorDropButtonSound];
+      
       SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
       SKAction *deselectScaleAction = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
 
@@ -281,9 +290,9 @@
    expand.timingMode = SKActionTimingEaseInEaseOut;
    spin.timingMode = SKActionTimingEaseInEaseOut;
    changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
-
-
-   [self runAction:_expandColorGridSound];
+   
+   if (_shouldPlaySound) [self runAction:_expandColorGridSound];
+   
    [_backgroundLayer runAction:backgroundActions
                     completion:
     ^{
@@ -314,9 +323,9 @@
    collapse.timingMode = SKActionTimingEaseInEaseOut;
    spin.timingMode = SKActionTimingEaseInEaseOut;
    changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
-
-
-   [self runAction:_collapseColorGridSound];
+   
+   if (_shouldPlaySound) [self runAction:_collapseColorGridSound];
+   
    [_backgroundLayer runAction:backgroundActions
                     completion:
     ^{
@@ -567,6 +576,15 @@
    
    _currentColor = newColor;
    [self.delegate setCurrentColor:newColor];
+}
+
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+{
+   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _shouldPlaySound = [value boolValue];
+   }
 }
 
 @end

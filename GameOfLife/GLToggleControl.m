@@ -35,12 +35,19 @@
    BOOL _animating;
    BOOL _stateSetFromSlide;
 
+   BOOL _shouldPlaySound;
    SKAction * _toggleSound;
    NSString * _preferenceKey;
 }
 @end
 
 @implementation GLToggleControl
+
+- (void)observeSoundFxChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
 
 - (id)init
 {
@@ -50,6 +57,7 @@
       [self setupVariables];
       [self setupButtonImages];
       [self setupHitBox];
+      [self observeSoundFxChanges];
    }
    return self;
 }
@@ -100,7 +108,7 @@
 {
    if (_state != state)
    {
-      [self runAction:_toggleSound];
+      if (_shouldPlaySound) [self runAction:_toggleSound];
       _state = state;
       [self updateUserDefaults:_state];
    }
@@ -332,6 +340,15 @@
 
    [self toggle:(_stateSetFromSlide)? NO : YES];
    [super handleTouchEnded:touch];
+}
+
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+{
+   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _shouldPlaySound = [value boolValue];
+   }
 }
 
 @end

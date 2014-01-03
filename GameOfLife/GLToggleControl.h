@@ -8,6 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "GLUIButton.h"
+#import "GLHUDSettingsManager.h"
 
 typedef NS_ENUM(int, GL_TOGGLE_CONTROL_STATE)
 {
@@ -15,7 +16,7 @@ typedef NS_ENUM(int, GL_TOGGLE_CONTROL_STATE)
    e_TOGGLE_CONTROL_ENABLED
 };
 
-@interface GLToggleControl : GLUIButton
+@interface GLToggleControl : GLUIButton<HUDSettingsObserver>
 
 @property (nonatomic, readonly) GL_TOGGLE_CONTROL_STATE state;
 
