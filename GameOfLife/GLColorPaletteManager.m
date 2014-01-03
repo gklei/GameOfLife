@@ -23,14 +23,6 @@ GLColorPaletteManager * g_globalColorPaletteManager = nil;
    return g_globalColorPaletteManager;
 }
 
-- (id)init
-{
-   if (self = [super init])
-   {
-   }
-   return self;
-}
-
 - (BOOL)hasStoredPalette
 {
    return [[NSUserDefaults standardUserDefaults] objectForKey:@"gl_color_palette_array"] != nil;

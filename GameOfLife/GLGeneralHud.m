@@ -150,7 +150,6 @@
       _expandCollapseButton = [GLUIActionButton spriteNodeWithImageNamed:@"arrow-right"];
 
    _expandCollapseButton.color = [SKColor crayolaBlackCoralPearlColor];
-//   _expandCollapseButton.alpha = _backgroundLayer.alpha;
    _expandCollapseButton.colorBlendFactor = 1.0;
    [_expandCollapseButton setScale:.85];
 
@@ -160,12 +159,12 @@
 
    _expandCollapseButton.name = @"expand_collapse";
 
-   void (^actionBlock)() = ^
+   ActionBlock expandCollapseActionBlock = ^
    {
       if (!self.isAnimating)
          [self toggle];
    };
-   _expandCollapseButton.actionBlock = actionBlock;
+   _expandCollapseButton.actionBlock = expandCollapseActionBlock;
    [self addChild:_expandCollapseButton];
 }
 
@@ -184,7 +183,7 @@
 - (void)setupCoreFunctionButtons
 {
    _clearButton = [self buttonWithFilename:@"cancel-circle" buttonName:@"clear"];
-   void (^clearButtonActionBlock)() = ^
+   ActionBlock clearButtonActionBlock = ^
    {
       [self runAction:_clearSound];
       [self.delegate clearButtonPressed];
@@ -192,7 +191,7 @@
    _clearButton.actionBlock = clearButtonActionBlock;
 
    _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
-   void (^restoreButtonActionBlock)() = ^
+   ActionBlock restoreButtonActionBlock = ^
    {
       [self runAction:_restoreSound];
       [self.delegate restoreButtonPressed];
@@ -201,15 +200,15 @@
 
    _startStopButton = [self buttonWithFilename:@"play2" buttonName:@"start_stop"];
    _startStopButton.color = [SKColor crayolaLimeColor];
-   void (^startStopButtonActionBlock)() = ^{[self.delegate toggleRunningButtonPressed];};
+   ActionBlock startStopButtonActionBlock = ^{[self.delegate toggleRunningButtonPressed];};
    _startStopButton.actionBlock = startStopButtonActionBlock;
 
    _cameraButton = [self buttonWithFilename:@"camera2" buttonName:@"camera"];
-   void (^cameraButtonActionBlock)() = ^{[self.delegate screenShotButtonPressed];};
+   ActionBlock cameraButtonActionBlock = ^{[self.delegate screenShotButtonPressed];};
    _cameraButton.actionBlock = cameraButtonActionBlock;
 
    _settingsButton = [self buttonWithFilename:@"cog" buttonName:@"settings"];
-   void (^settingsButtonActionBlock)() = ^
+   ActionBlock settingsButtonActionBlock= ^
    {
       if (!self.isAnimating)
          [self toggleSettings];
@@ -279,7 +278,6 @@
    SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_EXPANDED
                                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
 
-//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
    SKAction *backgroundActions = [SKAction group:@[expand, changeBackgroundAlpha]];
 
    expand.timingMode = SKActionTimingEaseInEaseOut;
@@ -320,7 +318,6 @@
    SKAction *changeBackgroundAlpha = [SKAction fadeAlphaTo:BACKGROUND_ALPHA_SETTINGS_COLLAPSED
                                                   duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
 
-//   SKAction *buttonActions = [SKAction group:@[spin, changeColor]];
    SKAction *backgroundActions = [SKAction group:@[collapse, changeBackgroundAlpha]];
 
    collapse.timingMode = SKActionTimingEaseInEaseOut;
@@ -344,27 +341,17 @@
 - (void)toggleSettings
 {
    if (_settingsAreExpanded)
-   {
-//      [_particleGenerator removeFromParent];
       [self collapseSettingsWithCompletionBlock:^
        {
           _settingsButton.color = [SKColor whiteColor];
           _settingsLayer.hidden = YES;
        }];
-   }
    else
-   {
       [self expandSettingsWithCompletionBlock:^
        {
           if (_settingsAreExpanded)
-          {
-//             _particleGenerator.numParticlesToEmit = 100000;
-//             [self addChild:_particleGenerator];
-//             _settingsButton.color = [SKColor crayolaRobinsEggBlueColor];
              _settingsLayer.hidden = NO;
-          }
        }];
-   }
 }
 
 - (void)expandBottomBar
@@ -380,8 +367,6 @@
    SKAction *changeHudColor = [SKAction colorizeWithColor:[SKColor crayolaBlackCoralPearlColor]
                                          colorBlendFactor:1.0
                                                  duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION];
-//   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:1.0
-//                                              duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION];
    SKAction *changeButtonColor = [SKAction colorizeWithColor:[SKColor whiteColor]
                                             colorBlendFactor:1.0
                                                     duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION];
@@ -390,12 +375,9 @@
 
    slide.timingMode = SKActionTimingEaseInEaseOut;
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
-//   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
-   SKAction *buttonActions = [SKAction group:@[//changeButtonAlpha,
-                                               changeButtonColor,
-                                               rotate]];
+   SKAction *buttonActions = [SKAction group:@[changeButtonColor, rotate]];
    self.expanded = YES;
    [self runAction:wait
         completion:^
@@ -453,21 +435,16 @@
                                             colorBlendFactor:1.0
                                                     duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION -
                                                              WAIT_BEFORE_COLORIZE_DURATION];
-//   SKAction *changeButtonAlpha = [SKAction fadeAlphaTo:_backgroundLayer.alpha
-//                                              duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION -
-//                                                       WAIT_BEFORE_COLORIZE_DURATION];
    SKAction *rotate = [SKAction rotateByAngle:-M_PI
                                      duration:BOTTOM_BAR_EXPAND_COLLAPSE_DURATION];
 
    slide.timingMode = SKActionTimingEaseInEaseOut;
    changeHudColor.timingMode = SKActionTimingEaseInEaseOut;
    changeButtonColor.timingMode = SKActionTimingEaseInEaseOut;
-//   changeButtonAlpha.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
    SKAction *hudBackgroundColorSequence = [SKAction sequence:@[wait, changeHudColor]];
-   SKAction *buttonColorAnimations = [SKAction group:@[/*changeButtonAlpha,*/ changeButtonColor]];
-   SKAction *buttonColorSequence = [SKAction sequence:@[wait, buttonColorAnimations]];
+   SKAction *buttonColorSequence = [SKAction sequence:@[wait, changeButtonColor]];
    SKAction *buttonActions = [SKAction group:@[rotate, buttonColorSequence]];
 
    self.expanded = NO;

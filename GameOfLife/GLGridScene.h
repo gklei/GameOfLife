@@ -13,8 +13,6 @@
 
 @interface GLGridScene : SKScene<HUDSettingsObserver>
 
-//@property (nonatomic, readonly) CGPoint locationOfFirstTouch;
-
 - (void)expandGeneralHUD;
 
 @end

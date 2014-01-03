@@ -512,7 +512,7 @@
    if ((tile.isLiving && liveCount == 2) || (liveCount == 3))
    {
       tile.liveColor = (tile.isLiving)? tile.liveColor :
-                                        [_potentialTileColors objectAtIndex:0];
+                                        [_potentialTileColors objectAtIndex:arc4random_uniform(2)];
       return LIVING;
    }
    else

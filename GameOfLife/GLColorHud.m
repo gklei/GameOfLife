@@ -25,7 +25,7 @@
 #define BACKGROUND_ALPHA_SETTINGS_EXPANDED .85
 
 #define BOTTOM_BAR_HEIGHT 60
-#define SETTINGS_HEIGHT BOTTOM_BAR_HEIGHT * 6 - 20//CGRectGetHeight([UIScreen mainScreen].bounds) - BOTTOM_BAR_HEIGHT
+#define SETTINGS_HEIGHT BOTTOM_BAR_HEIGHT * 6 - 20
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
 #define REPOSITION_BUTTONS_DURATION .25
@@ -41,7 +41,6 @@
    GLUIActionButton *_currentColorDrop;
 
    NSMutableArray *_colorDrops;
-   NSMutableArray *_colorDropHitBoxes;
 
    SKAction *_colorDropButtonSound;
    SKAction *_expandColorGridSound;
@@ -117,13 +116,12 @@
 - (void)setupSplashButton
 {
    _splashButton = [GLUIActionButton spriteNodeWithImageNamed:@"splash2_48.png"];
-   [_splashButton setColor:[SKColor crayolaBlackCoralPearlColor]];
    [_splashButton setScale:.66666666667];
    _splashButton.colorBlendFactor = 1.0;
    _splashButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - _splashButton.size.width/2.0 - 2,
                                         HUD_BUTTON_EDGE_PADDING - _splashButton.size.height/2.0);
    _splashButton.name = @"splash";
-   void (^splashButtonActionBlock)() = ^
+   ActionBlock splashButtonActionBlock = ^
    {
       if (!self.isAnimating)
          [self toggle];
@@ -141,11 +139,10 @@
                            [SKColor crayolaIndigoColor], [SKColor crayolaOceanBluePearlColor], [SKColor crayolaGrannySmithAppleColor],
                            [SKColor crayolaScreaminGreenColor], [SKColor crayolaMagicMintColor] , [SKColor crayolaCaribbeanGreenColor],
                            [SKColor crayolaMetallicSeaweedColor], [SKColor crayolaPeachColor], [SKColor crayolaKeyLimePearlColor],
-                           /*[SKColor crayolaElectricLimeColor],*/ [SKColor crayolaLimeColor], [SKColor crayolaChocolateColor],
-                           [SKColor crayolaDandelionColor], [SKColor crayolaSunglowColor], [SKColor crayolaMangoTangoColor],
-                           [SKColor crayolaOrangeRedColor], [SKColor crayolaBigDipORubyColor], [SKColor crayolaMelonColor],
-                           [SKColor crayolaMauvelousColor], [SKColor crayolaOrchidColor], [SKColor crayolaPinkFlamingoColor],
-                           [SKColor crayolaWinterSkyColor]];
+                           [SKColor crayolaLimeColor], [SKColor crayolaChocolateColor], [SKColor crayolaDandelionColor],
+                           [SKColor crayolaSunglowColor], [SKColor crayolaMangoTangoColor], [SKColor crayolaOrangeRedColor],
+                           [SKColor crayolaBigDipORubyColor], [SKColor crayolaMelonColor], [SKColor crayolaMauvelousColor],
+                           [SKColor crayolaOrchidColor], [SKColor crayolaPinkFlamingoColor], [SKColor crayolaWinterSkyColor]];
 }
 
 - (void)runSplashButtonColorChangeAnimation
@@ -180,7 +177,7 @@
                                          -_splashButton.size.height/2.0);
    _paletteButton.name = @"palette";
 
-   void (^paletteButtonActionBlock)() = ^
+   ActionBlock paletteButtonActionBlock = ^
    {
       if (!self.isAnimating)
          [self toggleColorGrid];
@@ -196,9 +193,7 @@
    _colorDrops = [NSMutableArray arrayWithCapacity:COLOR_DROP_CAPACITY];
    if ([GLColorPaletteManager sharedManager].hasStoredPalette)
    {
-//      colorDropColors = [[NSUserDefaults standardUserDefaults] objectForKey:@"gl_palette_array"];
       colorDropColors = [GLColorPaletteManager sharedManager].storedColorPalette;
-      NSLog(@"palette array in defaults: %@", colorDropColors);
    }
    else
    {
@@ -207,7 +202,6 @@
                           [SKColor crayolaLimeColor],
                           [SKColor crayolaOrangeRedColor],
                           [SKColor crayolaPinkFlamingoColor]];
-      NSLog(@"palette array not in defaults: %@", colorDropColors);
 
       [GLColorPaletteManager sharedManager].storedColorPalette = colorDropColors;
    }
@@ -223,7 +217,7 @@
       drop.alpha = .75;
       drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
 
-      void (^colorDropActionBlock)() = ^{[self updateCurrentColorDrop:drop];};
+      ActionBlock colorDropActionBlock = ^{[self updateCurrentColorDrop:drop];};
       drop.actionBlock = colorDropActionBlock;
 
       [_colorDrops insertObject:drop atIndex:i];
@@ -281,7 +275,6 @@
    expand.timingMode = SKActionTimingEaseInEaseOut;
    spin.timingMode = SKActionTimingEaseInEaseOut;
    changeBackgroundAlpha.timingMode = SKActionTimingEaseInEaseOut;
-
 
    [self runAction:_expandColorGridSound];
    [_backgroundLayer runAction:backgroundActions
@@ -372,10 +365,8 @@
    maintainPosition.timingMode = SKActionTimingEaseInEaseOut;
    rotate.timingMode = SKActionTimingEaseInEaseOut;
 
-   SKAction *buttonActions = [SKAction group:@[changeButtonColor,
-                                               rotate]];
-   SKAction *backgroundActions = [SKAction group:@[changeHudColor,
-                                                   slide]];
+   SKAction *buttonActions = [SKAction group:@[changeButtonColor, rotate]];
+   SKAction *backgroundActions = [SKAction group:@[changeHudColor, slide]];
    self.expanded = YES;
    [self runAction:wait
         completion:^
@@ -536,7 +527,7 @@
 
 - (NSArray *)getCurrentDropColors
 {
-   NSMutableArray *dropColors = [NSMutableArray arrayWithCapacity:5];
+   NSMutableArray *dropColors = [NSMutableArray arrayWithCapacity:_colorDrops.count];
    for (GLUIActionButton *drop in _colorDrops)
       [dropColors addObject:drop.color];
 
@@ -558,10 +549,8 @@
 
    if (!colorExistsInCurrentPalette)
    {
-      NSLog(@"colors before: %@", [self getCurrentDropColors]);
+      // these two things must happen in this order!
       _currentColorDrop.color = newColor;
-      NSLog(@"colors after: %@", [self getCurrentDropColors]);
-
       [GLColorPaletteManager sharedManager].storedColorPalette = [self getCurrentDropColors];
    }
    
