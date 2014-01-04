@@ -289,7 +289,8 @@
 
    [_backgroundLayer runAction:backgroundActions
                     completion:
-    ^{        [self.delegate colorGridDidExpand];
+    ^{
+       [self.delegate colorGridDidExpand];
        self.animating = NO;
     }];
 
@@ -380,7 +381,7 @@
    [self runAction:wait
         completion:^
    {
-      [self runAction:self.defaultExpandingSoundFX];
+      if (_shouldPlaySound) [self runAction:self.defaultExpandingSoundFX];
 
       [_backgroundLayer runAction:backgroundActions];
 
@@ -470,7 +471,7 @@
    [_paletteButton runAction:slide];
    [_paletteButton.hitBox runAction:slide];
 
-   [self runAction:self.defaultCollapsingSoundFX];
+   if (_shouldPlaySound) [self runAction:self.defaultCollapsingSoundFX];
    
    [_backgroundLayer runAction:hudBackgroundActions
                     completion:^
