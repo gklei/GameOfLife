@@ -60,7 +60,7 @@ NS_INLINE HUDItemRange HUDItemRangeMake(float location, float length)
 @property (nonatomic, strong) NSString *   label;
 @property (nonatomic, assign) HUDItemRange range;
 @property (nonatomic, assign) HUDItemType  type;
-@property (nonatomic, assign) NSNumber *   defaultvalue;
+@property (nonatomic, strong) NSNumber *   defaultvalue;
 @property (nonatomic, assign) HUDValueType valueType;
 
 @end
