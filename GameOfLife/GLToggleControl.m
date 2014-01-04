@@ -161,9 +161,6 @@
 {
    SKAction *enableSlide = [SKAction moveToX:INNER_RING_X_ANIMATION - CGRectGetWidth(_innerRing.calculateAccumulatedFrame)/2
                                     duration:TOGGLE_ANIMATION_DURATION];
-   /*[SKAction moveByX:INNER_RING_X_ANIMATION
-                                           y:0
-                                    duration:TOGGLE_ANIMATION_DURATION];*/
 
    SKAction *enableInnerRingColor = [SKAction colorizeWithColor:_innerRingEnabledColor
                                                colorBlendFactor:1
@@ -194,9 +191,6 @@
 {
    SKAction *disableSlide = [SKAction moveToX:-INNER_RING_X_ANIMATION + CGRectGetWidth(_innerRing.calculateAccumulatedFrame)/2
                                      duration:TOGGLE_ANIMATION_DURATION];
-   /*[SKAction moveByX:-INNER_RING_X_ANIMATION
-                                            y:0
-                                     duration:TOGGLE_ANIMATION_DURATION];*/
    
    SKAction *disableInnerRingColor = [SKAction colorizeWithColor:_innerRingDisabledColor
                                                 colorBlendFactor:1
@@ -250,7 +244,9 @@
    self.hitBox.position = _innerRing.position;
 }
 
-- (UIColor *)colorLerpFromStartColor:(UIColor *)start toEndColor:(UIColor *)end withDuration:(float)t
+- (UIColor *)colorLerpFromStartColor:(UIColor *)start
+                          toEndColor:(UIColor *)end
+                        withDuration:(float)t
 {
    t = (t < 0.0f)? 0.0f : t;
    t = (t > 1.0f)? 1.0f : t;
