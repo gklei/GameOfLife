@@ -72,8 +72,9 @@
    _dimensions.rows = size.width/TILESIZE.width;
    _dimensions.columns = size.width/TILESIZE.width;
    float maxRowHeight = size.height;
-   double rotation = -M_PI;
-
+   double liveRotation = -M_PI;
+   double deadRotation = 0.0;
+   
    // check for iPhone 5
    if (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)568) < DBL_EPSILON)
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
@@ -81,48 +82,50 @@
    
    SKTexture *texture1 = nil;
    SKTexture *texture2 = nil;
-   int i = arc4random_uniform(8);
-//   int i = 8;
+   int i = arc4random_uniform(9);
+//   i = 8;
    switch (i)
    {
       case 0:
          texture1 = [SKTexture textureWithImageNamed:@"tile.ring.png"];
-         rotation = 0.0;
+         liveRotation = 0.0;
          break;
       case 1:
          texture1 = [SKTexture textureWithImageNamed:@"tile.cylinder.png"];
-         rotation = -M_PI;
+         liveRotation = -M_PI;
          break;
       case 2:
          texture1 = [SKTexture textureWithImageNamed:@"tile.spiral.png"];
-         rotation = -M_PI;
+         liveRotation = -M_PI;
          break;
       case 3:
          texture1 = [SKTexture textureWithImageNamed:@"tile.buldge.png"];
-         rotation = -M_PI;
+         liveRotation = -M_PI;
          break;
       case 4:
          texture1 = [SKTexture textureWithImageNamed:@"tile.ring3d.png"];
-         rotation = -M_PI;
+         liveRotation = -M_PI;
          break;
       case 5:
          texture1 = [SKTexture textureWithImageNamed:@"tile.frowny.png"];
          texture2 = [SKTexture textureWithImageNamed:@"tile.smiley.png"];
-         rotation = 0.0;
+         liveRotation = 0.0;
          break;
       case 6:
          texture1 = [SKTexture textureWithImageNamed:@"tile.circle.png"];
-         rotation = 0.0;
+         liveRotation = 0.0;
          break;
       case 7:
          texture1 = [SKTexture textureWithImageNamed:@"tile.clear.png"];
          texture2 = [SKTexture textureWithImageNamed:@"tile.snowflake.png"];
          [self setCurrentColor:[UIColor colorForCrayolaColorName:CCN_crayolaWhiteColor]];
-         rotation = 0.0;
+         liveRotation = 0.0;
          break;
       default:
          texture1 = [SKTexture textureWithImageNamed:@"tile.square.png"];
-         rotation = -M_PI_2;
+         liveRotation = -M_PI_2;
+//         liveRotation = -M_PI_4;
+//         deadRotation = M_PI_4;
    }
    
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
@@ -134,12 +137,13 @@
                                                                    yPos + 0.5,
                                                                    TILESIZE.width - 1,
                                                                    TILESIZE.height - 1)
-                                            andRotation:rotation];
+                                            andRotation:liveRotation];
          if (texture2)
             tile.liveTexture = texture2;
          
          tile.tileColorDelegate = self;
          tile.liveColor = [self currentTileColor];
+         tile.deadRotation = deadRotation;
          [self addChild:tile];
 //         [self.canvasNode addChild:tile];
       }

@@ -13,8 +13,6 @@
 
 @implementation GLTileNode
 
-@synthesize liveColor = _liveColor;
-
 + (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation
 {
    GLTileNode *tile = [GLTileNode spriteNodeWithTexture:texture size:rect.size];
@@ -26,6 +24,7 @@
    tile.colorBlendFactor = 1.0;
    tile.isLiving = NO;
    tile.scalesOnTouch = NO;
+   tile.liveRotation = rotation;
 
    BeganFocusActionBlock beganFocusActionBlock = ^
    {
@@ -169,10 +168,10 @@
 
 - (void)swapTextures
 {
-   if (_liveTexture == nil || _deadTexture == nil)
-      self.zRotation = (_isLiving)? M_PI : 0.0;
-   else
+   if ([self dualTextures])
       self.texture = (_isLiving)? _liveTexture : _deadTexture;
+   else
+      self.zRotation = (_isLiving)? _liveRotation : _deadRotation;
 }
 
 - (bool)dualTextures
@@ -190,6 +189,13 @@
 
    _isLiving = living;
    [self swapTextures];
+}
+
+- (void)setDeadRotation:(double)rotation
+{
+   _deadRotation = rotation;
+   if (!_isLiving)
+      self.zRotation = _deadRotation;
 }
 
 - (void)updateLivingAndColor:(BOOL)living
