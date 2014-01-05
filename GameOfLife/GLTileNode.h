@@ -37,7 +37,7 @@
 
 @property (strong, nonatomic) id<GLTileColorDelegate> tileColorDelegate;
 
-+ (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect;
++ (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation;
 
 - (void)updateLivingAndColor:(BOOL)living;
 - (SKColor *)getLivingTileColor;

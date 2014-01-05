@@ -13,4 +13,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+- (SKView *)view;
+
 @end

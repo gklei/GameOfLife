@@ -15,7 +15,7 @@
 
 @synthesize liveColor = _liveColor;
 
-+ (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect
++ (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation
 {
    GLTileNode *tile = [GLTileNode spriteNodeWithTexture:texture size:rect.size];
    tile.deadTexture = texture;
@@ -34,7 +34,7 @@
          SKNode *parent = tile.parent;
          [tile removeFromParent];
          [parent addChild:tile];
-         SKAction *rotateRight = [SKAction rotateByAngle:-M_PI_2 duration:.2];
+         SKAction *rotateRight = [SKAction rotateByAngle:rotation duration:.2];
          SKAction *scaleUp = [SKAction scaleTo:TILE_SCALE_FOCUSED duration:.2];
 
          rotateRight.timingMode = SKActionTimingEaseInEaseOut;
@@ -46,7 +46,7 @@
               completion:^
          {
             [tile setScale:TILE_SCALE_FOCUSED];
-            tile.zRotation = -M_PI_2;
+            tile.zRotation = rotation;
          }];
       }
    };

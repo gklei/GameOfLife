@@ -7,6 +7,7 @@
 //
 
 #import "GLGrid.h"
+#import "GLAppDelegate.h"
 #import "GLTileNode.h"
 #import "UIColor+CrossFade.h"
 
@@ -35,7 +36,13 @@
 
    SKColor *_currentColor;
 }
+
+//@property (nonatomic, strong) SKTexture * canvasTexture;
+//@property (nonatomic, strong) SKSpriteNode * canvasSprite;
+//@property (nonatomic, strong) SKNode * canvasNode;
+
 @end
+
 
 @implementation GLGrid
 
@@ -60,9 +67,12 @@
 
 - (void)setupGridWithSize:(CGSize)size
 {
+//   self.canvasNode = [SKNode node];
+   
    _dimensions.rows = size.width/TILESIZE.width;
    _dimensions.columns = size.width/TILESIZE.width;
    float maxRowHeight = size.height;
+   double rotation = -M_PI;
 
    // check for iPhone 5
    if (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)568) < DBL_EPSILON)
@@ -71,39 +81,48 @@
    
    SKTexture *texture1 = nil;
    SKTexture *texture2 = nil;
-//   int i = arc4random_uniform(7);
-   int i = 8;
+   int i = arc4random_uniform(8);
+//   int i = 8;
    switch (i)
    {
       case 0:
          texture1 = [SKTexture textureWithImageNamed:@"tile.ring.png"];
+         rotation = 0.0;
          break;
       case 1:
          texture1 = [SKTexture textureWithImageNamed:@"tile.cylinder.png"];
+         rotation = -M_PI;
          break;
       case 2:
          texture1 = [SKTexture textureWithImageNamed:@"tile.spiral.png"];
+         rotation = -M_PI;
          break;
       case 3:
          texture1 = [SKTexture textureWithImageNamed:@"tile.buldge.png"];
+         rotation = -M_PI;
          break;
       case 4:
          texture1 = [SKTexture textureWithImageNamed:@"tile.ring3d.png"];
+         rotation = -M_PI;
          break;
       case 5:
          texture1 = [SKTexture textureWithImageNamed:@"tile.frowny.png"];
          texture2 = [SKTexture textureWithImageNamed:@"tile.smiley.png"];
+         rotation = 0.0;
          break;
       case 6:
          texture1 = [SKTexture textureWithImageNamed:@"tile.circle.png"];
+         rotation = 0.0;
          break;
       case 7:
          texture1 = [SKTexture textureWithImageNamed:@"tile.clear.png"];
          texture2 = [SKTexture textureWithImageNamed:@"tile.snowflake.png"];
          [self setCurrentColor:[UIColor colorForCrayolaColorName:CCN_crayolaWhiteColor]];
+         rotation = 0.0;
          break;
       default:
          texture1 = [SKTexture textureWithImageNamed:@"tile.square.png"];
+         rotation = -M_PI_2;
    }
    
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
@@ -114,17 +133,20 @@
                                                    rect:CGRectMake(xPos + 0.5,
                                                                    yPos + 0.5,
                                                                    TILESIZE.width - 1,
-                                                                   TILESIZE.height - 1)];
+                                                                   TILESIZE.height - 1)
+                                            andRotation:rotation];
          if (texture2)
             tile.liveTexture = texture2;
          
          tile.tileColorDelegate = self;
          tile.liveColor = [self currentTileColor];
          [self addChild:tile];
+//         [self.canvasNode addChild:tile];
       }
    }
    
    _tiles = [NSArray arrayWithArray:self.children];
+//   _tiles = [NSArray arrayWithArray:self.canvasNode.children];
    
    _priorGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _currentGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
@@ -139,6 +161,24 @@
       tile.boardMaxDistance = maxBoardDistance;
       [tile setColorCenter:boardCenter];
    }
+   
+   [self setupCanvasSprite:size];
+}
+
+- (void)setupCanvasSprite:(CGSize)size
+{
+//   GLAppDelegate * appDelagate = ((GLAppDelegate *)[[UIApplication sharedApplication] delegate]);
+//   self.canvasTexture = [appDelagate.view textureFromNode:self.canvasNode];
+//   self.canvasSprite = [SKSpriteNode spriteNodeWithTexture:self.canvasTexture size:size];
+//   self.canvasSprite.anchorPoint = CGPointMake(0, 0);
+//   [self addChild:self.canvasSprite];
+}
+
+- (void)updateCanvasTexture
+{
+//   GLAppDelegate * appDelagate = ((GLAppDelegate *)[[UIApplication sharedApplication] delegate]);
+//   self.canvasTexture = [appDelagate.view textureFromNode:self.canvasNode];
+//   self.canvasSprite.texture = self.canvasTexture;
 }
 
 - (GLTileNode *)tileAtTouch:(UITouch *)touch
@@ -147,7 +187,7 @@
 
    int row = location.y / TILESIZE.height;
    int col = location.x / TILESIZE.width;
-   int arrayIndex = row*_dimensions.columns + col;
+   int arrayIndex = row * _dimensions.columns + col;
 
    if (arrayIndex >= 0 && arrayIndex < _tiles.count)
       return [_tiles objectAtIndex:arrayIndex];
@@ -175,6 +215,7 @@
       ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
 
    [self updateColorCenter];
+   [self updateCanvasTexture];
 }
 
 - (BOOL)currentlyInContinuousBiLoop
@@ -208,6 +249,8 @@
    
    NSUserDefaults * standardDefaults = [NSUserDefaults standardUserDefaults];
    [standardDefaults setObject:[NSArray arrayWithArray:storedState] forKey:@"StoredTileState"];
+   
+   [self updateCanvasTexture];
 }
 
 - (void)restoreGrid
@@ -247,11 +290,6 @@
 
 - (void)clearGrid
 {
-//   if (!_clearingGrid)
-//   {
-//      _clearingGrid = YES;
-//      [self resetTilesWithTileArray:[self getLivingTiles] index:0];
-//   }
    [self resetGrid];
    _inContinuousLoop = NO;
 }
@@ -270,8 +308,9 @@
    }
 
    GLTileNode *tile = [tileArray objectAtIndex:tileIndex];
-   GLTileNode *dummyTile = [GLTileNode tileWithTexture:tile.texture rect:tile.frame];
-
+   GLTileNode *dummyTile = [GLTileNode tileWithTexture:tile.texture
+                                                  rect:tile.frame
+                                           andRotation:0.0];
    [tile removeFromParent];
    [self addChild:dummyTile];
    [self addChild:tile];
