@@ -17,6 +17,7 @@
 #import "UIColor+Crayola.h"
 
 #include <OpenGLES/ES1/glext.h>
+#include <AssetsLibrary/AssetsLibrary.h>
 
 #define DEFAULT_GENERATION_DURATION 0.8
 
@@ -311,8 +312,10 @@
           UIGraphicsEndImageContext();
 
           if (viewImage)
-             UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
-          
+             UIImageWriteToSavedPhotosAlbum(viewImage,
+                                            self,
+                                            @selector(image:didFinishSavingWithError:contextInfo:),
+                                            nil);
           _firstScreenShotTaken = YES;
       }];
    }
@@ -326,7 +329,10 @@
       UIGraphicsEndImageContext();
 
       if (viewImage)
-         UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+         UIImageWriteToSavedPhotosAlbum(viewImage,
+                                        self,
+                                        @selector(image:didFinishSavingWithError:contextInfo:),
+                                        nil);
 
       [_flashLayer runAction:_flashAnimation];
    }
@@ -334,6 +340,11 @@
    {
       // show HUDS
    }
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+   NSLog(@"photo saved with error: %@", [error userInfo]);
 }
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
