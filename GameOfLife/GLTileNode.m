@@ -13,9 +13,7 @@
 
 @implementation GLTileNode
 
-@synthesize liveColor = _liveColor;
-
-+ (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect
++ (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation
 {
    GLTileNode *tile = [GLTileNode spriteNodeWithTexture:texture size:rect.size];
    tile.deadTexture = texture;
@@ -26,6 +24,7 @@
    tile.colorBlendFactor = 1.0;
    tile.isLiving = NO;
    tile.scalesOnTouch = NO;
+   tile.liveRotation = rotation;
 
    BeganFocusActionBlock beganFocusActionBlock = ^
    {
@@ -34,7 +33,7 @@
          SKNode *parent = tile.parent;
          [tile removeFromParent];
          [parent addChild:tile];
-         SKAction *rotateRight = [SKAction rotateByAngle:-M_PI_2 duration:.2];
+         SKAction *rotateRight = [SKAction rotateByAngle:rotation duration:.2];
          SKAction *scaleUp = [SKAction scaleTo:TILE_SCALE_FOCUSED duration:.2];
 
          rotateRight.timingMode = SKActionTimingEaseInEaseOut;
@@ -46,7 +45,7 @@
               completion:^
          {
             [tile setScale:TILE_SCALE_FOCUSED];
-            tile.zRotation = -M_PI_2;
+            tile.zRotation = rotation;
          }];
       }
    };
@@ -169,10 +168,10 @@
 
 - (void)swapTextures
 {
-   if (_liveTexture == nil || _deadTexture == nil)
-      self.zRotation = (_isLiving)? M_PI : 0.0;
-   else
+   if ([self dualTextures])
       self.texture = (_isLiving)? _liveTexture : _deadTexture;
+   else
+      self.zRotation = (_isLiving)? _liveRotation : _deadRotation;
 }
 
 - (bool)dualTextures
@@ -190,6 +189,13 @@
 
    _isLiving = living;
    [self swapTextures];
+}
+
+- (void)setDeadRotation:(double)rotation
+{
+   _deadRotation = rotation;
+   if (!_isLiving)
+      self.zRotation = _deadRotation;
 }
 
 - (void)updateLivingAndColor:(BOOL)living

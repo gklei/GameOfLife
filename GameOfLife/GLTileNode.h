@@ -20,6 +20,8 @@
 @property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
 @property (nonatomic, assign) float birthingDuration;
 @property (nonatomic, assign) float dyingDuration;
+@property (nonatomic, assign) double liveRotation;
+@property (nonatomic, assign, setter = setDeadRotation:) double deadRotation;
 
 @property (nonatomic, assign) CrayolaColorName liveColorName;
 @property (nonatomic, assign) CrayolaColorName deadColorName;
@@ -37,7 +39,7 @@
 
 @property (strong, nonatomic) id<GLTileColorDelegate> tileColorDelegate;
 
-+ (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect;
++ (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation;
 
 - (void)updateLivingAndColor:(BOOL)living;
 - (SKColor *)getLivingTileColor;

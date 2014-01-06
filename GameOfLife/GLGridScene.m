@@ -299,6 +299,7 @@
    {
       // hide HUDs
    }
+   
    if (!_firstScreenShotTaken)
    {
       [_flashLayer runAction:_flashAnimation
@@ -336,6 +337,7 @@
 
       [_flashLayer runAction:_flashAnimation];
    }
+   
    if (_autoHideHUDLayersForScreenshot)
    {
       // show HUDS
@@ -628,7 +630,7 @@
    }
 }
 
-#pragma mark SKScene Overridden Method
+#pragma mark - SKScene Overridden Method
 -(void)update:(CFTimeInterval)currentTime
 {
    if (_running && currentTime - _lastGenerationTime > _generationDuration)
@@ -642,6 +644,7 @@
    }
 }
 
+#pragma mark - HUDSettingsObserver protocol
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
 {
    if ([keyPath compare:@"GenerationDuration"] == NSOrderedSame)

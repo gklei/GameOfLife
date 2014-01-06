@@ -31,7 +31,7 @@
 
    // Configure the view.
    SKView * skView = (SKView *)self.view;
-//   skView.showsFPS = YES;
+//    skView.showsFPS = YES;
 //    skView.showsNodeCount = YES;
 
    // Create and configure the scene.
@@ -41,7 +41,8 @@
    [skView presentScene:_gridScene];
 }
 
-- (BOOL)prefersStatusBarHidden {
+- (BOOL)prefersStatusBarHidden
+{
    return YES;
 }
 
