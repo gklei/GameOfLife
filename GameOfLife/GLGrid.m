@@ -134,7 +134,7 @@
    for (GLTileNode *tile in _tiles)
    {
       tile.deadTexture = texture;
-      tile.texture = texture;
+      [tile swapTextures];
    }
 }
 
@@ -146,16 +146,15 @@
 
 - (void)setLiveImage:(NSString *)liveImageName
 {
-   if (liveImageName.length == 0) return;
+   SKTexture *texture = nil;
    
-   SKTexture *texture = [SKTexture textureWithImageNamed:liveImageName];
-   if (texture == nil) return;
+   if (liveImageName.length > 0)
+      texture = [SKTexture textureWithImageNamed:liveImageName];
    
    for (GLTileNode *tile in _tiles)
    {
       tile.liveTexture = texture;
-      if (tile.isLiving)
-         tile.texture = texture;
+      [tile swapTextures];
    }
 }
 
