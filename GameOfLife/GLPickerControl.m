@@ -121,12 +121,12 @@
       
       [self updateControlHeight];
       
-      NSNumber * value = [[NSUserDefaults standardUserDefaults] objectForKey:@"GridImageIndex"];
-      [self setupImagePairs:[value unsignedIntegerValue]];
-      
       [self setupSoundFX];
       [self observeSoundFxChanges];
       [self observeGridImageIndexChanges];
+      
+      NSNumber * value = [[NSUserDefaults standardUserDefaults] objectForKey:@"GridImageIndex"];
+      [self setupImagePairs:[value unsignedIntegerValue]];
    }
    
    return self;
@@ -222,20 +222,14 @@
 
 - (void)handleTouchBegan:(UITouch *)touch
 {
-   if (_shouldPlaySound) [self runAction:_pressReleaseSoundFX];
-   [super handleTouchBegan:touch];
 }
 
 - (void)handleTouchMoved:(UITouch *)touch
 {
-// Currently this does not need to be called
-//   [super handleTouchMoved:touch];
 }
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
-   if (_shouldPlaySound) [self runAction:_pressReleaseSoundFX];
-   [super handleTouchEnded:touch];
 }
 
 - (void)updateImageIndex:(NSUInteger)index
@@ -257,6 +251,7 @@
       
       NSUInteger imageIndex = [value unsignedLongValue];
       [self updateImageIndex:imageIndex];
+      if (_shouldPlaySound && self.items) [self runAction:_pressReleaseSoundFX];
    }
 }
 
