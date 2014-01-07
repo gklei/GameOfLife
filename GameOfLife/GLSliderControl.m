@@ -61,10 +61,12 @@
    [hudManager addObserver:self forKeyPath:@"SoundFX"];
 }
 
-- (id)init
+- (id)initWithLength:(int)length
 {
    if (self = [super init])
    {
+      _sliderLength = length;
+      
       self.scalesOnTouch = NO;
       [self setupLeftTrack];
       [self setupRightTrack];
@@ -74,13 +76,8 @@
       [self setupSoundFX];
       [self observeSoundFxChanges];
    }
+   
    return self;
-}
-
-- (id)initWithLength:(int)length
-{
-   _sliderLength = length;
-   return [self init];
 }
 
 - (id)initWithLength:(int)length range:(HUDItemRange)range andPreferenceKey:(NSString *)prefKey
@@ -269,8 +266,8 @@
 
    [self moveKnobByDeltaX:deltaX];
 
-   // Currently this does not need to be called
-   //   [super handleTouchMoved:touch];
+// Currently this does not need to be called
+//   [super handleTouchMoved:touch];
 }
 
 - (void)handleTouchEnded:(UITouch *)touch
@@ -292,6 +289,11 @@
       assert(type == HVT_BOOL);
       _shouldPlaySound = [value boolValue];
    }
+}
+
+- (NSUInteger)controlHeight
+{
+   return 40;
 }
 
 @end

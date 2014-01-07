@@ -52,6 +52,7 @@
    GLUIButton *_focusedButton;
 
    CGPoint _locationOfFirstTouch;
+   NSArray * _gridImagePairs;
 }
 @end
 
@@ -68,6 +69,24 @@
    hudItem.type = HIT_SLIDER;
    hudItem.defaultvalue = [NSNumber numberWithFloat:DEFAULT_GENERATION_DURATION];
    hudItem.valueType = HVT_FLOAT;
+   
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addHudItem:hudItem];
+}
+
+- (void)registerGridImagePickerHUD:(NSArray *)imagePairs
+{
+   assert(imagePairs.count > 0);
+   assert((imagePairs.count % 2) == 0);
+   
+   HUDPickerItemDescription * hudItem = [[HUDPickerItemDescription alloc] init];
+   hudItem.keyPath = @"GridImages";
+   hudItem.label = @"IMAGES";
+   hudItem.type = HIT_PICKER;
+   hudItem.valueType = HVT_UINT;
+   hudItem.imagePairs = imagePairs;
+   hudItem.range = HUDItemRangeMake(0, imagePairs.count - 1);
+   hudItem.defaultvalue = [NSNumber numberWithFloat:0];
    
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
    [hudManager addHudItem:hudItem];
@@ -108,6 +127,7 @@
    [self registerSmartMenuHUD];
    [self registerGeneralDurationHUD];
    [self registerLoopDetectionHUD];
+   [self registerGridImagePickerHUD:_gridImagePairs];
 }
 
 #pragma mark - observation methods
@@ -148,6 +168,18 @@
 {
    if (self = [super initWithSize:size])
    {
+      //                  live image,            dead image
+      _gridImagePairs = @[@"",                   @"tile.square.png",
+                          @"",                   @"tile.ring.png",
+                          @"",                   @"tile.ring3d.png",
+                          @"",                   @"tile.circle.png",
+                          @"",                   @"tile.cylinder.png",
+                          @"",                   @"tile.spiral.png",
+                          @"",                   @"tile.buldge.png",
+                          @"",                   @"tile.square.png",
+                          @"tile.smiley.png",    @"tile.frowny.png",
+                          @"tile.snowflake.png", @"tile.clear.png"];
+      
       [self setupGridWithSize:size];
 
       [self registerHudParameters];
@@ -659,6 +691,40 @@
       assert(type == HVT_BOOL);
       _grid.inContinuousLoop = NO;
       _grid.considersContinuousBiLoops = [value boolValue];
+   }
+   
+   if ([keyPath compare:@"GridImages"] == NSOrderedSame)
+   {
+//static NSUInteger nextOne = 0;
+//nextOne += 2;
+//if (nextOne >= _gridImagePairs.count)
+//   nextOne = 0;
+//NSUInteger imageIndex = nextOne;
+      assert(type == HVT_UINT);
+      
+      NSUInteger imageIndex = [value unsignedIntValue];
+      if (imageIndex + 1 >= _gridImagePairs.count)
+         return;
+      
+      // TODO:LEA: maybe the rotations should be stored with the images in the preferences?
+      [_grid setDeadImage:[_gridImagePairs objectAtIndex:imageIndex + 1]];
+      [_grid setDeadRotation:0];
+      
+      [_grid setLiveImage:[_gridImagePairs objectAtIndex:imageIndex]];
+      switch (imageIndex)
+      {
+         case 0:
+            [_grid setLiveRotation:-M_PI_2];
+            break;
+         case 4:
+         case 6:
+         case 8:
+         case 10:
+            [_grid setLiveRotation:-M_PI];
+            break;
+         default:
+            [_grid setLiveRotation:0];
+      }
    }
 }
 

@@ -53,8 +53,6 @@ NS_INLINE HUDItemRange HUDItemRangeMake(float location, float length)
 }
 
 @interface HUDItemDescription : NSObject
-{
-}
 
 @property (nonatomic, strong) NSString *   keyPath;
 @property (nonatomic, strong) NSString *   label;
@@ -65,6 +63,9 @@ NS_INLINE HUDItemRange HUDItemRangeMake(float location, float length)
 
 @end
 
+@interface HUDPickerItemDescription : HUDItemDescription
+   @property (nonatomic, strong) NSArray * imagePairs;
+@end
 
 @interface GLHUDSettingsManager : NSObject
 

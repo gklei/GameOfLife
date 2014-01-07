@@ -24,6 +24,7 @@ typedef struct {
 @property (nonatomic, readwrite) BOOL usesMultiColors;
 
 - (id)initWithSize:(CGSize)size;
+
 - (GLTileNode *)tileAtTouch:(UITouch *)touch;
 - (void)updateNextGeneration;
 - (void)storeGridState;
@@ -38,5 +39,10 @@ typedef struct {
                    dyingDuration:(float)dDuration;
 
 - (BOOL)currentStateIsRunnable;
+
+- (void)setDeadImage:(NSString *)deadImageName;
+- (void)setDeadRotation:(double)rotation;
+- (void)setLiveImage:(NSString *)liveImageName;
+- (void)setLiveRotation:(double)rotation;
 
 @end

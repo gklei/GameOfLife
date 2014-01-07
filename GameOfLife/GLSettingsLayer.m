@@ -9,6 +9,7 @@
 #import "GLSettingsLayer.h"
 
 #import "GLHUDSettingsManager.h"
+#import "GLPickerControl.h"
 #import "GLSettingsItem.h"
 #import "GLSliderControl.h"
 #import "GLToggleControl.h"
@@ -16,10 +17,6 @@
 #import "UIColor+Crayola.h"
 
 #import "GLAppDelegate.h"
-
-//#define TOP_PADDING 20
-//#define HEADING_FONT_SIZE 16
-#define CONTROL_HEIGHT 50
 
 @interface GLSettingsLayer()
 {
@@ -35,7 +32,7 @@
    GLSettingsItem *toggleItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                               control:toggleControl];
    toggleItem.position = _nextControlPosition;
-   _nextControlPosition.y -= CONTROL_HEIGHT;
+   _nextControlPosition.y -= toggleControl.controlHeight;
    
    [self addChild:toggleItem];
 }
@@ -48,14 +45,22 @@
    GLSettingsItem * sliderItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                                control:sliderControl];
    sliderItem.position = _nextControlPosition;
-   _nextControlPosition.y -= CONTROL_HEIGHT;
+   _nextControlPosition.y -= sliderControl.controlHeight;
    
    [self addChild:sliderItem];
 }
 
 - (void)addPickerControl:(HUDItemDescription *)item
 {
-   _nextControlPosition.y -= CONTROL_HEIGHT;
+   GLPickerControl * pickerControl =
+      [[GLPickerControl alloc] initWithHUDPickerItemDescription:(HUDPickerItemDescription *)item];
+   
+   GLSettingsItem * pickerItem = [[GLSettingsItem alloc] initWithTitle:item.label
+                                                               control:pickerControl];
+   pickerItem.position = _nextControlPosition;
+   _nextControlPosition.y -= pickerControl.controlHeight;
+   
+   [self addChild:pickerItem];
 }
 
 - (void)addItemToSettings:(HUDItemDescription *)item
@@ -74,6 +79,8 @@
       case HIT_PICKER:
          [self addPickerControl:item];
          break;
+      default:
+         NSLog(@"WARNING: Undefined HUD item type requested - not building UI");
    }
 }
 
@@ -93,10 +100,12 @@
                       anchorPoint:anchorPoint])
    {
       [self setupSettingsLabel];
-      NSArray * keyPaths = [NSArray arrayWithObjects:@"GenerationDuration",
+      NSArray * keyPaths = [NSArray arrayWithObjects:@"GridImages",
+                                                     @"GenerationDuration",
                                                      @"SoundFX",
                                                      @"SmartMenu",
                                                      @"LoopDetection",
+                                                     //@"GridImages",
                                                      nil];
       [self setupHudItemsforKeys:keyPaths];
    }
@@ -116,7 +125,7 @@
                                         -(HEADING_FONT_SIZE + TOP_PADDING));
    [self addChild:settingsLabel];
    
-   _nextControlPosition = CGPointMake(0, -(HEADING_FONT_SIZE + TOP_PADDING + CONTROL_HEIGHT));
+   _nextControlPosition = CGPointMake(0, -(TOP_PADDING * 2 + HEADING_FONT_SIZE * 2));
 }
 
 @end

@@ -22,6 +22,12 @@ GLHUDSettingsManager * g_globalHUDSettigsManager = nil;
 
 @end
 
+//
+// class HUDPickerItemDescription
+//
+@implementation HUDPickerItemDescription
+
+@end
 
 //
 // class GLHUDSettingsManager

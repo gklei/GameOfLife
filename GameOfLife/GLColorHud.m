@@ -216,8 +216,10 @@
 
    for (int i=0; i<COLOR_DROP_CAPACITY; ++i)
    {
-      GLUIActionButton *drop = ([self usingRetinaDisplay]) ? [GLUIActionButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
-                                                             [GLUIActionButton spriteNodeWithImageNamed:@"droplet.png"];
+      GLUIActionButton *drop = ([self usingRetinaDisplay]) ?
+         [GLUIActionButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
+         [GLUIActionButton spriteNodeWithImageNamed:@"droplet.png"];
+      
       [drop setScale:COLOR_DROP_SCALE];
       drop.position = CGPointMake(i*COLOR_DROP_PADDING + 78, -drop.size.height/2.0 - 5);
       drop.colorBlendFactor = 1.0;

@@ -8,7 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-#define TOP_PADDING 20
+#define TOP_PADDING 10
 #define HEADING_FONT_SIZE 16
 
 @interface GLMenuLayer : SKSpriteNode

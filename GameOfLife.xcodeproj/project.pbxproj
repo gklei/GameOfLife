@@ -123,6 +123,7 @@
 		ED2CB96C185C105200319DE5 /* tile.buldge.png in Resources */ = {isa = PBXBuildFile; fileRef = ED2CB96A185C105200319DE5 /* tile.buldge.png */; };
 		ED2CB96D185C105200319DE5 /* tile.spiral.png in Resources */ = {isa = PBXBuildFile; fileRef = ED2CB96B185C105200319DE5 /* tile.spiral.png */; };
 		ED2CB971185C157500319DE5 /* tile.ring3d.png in Resources */ = {isa = PBXBuildFile; fileRef = ED2CB970185C157500319DE5 /* tile.ring3d.png */; };
+		ED4C6209187B615E0001E7DC /* GLPickerControl.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4C6208187B615E0001E7DC /* GLPickerControl.m */; };
 		ED581D9C186276880016F98D /* GLHUDSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ED581D9B186276880016F98D /* GLHUDSettingsManager.m */; };
 		ED8EA7AC1873BDAA0073132A /* tile.snowflake.png in Resources */ = {isa = PBXBuildFile; fileRef = ED8EA7AB1873BDAA0073132A /* tile.snowflake.png */; };
 		ED8EA7AE1873C3470073132A /* tile.clear.png in Resources */ = {isa = PBXBuildFile; fileRef = ED8EA7AD1873C3470073132A /* tile.clear.png */; };
@@ -283,6 +284,8 @@
 		ED2CB96A185C105200319DE5 /* tile.buldge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.buldge.png; path = Images/tile.buldge.png; sourceTree = SOURCE_ROOT; };
 		ED2CB96B185C105200319DE5 /* tile.spiral.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.spiral.png; path = Images/tile.spiral.png; sourceTree = SOURCE_ROOT; };
 		ED2CB970185C157500319DE5 /* tile.ring3d.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.ring3d.png; path = Images/tile.ring3d.png; sourceTree = SOURCE_ROOT; };
+		ED4C6207187B615E0001E7DC /* GLPickerControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPickerControl.h; sourceTree = "<group>"; };
+		ED4C6208187B615E0001E7DC /* GLPickerControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPickerControl.m; sourceTree = "<group>"; };
 		ED581D9A186276880016F98D /* GLHUDSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLHUDSettingsManager.h; sourceTree = "<group>"; };
 		ED581D9B186276880016F98D /* GLHUDSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLHUDSettingsManager.m; sourceTree = "<group>"; };
 		ED8EA7AB1873BDAA0073132A /* tile.snowflake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.snowflake.png; path = Images/tile.snowflake.png; sourceTree = SOURCE_ROOT; };
@@ -451,49 +454,30 @@
 		8ECA898B182371AE009D906F /* GameOfLife */ = {
 			isa = PBXGroup;
 			children = (
+				ED4C620A187B61C30001E7DC /* HUD */,
 				8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */,
 				8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */,
 				8ECA8994182371AE009D906F /* GLAppDelegate.h */,
 				8ECA8995182371AE009D906F /* GLAppDelegate.m */,
 				8E2FA2AC1869E3ED0021A471 /* GLColorGrid.h */,
 				8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */,
-				8E75B02F184169BF000AEEB8 /* GLColorHud.h */,
-				8E75B030184169BF000AEEB8 /* GLColorHud.m */,
 				8EB738CC1874B56600BB58C0 /* GLColorPaletteManager.h */,
 				8EB738CD1874B56600BB58C0 /* GLColorPaletteManager.m */,
 				8E2FA2971867BB080021A471 /* GLColorSelectionLayer.h */,
 				8E2FA2981867BB080021A471 /* GLColorSelectionLayer.m */,
 				8E2FA2A71869DC750021A471 /* GLColorSwatch.h */,
 				8E2FA2A81869DC750021A471 /* GLColorSwatch.m */,
-				8E75B03E1842FFE3000AEEB8 /* GLGeneralHud.h */,
-				8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */,
 				8E75B04C18490C0A000AEEB8 /* GLGrid.h */,
 				8E75B04D18490C0A000AEEB8 /* GLGrid.m */,
 				8E99B29D182BFE7600C7AEDB /* GLGridScene.h */,
 				8E99B29E182BFE7600C7AEDB /* GLGridScene.m */,
-				8E75B041184577E0000AEEB8 /* GLHud.h */,
-				8E75B042184577E0000AEEB8 /* GLHud.m */,
-				ED581D9A186276880016F98D /* GLHUDSettingsManager.h */,
-				ED581D9B186276880016F98D /* GLHUDSettingsManager.m */,
 				8E2FA29A1867BBED0021A471 /* GLMenuLayer.h */,
 				8E2FA29B1867BBED0021A471 /* GLMenuLayer.m */,
-				8E2FA2821862ABE20021A471 /* GLSelectionControl.h */,
-				8E2FA2831862ABE20021A471 /* GLSelectionControl.m */,
-				8EAA38B1185E6A6C00DA5CED /* GLSettingsItem.h */,
-				8EAA38B2185E6A6C00DA5CED /* GLSettingsItem.m */,
-				8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */,
-				8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */,
-				8E254A84185BBD600068A3F9 /* GLSliderControl.h */,
-				8E254A85185BBD600068A3F9 /* GLSliderControl.m */,
 				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
 				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
-				8EA2650C18595C6700351F5E /* GLToggleControl.h */,
-				8EA2650D18595C6700351F5E /* GLToggleControl.m */,
 				8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */,
 				8E2FA288186567B50021A471 /* GLUIActionButton.h */,
 				8E2FA289186567B50021A471 /* GLUIActionButton.m */,
-				8E254A81185BBB090068A3F9 /* GLUIButton.h */,
-				8E254A82185BBB090068A3F9 /* GLUIButton.m */,
 				8ECA899A182371AE009D906F /* GLViewController.h */,
 				8ECA899B182371AE009D906F /* GLViewController.m */,
 				8ECA89A2182371AE009D906F /* Images.xcassets */,
@@ -534,6 +518,43 @@
 				8ECA89B2182371AE009D906F /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		ED4C620A187B61C30001E7DC /* HUD */ = {
+			isa = PBXGroup;
+			children = (
+				ED4C620B187B62330001E7DC /* Controls */,
+				8E75B02F184169BF000AEEB8 /* GLColorHud.h */,
+				8E75B030184169BF000AEEB8 /* GLColorHud.m */,
+				8E75B03E1842FFE3000AEEB8 /* GLGeneralHud.h */,
+				8E75B03F1842FFE3000AEEB8 /* GLGeneralHud.m */,
+				8E75B041184577E0000AEEB8 /* GLHud.h */,
+				8E75B042184577E0000AEEB8 /* GLHud.m */,
+				ED581D9A186276880016F98D /* GLHUDSettingsManager.h */,
+				ED581D9B186276880016F98D /* GLHUDSettingsManager.m */,
+				8E2FA2821862ABE20021A471 /* GLSelectionControl.h */,
+				8E2FA2831862ABE20021A471 /* GLSelectionControl.m */,
+				8EAA38B1185E6A6C00DA5CED /* GLSettingsItem.h */,
+				8EAA38B2185E6A6C00DA5CED /* GLSettingsItem.m */,
+				8EAA59C4184B1E99008E34D9 /* GLSettingsLayer.h */,
+				8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */,
+			);
+			name = HUD;
+			sourceTree = "<group>";
+		};
+		ED4C620B187B62330001E7DC /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				ED4C6207187B615E0001E7DC /* GLPickerControl.h */,
+				ED4C6208187B615E0001E7DC /* GLPickerControl.m */,
+				8E254A84185BBD600068A3F9 /* GLSliderControl.h */,
+				8E254A85185BBD600068A3F9 /* GLSliderControl.m */,
+				8EA2650C18595C6700351F5E /* GLToggleControl.h */,
+				8EA2650D18595C6700351F5E /* GLToggleControl.m */,
+				8E254A81185BBB090068A3F9 /* GLUIButton.h */,
+				8E254A82185BBB090068A3F9 /* GLUIButton.m */,
+			);
+			name = Controls;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -740,6 +761,7 @@
 				8EAA38B3185E6A6C00DA5CED /* GLSettingsItem.m in Sources */,
 				8E75B04E18490C0A000AEEB8 /* GLGrid.m in Sources */,
 				8E2FA2841862ABE20021A471 /* GLSelectionControl.m in Sources */,
+				ED4C6209187B615E0001E7DC /* GLPickerControl.m in Sources */,
 				8E75B043184577E0000AEEB8 /* GLHud.m in Sources */,
 				8ECA899C182371AE009D906F /* GLViewController.m in Sources */,
 				8ECA8996182371AE009D906F /* GLAppDelegate.m in Sources */,

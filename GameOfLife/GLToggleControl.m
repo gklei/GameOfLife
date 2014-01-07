@@ -347,4 +347,9 @@
    }
 }
 
+- (NSUInteger)controlHeight
+{
+   return 40;
+}
+
 @end

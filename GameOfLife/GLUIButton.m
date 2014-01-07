@@ -105,6 +105,11 @@
    _hasFocus = NO;
 }
 
+- (NSUInteger)controlHeight
+{
+   return 0;
+}
+
 - (void)handleTouchBegan:(UITouch *)touch
 {
    if (_scalesOnTouch)

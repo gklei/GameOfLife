@@ -20,6 +20,7 @@
 - (CGRect)largestPossibleAccumulatedFrame;
 - (void)glow;
 - (void)loseFocus;
+- (NSUInteger)controlHeight;
 
 @property (nonatomic, readwrite) SKSpriteNode *hitBox;
 @property (nonatomic, readwrite) BOOL hasFocus;

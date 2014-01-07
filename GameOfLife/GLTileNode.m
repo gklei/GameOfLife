@@ -19,7 +19,6 @@
    tile.deadTexture = texture;
    tile.position = CGPointMake(rect.origin.x + rect.size.width * 0.5,
                                rect.origin.y + rect.size.height * 0.5);
-   
    tile.size = rect.size;
    tile.colorBlendFactor = 1.0;
    tile.isLiving = NO;
@@ -33,7 +32,7 @@
          SKNode *parent = tile.parent;
          [tile removeFromParent];
          [parent addChild:tile];
-         SKAction *rotateRight = [SKAction rotateByAngle:rotation duration:.2];
+         SKAction *rotateRight = [SKAction rotateByAngle:tile.liveRotation duration:.2];
          SKAction *scaleUp = [SKAction scaleTo:TILE_SCALE_FOCUSED duration:.2];
 
          rotateRight.timingMode = SKActionTimingEaseInEaseOut;
@@ -45,7 +44,7 @@
               completion:^
          {
             [tile setScale:TILE_SCALE_FOCUSED];
-            tile.zRotation = rotation;
+            tile.zRotation = tile.liveRotation;
          }];
       }
    };
@@ -189,6 +188,13 @@
 
    _isLiving = living;
    [self swapTextures];
+}
+
+- (void)setLiveRotation:(double)rotation
+{
+   _liveRotation = rotation;
+   if (_isLiving)
+      self.zRotation = _liveRotation;
 }
 
 - (void)setDeadRotation:(double)rotation

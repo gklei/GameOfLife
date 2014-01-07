@@ -37,10 +37,6 @@
    SKColor *_currentColor;
 }
 
-//@property (nonatomic, strong) SKTexture * canvasTexture;
-//@property (nonatomic, strong) SKSpriteNode * canvasSprite;
-//@property (nonatomic, strong) SKNode * canvasNode;
-
 @end
 
 
@@ -67,90 +63,37 @@
 
 - (void)setupGridWithSize:(CGSize)size
 {
-//   self.canvasNode = [SKNode node];
-   
    _dimensions.rows = size.width/TILESIZE.width;
    _dimensions.columns = size.width/TILESIZE.width;
+   
+   SKTexture *texture = [SKTexture textureWithImageNamed:@"tile.square.png"];
+   double textureRotation = -M_PI_2;
+   
    float maxRowHeight = size.height;
-   double liveRotation = -M_PI;
-   double deadRotation = 0.0;
    
    // check for iPhone 5
    if (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)568) < DBL_EPSILON)
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
          maxRowHeight -= TILESIZE.height;
    
-   SKTexture *texture1 = nil;
-   SKTexture *texture2 = nil;
-   int i = arc4random_uniform(9);
-//   i = 8;
-   switch (i)
-   {
-      case 0:
-         texture1 = [SKTexture textureWithImageNamed:@"tile.ring.png"];
-         liveRotation = 0.0;
-         break;
-      case 1:
-         texture1 = [SKTexture textureWithImageNamed:@"tile.cylinder.png"];
-         liveRotation = -M_PI;
-         break;
-      case 2:
-         texture1 = [SKTexture textureWithImageNamed:@"tile.spiral.png"];
-         liveRotation = -M_PI;
-         break;
-      case 3:
-         texture1 = [SKTexture textureWithImageNamed:@"tile.buldge.png"];
-         liveRotation = -M_PI;
-         break;
-      case 4:
-         texture1 = [SKTexture textureWithImageNamed:@"tile.ring3d.png"];
-         liveRotation = -M_PI;
-         break;
-      case 5:
-         texture1 = [SKTexture textureWithImageNamed:@"tile.frowny.png"];
-         texture2 = [SKTexture textureWithImageNamed:@"tile.smiley.png"];
-         liveRotation = 0.0;
-         break;
-      case 6:
-         texture1 = [SKTexture textureWithImageNamed:@"tile.circle.png"];
-         liveRotation = 0.0;
-         break;
-      case 7:
-         texture1 = [SKTexture textureWithImageNamed:@"tile.clear.png"];
-         texture2 = [SKTexture textureWithImageNamed:@"tile.snowflake.png"];
-         [self setCurrentColor:[UIColor colorForCrayolaColorName:CCN_crayolaWhiteColor]];
-         liveRotation = 0.0;
-         break;
-      default:
-         texture1 = [SKTexture textureWithImageNamed:@"tile.square.png"];
-         liveRotation = -M_PI_2;
-//         liveRotation = -M_PI_4;
-//         deadRotation = M_PI_4;
-   }
-   
    for (int yPos = 0; yPos < maxRowHeight; yPos += TILESIZE.height)
    {
       for (int xPos = 0; xPos < size.width; xPos += TILESIZE.width)
       {
-         GLTileNode *tile = [GLTileNode tileWithTexture:texture1
+         GLTileNode *tile = [GLTileNode tileWithTexture:texture
                                                    rect:CGRectMake(xPos + 0.5,
                                                                    yPos + 0.5,
                                                                    TILESIZE.width - 1,
                                                                    TILESIZE.height - 1)
-                                            andRotation:liveRotation];
-         if (texture2)
-            tile.liveTexture = texture2;
-         
+                                            andRotation:textureRotation];
          tile.tileColorDelegate = self;
          tile.liveColor = [self currentTileColor];
-         tile.deadRotation = deadRotation;
+         tile.deadRotation = textureRotation;
          [self addChild:tile];
-//         [self.canvasNode addChild:tile];
       }
    }
    
    _tiles = [NSArray arrayWithArray:self.children];
-//   _tiles = [NSArray arrayWithArray:self.canvasNode.children];
    
    _priorGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _currentGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
@@ -165,24 +108,6 @@
       tile.boardMaxDistance = maxBoardDistance;
       [tile setColorCenter:boardCenter];
    }
-   
-   [self setupCanvasSprite:size];
-}
-
-- (void)setupCanvasSprite:(CGSize)size
-{
-//   GLAppDelegate * appDelagate = ((GLAppDelegate *)[[UIApplication sharedApplication] delegate]);
-//   self.canvasTexture = [appDelagate.view textureFromNode:self.canvasNode];
-//   self.canvasSprite = [SKSpriteNode spriteNodeWithTexture:self.canvasTexture size:size];
-//   self.canvasSprite.anchorPoint = CGPointMake(0, 0);
-//   [self addChild:self.canvasSprite];
-}
-
-- (void)updateCanvasTexture
-{
-//   GLAppDelegate * appDelagate = ((GLAppDelegate *)[[UIApplication sharedApplication] delegate]);
-//   self.canvasTexture = [appDelagate.view textureFromNode:self.canvasNode];
-//   self.canvasSprite.texture = self.canvasTexture;
 }
 
 - (GLTileNode *)tileAtTouch:(UITouch *)touch
@@ -197,6 +122,48 @@
       return [_tiles objectAtIndex:arrayIndex];
 
    return nil;
+}
+
+- (void)setDeadImage:(NSString *)deadImageName
+{
+   if (deadImageName.length == 0) return;
+   NSLog(@"deadImageName = %@", deadImageName);
+   SKTexture *texture = [SKTexture textureWithImageNamed:deadImageName];
+   if (texture == nil) return;
+   
+   for (GLTileNode *tile in _tiles)
+   {
+      tile.deadTexture = texture;
+      tile.texture = texture;
+   }
+}
+
+- (void)setDeadRotation:(double)rotation
+{
+   for (GLTileNode *tile in _tiles)
+      tile.deadRotation = rotation;
+}
+
+- (void)setLiveImage:(NSString *)liveImageName
+{
+   if (liveImageName.length == 0) return;
+   NSLog(@"liveImageName = %@", liveImageName);
+   
+   SKTexture *texture = [SKTexture textureWithImageNamed:liveImageName];
+   if (texture == nil) return;
+   
+   for (GLTileNode *tile in _tiles)
+   {
+      tile.liveTexture = texture;
+      if (tile.isLiving)
+         tile.texture = texture;
+   }
+}
+
+- (void)setLiveRotation:(double)rotation
+{
+   for (GLTileNode *tile in _tiles)
+      tile.liveRotation = rotation;
 }
 
 - (void)updateNextGeneration
@@ -219,7 +186,6 @@
       ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
 
    [self updateColorCenter];
-   [self updateCanvasTexture];
 }
 
 - (BOOL)currentlyInContinuousBiLoop
@@ -253,8 +219,6 @@
    
    NSUserDefaults * standardDefaults = [NSUserDefaults standardUserDefaults];
    [standardDefaults setObject:[NSArray arrayWithArray:storedState] forKey:@"StoredTileState"];
-   
-   [self updateCanvasTexture];
 }
 
 - (void)restoreGrid
