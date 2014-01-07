@@ -116,6 +116,7 @@
 		8ECA89AC182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
 		8ECA89B4182371AE009D906F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8ECA89B2182371AE009D906F /* InfoPlist.strings */; };
 		8ECA89B6182371AE009D906F /* GameOfLifeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECA89B5182371AE009D906F /* GameOfLifeTests.m */; };
+		8EF02CB51877DFF800E15705 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF02CB41877DFF800E15705 /* AssetsLibrary.framework */; };
 		ED292D1A185C90650031696D /* tile.frowny.png in Resources */ = {isa = PBXBuildFile; fileRef = ED292D18185C90650031696D /* tile.frowny.png */; };
 		ED292D1B185C90650031696D /* tile.smiley.png in Resources */ = {isa = PBXBuildFile; fileRef = ED292D19185C90650031696D /* tile.smiley.png */; };
 		ED2CB965185C01BE00319DE5 /* tile.ring.png in Resources */ = {isa = PBXBuildFile; fileRef = ED2CB964185C01BE00319DE5 /* tile.ring.png */; };
@@ -277,6 +278,7 @@
 		8ECA89B1182371AE009D906F /* GameOfLifeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GameOfLifeTests-Info.plist"; sourceTree = "<group>"; };
 		8ECA89B3182371AE009D906F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8ECA89B5182371AE009D906F /* GameOfLifeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameOfLifeTests.m; sourceTree = "<group>"; };
+		8EF02CB41877DFF800E15705 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		ED292D18185C90650031696D /* tile.frowny.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.frowny.png; path = Images/tile.frowny.png; sourceTree = SOURCE_ROOT; };
 		ED292D19185C90650031696D /* tile.smiley.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.smiley.png; path = Images/tile.smiley.png; sourceTree = SOURCE_ROOT; };
 		ED2CB964185C01BE00319DE5 /* tile.ring.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.ring.png; path = Images/tile.ring.png; sourceTree = SOURCE_ROOT; };
@@ -299,6 +301,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EF02CB51877DFF800E15705 /* AssetsLibrary.framework in Frameworks */,
 				8ECA8986182371AE009D906F /* CoreGraphics.framework in Frameworks */,
 				8ECA8988182371AE009D906F /* UIKit.framework in Frameworks */,
 				8ECA898A182371AE009D906F /* SpriteKit.framework in Frameworks */,
@@ -442,6 +445,7 @@
 		8ECA8982182371AE009D906F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8EF02CB41877DFF800E15705 /* AssetsLibrary.framework */,
 				8ECA8983182371AE009D906F /* Foundation.framework */,
 				8ECA8985182371AE009D906F /* CoreGraphics.framework */,
 				8ECA8987182371AE009D906F /* UIKit.framework */,
@@ -475,6 +479,9 @@
 				8E2FA29B1867BBED0021A471 /* GLMenuLayer.m */,
 				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
 				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
+				8EA2650C18595C6700351F5E /* GLToggleControl.h */,
+				8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */,
+				8EA2650D18595C6700351F5E /* GLToggleControl.m */,
 				8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */,
 				8E2FA288186567B50021A471 /* GLUIActionButton.h */,
 				8E2FA289186567B50021A471 /* GLUIActionButton.m */,
@@ -485,7 +492,6 @@
 				8E2FA2A418695C480021A471 /* spark.png */,
 				8E2FA2A318695C480021A471 /* Spark.sks */,
 				8ECA898C182371AE009D906F /* Supporting Files */,
-				8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */,
 				8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */,
 			);
 			path = GameOfLife;
