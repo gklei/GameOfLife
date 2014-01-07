@@ -333,8 +333,8 @@
 
    for (GLTileNode *tile in _tiles)
    {
-      if (!tile.isLiving)
-         tile.liveColor = [self currentTileColor];
+      tile.liveColor = _currentColor;
+      [tile updateLivingAndColor:[tile isLiving]];
    }
 }
 

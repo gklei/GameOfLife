@@ -67,7 +67,6 @@
 		8EA265081858033A00351F5E /* settings.expand.2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA265031858033A00351F5E /* settings.expand.2.wav */; };
 		8EA265091858033A00351F5E /* stop.algorithm.2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA265041858033A00351F5E /* stop.algorithm.2.wav */; };
 		8EA2650B1858045800351F5E /* start.algorithm.2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA2650A1858045800351F5E /* start.algorithm.2.wav */; };
-		8EA2650E18595C6700351F5E /* GLToggleControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA2650D18595C6700351F5E /* GLToggleControl.m */; };
 		8EA2651D185966A600351F5E /* arrow-right.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EA2651B185966A600351F5E /* arrow-right.png */; };
 		8EA2651E185966A600351F5E /* arrow-right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EA2651C185966A600351F5E /* arrow-right@2x.png */; };
 		8EA2652118596A7D00351F5E /* cancel-circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EA2651F18596A7D00351F5E /* cancel-circle.png */; };
@@ -128,6 +127,7 @@
 		ED581D9C186276880016F98D /* GLHUDSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ED581D9B186276880016F98D /* GLHUDSettingsManager.m */; };
 		ED8EA7AC1873BDAA0073132A /* tile.snowflake.png in Resources */ = {isa = PBXBuildFile; fileRef = ED8EA7AB1873BDAA0073132A /* tile.snowflake.png */; };
 		ED8EA7AE1873C3470073132A /* tile.clear.png in Resources */ = {isa = PBXBuildFile; fileRef = ED8EA7AD1873C3470073132A /* tile.clear.png */; };
+		EDB8C3A7187BF4310047AE52 /* GLToggleControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB8C3A6187BF4310047AE52 /* GLToggleControl.m */; };
 		EDE4505C1833F3380063DE36 /* clear.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505A1833F3380063DE36 /* clear.png */; };
 		EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505B1833F3380063DE36 /* clear@2x.png */; };
 /* End PBXBuildFile section */
@@ -218,8 +218,6 @@
 		8EA265031858033A00351F5E /* settings.expand.2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = settings.expand.2.wav; path = "GL Sound FX/settings.expand.2.wav"; sourceTree = SOURCE_ROOT; };
 		8EA265041858033A00351F5E /* stop.algorithm.2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = stop.algorithm.2.wav; path = "GL Sound FX/stop.algorithm.2.wav"; sourceTree = SOURCE_ROOT; };
 		8EA2650A1858045800351F5E /* start.algorithm.2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = start.algorithm.2.wav; path = "GL Sound FX/start.algorithm.2.wav"; sourceTree = SOURCE_ROOT; };
-		8EA2650C18595C6700351F5E /* GLToggleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLToggleControl.h; sourceTree = "<group>"; };
-		8EA2650D18595C6700351F5E /* GLToggleControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLToggleControl.m; sourceTree = "<group>"; };
 		8EA2651B185966A600351F5E /* arrow-right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow-right.png"; path = "Images/arrow-right.png"; sourceTree = SOURCE_ROOT; };
 		8EA2651C185966A600351F5E /* arrow-right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow-right@2x.png"; path = "Images/arrow-right@2x.png"; sourceTree = SOURCE_ROOT; };
 		8EA2651F18596A7D00351F5E /* cancel-circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cancel-circle.png"; path = "Images/cancel-circle.png"; sourceTree = SOURCE_ROOT; };
@@ -292,6 +290,8 @@
 		ED581D9B186276880016F98D /* GLHUDSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLHUDSettingsManager.m; sourceTree = "<group>"; };
 		ED8EA7AB1873BDAA0073132A /* tile.snowflake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.snowflake.png; path = Images/tile.snowflake.png; sourceTree = SOURCE_ROOT; };
 		ED8EA7AD1873C3470073132A /* tile.clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.clear.png; path = Images/tile.clear.png; sourceTree = SOURCE_ROOT; };
+		EDB8C3A5187BF4310047AE52 /* GLToggleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLToggleControl.h; sourceTree = "<group>"; };
+		EDB8C3A6187BF4310047AE52 /* GLToggleControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLToggleControl.m; sourceTree = "<group>"; };
 		EDE4505A1833F3380063DE36 /* clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = clear.png; path = Images/clear.png; sourceTree = SOURCE_ROOT; };
 		EDE4505B1833F3380063DE36 /* clear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear@2x.png"; path = "Images/clear@2x.png"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -479,9 +479,7 @@
 				8E2FA29B1867BBED0021A471 /* GLMenuLayer.m */,
 				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
 				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
-				8EA2650C18595C6700351F5E /* GLToggleControl.h */,
 				8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */,
-				8EA2650D18595C6700351F5E /* GLToggleControl.m */,
 				8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */,
 				8E2FA288186567B50021A471 /* GLUIActionButton.h */,
 				8E2FA289186567B50021A471 /* GLUIActionButton.m */,
@@ -555,8 +553,8 @@
 				ED4C6208187B615E0001E7DC /* GLPickerControl.m */,
 				8E254A84185BBD600068A3F9 /* GLSliderControl.h */,
 				8E254A85185BBD600068A3F9 /* GLSliderControl.m */,
-				8EA2650C18595C6700351F5E /* GLToggleControl.h */,
-				8EA2650D18595C6700351F5E /* GLToggleControl.m */,
+				EDB8C3A5187BF4310047AE52 /* GLToggleControl.h */,
+				EDB8C3A6187BF4310047AE52 /* GLToggleControl.m */,
 				8E254A81185BBB090068A3F9 /* GLUIButton.h */,
 				8E254A82185BBB090068A3F9 /* GLUIButton.m */,
 			);
@@ -746,13 +744,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EA2650E18595C6700351F5E /* GLToggleControl.m in Sources */,
 				8E2FA2A91869DC750021A471 /* GLColorSwatch.m in Sources */,
 				ED581D9C186276880016F98D /* GLHUDSettingsManager.m in Sources */,
 				8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */,
 				8E254A83185BBB090068A3F9 /* GLUIButton.m in Sources */,
 				8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */,
 				8ECA8992182371AE009D906F /* main.m in Sources */,
+				EDB8C3A7187BF4310047AE52 /* GLToggleControl.m in Sources */,
 				8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */,
 				8E75B0401842FFE3000AEEB8 /* GLGeneralHud.m in Sources */,
 				8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */,
