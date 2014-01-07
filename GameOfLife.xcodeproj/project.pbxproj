@@ -481,8 +481,6 @@
 				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
 				8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */,
 				8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */,
-				8E2FA288186567B50021A471 /* GLUIActionButton.h */,
-				8E2FA289186567B50021A471 /* GLUIActionButton.m */,
 				8ECA899A182371AE009D906F /* GLViewController.h */,
 				8ECA899B182371AE009D906F /* GLViewController.m */,
 				8ECA89A2182371AE009D906F /* Images.xcassets */,
@@ -549,6 +547,8 @@
 		ED4C620B187B62330001E7DC /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				8E2FA288186567B50021A471 /* GLUIActionButton.h */,
+				8E2FA289186567B50021A471 /* GLUIActionButton.m */,
 				ED4C6207187B615E0001E7DC /* GLPickerControl.h */,
 				ED4C6208187B615E0001E7DC /* GLPickerControl.m */,
 				8E254A84185BBD600068A3F9 /* GLSliderControl.h */,

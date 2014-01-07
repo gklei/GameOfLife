@@ -8,6 +8,7 @@
 
 #import "GLPickerControl.h"
 #import "GLTileNode.h"
+#import "GLUIActionButton.h"
 
 #define IMAGE_X_PADDING 18
 #define IMAGE_Y_PADDING 10
@@ -18,7 +19,7 @@
 //
 // GLPickerItem
 //
-@interface GLPickerItem : GLUIButton<GLTouchHandler>
+@interface GLPickerItem : GLUIActionButton
 
 @property (nonatomic, assign) NSUInteger imageIndex;
 @property (nonatomic, strong) NSString * preferenceKey;
@@ -33,11 +34,11 @@
                   forPreferenceKey:(NSString *)preferenceKey
 {
    GLPickerItem * item = [[GLPickerItem alloc] init];
-   
+
    item.imageIndex = index;
    item.preferenceKey = preferenceKey;
    item.sprite = tileNode;
-   
+
    CGSize size = tileNode.size;
    size.width += IMAGE_X_PADDING;
    size.height += IMAGE_Y_PADDING;
@@ -56,6 +57,7 @@
 
 - (void)handleTouchBegan:(UITouch *)touch
 {
+   [super handleTouchBegan:touch];
 }
 
 - (void)handleTouchMoved:(UITouch *)touch
@@ -66,6 +68,8 @@
 {
    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
    [defaults setObject:[NSNumber numberWithUnsignedLong:_imageIndex] forKey:_preferenceKey];
+
+   [super handleTouchEnded:touch];
 }
 
 - (void)setIsLiving:(BOOL)living
@@ -212,7 +216,7 @@
 
 - (SKColor *)currentTileColor
 {
-   return [SKColor blueColor];
+   return [SKColor crayolaRobinsEggBlueColor];
 }
 
 - (void)setupSoundFX
