@@ -48,28 +48,20 @@
    position.x -= IMAGE_X_PADDING * 0.5;
    position.y -= IMAGE_Y_PADDING * 0.5;
    item.hitBox.position = position;
+
+   ActionBlock itemActionBlock = ^
+   {
+      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+      [defaults setObject:[NSNumber numberWithUnsignedLong:item.imageIndex]
+                   forKey:item.preferenceKey];
+   };
+
+   item.actionBlock = itemActionBlock;
    
    [item addChild:tileNode];
    [item addChild:item.hitBox];
 
    return item;
-}
-
-- (void)handleTouchBegan:(UITouch *)touch
-{
-   [super handleTouchBegan:touch];
-}
-
-- (void)handleTouchMoved:(UITouch *)touch
-{
-}
-
-- (void)handleTouchEnded:(UITouch *)touch
-{
-   NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-   [defaults setObject:[NSNumber numberWithUnsignedLong:_imageIndex] forKey:_preferenceKey];
-
-   [super handleTouchEnded:touch];
 }
 
 - (void)setIsLiving:(BOOL)living
