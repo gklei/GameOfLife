@@ -105,7 +105,7 @@
 
    CGFloat r, g, b;
 
-   if ([_liveColor getRed:&r green:&g blue:&b alpha:0])
+   if ([_liveColor getRed:&r green:&g blue:&b alpha:nil])
       return [SKColor colorWithRed:dist*r green:dist*g blue:dist*b alpha:1.0];
    else
       return [SKColor colorWithHue:[self colorDistance]

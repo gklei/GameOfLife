@@ -9,26 +9,68 @@
 #import "GLPickerControl.h"
 #import "GLTileNode.h"
 
-//#define DEFAULT_LENGTH 180
-//
-//// These are dependant on the knob image and track end image sizes
-//#define FULLY_EXTENDED_TRACK_SCALE_FACTOR .5 //.503318573
-//#define HALF_EXTENDED_TRACK_SCALE_FACTOR .225
-//
-//// These assure that the correct regions of the track end images are
-//// stretched when adjusting the xScale property
-//#define LEFT_TRACK_CENTER_RECT CGRectMake(.75, .25, .25, .5)
-//#define RIGHT_TRACK_CENTER_RECT CGRectMake(0, .25, .25, .5)
-//
-//#define DEFAULT_KNOB_SCALE .6
-//#define SELECTED_KNOB_SCALE .74
-
 #define IMAGE_X_PADDING 18
-#define IMAGE_Y_PADDING 18
+#define IMAGE_Y_PADDING 10
 #define IMAGES_PER_ROW  5
 #define IMAGE_SIZE CGSizeMake(20, 20)
 
-@interface GLPickerControl()
+
+//
+// GLPickerItem
+//
+@interface GLPickerItem : GLUIButton<GLTouchHandler>
+
+@property (nonatomic, assign) NSUInteger imageIndex;
+@property (nonatomic, strong) NSString * preferenceKey;
+
+@end
+
+
+@implementation GLPickerItem
+
++ (GLPickerItem *)itemWithTileNode:(GLTileNode *)tileNode
+                        imageIndex:(NSUInteger)index
+                  forPreferenceKey:(NSString *)preferenceKey
+{
+   GLPickerItem * item = [[GLPickerItem alloc] init];
+   
+   item.imageIndex = index;
+   item.hitBox.size = tileNode.size;
+   item.hitBox.position = tileNode.position;
+   item.sprite = tileNode;
+   item.preferenceKey = preferenceKey;
+   [item addChild:tileNode];
+   [item addChild:item.hitBox];
+
+   return item;
+}
+
+- (void)handleTouchBegan:(UITouch *)touch
+{
+}
+
+- (void)handleTouchMoved:(UITouch *)touch
+{
+}
+
+- (void)handleTouchEnded:(UITouch *)touch
+{
+   NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+   [defaults setObject:[NSNumber numberWithUnsignedLong:_imageIndex] forKey:_preferenceKey];
+}
+
+- (void)setIsLiving:(BOOL)living
+{
+   GLTileNode * node = (GLTileNode *)[self sprite];
+   [node updateLivingAndColor:living];
+}
+
+@end
+
+//
+// GLPickerControl
+//
+@interface GLPickerControl() <GLTileColorDelegate>
 {
    NSArray * _imagePairs;
    
@@ -39,6 +81,9 @@
    NSString *_preferenceKey;
    HUDItemRange _range;
 }
+
+@property (nonatomic, strong) NSArray *items;
+
 @end
 
 
@@ -48,6 +93,12 @@
 {
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
    [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
+
+- (void)observeGridImageIndexChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"GridImageIndex"];
 }
 
 - (id)initWithHUDPickerItemDescription:(HUDPickerItemDescription *)itemDesc
@@ -60,38 +111,42 @@
       _range = itemDesc.range;
       
       [self updateControlHeight];
-      [self setupImagePairs];
+      
+      NSNumber * value = [[NSUserDefaults standardUserDefaults] objectForKey:@"GridImageIndex"];
+      [self setupImagePairs:[value unsignedIntegerValue]];
       
       [self setupSoundFX];
       [self observeSoundFxChanges];
+      [self observeGridImageIndexChanges];
    }
    
    return self;
 }
 
-- (void)setupImagePairs
+- (void)setupImagePairs:(NSUInteger)selectedIndex;
 {
    int imageCount = 0;
+   NSMutableArray * pickerItems = [[NSMutableArray alloc] init];
    while (imageCount * 2 < _imagePairs.count)
    {
+      // don't know why I have to shift xPos by one IMAGE_SIZE.width + IMAGE_X_PADDING
       int xPos = ((imageCount % IMAGES_PER_ROW) + 1) * (IMAGE_SIZE.width + IMAGE_X_PADDING);
       int yPos = -(imageCount / IMAGES_PER_ROW) * (IMAGE_SIZE.height + IMAGE_Y_PADDING);
       
       int imageIndex = imageCount * 2;
-      ++imageCount;
-      
       SKTexture *deadTexture =
          [SKTexture textureWithImageNamed:[_imagePairs objectAtIndex:imageIndex + 1]];
       
-      double liveRotation = [self rotationForImageIndex:imageIndex];
+      double rotation = [self rotationForImageIndex:imageIndex];
       GLTileNode *tile = [GLTileNode tileWithTexture:deadTexture
                                                 rect:CGRectMake(xPos,
                                                                 yPos,
                                                                 IMAGE_SIZE.width,
                                                                 IMAGE_SIZE.height)
-                                         andRotation:liveRotation];
+                                         andRotation:rotation];
       tile.deadRotation = 0;
       tile.position = CGPointMake(xPos, yPos);
+      tile.tileColorDelegate = self;
       
       NSString * liveName = [_imagePairs objectAtIndex:imageIndex];
       if (liveName.length > 0)
@@ -101,8 +156,17 @@
             tile.liveTexture = liveTexture;
       }
       
-      [self addChild:tile];
+      [tile updateLivingAndColor:(imageCount == selectedIndex)];
+      
+      GLPickerItem * item = [GLPickerItem itemWithTileNode:tile
+                                                imageIndex:imageIndex
+                                          forPreferenceKey:@"GridImageIndex"];
+      [self addChild:item];
+      [pickerItems addObject:item];
+      ++imageCount;
    }
+   
+   self.items = [NSArray arrayWithArray:pickerItems];
 }
 
 - (void)updateControlHeight
@@ -111,7 +175,7 @@
    NSInteger numRows = numImages / IMAGES_PER_ROW;
    if ((numRows * IMAGES_PER_ROW) < numImages) ++numRows;
    
-   _controlHeight = numRows * (IMAGE_SIZE.height + IMAGE_Y_PADDING);
+   _controlHeight = numRows * (IMAGE_SIZE.height + IMAGE_Y_PADDING) + IMAGE_Y_PADDING;
 }
 
 - (double)rotationForImageIndex:(NSInteger)imageIndex
@@ -134,6 +198,11 @@
    }
    
    return result;
+}
+
+- (SKColor *)currentTileColor
+{
+   return [SKColor blueColor];
 }
 
 - (void)setupSoundFX
@@ -166,15 +235,14 @@
       assert(type == HVT_BOOL);
       _shouldPlaySound = [value boolValue];
    }
-}
-
-- (CGRect)largestPossibleAccumulatedFrame
-{
-   CGRect frame = self.calculateAccumulatedFrame;
-   frame.size.width += IMAGE_X_PADDING;
-   frame.size.height += IMAGE_Y_PADDING;
-   NSLog(@"Picker:largestPossibleAccumulatedFrame = %@", NSStringFromCGRect(frame));
-   return frame;
+   else if ([keyPath compare:@"GridImageIndex"] == NSOrderedSame)
+   {
+      assert(type == HVT_ULONG);
+      
+      NSUInteger imageIndex = [value unsignedLongValue];
+      for (GLPickerItem *item in self.items)
+         [item setIsLiving:(item.imageIndex == imageIndex)];
+   }
 }
 
 - (NSUInteger)controlHeight

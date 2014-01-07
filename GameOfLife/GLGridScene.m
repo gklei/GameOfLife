@@ -80,10 +80,10 @@
    assert((imagePairs.count % 2) == 0);
    
    HUDPickerItemDescription * hudItem = [[HUDPickerItemDescription alloc] init];
-   hudItem.keyPath = @"GridImages";
+   hudItem.keyPath = @"GridImageIndex";
    hudItem.label = @"IMAGES";
    hudItem.type = HIT_PICKER;
-   hudItem.valueType = HVT_UINT;
+   hudItem.valueType = HVT_ULONG;
    hudItem.imagePairs = imagePairs;
    hudItem.range = HUDItemRangeMake(0, imagePairs.count - 1);
    hudItem.defaultvalue = [NSNumber numberWithFloat:0];
@@ -155,12 +155,19 @@
    [hudManager addObserver:self forKeyPath:@"GenerationDuration"];
 }
 
+- (void)observeGridImageIndexChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"GridImageIndex"];
+}
+
 - (void)observeHudParameterChanges
 {
    [self observeSoundFxChanges];
    [self observeSmartMenuChanges];
    [self observeLoopDetectionChanges];
    [self observeGeneralDurationChanges];
+   [self observeGridImageIndexChanges];
 }
 
 #pragma mark - Initializer Method
@@ -176,7 +183,6 @@
                           @"",                   @"tile.cylinder.png",
                           @"",                   @"tile.spiral.png",
                           @"",                   @"tile.buldge.png",
-                          @"",                   @"tile.square.png",
                           @"tile.smiley.png",    @"tile.frowny.png",
                           @"tile.snowflake.png", @"tile.clear.png"];
       
@@ -436,12 +442,18 @@
    }
 
    for (SKNode *node in [self nodesAtPoint:_locationOfFirstTouch])
-      if ([node.name isEqualToString:@"ui_control_hit_box"] && !node.parent.parent.hidden)
+   {
+      if ([node.name isEqualToString:@"ui_control_hit_box"])
       {
          _focusedButton = (GLUIButton *)node.parent.parent;
          [_focusedButton handleTouchBegan:touch];
          return;
       }
+      else
+      {
+         NSLog(@"node.name != ui_control_hit_box : %@", node);
+      }
+   }
 
    if (!_running)
    {
@@ -673,40 +685,29 @@
       assert(type == HVT_FLOAT);
       [self updateGenerationDuration:[value floatValue]];
    }
-   
-   if ([keyPath compare:@"SmartMenu"] == NSOrderedSame)
+   else if ([keyPath compare:@"SmartMenu"] == NSOrderedSame)
    {
       assert(type == HVT_BOOL);
       _autoShowHideHudForStartStop = [value boolValue];
    }
-   
-   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   else if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
    {
       assert(type == HVT_BOOL);
       _shouldPlaySound = [value boolValue];
    }
-   
-   if ([keyPath compare:@"LoopDetection"] == NSOrderedSame)
+   else if ([keyPath compare:@"LoopDetection"] == NSOrderedSame)
    {
       assert(type == HVT_BOOL);
       _grid.inContinuousLoop = NO;
       _grid.considersContinuousBiLoops = [value boolValue];
    }
-   
-   if ([keyPath compare:@"GridImages"] == NSOrderedSame)
+   else if ([keyPath compare:@"GridImageIndex"] == NSOrderedSame)
    {
-//static NSUInteger nextOne = 0;
-//nextOne += 2;
-//if (nextOne >= _gridImagePairs.count)
-//   nextOne = 0;
-//NSUInteger imageIndex = nextOne;
-      assert(type == HVT_UINT);
-      
-      NSUInteger imageIndex = [value unsignedIntValue];
+      assert(type == HVT_ULONG);
+      NSUInteger imageIndex = [value unsignedLongValue];
       if (imageIndex + 1 >= _gridImagePairs.count)
          return;
       
-      // TODO:LEA: maybe the rotations should be stored with the images in the preferences?
       [_grid setDeadImage:[_gridImagePairs objectAtIndex:imageIndex + 1]];
       [_grid setDeadRotation:0];
       

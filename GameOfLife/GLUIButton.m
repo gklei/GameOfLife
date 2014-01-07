@@ -47,7 +47,7 @@
 + (instancetype)spriteNodeWithImageNamed:(NSString *)name
 {
    GLUIButton *button = [[self alloc] init];
-   SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:name];
+   SKSpriteNode *sprite = [super spriteNodeWithImageNamed:name];
 
 //   button.hitBox.color = [SKColor orangeColor];
 //   button.hitBox.alpha = .5;

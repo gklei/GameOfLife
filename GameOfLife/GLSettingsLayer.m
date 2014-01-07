@@ -90,7 +90,7 @@
     NSDictionary * hudItems = [hudManager getHudItemsforKeyPaths:keyPaths];
     
     for (NSString * keyPath in keyPaths)
-       [self addItemToSettings:(HUDItemDescription *)[hudItems objectForKey:keyPath]];
+       [self addItemToSettings:[hudItems objectForKey:keyPath]];
  }
 
 - (id)initWithSize:(CGSize)size
@@ -100,12 +100,11 @@
                       anchorPoint:anchorPoint])
    {
       [self setupSettingsLabel];
-      NSArray * keyPaths = [NSArray arrayWithObjects:@"GridImages",
+      NSArray * keyPaths = [NSArray arrayWithObjects:@"GridImageIndex",
                                                      @"GenerationDuration",
                                                      @"SoundFX",
                                                      @"SmartMenu",
                                                      @"LoopDetection",
-                                                     //@"GridImages",
                                                      nil];
       [self setupHudItemsforKeys:keyPaths];
    }
