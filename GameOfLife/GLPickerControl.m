@@ -11,7 +11,7 @@
 #import "GLUIActionButton.h"
 
 #define IMAGE_X_PADDING 18
-#define IMAGE_Y_PADDING 10
+#define IMAGE_Y_PADDING 12
 #define IMAGES_PER_ROW  5
 #define IMAGE_SIZE CGSizeMake(20, 20)
 
@@ -184,7 +184,7 @@
    NSInteger numRows = numImages / IMAGES_PER_ROW;
    if ((numRows * IMAGES_PER_ROW) < numImages) ++numRows;
    
-   _controlHeight = numRows * (IMAGE_SIZE.height + IMAGE_Y_PADDING) + IMAGE_Y_PADDING;
+   _controlHeight = numRows * (IMAGE_SIZE.height + IMAGE_Y_PADDING) + IMAGE_Y_PADDING * 0.5;
 }
 
 - (double)rotationForImageIndex:(NSInteger)imageIndex
