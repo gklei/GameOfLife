@@ -132,10 +132,7 @@
    if (texture == nil) return;
    
    for (GLTileNode *tile in _tiles)
-   {
       tile.deadTexture = texture;
-      [tile swapTextures];
-   }
 }
 
 - (void)setDeadRotation:(double)rotation
@@ -152,16 +149,19 @@
       texture = [SKTexture textureWithImageNamed:liveImageName];
    
    for (GLTileNode *tile in _tiles)
-   {
       tile.liveTexture = texture;
-      [tile swapTextures];
-   }
 }
 
 - (void)setLiveRotation:(double)rotation
 {
    for (GLTileNode *tile in _tiles)
       tile.liveRotation = rotation;
+}
+
+- (void)updateTextures
+{
+   for (GLTileNode *tile in _tiles)
+      [tile updateTextures];
 }
 
 - (void)updateNextGeneration

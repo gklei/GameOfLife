@@ -223,4 +223,12 @@
    [self runAction:changeColor];
 }
 
+- (void)updateTextures
+{
+   if (![self dualTextures])
+      self.texture = self.deadTexture;
+   
+   [self swapTextures];
+}
+
 @end

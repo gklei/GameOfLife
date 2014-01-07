@@ -45,6 +45,6 @@
 - (SKColor *)getLivingTileColor;
 - (void)updateColor;
 - (void)clearTile;
-- (void)swapTextures;
+- (void)updateTextures;
 
 @end
