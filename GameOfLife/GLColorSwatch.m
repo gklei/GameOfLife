@@ -27,6 +27,9 @@
    {
       _state = e_COLOR_SWATCH_DISABLED;
 
+      ActionBlock actionBlock = ^{[self toggle];};
+      self.actionBlock = actionBlock;
+
       [self setupSwatchImages];
       [self setupHitBox];
    }
@@ -62,6 +65,10 @@
 
 - (void)toggle
 {
+   // if the color selection layer is hidden, return
+   if (self.parent.parent.hidden)
+      return;
+
    if (_state == e_COLOR_SWATCH_DISABLED)
       _state = e_COLOR_SWATCH_ENABLED;
    else
@@ -70,13 +77,13 @@
    [_swatchSelectionDelegate swatchSelected:self];
 }
 
-- (void)handleTouchEnded:(UITouch *)touch
-{
-   if ([self.hitBox containsPoint:[touch locationInNode:self]])
-   {
-      [self toggle];
-   }
-   [super handleTouchEnded:touch];
-}
+//- (void)handleTouchEnded:(UITouch *)touch
+//{
+//   if ([self.hitBox containsPoint:[touch locationInNode:self]])
+//   {
+//      [self toggle];
+//   }
+//   [super handleTouchEnded:touch];
+//}
 
 @end

@@ -349,7 +349,7 @@
 
 - (NSUInteger)controlHeight
 {
-   return 40;
+   return 45;
 }
 
 @end

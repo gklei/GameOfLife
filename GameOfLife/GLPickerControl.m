@@ -51,11 +51,14 @@
 
    ActionBlock itemActionBlock = ^
    {
+      // if the settings layer is hidden, return
+      if (item.parent.parent.parent.parent.hidden)
+         return;
+
       NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
       [defaults setObject:[NSNumber numberWithUnsignedLong:item.imageIndex]
                    forKey:item.preferenceKey];
    };
-
    item.actionBlock = itemActionBlock;
    
    [item addChild:tileNode];
