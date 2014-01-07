@@ -199,8 +199,9 @@
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
       self.userInteractionEnabled = YES;
-      
-      [self loadLastGrid];
+
+      if (![self firstTimeRunning])
+         [self loadLastGrid];
    }
    return self;
 }
@@ -263,6 +264,25 @@
 {
    [_grid loadStoredTileStates];
    [self restoreButtonPressed];
+}
+
+- (BOOL)firstTimeRunning
+{
+   BOOL retVal = NO;
+   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+   if (![defaults objectForKey:@"firstRun"])
+   {
+      retVal = YES;
+      [defaults setObject:[NSDate date] forKey:@"firstRun"];
+   }
+
+   [[NSUserDefaults standardUserDefaults] synchronize];
+   return retVal;
+}
+
+- (void)setDefaultGridAttributes
+{
+   [_grid clearGrid];
 }
 
 #pragma mark - GLGeneralHud Delegate Methods
