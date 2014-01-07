@@ -442,18 +442,12 @@
    }
 
    for (SKNode *node in [self nodesAtPoint:_locationOfFirstTouch])
-   {
-      if ([node.name isEqualToString:@"ui_control_hit_box"])
+      if ([node.name isEqualToString:@"ui_control_hit_box"] && !node.parent.parent.hidden)
       {
          _focusedButton = (GLUIButton *)node.parent.parent;
          [_focusedButton handleTouchBegan:touch];
          return;
       }
-      else
-      {
-         NSLog(@"node.name != ui_control_hit_box : %@", node);
-      }
-   }
 
    if (!_running)
    {
@@ -645,7 +639,7 @@
    }
 }
 
-#pragma mark Helper Method
+#pragma mark Helper Methods
 - (void)toggleLivingForTileAtTouch:(UITouch *)touch withSoundFX:(SKAction *)soundFX
 {
    GLTileNode *tile = [_grid tileAtTouch:touch];
@@ -661,6 +655,28 @@
       [tile updateLivingAndColor:!tile.isLiving];
       [_grid storeGridState];
    }
+}
+
+- (double)rotationForImageIndex:(NSInteger)imageIndex
+{
+   double result = 0;
+   
+   switch (imageIndex)
+   {
+      case 0:
+         result = -M_PI_2;
+         break;
+      case 4:
+      case 6:
+      case 8:
+      case 10:
+         result = -M_PI;
+         break;
+      default:
+         result = 0;
+   }
+   
+   return result;
 }
 
 #pragma mark - SKScene Overridden Method
@@ -712,20 +728,7 @@
       [_grid setDeadRotation:0];
       
       [_grid setLiveImage:[_gridImagePairs objectAtIndex:imageIndex]];
-      switch (imageIndex)
-      {
-         case 0:
-            [_grid setLiveRotation:-M_PI_2];
-            break;
-         case 4:
-         case 6:
-         case 8:
-         case 10:
-            [_grid setLiveRotation:-M_PI];
-            break;
-         default:
-            [_grid setLiveRotation:0];
-      }
+      [_grid setLiveRotation:[self rotationForImageIndex:imageIndex]];
    }
 }
 

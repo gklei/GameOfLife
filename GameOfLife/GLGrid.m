@@ -127,7 +127,7 @@
 - (void)setDeadImage:(NSString *)deadImageName
 {
    if (deadImageName.length == 0) return;
-   NSLog(@"deadImageName = %@", deadImageName);
+   
    SKTexture *texture = [SKTexture textureWithImageNamed:deadImageName];
    if (texture == nil) return;
    
@@ -147,7 +147,6 @@
 - (void)setLiveImage:(NSString *)liveImageName
 {
    if (liveImageName.length == 0) return;
-   NSLog(@"liveImageName = %@", liveImageName);
    
    SKTexture *texture = [SKTexture textureWithImageNamed:liveImageName];
    if (texture == nil) return;

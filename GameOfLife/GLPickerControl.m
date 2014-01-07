@@ -35,10 +35,19 @@
    GLPickerItem * item = [[GLPickerItem alloc] init];
    
    item.imageIndex = index;
-   item.hitBox.size = tileNode.size;
-   item.hitBox.position = tileNode.position;
-   item.sprite = tileNode;
    item.preferenceKey = preferenceKey;
+   item.sprite = tileNode;
+   
+   CGSize size = tileNode.size;
+   size.width += IMAGE_X_PADDING;
+   size.height += IMAGE_Y_PADDING;
+   item.hitBox.size = size;
+   
+   CGPoint position = tileNode.position;
+   position.x -= IMAGE_X_PADDING * 0.5;
+   position.y -= IMAGE_Y_PADDING * 0.5;
+   item.hitBox.position = position;
+   
    [item addChild:tileNode];
    [item addChild:item.hitBox];
 
@@ -156,8 +165,6 @@
             tile.liveTexture = liveTexture;
       }
       
-      [tile updateLivingAndColor:(imageCount == selectedIndex)];
-      
       GLPickerItem * item = [GLPickerItem itemWithTileNode:tile
                                                 imageIndex:imageIndex
                                           forPreferenceKey:@"GridImageIndex"];
@@ -167,6 +174,9 @@
    }
    
    self.items = [NSArray arrayWithArray:pickerItems];
+   [self updateImageIndex:[[[NSUserDefaults standardUserDefaults]
+                              objectForKey:@"GridImageIndex"]
+                                 unsignedLongValue]];
 }
 
 - (void)updateControlHeight
@@ -228,6 +238,12 @@
    [super handleTouchEnded:touch];
 }
 
+- (void)updateImageIndex:(NSUInteger)index
+{
+   for (GLPickerItem *item in self.items)
+      [item setIsLiving:(item.imageIndex == index)];
+}
+
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
 {
    if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
@@ -240,8 +256,7 @@
       assert(type == HVT_ULONG);
       
       NSUInteger imageIndex = [value unsignedLongValue];
-      for (GLPickerItem *item in self.items)
-         [item setIsLiving:(item.imageIndex == imageIndex)];
+      [self updateImageIndex:imageIndex];
    }
 }
 
