@@ -48,7 +48,7 @@
       CCN_crayolaCeruleanColor, CCN_crayolaScreaminGreenColor, CCN_crayolaKeyLimePearlColor, CCN_crayolaSunglowColor, CCN_crayolaMauvelousColor,
       CCN_crayolaBlueColor, CCN_crayolaMagicMintColor, CCN_crayolaElectricLimeColor, CCN_crayolaMangoTangoColor, CCN_crayolaOrchidColor,
       CCN_crayolaIndigoColor, CCN_crayolaCaribbeanGreenColor, CCN_crayolaLimeColor, CCN_crayolaOrangeRedColor, CCN_crayolaPinkFlamingoColor,
-      CCN_crayolaOceanBluePearlColor, CCN_crayolaMetallicSeaweedColor, CCN_crayolaChocolateColor, CCN_crayolaBigDipORubyColor, CCN_crayolaWinterSkyColor
+      CCN_crayolaOceanBluePearlColor, CCN_crayolaMetallicSeaweedColor, CCN_crayolaChocolateColor,  CCN_crayolaWinterSkyColor, CCN_crayolaBigDipORubyColor
    };
 }
 
