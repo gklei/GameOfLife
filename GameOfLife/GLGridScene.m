@@ -520,6 +520,16 @@
       [self generalHudWillExpandWithWaitPeriod:waitPeriod];
 }
 
+- (BOOL)hudCanExpand:(GLHud *)hud
+{
+   if (hud == _colorHudLayer)
+      return !_generalHudLayer.animating;
+   else if (hud == _generalHudLayer)
+      return !_colorHudLayer.animating;
+
+   return NO;
+}
+
 - (void)hudDidExpand:(GLHud *)hud
 {
    if (hud == _colorHudLayer)

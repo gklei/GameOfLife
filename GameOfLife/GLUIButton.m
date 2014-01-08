@@ -101,6 +101,9 @@
 
 - (void)loseFocus
 {
+   if (_scalesOnTouch)
+      [self runAction:_scaleDown];
+   
    _glowEffect.shouldEnableEffects = NO;
    _hasFocus = NO;
 }

@@ -13,6 +13,7 @@
 
 @protocol GLHudDelegate <NSObject>
    - (void)hud:(GLHud *)hud willExpandAfterPeriod:(CFTimeInterval *)waitPeriod;
+   - (BOOL)hudCanExpand:(GLHud *)hud;
    - (void)hudDidExpand:(GLHud *)hud;
    - (void)hudWillCollapse:(GLHud *)hud;
    - (void)hudDidCollapse:(GLHud *)hud;

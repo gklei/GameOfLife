@@ -356,6 +356,9 @@
 
 - (void)expand
 {
+   if (![self.delegate hudCanExpand:self])
+      return;
+   
    self.animating = YES;
    CFTimeInterval waitPeriod = 0.0;
    [self.delegate hud:self willExpandAfterPeriod:&waitPeriod];
@@ -436,10 +439,10 @@
 
 - (void)collapseBottomBar
 {
+   self.animating = YES;
    _shouldRunSplashButtonColorChangingAnimation = YES;
    [self runSplashButtonColorChangeAnimation];
 
-   self.animating = YES;
    [self.delegate hudWillCollapse:self];
 
    SKAction *wait = [SKAction waitForDuration:.25];

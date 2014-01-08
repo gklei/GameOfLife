@@ -362,6 +362,9 @@
 
 - (void)expandBottomBar
 {
+   if (![self.delegate hudCanExpand:self])
+      return;
+   
    self.animating = YES;
    CFTimeInterval waitPeriod = 0.0;
    [self.delegate hud:self willExpandAfterPeriod:&waitPeriod];
