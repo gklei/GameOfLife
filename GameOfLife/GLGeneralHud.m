@@ -68,8 +68,8 @@
 {
    if (self = [super init])
    {
-      NSString *spartPath = [[NSBundle mainBundle] pathForResource:@"Spark" ofType:@"sks"];
-      _particleGenerator = [NSKeyedUnarchiver unarchiveObjectWithFile:spartPath];
+      NSString *sparkPath = [[NSBundle mainBundle] pathForResource:@"Spark" ofType:@"sks"];
+      _particleGenerator = [NSKeyedUnarchiver unarchiveObjectWithFile:sparkPath];
 
       _defaultSize = [UIScreen mainScreen].bounds.size;
       [self setupSoundFX];
@@ -185,7 +185,6 @@
       button.position = CGPointMake(++multiplier * CORE_FUNCTION_BUTTON_PADDING + 82,
                                     -button.size.height);
    }
-   _particleGenerator.position = _settingsButton.position;
 }
 
 - (void)setupCoreFunctionButtons
@@ -400,7 +399,6 @@
          [button runAction:slide];
          [button.hitBox runAction:slide];
       }
-      [_particleGenerator runAction:slide];
 
       [_backgroundLayer runAction:changeHudColor];
       [_expandCollapseButton runAction:buttonActions
@@ -420,7 +418,6 @@
              [button runAction:moveButton];
              [button.hitBox runAction:moveButtonHitBox];
           }
-          [_particleGenerator runAction:moveButton];
 
           [self.delegate hudDidExpand:self];
           self.animating = NO;
@@ -469,7 +466,6 @@
       [button runAction:slide];
       [button.hitBox runAction:slide];
    }
-   [_particleGenerator runAction:slide];
 
    [_expandCollapseButton runAction:buttonActions];
    [_backgroundLayer runAction:hudBackgroundColorSequence
@@ -486,7 +482,6 @@
           [button runAction:moveButton];
           [button.hitBox runAction:moveButtonHitBox];
        }
-       [_particleGenerator runAction:slide];
 
        [self.delegate hudDidCollapse:self];
        self.animating = NO;
