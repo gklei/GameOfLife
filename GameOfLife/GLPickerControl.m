@@ -10,9 +10,9 @@
 #import "GLTileNode.h"
 #import "GLUIActionButton.h"
 
-#define IMAGE_X_PADDING 18
-#define IMAGE_Y_PADDING 12
-#define IMAGES_PER_ROW  5
+#define IMAGE_X_PADDING 36
+#define IMAGE_Y_PADDING 15
+#define IMAGES_PER_ROW  4
 #define IMAGE_SIZE CGSizeMake(20, 20)
 
 
@@ -138,7 +138,7 @@
    while (imageCount * 2 < _imagePairs.count)
    {
       // don't know why I have to shift xPos by one IMAGE_SIZE.width + IMAGE_X_PADDING
-      int xPos = ((imageCount % IMAGES_PER_ROW) + 1) * (IMAGE_SIZE.width + IMAGE_X_PADDING);
+      int xPos = ((imageCount % IMAGES_PER_ROW) + 1) * (IMAGE_SIZE.width + IMAGE_X_PADDING) - 7;
       int yPos = -(imageCount / IMAGES_PER_ROW) * (IMAGE_SIZE.height + IMAGE_Y_PADDING);
       
       int imageIndex = imageCount * 2;

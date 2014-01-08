@@ -181,11 +181,12 @@
                           @"",                   @"tile.ring3d.png",
                           @"",                   @"tile.circle.png",
                           @"",                   @"tile.cylinder.png",
-                          @"",                   @"tile.spiral.png",
+//                          @"",                   @"tile.spiral.png",
                           @"",                   @"tile.buldge.png",
                           @"tile.smiley.png",    @"tile.frowny.png",
-                          @"tile.snowflake.png", @"tile.clear.png"];
-      
+//                          @"tile.snowflake.png", @"tile.clear.png"];
+                          @"",                  @"tile.leaf.png"];
+
       [self setupGridWithSize:size];
 
       [self registerHudParameters];

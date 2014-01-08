@@ -30,6 +30,7 @@
 		8E2FA2AB1869DDD90021A471 /* color-swatch-ring-outer.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2AA1869DDD90021A471 /* color-swatch-ring-outer.png */; };
 		8E2FA2AE1869E3ED0021A471 /* GLColorGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */; };
 		8E2FA2B01869E4BA0021A471 /* color-swatch-fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2AF1869E4BA0021A471 /* color-swatch-fill.png */; };
+		8E5A5554187D005800483158 /* tile.leaf.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E5A5553187D005800483158 /* tile.leaf.png */; };
 		8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02B184164F7000AEEB8 /* expand_left.png */; };
 		8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02C184164F7000AEEB8 /* expand_left@2x.png */; };
 		8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B030184169BF000AEEB8 /* GLColorHud.m */; };
@@ -174,6 +175,7 @@
 		8E2FA2AC1869E3ED0021A471 /* GLColorGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorGrid.h; sourceTree = "<group>"; };
 		8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLColorGrid.m; sourceTree = "<group>"; };
 		8E2FA2AF1869E4BA0021A471 /* color-swatch-fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "color-swatch-fill.png"; path = "Images/color-swatch-fill.png"; sourceTree = SOURCE_ROOT; };
+		8E5A5553187D005800483158 /* tile.leaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.leaf.png; path = Images/tile.leaf.png; sourceTree = SOURCE_ROOT; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02F184169BF000AEEB8 /* GLColorHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorHud.h; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8E5A5553187D005800483158 /* tile.leaf.png */,
 				8EA2651B185966A600351F5E /* arrow-right.png */,
 				8EA2651C185966A600351F5E /* arrow-right@2x.png */,
 				8E75B04418466F7F000AEEB8 /* camera.png */,
@@ -726,6 +729,7 @@
 				8EA264FB1850229100351F5E /* menu.open.wav in Resources */,
 				8EA2653218596F3E00351F5E /* pause@2x.png in Resources */,
 				8EA264F1184EEB1B00351F5E /* color.change.wav in Resources */,
+				8E5A5554187D005800483158 /* tile.leaf.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
