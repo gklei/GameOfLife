@@ -299,4 +299,13 @@
    return [super texture];
 }
 
+- (void)setHidden:(BOOL)hidden
+{
+   if (_sprite)
+      _sprite.hidden = hidden;
+   
+   super.hidden = hidden;
+   self.hitBox.hidden = hidden;
+}
+
 @end

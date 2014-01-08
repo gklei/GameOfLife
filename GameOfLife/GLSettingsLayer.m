@@ -127,4 +127,11 @@
    _nextControlPosition = CGPointMake(0, -(TOP_PADDING * 2 + HEADING_FONT_SIZE * 2 + 10));
 }
 
+- (void)setHidden:(BOOL)hidden
+{
+   super.hidden = hidden;
+   for (SKNode *node in self.children)
+      node.hidden = hidden;
+}
+
 @end

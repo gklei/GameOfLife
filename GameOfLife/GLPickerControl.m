@@ -44,10 +44,10 @@
    size.height += IMAGE_Y_PADDING;
    item.hitBox.size = size;
    
-   CGPoint position = tileNode.position;
-   position.x -= IMAGE_X_PADDING * 0.5;
-   position.y -= IMAGE_Y_PADDING * 0.5;
-   item.hitBox.position = position;
+//   CGPoint position = tileNode.position;
+//   position.x -= IMAGE_X_PADDING * 0.5;
+//   position.y -= IMAGE_Y_PADDING * 0.5;
+   item.hitBox.position = tileNode.position;
 
    ActionBlock itemActionBlock = ^
    {
@@ -257,6 +257,13 @@
 - (NSUInteger)controlHeight
 {
    return _controlHeight;
+}
+
+- (void)setHidden:(BOOL)hidden
+{
+   super.hidden = hidden;
+   for (GLPickerItem *item in self.items)
+      item.hidden = hidden;
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "GLMenuLayer.h"
+#import "GLUIButton.h"
 
 @implementation GLMenuLayer
 
@@ -19,6 +20,14 @@
       self.anchorPoint = anchorPoint;
    }
    return self;
+}
+
+- (void)setHidden:(BOOL)hidden
+{
+   for (GLUIButton *button in self.children)
+      button.hidden = hidden;
+   
+   super.hidden = hidden;
 }
 
 @end

@@ -114,4 +114,10 @@
    _itemStatusLabel.text = [self futurizedString:_itemUIControl.stringValue];
 }
 
+- (void)setHidden:(BOOL)hidden
+{
+   _itemUIControl.hidden = hidden;
+   super.hidden = hidden;
+}
+
 @end
