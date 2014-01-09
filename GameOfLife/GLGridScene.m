@@ -45,7 +45,7 @@
    CFTimeInterval _lastGenerationTime;
    CFTimeInterval _generationDuration;
 
-   ALAuthorizationStatus _photoLibraryAccessStatus;
+   ALAuthorizationStatus _photoLibraryAuthorizationStatus;
    SKSpriteNode *_flashLayer;
    SKAction *_flashAnimation;
    BOOL _firstScreenShotTaken;
@@ -209,14 +209,13 @@
                           @"",                  @"tile.leaf.png"];
 
       [self registerHudParameters];
-      
+
+      [self checkPhotoLibraryAuthorizationStatus];
       [self setupGridWithSize:size];
       [self setupGeneralHud];
       [self setupColorHud];
       [self setupSoundFX];
       [self setupFlashLayerAndAnimation];
-
-      [self checkPhotoLibraryAuthorizationStatus];
       
       [self observeHudParameterChanges];
 
@@ -286,7 +285,7 @@
    // killed by the OS and restarted.  Because of this, we do not need to
    // register for a notification when the authorization status changes, but
    // instead, simply check to see what it is every time the app starts.
-   _photoLibraryAccessStatus = [ALAssetsLibrary authorizationStatus];
+   _photoLibraryAuthorizationStatus = [ALAssetsLibrary authorizationStatus];
 }
 
 - (void)expandGeneralHUD
@@ -381,10 +380,6 @@
    }
 }
 
-- (void)screenShotButtonPressed
-{
-}
-
 - (void)takeScreenShot
 {
    // weird work around for the first screen shot that's taken being slow
@@ -422,6 +417,10 @@
 
       [_flashLayer runAction:_flashAnimation];
    }
+}
+
+- (void)screenShotButtonPressed
+{
 }
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action

@@ -14,6 +14,8 @@
 #import "GLSettingsLayer.h"
 #import "UIColor+Crayola.h"
 
+#include <AssetsLibrary/AssetsLibrary.h>
+
 #define CORE_FUNCTION_BUTTON_PADDING 52
 #define HUD_BUTTON_EDGE_PADDING 48
 #define HUD_BUTTON_PADDING 50
@@ -213,6 +215,9 @@
    _cameraButton = [self buttonWithFilename:@"camera2" buttonName:@"camera"];
    ActionBlock cameraButtonActionBlock = ^{[self.delegate screenShotButtonPressed];};
    _cameraButton.actionBlock = cameraButtonActionBlock;
+
+   ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+   _cameraButton.alpha = (status == ALAuthorizationStatusAuthorized)? 1 : .5;
 
    _settingsButton = [self buttonWithFilename:@"cog" buttonName:@"settings"];
    ActionBlock settingsButtonActionBlock= ^
