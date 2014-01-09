@@ -194,7 +194,34 @@
    [self addChild:_paletteButton];
 }
 
--(void)addColorDrops
+- (void)initCurrentColorDrop
+{
+   // get the current color name
+   CrayolaColorName colorName = [[[NSUserDefaults standardUserDefaults]
+                                  objectForKey:@"GridLiveColorName"]
+                                 unsignedIntValue];
+   
+   // find a drop with that color
+   if ([UIColor colorForCrayolaColorName:colorName])
+   {
+      for (GLColorDropButton * drop in _colorDrops)
+      {
+         if (drop.colorName == colorName)
+         {
+            _currentColorDrop = drop;
+            _currentColorName = colorName;
+            return;
+         }
+      }
+   }
+   
+   // no match, so just pick the first drop and use that color
+   NSLog(@"Failed to find a color drop with the color:%d", colorName);
+   _currentColorDrop = _colorDrops.firstObject;
+   [self updateCurrentColorName:_currentColorDrop.colorName];
+}
+
+- (void)addColorDrops
 {
    NSArray *colorDropColors = nil;
    _colorDrops = [NSMutableArray arrayWithCapacity:COLOR_DROP_CAPACITY];
@@ -233,8 +260,7 @@
       [self addChild:drop];
    }
    
-   _currentColorDrop = _colorDrops.firstObject;
-   _currentColorName = _currentColorDrop.colorName;
+   [self initCurrentColorDrop];
 }
 
 - (void)setColorDropsHidden:(BOOL)hidden
@@ -550,6 +576,19 @@
    return [NSArray arrayWithArray:dropColors];
 }
 
+- (void)updateCurrentColorName:(CrayolaColorName)colorName
+{
+   SKColor * color = [UIColor colorForCrayolaColorName:colorName];
+   if (color)
+   {
+      _currentColorName = colorName;
+      
+      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+      [defaults setObject:[NSNumber numberWithUnsignedInt:_currentColorName]
+                   forKey:@"GridLiveColorName"];
+   }
+}
+
 - (void)colorGridColorNameChanged:(CrayolaColorName)colorName
 {
    BOOL colorExistsInCurrentPalette = NO;
@@ -570,8 +609,7 @@
       [GLColorPaletteManager sharedManager].storedColorPalette = [self getCurrentDropColorNames];
    }
    
-   _currentColorName = colorName;
-   [self.delegate setCurrentColorName:colorName];
+   [self updateCurrentColorName:colorName];
 }
 
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath

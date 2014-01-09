@@ -12,7 +12,6 @@
 #import "UIColor+Crayola.h"
 
 @protocol GLColorHudDelegate <GLHudDelegate>
-   - (void)setCurrentColorName:(CrayolaColorName)colorName;
    - (void)colorGridWillExpandWithRepositioningAction:(SKAction *)action;
    - (void)colorGridDidExpand;
    - (void)colorGridWillCollapseWithRepositioningAction:(SKAction *)action;

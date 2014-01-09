@@ -11,7 +11,7 @@
 
 typedef enum
 {
-   CCN_crayolaAbsoluteZeroColor,
+   CCN_crayolaAbsoluteZeroColor = 0,
    CCN_crayolaAlienArmpitColor,
    CCN_crayolaAlloyOrangeColor,
    CCN_crayolaAlmondColor,
