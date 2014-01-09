@@ -213,11 +213,10 @@
    _startStopButton.actionBlock = startStopButtonActionBlock;
 
    _cameraButton = [self buttonWithFilename:@"camera2" buttonName:@"camera"];
+   _cameraButton.alpha =
+      ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized)? 1 : .5;
    ActionBlock cameraButtonActionBlock = ^{[self.delegate screenShotButtonPressed];};
    _cameraButton.actionBlock = cameraButtonActionBlock;
-
-   ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
-   _cameraButton.alpha = (status == ALAuthorizationStatusAuthorized)? 1 : .5;
 
    _settingsButton = [self buttonWithFilename:@"cog" buttonName:@"settings"];
    ActionBlock settingsButtonActionBlock= ^
