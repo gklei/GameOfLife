@@ -206,7 +206,7 @@
                           @"",                   @"tile.cylinder.png",
                           @"",                   @"tile.buldge.png",
                           @"tile.smiley.png",    @"tile.frowny.png",
-                          @"",                  @"tile.leaf.png"];
+                          @"",                   @"tile.leaf.png"];
 
       [self registerHudParameters];
 
