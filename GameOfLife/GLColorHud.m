@@ -550,6 +550,19 @@
    return [NSArray arrayWithArray:dropColors];
 }
 
+- (void)updateCurrentColorName:(CrayolaColorName)colorName
+{
+   SKColor * color = [UIColor colorForCrayolaColorName:colorName];
+   if (color)
+   {
+      _currentColorName = colorName;
+      
+      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+      [defaults setObject:[NSNumber numberWithUnsignedInt:_currentColorName]
+                   forKey:@"GridLiveColorName"];
+   }
+}
+
 - (void)colorGridColorNameChanged:(CrayolaColorName)colorName
 {
    BOOL colorExistsInCurrentPalette = NO;
@@ -570,8 +583,7 @@
       [GLColorPaletteManager sharedManager].storedColorPalette = [self getCurrentDropColorNames];
    }
    
-   _currentColorName = colorName;
-   [self.delegate setCurrentColorName:colorName];
+   [self updateCurrentColorName:colorName];
 }
 
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath

@@ -251,8 +251,6 @@
    _colorHudLayer = [GLColorHud new];
    _colorHudLayer.delegate = self;
    _colorHudLayer.position = CGPointMake(self.size.width - 60, 0);
-   
-//   [_grid setCurrentColorName:_colorHudLayer.currentColorName];
    [self addChild:_colorHudLayer];
 }
 
@@ -443,11 +441,6 @@
 }
 
 #pragma mark GLColorHud Delegate Method
-- (void)setCurrentColorName:(CrayolaColorName)colorName;
-{
-   [_grid setCurrentColorName:colorName];
-}
-
 - (void)colorGridWillExpandWithRepositioningAction:(SKAction *)action
 {
    [_generalHudLayer runAction:action];
