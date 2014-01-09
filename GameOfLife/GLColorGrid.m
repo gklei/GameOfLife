@@ -19,7 +19,7 @@
 @interface GLColorGrid() <GLColorSwatchSelection>
 {
    std::vector<CrayolaColorName> _colorGridColors;
-   NSMutableArray *_colorSwatches;
+   NSArray *_colorSwatches;
    GLColorSwatch *_selectedColorSwatch;
    SKSpriteNode *_swatchSelectionRing;
 }
@@ -33,7 +33,6 @@
    {
       _dimensions.columns = size.height;
       _dimensions.rows = size.width;
-      [self setupColorGridColors];
       [self setupColorSwatches];
       [self setupSelectionRing];
    }
@@ -54,22 +53,28 @@
 
 - (void)setupColorSwatches
 {
-   _colorSwatches = [[NSMutableArray alloc] initWithCapacity:_colorGridColors.size()];
-   int colorIndex = 0;
-   for (int yPos = 0; yPos < _dimensions.rows * (COLOR_SWATCH_SIZE.height + COLOR_SWATCH_Y_PADDING);
-        yPos += COLOR_SWATCH_SIZE.height + COLOR_SWATCH_Y_PADDING)
+   if (_colorSwatches == nil)
    {
-      for (int xPos = 0; xPos < _dimensions.columns * (COLOR_SWATCH_SIZE.width + COLOR_SWATCH_X_PADDING);
-           xPos += COLOR_SWATCH_SIZE.width + COLOR_SWATCH_X_PADDING)
+      [self setupColorGridColors];
+      NSMutableArray * swatches = [[NSMutableArray alloc] initWithCapacity:_colorGridColors.size()];
+      int colorIndex = 0;
+      for (int yPos = 0; yPos < _dimensions.rows * (COLOR_SWATCH_SIZE.height + COLOR_SWATCH_Y_PADDING);
+           yPos += COLOR_SWATCH_SIZE.height + COLOR_SWATCH_Y_PADDING)
       {
-         GLColorSwatch *swatch = [[GLColorSwatch alloc] init];
-         swatch.swatchSelectionDelegate = self;
-         swatch.position = CGPointMake(xPos, yPos);
-         swatch.color = [SKColor colorForCrayolaColorName:_colorGridColors[colorIndex++]];
-         [_colorSwatches addObject:swatch];
+         for (int xPos = 0; xPos < _dimensions.columns * (COLOR_SWATCH_SIZE.width + COLOR_SWATCH_X_PADDING);
+              xPos += COLOR_SWATCH_SIZE.width + COLOR_SWATCH_X_PADDING)
+         {
+            GLColorSwatch *swatch = [[GLColorSwatch alloc] init];
+            swatch.swatchSelectionDelegate = self;
+            swatch.position = CGPointMake(xPos, yPos);
+            swatch.colorName = _colorGridColors[colorIndex++];
+            [swatches addObject:swatch];
 
-         [self addChild:swatch];
+            [self addChild:swatch];
+         }
       }
+      
+      _colorSwatches = [NSArray arrayWithArray:swatches];
    }
 }
 
@@ -117,24 +122,25 @@
       _selectedColorSwatch = swatch;
       _swatchSelectionRing.position = _selectedColorSwatch.position;
       _swatchSelectionRing.hidden = NO;
-      [_colorGridDelegate colorGridColorChanged:_selectedColorSwatch.color];
+      
+      [_colorGridDelegate colorGridColorNameChanged:_selectedColorSwatch.colorName];
       return;
    }
 
    [self moveSelectionRingToSwatch:swatch];
-   [_colorGridDelegate colorGridColorChanged:_selectedColorSwatch.color];
+   [_colorGridDelegate colorGridColorNameChanged:_selectedColorSwatch.colorName];
 }
 
-- (void)updateSelectedColor:(UIColor *)newColor
+- (void)updateSelectedColorName:(CrayolaColorName)colorName
 {
    GLColorSwatch *nextSwatch = nil;
    for (GLColorSwatch *swatch in _colorSwatches)
-      if ([swatch.color isEqual:newColor])
+      if (swatch.colorName == colorName)
       {
          nextSwatch = swatch;
          break;
       }
-
+   
    if (nextSwatch)
       [self swatchSelected:nextSwatch];
 }

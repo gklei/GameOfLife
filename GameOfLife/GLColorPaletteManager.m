@@ -25,34 +25,18 @@ GLColorPaletteManager * g_globalColorPaletteManager = nil;
 
 - (BOOL)hasStoredPalette
 {
-   return [[NSUserDefaults standardUserDefaults] objectForKey:@"gl_color_palette_array"] != nil;
+   return [[NSUserDefaults standardUserDefaults] objectForKey:@"gl_stored_color_drops"] != nil;
 }
 
 - (void)setStoredColorPalette:(NSArray *)storedColorPalette
 {
-   NSMutableArray *colorDataArray = [NSMutableArray arrayWithCapacity:storedColorPalette.count];
-   for (UIColor *color in storedColorPalette)
-   {
-      NSData *colorEncodedObject = [NSKeyedArchiver archivedDataWithRootObject:color];
-      [colorDataArray addObject:colorEncodedObject];
-   }
-
-   [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"gl_color_palette_array"];
-   [[NSUserDefaults standardUserDefaults] setObject:colorDataArray forKey:@"gl_color_palette_array"];
+   [[NSUserDefaults standardUserDefaults] setObject:storedColorPalette forKey:@"gl_stored_color_drops"];
 }
 
 - (NSArray *)storedColorPalette
 {
-   NSArray *colorDataArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"gl_color_palette_array"];
-   NSMutableArray *colorArray = [NSMutableArray arrayWithCapacity:colorDataArray.count];
-
-   for (NSData *colorEncodedObject in colorDataArray)
-   {
-      UIColor *color = [NSKeyedUnarchiver unarchiveObjectWithData:colorEncodedObject];
-      [colorArray addObject:color];
-   }
-   
-   return [NSArray arrayWithArray:colorArray];
+   NSArray *colorDataArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"gl_stored_color_drops"];
+   return [NSArray arrayWithArray:colorDataArray];
 }
 
 @end

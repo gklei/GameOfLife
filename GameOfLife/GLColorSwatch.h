@@ -7,6 +7,7 @@
 //
 
 #import "GLUIActionButton.h"
+#import "UIColor+Crayola.h"
 
 @class GLColorSwatch;
 
@@ -23,6 +24,7 @@ typedef NS_ENUM(int, GL_COLOR_SWATCH_STATE)
 @interface GLColorSwatch : GLUIActionButton
 
 @property (nonatomic, readwrite) GL_COLOR_SWATCH_STATE state;
-@property (nonatomic, retain) id<GLColorSwatchSelection> swatchSelectionDelegate;
+@property (nonatomic, assign) id<GLColorSwatchSelection> swatchSelectionDelegate;
+@property (nonatomic, assign, setter = setColorName:) CrayolaColorName colorName;
 
 @end

@@ -10,9 +10,10 @@
 
 typedef enum
 {
-   HIT_TOGGLER = 0,
-   HIT_SLIDER  = 1,
-   HIT_PICKER  = 2,
+   HIT_NO_UI   = 0,
+   HIT_TOGGLER = 1,
+   HIT_SLIDER  = 2,
+   HIT_PICKER  = 3,
 } HUDItemType;
 
 typedef enum

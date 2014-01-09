@@ -86,7 +86,7 @@
    hudItem.valueType = HVT_ULONG;
    hudItem.imagePairs = imagePairs;
    hudItem.range = HUDItemRangeMake(0, imagePairs.count - 1);
-   hudItem.defaultvalue = [NSNumber numberWithFloat:0];
+   hudItem.defaultvalue = [NSNumber numberWithUnsignedInteger:0];
    
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
    [hudManager addHudItem:hudItem];
@@ -121,6 +121,20 @@
    [self registerToggleItemWithLabel:@"LOOP DETECTION" andKeyPath:@"LoopDetection"];
 }
 
+- (void)registerLiveColorNameChanges
+{
+   HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
+   hudItem.keyPath = @"GridLiveColorName";
+   hudItem.label = @"Live Color Name";;
+   hudItem.range = HUDItemRangeMake(0, 1);
+   hudItem.type = HIT_NO_UI;
+   hudItem.defaultvalue = [NSNumber numberWithUnsignedInt:CCN_crayolaCeruleanColor];
+   hudItem.valueType = HVT_UINT;
+   
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addHudItem:hudItem];
+}
+
 - (void)registerHudParameters
 {
    [self registerSoundFxHUD];
@@ -128,6 +142,7 @@
    [self registerGeneralDurationHUD];
    [self registerLoopDetectionHUD];
    [self registerGridImagePickerHUD:_gridImagePairs];
+   [self registerLiveColorNameChanges];
 }
 
 #pragma mark - observation methods
@@ -161,6 +176,12 @@
    [hudManager addObserver:self forKeyPath:@"GridImageIndex"];
 }
 
+- (void)observeGridLiveColorNameChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"GridLiveColorName"];
+}
+
 - (void)observeHudParameterChanges
 {
    [self observeSoundFxChanges];
@@ -168,6 +189,7 @@
    [self observeLoopDetectionChanges];
    [self observeGeneralDurationChanges];
    [self observeGridImageIndexChanges];
+   [self observeGridLiveColorNameChanges];
 }
 
 #pragma mark - Initializer Method
@@ -187,16 +209,16 @@
 //                          @"tile.snowflake.png", @"tile.clear.png"];
                           @"",                  @"tile.leaf.png"];
 
-      [self setupGridWithSize:size];
-
       [self registerHudParameters];
-      [self observeHudParameterChanges];
-
+      
+      [self setupGridWithSize:size];
       [self setupGeneralHud];
       [self setupColorHud];
       [self setupSoundFX];
       [self setupFlashLayerAndAnimation];
       
+      [self observeHudParameterChanges];
+
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
       self.userInteractionEnabled = YES;
@@ -229,7 +251,7 @@
    _colorHudLayer.delegate = self;
    _colorHudLayer.position = CGPointMake(self.size.width - 60, 0);
    
-   [_grid setCurrentColor:_colorHudLayer.currentColor];
+//   [_grid setCurrentColorName:_colorHudLayer.currentColorName];
    [self addChild:_colorHudLayer];
 }
 
@@ -416,9 +438,9 @@
 }
 
 #pragma mark GLColorHud Delegate Method
-- (void)setCurrentColor:(SKColor *)currentColor
+- (void)setCurrentColorName:(CrayolaColorName)colorName;
 {
-   [_grid setCurrentColor:currentColor];
+   [_grid setCurrentColorName:colorName];
 }
 
 - (void)colorGridWillExpandWithRepositioningAction:(SKAction *)action
@@ -731,6 +753,12 @@
    {
       assert(type == HVT_FLOAT);
       [self updateGenerationDuration:[value floatValue]];
+   }
+   else if ([keyPath compare:@"GridLiveColorName"] == NSOrderedSame)
+   {
+      assert(type == HVT_UINT);
+      CrayolaColorName colorName = (CrayolaColorName)[value unsignedIntValue];
+      [_grid setCurrentColorName:colorName];
    }
    else if ([keyPath compare:@"SmartMenu"] == NSOrderedSame)
    {
