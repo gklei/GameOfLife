@@ -16,6 +16,7 @@
 #import "GLTileNode.h"
 #import "UIColor+Crayola.h"
 
+#include <AssetsLibrary/AssetsLibrary.h>
 #include <OpenGLES/ES1/glext.h>
 
 #define DEFAULT_GENERATION_DURATION 0.8
@@ -34,7 +35,6 @@
    BOOL _colorHudIsAnimating;
    BOOL _running;
    BOOL _autoShowHideHudForStartStop;
-   BOOL _autoHideHUDLayersForScreenshot;
    BOOL _generalHudShouldExpand;
 
    BOOL _shouldPlaySound;
@@ -45,6 +45,7 @@
    CFTimeInterval _lastGenerationTime;
    CFTimeInterval _generationDuration;
 
+   ALAuthorizationStatus _photoLibraryAccessStatus;
    SKSpriteNode *_flashLayer;
    SKAction *_flashAnimation;
    BOOL _firstScreenShotTaken;
@@ -181,10 +182,8 @@
                           @"",                   @"tile.ring3d.png",
                           @"",                   @"tile.circle.png",
                           @"",                   @"tile.cylinder.png",
-//                          @"",                   @"tile.spiral.png",
                           @"",                   @"tile.buldge.png",
                           @"tile.smiley.png",    @"tile.frowny.png",
-//                          @"tile.snowflake.png", @"tile.clear.png"];
                           @"",                  @"tile.leaf.png"];
 
       [self setupGridWithSize:size];
@@ -196,6 +195,8 @@
       [self setupColorHud];
       [self setupSoundFX];
       [self setupFlashLayerAndAnimation];
+
+      [self checkPhotoLibraryAuthorizationStatus];
       
       // set background color for the scene
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
@@ -254,6 +255,16 @@
    _flashAnimation = [SKAction sequence:@[flashIn, flashOut]];
 
    [self addChild:_flashLayer];
+}
+
+- (void)checkPhotoLibraryAuthorizationStatus
+{
+   // NOTE: when the user changes the apps access to the photo library in
+   // privacy settings, the app will automatically (and unavoidably) be
+   // killed by the OS and restarted.  Because of this, we do not need to
+   // register for a notification when the authorization status changes, but
+   // instead, simply check to see what it is every time the app starts.
+   _photoLibraryAccessStatus = [ALAssetsLibrary authorizationStatus];
 }
 
 - (void)expandGeneralHUD
@@ -350,13 +361,12 @@
 
 - (void)screenShotButtonPressed
 {
+}
+
+- (void)takeScreenShot
+{
    // weird work around for the first screen shot that's taken being slow
    if (_shouldPlaySound) [self runAction:_flashSound];
-
-   if (_autoHideHUDLayersForScreenshot)
-   {
-      // hide HUDs
-   }
    
    if (!_firstScreenShotTaken)
    {
@@ -389,11 +399,6 @@
          UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
 
       [_flashLayer runAction:_flashAnimation];
-   }
-   
-   if (_autoHideHUDLayersForScreenshot)
-   {
-      // show HUDS
    }
 }
 
