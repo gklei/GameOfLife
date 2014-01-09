@@ -184,6 +184,7 @@
    }
    
    self.items = [NSArray arrayWithArray:pickerItems];
+   
    [self updateImageIndex:[[[NSUserDefaults standardUserDefaults]
                               objectForKey:@"GridImageIndex"]
                                  unsignedLongValue]];
