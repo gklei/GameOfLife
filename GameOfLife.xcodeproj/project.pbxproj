@@ -125,6 +125,7 @@
 		ED2CB971185C157500319DE5 /* tile.ring3d.png in Resources */ = {isa = PBXBuildFile; fileRef = ED2CB970185C157500319DE5 /* tile.ring3d.png */; };
 		ED4C6209187B615E0001E7DC /* GLPickerControl.m in Sources */ = {isa = PBXBuildFile; fileRef = ED4C6208187B615E0001E7DC /* GLPickerControl.m */; };
 		ED581D9C186276880016F98D /* GLHUDSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ED581D9B186276880016F98D /* GLHUDSettingsManager.m */; };
+		ED820542187E471300BF7CD6 /* GLColorDropButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ED820541187E471300BF7CD6 /* GLColorDropButton.m */; };
 		ED8EA7AC1873BDAA0073132A /* tile.snowflake.png in Resources */ = {isa = PBXBuildFile; fileRef = ED8EA7AB1873BDAA0073132A /* tile.snowflake.png */; };
 		ED8EA7AE1873C3470073132A /* tile.clear.png in Resources */ = {isa = PBXBuildFile; fileRef = ED8EA7AD1873C3470073132A /* tile.clear.png */; };
 		EDB8C3A7187BF4310047AE52 /* GLToggleControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB8C3A6187BF4310047AE52 /* GLToggleControl.m */; };
@@ -287,6 +288,8 @@
 		ED4C6208187B615E0001E7DC /* GLPickerControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPickerControl.m; sourceTree = "<group>"; };
 		ED581D9A186276880016F98D /* GLHUDSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLHUDSettingsManager.h; sourceTree = "<group>"; };
 		ED581D9B186276880016F98D /* GLHUDSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLHUDSettingsManager.m; sourceTree = "<group>"; };
+		ED820540187E471300BF7CD6 /* GLColorDropButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorDropButton.h; sourceTree = "<group>"; };
+		ED820541187E471300BF7CD6 /* GLColorDropButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorDropButton.m; sourceTree = "<group>"; };
 		ED8EA7AB1873BDAA0073132A /* tile.snowflake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.snowflake.png; path = Images/tile.snowflake.png; sourceTree = SOURCE_ROOT; };
 		ED8EA7AD1873C3470073132A /* tile.clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.clear.png; path = Images/tile.clear.png; sourceTree = SOURCE_ROOT; };
 		EDB8C3A5187BF4310047AE52 /* GLToggleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLToggleControl.h; sourceTree = "<group>"; };
@@ -458,9 +461,6 @@
 		8ECA898B182371AE009D906F /* GameOfLife */ = {
 			isa = PBXGroup;
 			children = (
-				ED4C620A187B61C30001E7DC /* HUD */,
-				8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */,
-				8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */,
 				8ECA8994182371AE009D906F /* GLAppDelegate.h */,
 				8ECA8995182371AE009D906F /* GLAppDelegate.m */,
 				8E2FA2AC1869E3ED0021A471 /* GLColorGrid.h */,
@@ -477,16 +477,19 @@
 				8E2FA29B1867BBED0021A471 /* GLMenuLayer.m */,
 				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
 				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
-				8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */,
 				8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */,
 				8ECA899A182371AE009D906F /* GLViewController.h */,
 				8ECA899B182371AE009D906F /* GLViewController.m */,
+				ED4C620A187B61C30001E7DC /* HUD */,
 				8ECA89A2182371AE009D906F /* Images.xcassets */,
 				8ECA8997182371AE009D906F /* Main.storyboard */,
 				8E2FA2A418695C480021A471 /* spark.png */,
 				8E2FA2A318695C480021A471 /* Spark.sks */,
 				8ECA898C182371AE009D906F /* Supporting Files */,
+				8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */,
 				8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */,
+				8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */,
+				8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */,
 			);
 			path = GameOfLife;
 			sourceTree = "<group>";
@@ -545,6 +548,8 @@
 		ED4C620B187B62330001E7DC /* Controls */ = {
 			isa = PBXGroup;
 			children = (
+				ED820540187E471300BF7CD6 /* GLColorDropButton.h */,
+				ED820541187E471300BF7CD6 /* GLColorDropButton.m */,
 				8E2FA288186567B50021A471 /* GLUIActionButton.h */,
 				8E2FA289186567B50021A471 /* GLUIActionButton.m */,
 				ED4C6207187B615E0001E7DC /* GLPickerControl.h */,
@@ -755,6 +760,7 @@
 				8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */,
 				8EB738CB18709E5300BB58C0 /* UIColor+CrossFade.m in Sources */,
 				8E2FA2AE1869E3ED0021A471 /* GLColorGrid.m in Sources */,
+				ED820542187E471300BF7CD6 /* GLColorDropButton.m in Sources */,
 				8E2FA29C1867BBED0021A471 /* GLMenuLayer.m in Sources */,
 				8E2FA2991867BB080021A471 /* GLColorSelectionLayer.m in Sources */,
 				8EB738CE1874B56600BB58C0 /* GLColorPaletteManager.m in Sources */,

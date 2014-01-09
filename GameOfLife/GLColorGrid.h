@@ -7,6 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "UIColor+Crayola.h"
 
 @class GLColorSwatch;
 
@@ -16,16 +17,15 @@ typedef struct {
 } ColorGridDimensions;
 
 @protocol GLColorGridDelegate <NSObject>
-- (void)colorGridColorChanged:(SKColor *)newColor;
+- (void)colorGridColorNameChanged:(CrayolaColorName)colorName;
 @end
 
 @interface GLColorGrid : SKNode
 
 @property (nonatomic, readonly) ColorGridDimensions dimensions;
-//@property (nonatomic, readwrite) GLColorSwatch *selectedSwatch;
 @property (nonatomic, retain) id<GLColorGridDelegate> colorGridDelegate;
 
 - (id)initWithSize:(CGSize)size;
-- (void)updateSelectedColor:(SKColor *)newColor;
+- (void)updateSelectedColorName:(CrayolaColorName)colorName;
 
 @end

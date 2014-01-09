@@ -28,8 +28,7 @@
    BOOL _running;
 
    NSMutableArray *_potentialTileColors;
-
-   SKColor *_currentColor;
+   CrayolaColorName _currentColorName;
 }
 
 @end
@@ -58,6 +57,8 @@
 
 - (void)setupGridWithSize:(CGSize)size
 {
+   SKColor * color = [UIColor colorForCrayolaColorName:_currentColorName];
+   assert(color != nil);
    _dimensions.rows = size.width/TILESIZE.width;
    _dimensions.columns = size.width/TILESIZE.width;
    
@@ -82,7 +83,7 @@
                                                                    TILESIZE.height - 1)
                                             andRotation:textureRotation];
          tile.tileColorDelegate = self;
-         tile.liveColor = [self currentTileColor];
+         tile.liveColor = color;
          tile.deadRotation = textureRotation;
          [self addChild:tile];
       }
@@ -322,14 +323,17 @@
    }
 }
 
-- (void)setCurrentColor:(UIColor *)color
+- (void)setCurrentColorName:(CrayolaColorName)colorName
 {
-   _currentColor = color;
-
-   for (GLTileNode *tile in _tiles)
+   SKColor * color = [UIColor colorForCrayolaColorName:colorName];
+   if (color)
    {
-      if (!tile.isLiving)
-         tile.liveColor = [self currentTileColor];
+      _currentColorName = colorName;
+      for (GLTileNode *tile in _tiles)
+      {
+         tile.liveColor = color;
+         [tile updateLivingAndColor:tile.isLiving];
+      }
    }
 }
 
@@ -355,7 +359,7 @@
 #pragma mark GLTileColor Delegate Methods
 - (SKColor *)currentTileColor
 {
-   return _currentColor;
+   return [UIColor colorForCrayolaColorName:_currentColorName];
 }
 
 #pragma mark Helper Methods

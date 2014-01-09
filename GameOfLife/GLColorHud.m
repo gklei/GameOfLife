@@ -7,10 +7,9 @@
 //
 
 #import "GLColorHud.h"
-#import "UIColor+Crayola.h"
 #import "GLColorGrid.h"
 #import "GLGridScene.h"
-#import "GLUIActionButton.h"
+#import "GLColorDropButton.h"
 #import "GLColorSelectionLayer.h"
 #import "GLColorPaletteManager.h"
 
@@ -36,9 +35,9 @@
    CGSize _defaultSize;
    SKSpriteNode *_backgroundLayer;
 
-   GLUIActionButton *_splashButton;
-   GLUIActionButton *_paletteButton;
-   GLUIActionButton *_currentColorDrop;
+   GLUIActionButton  *_splashButton;
+   GLUIActionButton  *_paletteButton;
+   GLColorDropButton *_currentColorDrop;
 
    NSMutableArray *_colorDrops;
 
@@ -75,7 +74,7 @@
       [self addColorDrops];
       [self setupPaletteButton];
 
-      [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
+      [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
       [self runSplashButtonColorChangeAnimation];
       [self observeSoundFxChanges];
    }
@@ -205,25 +204,25 @@
    }
    else
    {
-      colorDropColors = @[[SKColor crayolaCeruleanColor],
-                          [SKColor crayolaCaribbeanGreenColor],
-                          [SKColor crayolaLimeColor],
-                          [SKColor crayolaOrangeRedColor],
-                          [SKColor crayolaPinkFlamingoColor]];
+      colorDropColors = @[[NSNumber numberWithUnsignedInt:CCN_crayolaCeruleanColor],
+                          [NSNumber numberWithUnsignedInt:CCN_crayolaCaribbeanGreenColor],
+                          [NSNumber numberWithUnsignedInt:CCN_crayolaLimeColor],
+                          [NSNumber numberWithUnsignedInt:CCN_crayolaOrangeRedColor],
+                          [NSNumber numberWithUnsignedInt:CCN_crayolaPinkFlamingoColor]];
 
       [GLColorPaletteManager sharedManager].storedColorPalette = colorDropColors;
    }
 
-   for (int i=0; i<COLOR_DROP_CAPACITY; ++i)
+   for (int i = 0; i < COLOR_DROP_CAPACITY; ++i)
    {
-      GLUIActionButton *drop = ([self usingRetinaDisplay]) ?
-         [GLUIActionButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
-         [GLUIActionButton spriteNodeWithImageNamed:@"droplet.png"];
+      GLColorDropButton *drop = ([self usingRetinaDisplay]) ?
+         [GLColorDropButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
+         [GLColorDropButton spriteNodeWithImageNamed:@"droplet.png"];
       
       [drop setScale:COLOR_DROP_SCALE];
       drop.position = CGPointMake(i*COLOR_DROP_PADDING + 78, -drop.size.height/2.0 - 5);
       drop.colorBlendFactor = 1.0;
-      drop.color = colorDropColors[i];
+      drop.colorName = [((NSNumber *)[colorDropColors objectAtIndex:i]) unsignedIntValue];
       drop.alpha = .75;
       drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
 
@@ -233,8 +232,9 @@
       [_colorDrops insertObject:drop atIndex:i];
       [self addChild:drop];
    }
+   
    _currentColorDrop = _colorDrops.firstObject;
-   _currentColor = _currentColorDrop.color;
+   _currentColorName = _currentColorDrop.colorName;
 }
 
 - (void)setColorDropsHidden:(BOOL)hidden
@@ -245,7 +245,7 @@
    _paletteButton.hidden = hidden;
 }
 
-- (void)updateCurrentColorDrop:(GLUIActionButton *)colorDropButton
+- (void)updateCurrentColorDrop:(GLColorDropButton *)colorDropButton
 {
    if (_currentColorDrop != colorDropButton)
    {
@@ -264,10 +264,11 @@
       [colorDropButton runAction:selectAnimation];
 
       _currentColorDrop = colorDropButton;
-      _currentColor = _currentColorDrop.color;
-      [_colorSelectionLayer.colorGrid updateSelectedColor:_currentColor];
+      _currentColorName = _currentColorDrop.colorName;
+      [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
    }
 }
+
 - (void)expandColorGridWithCompletionBlock:(void (^)())completionBlock
 {
    self.animating = YES;
@@ -540,37 +541,37 @@
    _paletteButton.hidden = NO;
 }
 
-- (NSArray *)getCurrentDropColors
+- (NSArray *)getCurrentDropColorNames
 {
    NSMutableArray *dropColors = [NSMutableArray arrayWithCapacity:_colorDrops.count];
-   for (GLUIActionButton *drop in _colorDrops)
-      [dropColors addObject:drop.color];
+   for (GLColorDropButton *drop in _colorDrops)
+      [dropColors addObject:[NSNumber numberWithInt:drop.colorName]];
 
    return [NSArray arrayWithArray:dropColors];
 }
 
-- (void)colorGridColorChanged:(UIColor *)newColor
+- (void)colorGridColorNameChanged:(CrayolaColorName)colorName
 {
    BOOL colorExistsInCurrentPalette = NO;
-   for (GLUIActionButton *drop in _colorDrops)
+   for (GLColorDropButton *drop in _colorDrops)
    {
-      if ([drop.color isEqual:newColor])
+      if (drop.colorName == colorName)
       {
          colorExistsInCurrentPalette = YES;
          [self updateCurrentColorDrop:drop];
          break;
       }
    }
-
+   
    if (!colorExistsInCurrentPalette)
    {
       // these two things must happen in this order!
-      _currentColorDrop.color = newColor;
-      [GLColorPaletteManager sharedManager].storedColorPalette = [self getCurrentDropColors];
+      _currentColorDrop.colorName = colorName;
+      [GLColorPaletteManager sharedManager].storedColorPalette = [self getCurrentDropColorNames];
    }
    
-   _currentColor = newColor;
-   [self.delegate setCurrentColor:newColor];
+   _currentColorName = colorName;
+   [self.delegate setCurrentColorName:colorName];
 }
 
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath

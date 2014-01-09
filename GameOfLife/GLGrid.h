@@ -7,6 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "UIColor+Crayola.h"
 
 typedef struct {
    int rows;
@@ -33,7 +34,7 @@ typedef struct {
 - (void)clearGrid;
 - (void)toggleRunning:(BOOL)starting;
 
-- (void)setCurrentColor:(SKColor *)color;
+- (void)setCurrentColorName:(CrayolaColorName)colorName;
 
 - (void)setTilesBirthingDuration:(float)bDuration
                    dyingDuration:(float)dDuration;

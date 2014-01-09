@@ -2231,7 +2231,7 @@
          result = [UIColor crayolaYellowSunshineColor];
          break;
       default:
-         result = [UIColor crayolaAbsoluteZeroColor];
+         result = nil;
          break;
    }
    

@@ -53,6 +53,16 @@
    [self addChild:self.hitBox];
 }
 
+- (void)setColorName:(CrayolaColorName) colorName
+{
+   _colorName = colorName;
+   UIColor * color = [UIColor colorForCrayolaColorName:_colorName];
+   if (color)
+      self.color = color;
+   else
+      NSLog(@"no color for _colorName = %d", _colorName);
+}
+
 - (void)setColor:(UIColor *)color
 {
    _swatch.color = color;
