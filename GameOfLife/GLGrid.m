@@ -221,13 +221,15 @@
    {
       CGPoint center = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
                                    _dimensions.rows * TILESIZE.height * 0.5);
+      SKColor *liveColor = [UIColor colorForCrayolaColorName:_currentColorName];
       for (int i = 0; i < _tiles.count; ++i)
       {
          GLTileNode * tile = [_tiles objectAtIndex:i];
-         tile.liveColor = tile.originalColor;
+         if (liveColor) tile.liveColor = liveColor;
          tile.isLiving = _storedTileStates[i];
          [tile setColorCenter:center];
       }
+      
       _inContinuousLoop = NO;
    }
 }
@@ -323,7 +325,7 @@
    }
 }
 
-- (void)setCurrentColorName:(CrayolaColorName)colorName
+- (void)setLiveColorName:(CrayolaColorName)colorName
 {
    SKColor * color = [UIColor colorForCrayolaColorName:colorName];
    if (color)

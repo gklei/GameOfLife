@@ -34,7 +34,7 @@ typedef struct {
 - (void)clearGrid;
 - (void)toggleRunning:(BOOL)starting;
 
-- (void)setCurrentColorName:(CrayolaColorName)colorName;
+- (void)setLiveColorName:(CrayolaColorName)colorName;
 
 - (void)setTilesBirthingDuration:(float)bDuration
                    dyingDuration:(float)dDuration;

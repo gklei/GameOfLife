@@ -39,7 +39,6 @@
          scaleUp.timingMode = SKActionTimingEaseInEaseOut;
 
          tile.color = [tile getLivingTileColor];
-         tile.originalColor = [tile.tileColorDelegate currentTileColor];
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
          {
@@ -138,7 +137,7 @@
    float duration = (_isLiving)? _birthingDuration : _dyingDuration;
    
    SKColor *newColor = (_isLiving)? [self getNextColor:&_liveColorName] :
-   [SKColor colorForCrayolaColorName:_deadColorName];
+                                    [SKColor colorForCrayolaColorName:_deadColorName];
    
    SKAction *changeColor = [SKAction colorizeWithColor:newColor
                                       colorBlendFactor:1.0

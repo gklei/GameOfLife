@@ -755,7 +755,7 @@
    {
       assert(type == HVT_UINT);
       CrayolaColorName colorName = (CrayolaColorName)[value unsignedIntValue];
-      [_grid setCurrentColorName:colorName];
+      [_grid setLiveColorName:colorName];
    }
    else if ([keyPath compare:@"SmartMenu"] == NSOrderedSame)
    {

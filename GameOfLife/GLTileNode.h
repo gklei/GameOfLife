@@ -28,7 +28,6 @@
 
 @property (nonatomic, retain) SKColor *liveColor;
 @property (nonatomic, retain) SKColor *deadColor;
-@property (nonatomic, retain) SKColor *originalColor;
 
 @property (nonatomic, retain) SKTexture * liveTexture;
 @property (nonatomic, retain) SKTexture * deadTexture;
