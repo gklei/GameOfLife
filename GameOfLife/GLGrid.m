@@ -256,47 +256,6 @@
    _inContinuousLoop = NO;
 }
 
-- (void)resetTilesWithTileArray:(NSMutableArray *)tileArray index:(NSUInteger)tileIndex
-{
-   if (tileIndex >= tileArray.count)
-   {
-      // wait for the last tile to run the clearing actions
-      [self runAction:[SKAction waitForDuration:.4]
-           completion:^
-      {
-         _clearingGrid = NO;
-      }];
-      return;
-   }
-
-   GLTileNode *tile = [tileArray objectAtIndex:tileIndex];
-   GLTileNode *dummyTile = [GLTileNode tileWithTexture:tile.texture
-                                                  rect:tile.frame
-                                           andRotation:0.0];
-   [tile removeFromParent];
-   [self addChild:dummyTile];
-   [self addChild:tile];
-
-   SKAction *scaleUp = [SKAction scaleTo:1.2 duration:.3];
-   scaleUp.timingMode = SKActionTimingEaseIn;
-   SKAction *scaleDown = [SKAction scaleTo:1 duration:.1];
-   SKAction *decreaseAlpha = [SKAction fadeAlphaTo:0 duration:.3];
-   decreaseAlpha.timingMode = SKActionTimingEaseIn;
-   SKAction *rotateAndScaleUp = [SKAction group:@[scaleUp, decreaseAlpha]];
-   SKAction *tileActions = [SKAction sequence:@[rotateAndScaleUp, scaleDown]];
-
-   [tile runAction:tileActions
-        completion:
-    ^{
-       tile.alpha = 1;
-       tile.color = [SKColor colorForCrayolaColorName:tile.deadColorName];
-       tile.isLiving = NO;
-       [dummyTile removeFromParent];
-    }];
-
-   [self resetTilesWithTileArray:tileArray index:++tileIndex];
-}
-
 - (void)prepareForNextRun
 {
    _generationCount = 0;
