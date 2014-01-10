@@ -99,6 +99,7 @@
 		8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */; };
 		8EAA5A10184B29EC008E34D9 /* button.press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA5A0F184B29EC008E34D9 /* button.press.wav */; };
 		8EAA5A12184C22BE008E34D9 /* tile.circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EAA5A11184C22BE008E34D9 /* tile.circle.png */; };
+		8EAD55B91880B40100398596 /* NSString+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAD55B81880B40100398596 /* NSString+Additions.m */; };
 		8EB738CB18709E5300BB58C0 /* UIColor+CrossFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */; };
 		8EB738CE1874B56600BB58C0 /* GLColorPaletteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB738CD1874B56600BB58C0 /* GLColorPaletteManager.m */; };
 		8ECA8984182371AE009D906F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8983182371AE009D906F /* Foundation.framework */; };
@@ -256,6 +257,8 @@
 		8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSettingsLayer.m; sourceTree = "<group>"; };
 		8EAA5A0F184B29EC008E34D9 /* button.press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = button.press.wav; path = "GL Sound FX/button.press.wav"; sourceTree = SOURCE_ROOT; };
 		8EAA5A11184C22BE008E34D9 /* tile.circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.circle.png; path = Images/tile.circle.png; sourceTree = SOURCE_ROOT; };
+		8EAD55B71880B40100398596 /* NSString+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Additions.h"; sourceTree = "<group>"; };
+		8EAD55B81880B40100398596 /* NSString+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Additions.m"; sourceTree = "<group>"; };
 		8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CrossFade.h"; sourceTree = "<group>"; };
 		8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CrossFade.m"; sourceTree = "<group>"; };
 		8EB738CC1874B56600BB58C0 /* GLColorPaletteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorPaletteManager.h; sourceTree = "<group>"; };
@@ -492,6 +495,8 @@
 				8ECA898C182371AE009D906F /* Supporting Files */,
 				8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */,
 				8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */,
+				8EAD55B71880B40100398596 /* NSString+Additions.h */,
+				8EAD55B81880B40100398596 /* NSString+Additions.m */,
 				8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */,
 				8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */,
 			);
@@ -777,6 +782,7 @@
 				8E2FA28A186567B50021A471 /* GLUIActionButton.m in Sources */,
 				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,
 				8E9F2AF2187F667A001669BC /* GLAlertLayer.m in Sources */,
+				8EAD55B91880B40100398596 /* NSString+Additions.m in Sources */,
 				8EAA38B3185E6A6C00DA5CED /* GLSettingsItem.m in Sources */,
 				8E75B04E18490C0A000AEEB8 /* GLGrid.m in Sources */,
 				ED4C6209187B615E0001E7DC /* GLPickerControl.m in Sources */,

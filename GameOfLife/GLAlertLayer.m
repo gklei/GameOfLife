@@ -10,7 +10,7 @@
 
 @interface GLAlertLayer()
 {
-   SKLabelNode *_header;
+   NSMutableArray *_header;
 
    // the body is an array of SKLabelNodes
    NSMutableArray *_body;
@@ -27,21 +27,21 @@
    {
       [self setupHeader];
       [self setupBody];
-
-      [self addChild:_header];
    }
    return self;
 }
 
 - (void)setupHeader
 {
-   _header = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
-   _header.colorBlendFactor = 1.0;
-   _header.color = [SKColor whiteColor];
-   _header.alpha = 5;
-   _header.fontSize = HEADING_FONT_SIZE;
-   _header.position = CGPointMake(self.size.width * 0.5,
-                                  -(HEADING_FONT_SIZE + TOP_PADDING));
+   _header = [NSMutableArray new];
+
+//   _header = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
+//   _header.colorBlendFactor = 1.0;
+//   _header.color = [SKColor whiteColor];
+//   _header.alpha = 5;
+//   _header.fontSize = HEADING_FONT_SIZE;
+//   _header.position = CGPointMake(self.size.width * 0.5,
+//                                  -(HEADING_FONT_SIZE + TOP_PADDING));
 }
 
 - (void)setupBody
@@ -68,7 +68,6 @@
 - (void)setHeaderText:(NSString *)headerText
 {
    _headerText = headerText;
-   _header.text = [self futurizedHeaderString:_headerText];
 }
 
 @end

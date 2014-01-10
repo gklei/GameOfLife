@@ -8,6 +8,7 @@
 
 #import "GLSettingsItem.h"
 #import "GLUIButton.h"
+#import "NSString+Additions.h"
 
 #define TOP_TITLE_LABEL_PADDING 10
 #define LEFT_TITLE_LABEL_PADDING 10
@@ -39,27 +40,11 @@
    return self;
 }
 
-- (NSString *)futurizedString:(NSString *)string
-{
-   if (string == nil)
-      return nil;
-   
-   NSMutableString *futurizedString = [NSMutableString string];
-   
-   for (int i = 0; i < string.length - 1; ++i)
-      [futurizedString appendFormat:@"%c ", [string characterAtIndex:i]];
-   
-   int lastASCII = [string characterAtIndex:string.length - 1];
-   [futurizedString appendFormat:@"%c", lastASCII];
-
-   return futurizedString;
-}
-
 - (void)setupTitle:(NSString *)title
 {
    _itemTitleLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
 
-   _itemTitleLabel.text = [self futurizedString:title];
+   _itemTitleLabel.text = [NSString futurizedString:title];
    _itemTitleLabel.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
    _itemTitleLabel.colorBlendFactor = 1.0;
    _itemTitleLabel.color = [SKColor whiteColor];
@@ -88,7 +73,7 @@
                   CGRectGetWidth(_itemStatusLabel.calculateAccumulatedFrame) * 0.5 -
                   RIGHT_STATUS_LABEL_LABEL_PADDING, 0);
 
-   _itemStatusLabel.text = [self futurizedString:control.stringValue];
+   _itemStatusLabel.text = [NSString futurizedString:control.stringValue];
    [self addChild:_itemStatusLabel];
 }
 
@@ -96,22 +81,22 @@
 {
    _itemUIControl = control;
    _itemUIControl.delegate = self;
-   
-   _itemStatusLabel.text = [self futurizedString:control.longestPossibleStringValue];
-   
+
+   _itemStatusLabel.text = [NSString futurizedString:control.longestPossibleStringValue];
+
    _itemUIControl.position = (_itemStatusLabel.text)?
       CGPointMake(_itemStatusLabel.position.x -
                   CGRectGetWidth(_itemStatusLabel.calculateAccumulatedFrame) * 0.5 -
                   CGRectGetWidth(_itemUIControl.largestPossibleAccumulatedFrame) * 0.5, 0) :
       CGPointMake(CGRectGetWidth(_itemTitleLabel.calculateAccumulatedFrame), 0);
-   
-   _itemStatusLabel.text = [self futurizedString:control.stringValue];
+
+   _itemStatusLabel.text = [NSString futurizedString:control.stringValue];
    [self addChild:_itemUIControl];
 }
 
 - (void)controlValueChangedForKey:(NSString *)key;
 {
-   _itemStatusLabel.text = [self futurizedString:_itemUIControl.stringValue];
+   _itemStatusLabel.text = [NSString futurizedString:_itemUIControl.stringValue];
 }
 
 - (void)setHidden:(BOOL)hidden
