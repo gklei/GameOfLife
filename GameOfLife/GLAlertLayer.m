@@ -18,6 +18,7 @@
 
 @implementation GLAlertLayer
 
+#pragma mark - Init methods
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint
 {
@@ -30,6 +31,7 @@
    return self;
 }
 
+#pragma mark - Setup Methods
 - (void)setupHeader
 {
    _header = [NSMutableArray new];
@@ -38,17 +40,31 @@
 - (void)setupBody
 {
    _body = [NSMutableArray new];
-
 }
 
+#pragma mark - Setter Methods
 - (void)setHeaderText:(NSString *)headerText
 {
    _headerText = headerText;
+   [self addHeaderTextToLayer];
 }
 
 - (void)setBodyText:(NSString *)bodyText
 {
    _bodyText = bodyText;
+   [self addBodyTextToLayer];
+}
+
+#pragma mark - Helper Methods
+- (SKLabelNode *)headerLabelNode
+{
+   SKLabelNode *headerLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
+   headerLabelNode.colorBlendFactor = 1.0;
+   headerLabelNode.color = [SKColor whiteColor];
+   headerLabelNode.alpha = 5;
+   headerLabelNode.fontSize = HEADING_FONT_SIZE;
+
+   return headerLabelNode;
 }
 
 - (SKLabelNode *)bodyLabelNode
@@ -62,15 +78,12 @@
    return bodyLabelNode;
 }
 
-- (SKLabelNode *)headerLabelNode
+- (void)addHeaderTextToLayer
 {
-   SKLabelNode *headerLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
-   headerLabelNode.colorBlendFactor = 1.0;
-   headerLabelNode.color = [SKColor whiteColor];
-   headerLabelNode.alpha = 5;
-   headerLabelNode.fontSize = BODY_FONT_SIZE;
+}
 
-   return headerLabelNode;
+- (void)addBodyTextToLayer
+{
 }
 
 @end
