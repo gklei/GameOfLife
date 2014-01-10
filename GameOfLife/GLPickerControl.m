@@ -9,7 +9,6 @@
 #import "GLPickerControl.h"
 #import "GLTileNode.h"
 #import "GLUIActionButton.h"
-#import "UIColor+Crayola.h"
 
 
 #define IMAGE_X_PADDING 40
@@ -69,19 +68,12 @@
    [node clearActionsAndRestore];
 }
 
-- (void)setLiveColor:(SKColor *)color
-{
-   GLTileNode * node = (GLTileNode *)[self sprite];
-   [node setLiveColor:color];
-   [node clearActionsAndRestore];
-}
-
 @end
 
 //
 // GLPickerControl
 //
-@interface GLPickerControl() <GLTileColorDelegate>
+@interface GLPickerControl()
 {
    NSArray * _imagePairs;
    
@@ -91,8 +83,6 @@
    
    NSString *_preferenceKey;
    HUDItemRange _range;
-   
-   CrayolaColorName _colorName;
 }
 
 @property (nonatomic, strong) NSArray *items;
@@ -114,12 +104,6 @@
    [hudManager addObserver:self forKeyPath:@"GridImageIndex"];
 }
 
-- (void)observeGridLiveColorNameChanges
-{
-   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
-   [hudManager addObserver:self forKeyPath:@"GridLiveColorName"];
-}
-
 - (id)initWithHUDPickerItemDescription:(HUDPickerItemDescription *)itemDesc
 {
    if (self = [super init])
@@ -137,8 +121,6 @@
       
       NSNumber * value = [[NSUserDefaults standardUserDefaults] objectForKey:@"GridImageIndex"];
       [self setupImagePairs:[value unsignedIntegerValue]];
-      
-      [self observeGridLiveColorNameChanges];
    }
    
    return self;
@@ -222,11 +204,6 @@
    return result;
 }
 
-- (SKColor *)currentTileColor
-{
-   return [UIColor colorForCrayolaColorName:_colorName];
-}
-
 - (void)setupSoundFX
 {
    _pressReleaseSoundFX = [SKAction playSoundFileNamed:@"toggle.1.wav" waitForCompletion:NO];
@@ -250,17 +227,6 @@
       [item setIsLiving:(item.imageIndex == index)];
 }
 
-- (void)updateImageColorName:(CrayolaColorName)colorName
-{
-   SKColor * color = [UIColor colorForCrayolaColorName:colorName];
-   if (color)
-   {
-      _colorName = colorName;
-      for (GLPickerItem *item in self.items)
-         [item setLiveColor:color];
-   }
-}
-
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
 {
    if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
@@ -275,11 +241,6 @@
       NSUInteger imageIndex = [value unsignedLongValue];
       [self updateImageIndex:imageIndex];
       if (_shouldPlaySound && self.items) [self runAction:_pressReleaseSoundFX];
-   }
-   else if ([keyPath compare:@"GridLiveColorName"] == NSOrderedSame)
-   {
-      assert(type == HVT_UINT);
-      [self updateImageColorName:[value unsignedIntValue]];
    }
 }
 

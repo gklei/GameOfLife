@@ -7,10 +7,20 @@
 //
 
 #import "GLTileNode.h"
+#import "GLHUDSettingsManager.h"
 
 #define TILE_SCALE_DEFAULT       1
 #define TILE_SCALE_FOCUSED       1.3
 #define LIVE_COLOR_BLEND_FACTOR  0.95
+
+@interface GLTileNode() <HUDSettingsObserver>
+
+@property (nonatomic, retain) SKColor *liveColor;
+
+- (SKColor *)getLivingTileColor;
+- (void)updateColor;
+
+@end
 
 @implementation GLTileNode
 
@@ -73,16 +83,21 @@
    tile.deadColorName = CCN_crayolaCoconutColor;
    tile.boardMaxDistance = 10000;
    tile.maxColorDistance = tile.boardMaxDistance;
+   [tile observeGridLiveColorNameChanges];
    
    return tile;
 }
 
+- (void)observeGridLiveColorNameChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"GridLiveColorName"];
+}
+
 - (float)calcDistanceFromStart:(CGPoint)start toEnd:(CGPoint)end
 {
-   float dist;// = 0;
-//   if ((start.x != end.x) || (start.y != end.y))
-      dist = sqrt((start.x - end.x) * (start.x - end.x) +
-                  (start.y - end.y) * (start.y - end.y));
+   float dist = sqrt((start.x - end.x) * (start.x - end.x) +
+                     (start.y - end.y) * (start.y - end.y));
    return dist;
 }
 
@@ -177,7 +192,7 @@
       return;
 
    _isLiving = living;
-   [self swapTextures];
+   [self swapTextures]; 
 }
 
 - (void)setLiveRotation:(double)rotation
@@ -194,16 +209,10 @@
       self.zRotation = _deadRotation;
 }
 
-- (void)updateLivingAndColor:(BOOL)living
-{
-   self.isLiving = living;
-   [self updateColor];
-}
-
 - (void)clearTile
 {
    self.isLiving = NO;
-   \
+   
    SKColor *deadColor = [SKColor colorForCrayolaColorName:_deadColorName];
    SKAction *changeColor = [SKAction colorizeWithColor:deadColor
                                       colorBlendFactor:0.0
@@ -225,6 +234,20 @@
    [self removeAllActions];
    self.color = _isLiving? [self getNextColor] : [SKColor colorForCrayolaColorName:_deadColorName];
    self.colorBlendFactor = _isLiving? LIVE_COLOR_BLEND_FACTOR : 0.0;
+}
+
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+{
+   if ([keyPath compare:@"GridLiveColorName"] == NSOrderedSame)
+   {
+      assert(type == HVT_UINT);
+      SKColor * color = [UIColor colorForCrayolaColorName:[value unsignedIntValue]];
+      if (color)
+      {
+         self.liveColor = color;
+         [self clearActionsAndRestore];
+      }
+   }
 }
 
 @end

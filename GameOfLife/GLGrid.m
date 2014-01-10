@@ -17,7 +17,7 @@
 #define DEAD   NO
 #define TILESIZE CGSizeMake(20, 20)
 
-@interface GLGrid() <GLTileColorDelegate>
+@interface GLGrid()
 {
    std::vector<BOOL> _storedTileStates;
    std::vector<BOOL> _nextGenerationTileStates;
@@ -79,7 +79,6 @@
                                                                    TILESIZE.width - 1,
                                                                    TILESIZE.height - 1)
                                             andRotation:textureRotation];
-         tile.liveColor = color;
          tile.deadRotation = textureRotation;
          [self addChild:tile];
       }
@@ -218,11 +217,9 @@
       CGPoint center = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
                                    _dimensions.rows * TILESIZE.height * 0.5);
       
-      SKColor *liveColor = [UIColor colorForCrayolaColorName:_currentColorName];
       for (int i = 0; i < _tiles.count; ++i)
       {
          GLTileNode * tile = [_tiles objectAtIndex:i];
-         if (liveColor) tile.liveColor = liveColor;
          tile.isLiving = _storedTileStates[i];
          [tile setColorCenter:center];
          [tile clearActionsAndRestore];
@@ -326,20 +323,6 @@
    }
 }
 
-- (void)setLiveColorName:(CrayolaColorName)colorName
-{
-   SKColor * liveColor = [UIColor colorForCrayolaColorName:colorName];
-   if (liveColor)
-   {
-      _currentColorName = colorName;
-      for (GLTileNode *tile in _tiles)
-      {
-         tile.liveColor = liveColor;
-         [tile clearActionsAndRestore];
-      }
-   }
-}
-
 - (void)setTilesBirthingDuration:(float)bDuration
                    dyingDuration:(float)dDuration
 {
@@ -357,12 +340,6 @@
          return YES;
    
    return NO;
-}
-
-#pragma mark GLTileColor Delegate Methods
-- (SKColor *)currentTileColor
-{
-   return [UIColor colorForCrayolaColorName:_currentColorName];
 }
 
 #pragma mark Helper Methods
