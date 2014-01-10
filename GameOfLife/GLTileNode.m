@@ -192,8 +192,7 @@
       return;
 
    _isLiving = living;
-   [self swapTextures];
-   [self updateColor];
+   [self swapTextures]; 
 }
 
 - (void)setLiveRotation:(double)rotation
