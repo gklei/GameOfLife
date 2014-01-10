@@ -10,9 +10,8 @@
 
 @interface GLAlertLayer()
 {
+   // the header and body will be an array of label nodes
    NSMutableArray *_header;
-
-   // the body is an array of SKLabelNodes
    NSMutableArray *_body;
 }
 @end
@@ -34,40 +33,44 @@
 - (void)setupHeader
 {
    _header = [NSMutableArray new];
-
-//   _header = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
-//   _header.colorBlendFactor = 1.0;
-//   _header.color = [SKColor whiteColor];
-//   _header.alpha = 5;
-//   _header.fontSize = HEADING_FONT_SIZE;
-//   _header.position = CGPointMake(self.size.width * 0.5,
-//                                  -(HEADING_FONT_SIZE + TOP_PADDING));
 }
 
 - (void)setupBody
 {
    _body = [NSMutableArray new];
-}
 
-- (NSString *)futurizedHeaderString:(NSString *)string
-{
-   if (string == nil)
-      return nil;
-
-   NSMutableString *futurizedString = [NSMutableString string];
-
-   for (int i = 0; i < string.length - 1; ++i)
-      [futurizedString appendFormat:@"%c ", [string characterAtIndex:i]];
-
-   int lastASCII = [string characterAtIndex:string.length - 1];
-   [futurizedString appendFormat:@"%c", lastASCII];
-
-   return futurizedString;
 }
 
 - (void)setHeaderText:(NSString *)headerText
 {
    _headerText = headerText;
+}
+
+- (void)setBodyText:(NSString *)bodyText
+{
+   _bodyText = bodyText;
+}
+
+- (SKLabelNode *)bodyLabelNode
+{
+   SKLabelNode *bodyLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
+   bodyLabelNode.colorBlendFactor = 1.0;
+   bodyLabelNode.color = [SKColor whiteColor];
+   bodyLabelNode.alpha = 5;
+   bodyLabelNode.fontSize = BODY_FONT_SIZE;
+
+   return bodyLabelNode;
+}
+
+- (SKLabelNode *)headerLabelNode
+{
+   SKLabelNode *headerLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
+   headerLabelNode.colorBlendFactor = 1.0;
+   headerLabelNode.color = [SKColor whiteColor];
+   headerLabelNode.alpha = 5;
+   headerLabelNode.fontSize = BODY_FONT_SIZE;
+
+   return headerLabelNode;
 }
 
 @end
