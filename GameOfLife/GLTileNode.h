@@ -23,7 +23,6 @@
 @property (nonatomic, assign, setter = setLiveRotation:) double liveRotation;
 @property (nonatomic, assign, setter = setDeadRotation:) double deadRotation;
 
-@property (nonatomic, assign) CrayolaColorName liveColorName;
 @property (nonatomic, assign) CrayolaColorName deadColorName;
 
 @property (nonatomic, retain) SKColor *liveColor;
@@ -34,8 +33,6 @@
 @property (nonatomic, assign) float boardMaxDistance; // should be global, not per tile
 @property (nonatomic, assign) float maxColorDistance;
 @property (nonatomic, assign) CGPoint colorCenter;
-
-@property (strong, nonatomic) id<GLTileColorDelegate> tileColorDelegate;
 
 + (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation;
 

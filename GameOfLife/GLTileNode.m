@@ -70,7 +70,6 @@
    tile.loseFocusActionBlock = loseFocusActionBlock;
 
    tile.color = [SKColor crayolaCoconutColor];
-   tile.liveColorName = CCN_crayolaMulberryColor - 1;
    tile.deadColorName = CCN_crayolaCoconutColor;
    tile.boardMaxDistance = 10000;
    tile.maxColorDistance = tile.boardMaxDistance;
@@ -99,10 +98,7 @@
 - (SKColor *)getLivingTileColor
 {
    float dist = [self colorDistance] * 1.15;
-
-   // uses the current selected swatch color as the base color
-   _liveColor = [_tileColorDelegate currentTileColor];
-
+   
    CGFloat r, g, b;
 
    if ([_liveColor getRed:&r green:&g blue:&b alpha:nil])
@@ -115,12 +111,9 @@
 }
 
 // gets called while the algorithm is running
-- (SKColor *)getNextColor:(CrayolaColorName *)colorName
+- (SKColor *)getNextColor
 {
    float dist = [self colorDistance] * 1.15;
-
-   if (!_liveColor)
-      _liveColor = [_tileColorDelegate currentTileColor];
 
    CGFloat r, g, b;
 
@@ -137,7 +130,7 @@
 {
    float duration = (_isLiving)? _birthingDuration : _dyingDuration;
    
-   SKColor *newColor = (_isLiving)? [self getNextColor:&_liveColorName] :
+   SKColor *newColor = (_isLiving)? [self getNextColor] :
                                     [SKColor colorForCrayolaColorName:_deadColorName];
    
    SKAction *changeColor = [SKAction colorizeWithColor:newColor
@@ -183,9 +176,6 @@
    if (_isLiving == living)
       return;
 
-   if (!living)
-      _liveColor = nil;
-
    _isLiving = living;
    [self swapTextures];
 }
@@ -213,8 +203,7 @@
 - (void)clearTile
 {
    self.isLiving = NO;
-   _liveColor = [_tileColorDelegate currentTileColor];
-
+   \
    SKColor *deadColor = [SKColor colorForCrayolaColorName:_deadColorName];
    SKAction *changeColor = [SKAction colorizeWithColor:deadColor
                                       colorBlendFactor:0.0
@@ -234,19 +223,8 @@
 - (void)clearActionsAndRestore
 {
    [self removeAllActions];
-   
-   _liveColor = [_tileColorDelegate currentTileColor];
-   
-   if (_isLiving)
-   {
-      self.color = [self getNextColor:CCN_crayolaAbsoluteZeroColor];
-      self.colorBlendFactor = LIVE_COLOR_BLEND_FACTOR;
-   }
-   else
-   {
-      self.color = [SKColor colorForCrayolaColorName:_deadColorName];
-      self.colorBlendFactor = 0.0;
-   }
+   self.color = _isLiving? [self getNextColor] : [SKColor colorForCrayolaColorName:_deadColorName];
+   self.colorBlendFactor = _isLiving? LIVE_COLOR_BLEND_FACTOR : 0.0;
 }
 
 @end

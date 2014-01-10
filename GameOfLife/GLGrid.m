@@ -26,8 +26,7 @@
 
    BOOL _clearingGrid;
    BOOL _running;
-
-   NSMutableArray *_potentialTileColors;
+   
    CrayolaColorName _currentColorName;
 }
 
@@ -39,10 +38,8 @@
 - (id)initWithSize:(CGSize)size
 {
    if (self = [super init])
-   {
-      _potentialTileColors = [NSMutableArray new];
       [self setupGridWithSize:size];
-   }
+   
    return self;
 }
 
@@ -82,7 +79,6 @@
                                                                    TILESIZE.width - 1,
                                                                    TILESIZE.height - 1)
                                             andRotation:textureRotation];
-         tile.tileColorDelegate = self;
          tile.liveColor = color;
          tile.deadRotation = textureRotation;
          [self addChild:tile];
@@ -454,10 +450,7 @@
 
    tile = [_tiles objectAtIndex:neighborIndex];
    if (tile.isLiving)
-   {
-      [_potentialTileColors addObject:tile.liveColor];
       ++liveCount;
-   }
 
    // south
    neighborIndex = index - _dimensions.columns;
@@ -466,10 +459,7 @@
 
    tile = [_tiles objectAtIndex:neighborIndex];
    if (tile.isLiving)
-   {
-      [_potentialTileColors addObject:tile.liveColor];
       ++liveCount;
-   }
 
    return liveCount;
 }
@@ -484,10 +474,7 @@
 
    GLTileNode *eastTile = [_tiles objectAtIndex:neighborIdx];
    if (eastTile.isLiving)
-   {
-      [_potentialTileColors addObject:eastTile.liveColor];
       ++result;
-   }
 
    result += [self getNorthSouthTileLiveCountForTileAtIndex:neighborIdx];
 
@@ -504,10 +491,7 @@
 
    GLTileNode *westTile = [_tiles objectAtIndex:neighborIdx];
    if (westTile.isLiving)
-   {
-      [_potentialTileColors addObject:westTile.liveColor];
       ++result;
-   }
 
    result += [self getNorthSouthTileLiveCountForTileAtIndex:neighborIdx];
 
@@ -525,7 +509,6 @@
 
 - (BOOL)getIsLivingForNextGenerationAtIndex:(int)index
 {
-   [_potentialTileColors removeAllObjects];
    int liveCount = [self getNorthSouthTileLiveCountForTileAtIndex:index];
    liveCount += [self getEastTileLiveCountForTileAtIndex:index];
 
@@ -536,14 +519,7 @@
    GLTileNode * tile = [_tiles objectAtIndex:index];
 
    // behold, the meaning of life (all in one statement)
-   if ((tile.isLiving && liveCount == 2) || (liveCount == 3))
-   {
-      tile.liveColor = (tile.isLiving)? tile.liveColor :
-                                        [_potentialTileColors objectAtIndex:arc4random_uniform(3)];
-      return LIVING;
-   }
-   else
-      return DEAD;
+   return ((tile.isLiving && liveCount == 2) || (liveCount == 3)) ? LIVING : DEAD;
 }
 
 - (void)updateColorCenter
