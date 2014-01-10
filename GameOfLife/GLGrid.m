@@ -239,7 +239,10 @@
 - (void)resetGrid
 {
    for (GLTileNode *tile in _tiles)
+   {
+      [tile clearActionsAndRestore];
       [tile clearTile];
+   }
    
    _inContinuousLoop = NO;
 }

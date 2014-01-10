@@ -201,12 +201,12 @@
       //                  live image,            dead image
       _gridImagePairs = @[@"",                   @"tile.square.png",
                           @"",                   @"tile.ring.png",
-                          @"",                   @"tile.ring3d.png",
                           @"",                   @"tile.circle.png",
-                          @"",                   @"tile.cylinder.png",
-                          @"",                   @"tile.buldge.png",
                           @"tile.smiley.png",    @"tile.frowny.png",
-                          @"",                   @"tile.leaf.png"];
+                          @"",                   @"tile.square3d.png",
+                          @"",                   @"tile.ring3d.png",
+                          @"",                   @"tile.cylinder.png",
+                          @"",                   @"tile.buldge.png"];
 
       [self registerHudParameters];
 
@@ -710,16 +710,16 @@
 - (double)rotationForImageIndex:(NSInteger)imageIndex
 {
    double result = 0;
-   
+
    switch (imageIndex)
    {
       case 0:
          result = -M_PI_2;
          break;
-      case 4:
-      case 6:
       case 8:
       case 10:
+      case 12:
+      case 14:
          result = -M_PI;
          break;
       default:

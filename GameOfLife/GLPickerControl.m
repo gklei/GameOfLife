@@ -208,10 +208,10 @@
       case 0:
          result = -M_PI_2;
          break;
-      case 4:
-      case 6:
       case 8:
       case 10:
+      case 12:
+      case 14:
          result = -M_PI;
          break;
       default:

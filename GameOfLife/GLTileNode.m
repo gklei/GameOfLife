@@ -8,8 +8,9 @@
 
 #import "GLTileNode.h"
 
-#define TILE_SCALE_DEFAULT 1
-#define TILE_SCALE_FOCUSED 1.3
+#define TILE_SCALE_DEFAULT       1
+#define TILE_SCALE_FOCUSED       1.3
+#define TILE_COLOR_BLEND_FACTOR  0.9
 
 @implementation GLTileNode
 
@@ -20,7 +21,7 @@
    tile.position = CGPointMake(rect.origin.x + rect.size.width * 0.5,
                                rect.origin.y + rect.size.height * 0.5);
    tile.size = rect.size;
-   tile.colorBlendFactor = 1.0;
+   tile.colorBlendFactor = TILE_COLOR_BLEND_FACTOR;
    tile.isLiving = NO;
    tile.scalesOnTouch = NO;
    tile.liveRotation = rotation;
@@ -140,7 +141,7 @@
                                     [SKColor colorForCrayolaColorName:_deadColorName];
    
    SKAction *changeColor = [SKAction colorizeWithColor:newColor
-                                      colorBlendFactor:1.0
+                                      colorBlendFactor:TILE_COLOR_BLEND_FACTOR
                                               duration:duration];
    
    changeColor.timingMode = SKActionTimingEaseIn;
@@ -238,8 +239,8 @@
    
    if (_isLiving)
    {
-      self.color = _liveColor;
-      self.colorBlendFactor = 1.0;
+      self.color = [self getNextColor:CCN_crayolaAbsoluteZeroColor];
+      self.colorBlendFactor = TILE_COLOR_BLEND_FACTOR;
    }
    else
    {
