@@ -65,14 +65,15 @@
 - (void)setIsLiving:(BOOL)living
 {
    GLTileNode * node = (GLTileNode *)[self sprite];
-   [node updateLivingAndColor:living];
+   node.isLiving = living;
+   [node clearActionsAndRestore];
 }
 
-- (void)setColor:(SKColor *)color
+- (void)setLiveColor:(SKColor *)color
 {
    GLTileNode * node = (GLTileNode *)[self sprite];
    [node setLiveColor:color];
-   [node updateLivingAndColor:node.isLiving];
+   [node clearActionsAndRestore];
 }
 
 @end
@@ -133,10 +134,11 @@
       [self setupSoundFX];
       [self observeSoundFxChanges];
       [self observeGridImageIndexChanges];
-      [self observeGridLiveColorNameChanges];
       
       NSNumber * value = [[NSUserDefaults standardUserDefaults] objectForKey:@"GridImageIndex"];
       [self setupImagePairs:[value unsignedIntegerValue]];
+      
+      [self observeGridLiveColorNameChanges];
    }
    
    return self;
@@ -165,7 +167,6 @@
                                          andRotation:rotation];
       tile.deadRotation = 0;
       tile.position = CGPointMake(xPos, yPos);
-      tile.tileColorDelegate = self;
       
       NSString * liveName = [_imagePairs objectAtIndex:imageIndex];
       if (liveName.length > 0)
@@ -256,7 +257,7 @@
    {
       _colorName = colorName;
       for (GLPickerItem *item in self.items)
-         [item setColor:color];
+         [item setLiveColor:color];
    }
 }
 

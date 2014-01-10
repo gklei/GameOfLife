@@ -87,13 +87,4 @@
    [_swatchSelectionDelegate swatchSelected:self];
 }
 
-//- (void)handleTouchEnded:(UITouch *)touch
-//{
-//   if ([self.hitBox containsPoint:[touch locationInNode:self]])
-//   {
-//      [self toggle];
-//   }
-//   [super handleTouchEnded:touch];
-//}
-
 @end
