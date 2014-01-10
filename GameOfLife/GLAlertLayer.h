@@ -10,4 +10,7 @@
 
 @interface GLAlertLayer : GLMenuLayer
 
+@property (nonatomic, strong) SKLabelNode *header;
+@property (nonatomic, strong) SKLabelNode *body;
+
 @end
