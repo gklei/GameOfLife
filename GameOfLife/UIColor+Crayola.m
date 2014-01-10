@@ -1383,7 +1383,6 @@
 	if (!cache)
 	{
 		cache = [NSCache new];
-
 		[cache setName:@"UIColor+Crayola"];
 	}
 
@@ -1394,7 +1393,6 @@
 	if (!color)
 	{
 		color = [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
-
 		[cache setObject:color forKey:cacheKey];
 	}
 

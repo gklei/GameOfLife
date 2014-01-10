@@ -230,4 +230,22 @@
    [self swapTextures];
 }
 
+- (void)clearActionsAndRestore
+{
+   [self removeAllActions];
+   
+   _liveColor = [_tileColorDelegate currentTileColor];
+   
+   if (_isLiving)
+   {
+      self.color = _liveColor;
+      self.colorBlendFactor = 1.0;
+   }
+   else
+   {
+      self.color = [SKColor colorForCrayolaColorName:_deadColorName];
+      self.colorBlendFactor = 0.0;
+   }
+}
+
 @end

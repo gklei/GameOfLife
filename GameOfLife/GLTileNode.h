@@ -27,7 +27,6 @@
 @property (nonatomic, assign) CrayolaColorName deadColorName;
 
 @property (nonatomic, retain) SKColor *liveColor;
-@property (nonatomic, retain) SKColor *deadColor;
 
 @property (nonatomic, retain) SKTexture * liveTexture;
 @property (nonatomic, retain) SKTexture * deadTexture;
@@ -45,5 +44,6 @@
 - (void)updateColor;
 - (void)clearTile;
 - (void)updateTextures;
+- (void)clearActionsAndRestore;
 
 @end
