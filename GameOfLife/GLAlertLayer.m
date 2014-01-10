@@ -46,13 +46,13 @@
 - (void)setHeaderText:(NSString *)headerText
 {
    _headerText = headerText;
-   [self addHeaderTextToLayer];
+   [self addHeaderTextToLayer:_headerText];
 }
 
 - (void)setBodyText:(NSString *)bodyText
 {
    _bodyText = bodyText;
-   [self addBodyTextToLayer];
+   [self addBodyTextToLayer:_bodyText];
 }
 
 #pragma mark - Helper Methods
@@ -78,11 +78,11 @@
    return bodyLabelNode;
 }
 
-- (void)addHeaderTextToLayer
+- (void)addHeaderTextToLayer:(NSString *)headerText
 {
 }
 
-- (void)addBodyTextToLayer
+- (void)addBodyTextToLayer:(NSString *)bodyText
 {
 }
 
