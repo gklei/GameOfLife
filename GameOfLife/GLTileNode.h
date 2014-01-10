@@ -10,11 +10,6 @@
 #import "UIColor+Crayola.h"
 #import "GLUIActionButton.h"
 
-@class GLTileNode;
-@protocol GLTileColorDelegate <NSObject>
-   - (SKColor *)currentTileColor;
-@end
-
 @interface GLTileNode : GLUIActionButton
 
 @property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
@@ -25,8 +20,6 @@
 
 @property (nonatomic, assign) CrayolaColorName deadColorName;
 
-@property (nonatomic, retain) SKColor *liveColor;
-
 @property (nonatomic, retain) SKTexture * liveTexture;
 @property (nonatomic, retain) SKTexture * deadTexture;
 
@@ -36,9 +29,6 @@
 
 + (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation;
 
-- (void)updateLivingAndColor:(BOOL)living;
-- (SKColor *)getLivingTileColor;
-- (void)updateColor;
 - (void)clearTile;
 - (void)updateTextures;
 - (void)clearActionsAndRestore;

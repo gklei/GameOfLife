@@ -177,12 +177,6 @@
    [hudManager addObserver:self forKeyPath:@"GridImageIndex"];
 }
 
-- (void)observeGridLiveColorNameChanges
-{
-   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
-   [hudManager addObserver:self forKeyPath:@"GridLiveColorName"];
-}
-
 - (void)observeHudParameterChanges
 {
    [self observeSoundFxChanges];
@@ -190,7 +184,6 @@
    [self observeLoopDetectionChanges];
    [self observeGeneralDurationChanges];
    [self observeGridImageIndexChanges];
-   [self observeGridLiveColorNameChanges];
 }
 
 #pragma mark - Initializer Method
@@ -702,7 +695,7 @@
       
       _currentTileBeingTouched = tile;
       if (_shouldPlaySound) [self runAction:soundFX];
-      [tile updateLivingAndColor:!tile.isLiving];
+      tile.isLiving = !tile.isLiving;
       [_grid storeGridState];
    }
 }
@@ -750,12 +743,6 @@
    {
       assert(type == HVT_FLOAT);
       [self updateGenerationDuration:[value floatValue]];
-   }
-   else if ([keyPath compare:@"GridLiveColorName"] == NSOrderedSame)
-   {
-      assert(type == HVT_UINT);
-      CrayolaColorName colorName = (CrayolaColorName)[value unsignedIntValue];
-      [_grid setLiveColorName:colorName];
    }
    else if ([keyPath compare:@"SmartMenu"] == NSOrderedSame)
    {
