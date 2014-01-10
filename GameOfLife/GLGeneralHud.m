@@ -359,9 +359,7 @@
       [self expandSettingsWithCompletionBlock:^
        {
           if (_settingsAreExpanded)
-          {
              _settingsLayer.hidden = NO;
-          }
        }];
 }
 

@@ -8,6 +8,7 @@
 
 #import "GLGridScene.h"
 
+#import "GLAlertLayer.h"
 #import "GLGrid.h"
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
@@ -419,6 +420,15 @@
 
 - (void)screenShotButtonPressed
 {
+   CGSize alertSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 100);
+   GLAlertLayer *alert = [[GLAlertLayer alloc] initWithSize:alertSize
+                                                anchorPoint:CGPointMake(0, 1)];
+
+   alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
+   alert.color = [SKColor crayolaBlackCoralPearlColor];
+   alert.alpha = .8;
+   alert.headerText = @"ALERT!";
+   [self addChild:alert];
 }
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
