@@ -317,6 +317,40 @@
    [_grid clearGrid];
 }
 
+-(void)removeAllAlerts
+{
+   NSMutableArray * removable = [[NSMutableArray alloc] init];
+   
+   NSArray * children = [self children];
+   for (id child in children)
+      if ([child isKindOfClass:[GLAlertLayer class]])
+         [removable addObject:child];
+   
+   [self removeChildrenInArray:removable];
+}
+
+- (void)showGenerationCountAlert
+{
+   unsigned long genCount = [_grid generationCount];
+   if (genCount)
+   {
+      [self removeAllAlerts];
+      
+      CGSize alertSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 100);
+      GLAlertLayer *alert = [[GLAlertLayer alloc] initWithSize:alertSize
+                                                   anchorPoint:CGPointMake(0, 1)];
+      alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
+      
+      NSString * header = [NSString stringWithFormat:@"You had %lu generation", genCount];
+      if (genCount > 1)
+         header = [header stringByAppendingString:@"s"];
+      
+      alert.headerText = [header stringByAppendingString:@"!"];;
+      
+      [self addChild:alert];
+   }
+}
+
 #pragma mark - GLGeneralHud Delegate Methods
 - (void)clearButtonPressed
 {
@@ -330,6 +364,8 @@
                                             withSound:NO];
    }
    [_grid clearGrid];
+   
+   [self removeAllAlerts];
 }
 
 - (void)restoreButtonPressed
@@ -345,6 +381,7 @@
    }
    
    [_grid restoreGrid];
+   [self removeAllAlerts];
 }
 
 - (void)updateGenerationDuration:(float)duration
@@ -365,6 +402,7 @@
 
    [_grid toggleRunning:!_running];
    _running = !_running;
+   
    [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
                                          withSound:!_autoShowHideHudForStartStop];
    
@@ -377,6 +415,11 @@
       else
          _generalHudShouldExpand = YES;
    }
+   
+   if (_running)
+      [self removeAllAlerts];
+   else
+      [self showGenerationCountAlert];
 }
 
 - (void)takeScreenShot
@@ -701,6 +744,8 @@
 #pragma mark Helper Methods
 - (void)toggleLivingForTileAtTouch:(UITouch *)touch withSoundFX:(SKAction *)soundFX
 {
+   [self removeAllAlerts];
+   
    GLTileNode *tile = [_grid tileAtTouch:touch];
    if (_currentTileBeingTouched != tile)
    {
