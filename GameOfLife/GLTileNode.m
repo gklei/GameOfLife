@@ -55,6 +55,8 @@
          scaleUp.timingMode = SKActionTimingEaseInEaseOut;
 
          tile.isLiving = YES;
+         [tile clearActionsAndRestore:YES];
+         tile.isLiving = NO;
          
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
@@ -78,8 +80,7 @@
          if (tile.xScale != TILE_SCALE_DEFAULT || tile.yScale != TILE_SCALE_DEFAULT)
             [tile setScale:TILE_SCALE_DEFAULT];
          
-         tile.color = (tile.isLiving)? [tile getLivingTileColor] :
-                                       [SKColor colorForCrayolaColorName:tile.deadColorName];
+         [tile clearActionsAndRestore:YES];
       }];
    };
 
