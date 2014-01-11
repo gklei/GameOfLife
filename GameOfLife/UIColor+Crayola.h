@@ -291,7 +291,7 @@ typedef enum
 // wrap through the color names
 + (CrayolaColorName)getPreviousColorName:(CrayolaColorName)colorName;
 + (CrayolaColorName)getNextColorName:(CrayolaColorName)colorName;
-+ (CrayolaColorName)getColorNameForIndex:(NSUInteger)index;
++ (CrayolaColorName)getColorNameForIndex:(NSInteger)index;
 
 // get a color from a color name
 + (instancetype)colorForCrayolaColorName:(CrayolaColorName)colorName;

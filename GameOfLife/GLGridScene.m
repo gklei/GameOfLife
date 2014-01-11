@@ -139,7 +139,8 @@
 
 - (void)registerGenerationTracking
 {
-   [self registerToggleItemWithLabel:@"Tracking" andKeyPath:@"TileGenerationTracking"];
+   [self registerToggleItemWithLabel:@"COLOR FOR GENERATION"
+                          andKeyPath:@"TileGenerationTracking"];
 }
 
 - (void)registerHudParameters

@@ -15,7 +15,7 @@
 
 @interface GLTileNode() <HUDSettingsObserver>
 {
-   NSUInteger _generationCount;
+   NSInteger _generationCount;
 }
 
 @property (nonatomic, assign) BOOL trackGeneration;
@@ -54,7 +54,11 @@
          rotateRight.timingMode = SKActionTimingEaseInEaseOut;
          scaleUp.timingMode = SKActionTimingEaseInEaseOut;
          
+         // uncomment both tile.isLiving statements to to make tiles animate
+         // in the living color, regardless of the _trackGeneration flag
+//         tile.isLiving = YES;
          [tile restoreAsLiving];
+//         tile.isLiving = NO;
          
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
@@ -78,7 +82,10 @@
          if (tile.xScale != TILE_SCALE_DEFAULT || tile.yScale != TILE_SCALE_DEFAULT)
             [tile setScale:TILE_SCALE_DEFAULT];
          
-         [tile clearActionsAndRestore:YES];
+         if (tile.isLiving)
+            [tile restoreAsLiving];
+         else
+            [tile restoreAsDead];
       }];
    };
 
