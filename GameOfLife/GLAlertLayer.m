@@ -7,6 +7,7 @@
 //
 
 #import "GLAlertLayer.h"
+#import "NSString+Additions.h"
 
 @interface GLAlertLayer()
 {
@@ -35,23 +36,25 @@
 - (void)setupHeader
 {
    _header = [NSMutableArray new];
+   [_header addObject:[self headerLabelNode]];
 }
 
 - (void)setupBody
 {
    _body = [NSMutableArray new];
+   [_body addObject:[self bodyLabelNode]];
 }
 
 #pragma mark - Setter Methods
 - (void)setHeaderText:(NSString *)headerText
 {
-   _headerText = headerText;
+   _headerText = [NSString futurizedString:headerText];
    [self addHeaderTextToLayer:_headerText];
 }
 
 - (void)setBodyText:(NSString *)bodyText
 {
-   _bodyText = bodyText;
+   _bodyText = [NSString futurizedString:bodyText];
    [self addBodyTextToLayer:_bodyText];
 }
 
