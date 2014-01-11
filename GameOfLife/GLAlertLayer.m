@@ -8,6 +8,7 @@
 
 #import "GLAlertLayer.h"
 #import "NSString+Additions.h"
+#import "UIColor+Crayola.h"
 
 @interface GLAlertLayer()
 {
@@ -26,6 +27,9 @@
    if (self = [super initWithSize:size
                       anchorPoint:anchorPoint])
    {
+      self.color = [SKColor crayolaBlackCoralPearlColor];
+      self.alpha = .8;
+      
       [self setupHeader];
       [self setupBody];
    }

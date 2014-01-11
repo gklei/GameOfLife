@@ -30,7 +30,7 @@
    if (self = [super init])
    {
       _hitBox = [SKSpriteNode node];
-      _hitBox.name = @"ui_control_hit_box";
+      _hitBox.name = @"ui_button_hit_box";
       _glowEnabled = YES;
       _scalesOnTouch = YES;
       _scaleUp = [SKAction scaleBy:ON_TOUCH_SCALE duration:SCALING_ANIMATION_DURATION];

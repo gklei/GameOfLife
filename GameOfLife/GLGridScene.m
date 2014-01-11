@@ -418,9 +418,8 @@
                                                 anchorPoint:CGPointMake(0, 1)];
 
    alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
-   alert.color = [SKColor crayolaBlackCoralPearlColor];
-   alert.alpha = .8;
    alert.headerText = @"THIS IS A VERY VERY VERY VERY LONG TEST ALERT HEADER MESSAGE!";
+   
    [self addChild:alert];
 }
 
@@ -485,7 +484,7 @@
    }
 
    for (SKNode *node in [self nodesAtPoint:_locationOfFirstTouch])
-      if ([node.name isEqualToString:@"ui_control_hit_box"] && !node.parent.parent.hidden)
+      if ([node.name isEqualToString:@"ui_button_hit_box"] && !node.parent.parent.hidden)
       {
          _focusedButton = (GLUIButton *)node.parent.parent;
          [_focusedButton handleTouchBegan:touch];
