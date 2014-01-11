@@ -84,22 +84,22 @@
 - (void)addHeaderTextToLayer:(NSString *)headerText
 {
    // separate words by two spaces because the string is FUTURIZED
-   NSArray *words = [headerText componentsSeparatedByString:@"  "];
+   NSArray *headerTextWords = [headerText componentsSeparatedByString:@"  "];
    int lineIndex = 0;
 
-   ((SKLabelNode *)[_header objectAtIndex:lineIndex]).text = [words objectAtIndex:0];
+   ((SKLabelNode *)[_header objectAtIndex:lineIndex]).text = [headerTextWords objectAtIndex:0];
 
    // initial check to see if the first word in the header text is too large to display
    if (![self labelFitsInFrame:[_header objectAtIndex:lineIndex]])
    {
       NSLog(@"GLAlertLayer: cannot set header text becuase the word '%@' will not fit",
-            [words objectAtIndex:0]);
+            [headerTextWords objectAtIndex:0]);
       return;
    }
 
-   for (NSString *word in words)
+   for (NSString *word in headerTextWords)
    {
-      if ([word isEqual:words.firstObject]) continue;
+      if ([word isEqual:headerTextWords.firstObject]) continue;
 
       NSString *currentStr = ((SKLabelNode *)[_header objectAtIndex:lineIndex]).text;
       NSString *nextStr = [currentStr stringByAppendingString:[NSString stringWithFormat:@"  %@", word]];
