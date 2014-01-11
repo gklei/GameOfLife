@@ -127,9 +127,9 @@
    for (SKLabelNode *headerLine in _header)
    {
       headerLine.position = nextHeaderLinePosition;
-      [self addChild:headerLine];
       nextHeaderLinePosition = CGPointMake(self.size.width * .5,
                                            headerLine.position.y - HEADING_FONT_SIZE);
+      [self addChild:headerLine];
    }
 }
 
