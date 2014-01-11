@@ -83,33 +83,47 @@
 
 - (void)addHeaderTextToLayer:(NSString *)headerText
 {
+   // separate words by two spaces because the string is FUTURIZED
    NSArray *words = [headerText componentsSeparatedByString:@"  "];
-   int headerLineIndex = 0;
+   int lineIndex = 0;
 
-   ((SKLabelNode *)[_header objectAtIndex:headerLineIndex]).text = [words objectAtIndex:0];
+   ((SKLabelNode *)[_header objectAtIndex:lineIndex]).text = [words objectAtIndex:0];
 
    // initial check to see if the first word in the header text is too large to display
-   if (((SKLabelNode *)[_header objectAtIndex:headerLineIndex]).calculateAccumulatedFrame.size.width > self.size.width)
+   if (![self labelFitsInFrame:[_header objectAtIndex:lineIndex]])
+   {
+      NSLog(@"GLAlertLayer: cannot set header text becuase the word '%@' will not fit",
+            [words objectAtIndex:0]);
       return;
+   }
 
    for (NSString *word in words)
    {
       if ([word isEqual:words.firstObject]) continue;
 
-      NSString *currentText = ((SKLabelNode *)[_header objectAtIndex:headerLineIndex]).text;
-      NSString *appendedText =
-         [((SKLabelNode *)[_header objectAtIndex:headerLineIndex]).text stringByAppendingString:[NSString stringWithFormat:@"  %@", word]];
-      ((SKLabelNode *)[_header objectAtIndex:headerLineIndex]).text = appendedText;
+      NSString *currentStr = ((SKLabelNode *)[_header objectAtIndex:lineIndex]).text;
+      NSString *nextStr = [currentStr stringByAppendingString:[NSString stringWithFormat:@"  %@", word]];
+      ((SKLabelNode *)[_header objectAtIndex:lineIndex]).text = nextStr;
 
-      if (((SKLabelNode *)[_header objectAtIndex:headerLineIndex]).calculateAccumulatedFrame.size.width > self.size.width)
+      if (![self labelFitsInFrame:[_header objectAtIndex:lineIndex]])
       {
-         ((SKLabelNode *)[_header objectAtIndex:headerLineIndex]).text = currentText;
+         ((SKLabelNode *)[_header objectAtIndex:lineIndex]).text = currentStr;
          [_header addObject:[self headerLabelNode]];
-         ((SKLabelNode *)[_header objectAtIndex:++headerLineIndex]).text = word;
+         ((SKLabelNode *)[_header objectAtIndex:++lineIndex]).text = word;
       }
    }
 
-   CGPoint nextHeaderLinePosition = CGPointMake(self.size.width * .5, -(TOP_PADDING + HEADING_FONT_SIZE));
+   [self setPositionsForLinesInHeader];
+}
+
+- (void)addBodyTextToLayer:(NSString *)bodyText
+{
+}
+
+- (void)setPositionsForLinesInHeader
+{
+   CGPoint nextHeaderLinePosition = CGPointMake(self.size.width * .5,
+                                                -(TOP_PADDING + HEADING_FONT_SIZE));
    for (SKLabelNode *headerLine in _header)
    {
       headerLine.position = nextHeaderLinePosition;
@@ -119,8 +133,9 @@
    }
 }
 
-- (void)addBodyTextToLayer:(NSString *)bodyText
+- (BOOL)labelFitsInFrame:(SKLabelNode *)label
 {
+   return label.calculateAccumulatedFrame.size.width <= self.size.width;
 }
 
 @end
