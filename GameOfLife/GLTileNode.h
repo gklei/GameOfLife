@@ -20,8 +20,8 @@
 
 @property (nonatomic, assign) CrayolaColorName deadColorName;
 
-@property (nonatomic, retain) SKTexture * liveTexture;
-@property (nonatomic, retain) SKTexture * deadTexture;
+@property (nonatomic, retain, setter = setLiveTexture:) SKTexture * liveTexture;
+@property (nonatomic, retain, setter = setDeadTexture:) SKTexture * deadTexture;
 
 @property (nonatomic, assign) float boardMaxDistance; // should be global, not per tile
 @property (nonatomic, assign) float maxColorDistance;
@@ -30,7 +30,6 @@
 + (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation;
 
 - (void)clearTile;
-- (void)updateTextures;
 - (void)clearActionsAndRestore;
 
 @end

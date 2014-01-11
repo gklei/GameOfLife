@@ -782,8 +782,6 @@
       
       [_grid setLiveImage:[_gridImagePairs objectAtIndex:imageIndex]];
       [_grid setLiveRotation:[self rotationForImageIndex:imageIndex]];
-      
-      [_grid updateTextures];
    }
 }
 

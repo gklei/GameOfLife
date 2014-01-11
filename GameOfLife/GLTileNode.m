@@ -209,6 +209,26 @@
       self.zRotation = _deadRotation;
 }
 
+- (void)updateTextures
+{
+   if (![self dualTextures])
+      self.texture = _deadTexture;
+   
+   [self swapTextures];
+}
+
+- (void)setLiveTexture:(SKTexture *) liveTexture
+{
+   _liveTexture = liveTexture;
+   [self updateTextures];
+}
+
+- (void)setDeadTexture:(SKTexture *) deadTexture
+{
+   _deadTexture = deadTexture;
+   [self updateTextures];
+}
+
 - (void)clearTile
 {
    self.isLiving = NO;
@@ -219,14 +239,6 @@
                                               duration:.15];
    changeColor.timingMode = SKActionTimingEaseInEaseOut;
    [self runAction:changeColor];
-}
-
-- (void)updateTextures
-{
-   if (![self dualTextures])
-      self.texture = self.deadTexture;
-   
-   [self swapTextures];
 }
 
 - (void)clearActionsAndRestore
