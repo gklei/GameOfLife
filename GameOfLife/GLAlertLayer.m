@@ -2,7 +2,7 @@
 //  GLAlertLayer.m
 //  GameOfLife
 //
-//  Created by Gregory Klein on 1/9/14.
+//  Created by Gregory Klein on 1/9/14. (made in Mexico)
 //  Copyright (c) 2014 Gregory Klein. All rights reserved.
 //
 
@@ -83,10 +83,12 @@
 
 - (void)addHeaderTextToLayer:(NSString *)headerText
 {
+   
 }
 
 - (void)addBodyTextToLayer:(NSString *)bodyText
 {
+   
 }
 
 @end

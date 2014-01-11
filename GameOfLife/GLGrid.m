@@ -149,12 +149,6 @@
       tile.liveRotation = rotation;
 }
 
-- (void)updateTextures
-{
-   for (GLTileNode *tile in _tiles)
-      [tile updateTextures];
-}
-
 - (void)updateNextGeneration
 {
    for (int i = 0; i < _tiles.count; ++i)
