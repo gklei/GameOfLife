@@ -53,10 +53,8 @@
 
          rotateRight.timingMode = SKActionTimingEaseInEaseOut;
          scaleUp.timingMode = SKActionTimingEaseInEaseOut;
-
-         tile.isLiving = YES;
-         [tile clearActionsAndRestore:YES];
-         tile.isLiving = NO;
+         
+         [tile restoreAsLiving];
          
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
@@ -251,21 +249,28 @@
    [self runAction:changeColor];
 }
 
+- (void)restoreAsLiving
+{
+   self.color = [self getLivingTileColor];
+   self.colorBlendFactor = LIVE_COLOR_BLEND_FACTOR;
+}
+
+- (void)restoreAsDead
+{
+   self.color = [SKColor colorForCrayolaColorName:_deadColorName];
+   self.colorBlendFactor = 0.0;
+}
+
 - (void)clearActionsAndRestore:(BOOL)resetGenerations
 {
    [self removeAllActions];
    
+   if (resetGenerations && _generationCount) _generationCount = 1;
+   
    if ([self isLiving])
-   {
-      if (resetGenerations) _generationCount = 1;
-      self.color = [self getLivingTileColor];
-      self.colorBlendFactor = LIVE_COLOR_BLEND_FACTOR;
-   }
+      [self restoreAsLiving];
    else
-   {
-      self.color = [SKColor colorForCrayolaColorName:_deadColorName];
-      self.colorBlendFactor = 0.0;
-   }
+      [self restoreAsDead];
 }
 
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
