@@ -202,7 +202,7 @@
                                  unsignedIntValue];
    
    // find a drop with that color
-   if ([UIColor colorForCrayolaColorName:colorName])
+   if ([SKColor colorForCrayolaColorName:colorName])
    {
       for (GLColorDropButton * drop in _colorDrops)
       {
@@ -578,7 +578,7 @@
 
 - (void)updateCurrentColorName:(CrayolaColorName)colorName
 {
-   SKColor * color = [UIColor colorForCrayolaColorName:colorName];
+   SKColor * color = [SKColor colorForCrayolaColorName:colorName];
    if (color)
    {
       _currentColorName = colorName;

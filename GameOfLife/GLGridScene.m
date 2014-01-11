@@ -137,6 +137,11 @@
    [hudManager addHudItem:hudItem];
 }
 
+- (void)registerGenerationTracking
+{
+   [self registerToggleItemWithLabel:@"Tracking" andKeyPath:@"TileGenerationTracking"];
+}
+
 - (void)registerHudParameters
 {
    [self registerSoundFxHUD];
@@ -145,6 +150,7 @@
    [self registerLoopDetectionHUD];
    [self registerGridImagePickerHUD:_gridImagePairs];
    [self registerLiveColorNameChanges];
+   [self registerGenerationTracking];
 }
 
 #pragma mark - observation methods

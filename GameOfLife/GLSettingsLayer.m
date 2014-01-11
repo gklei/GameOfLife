@@ -105,6 +105,7 @@
                                                      @"SoundFX",
                                                      @"SmartMenu",
                                                      @"LoopDetection",
+                                                     @"TileGenerationTracking",
                                                      nil];
       [self setupHudItemsforKeys:keyPaths];
    }

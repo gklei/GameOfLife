@@ -2254,6 +2254,15 @@
    return colorName;
 }
 
++ (CrayolaColorName)getColorNameForIndex:(NSUInteger)index
+{
+   NSUInteger result = index;
+   if (result > CCN_crayolaYellowSunshineColor)
+      result = (result % CCN_crayolaYellowSunshineColor);
+   
+   return (CrayolaColorName)result;
+}
+
 + (instancetype)getPreviousColor:(CrayolaColorName)colorName
 {
    return [UIColor colorForCrayolaColorName:[UIColor getPreviousColorName:colorName]];

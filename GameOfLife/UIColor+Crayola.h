@@ -288,9 +288,10 @@ typedef enum
 
 @interface UIColor (Crayola)
 
-// wrap throught the color names
+// wrap through the color names
 + (CrayolaColorName)getPreviousColorName:(CrayolaColorName)colorName;
 + (CrayolaColorName)getNextColorName:(CrayolaColorName)colorName;
++ (CrayolaColorName)getColorNameForIndex:(NSUInteger)index;
 
 // get a color from a color name
 + (instancetype)colorForCrayolaColorName:(CrayolaColorName)colorName;

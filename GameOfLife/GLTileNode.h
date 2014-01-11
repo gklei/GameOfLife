@@ -12,13 +12,10 @@
 
 @interface GLTileNode : GLUIActionButton
 
-@property (nonatomic, assign, setter = setIsLiving:) BOOL isLiving;
 @property (nonatomic, assign) float birthingDuration;
 @property (nonatomic, assign) float dyingDuration;
 @property (nonatomic, assign, setter = setLiveRotation:) double liveRotation;
 @property (nonatomic, assign, setter = setDeadRotation:) double deadRotation;
-
-@property (nonatomic, assign) CrayolaColorName deadColorName;
 
 @property (nonatomic, retain, setter = setLiveTexture:) SKTexture * liveTexture;
 @property (nonatomic, retain, setter = setDeadTexture:) SKTexture * deadTexture;
@@ -29,7 +26,9 @@
 
 + (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation;
 
+- (BOOL)isLiving;
+- (void)setIsLiving:(BOOL)living;
 - (void)clearTile;
-- (void)clearActionsAndRestore;
+- (void)clearActionsAndRestore:(BOOL)resetGenerations;
 
 @end
