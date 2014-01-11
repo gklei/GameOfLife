@@ -420,7 +420,7 @@
    alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
    alert.color = [SKColor crayolaBlackCoralPearlColor];
    alert.alpha = .8;
-   alert.headerText = @"THIS IS A TEST ALERT!";
+   alert.headerText = @"THIS IS A VERY VERY VERY VERY LONG TEST ALERT HEADER MESSAGE!";
    [self addChild:alert];
 }
 
