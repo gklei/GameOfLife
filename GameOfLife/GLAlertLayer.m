@@ -122,14 +122,16 @@
 
 - (void)setPositionsForLinesInHeader
 {
-   CGPoint nextHeaderLinePosition = CGPointMake(self.size.width * .5,
+   CGPoint headerLinePosition = CGPointMake(self.size.width * .5,
                                                 -(TOP_PADDING + HEADING_FONT_SIZE));
    for (SKLabelNode *headerLine in _header)
    {
-      headerLine.position = nextHeaderLinePosition;
-      nextHeaderLinePosition = CGPointMake(self.size.width * .5,
-                                           headerLine.position.y - HEADING_FONT_SIZE);
+      headerLine.position = headerLinePosition;
       [self addChild:headerLine];
+
+      if (![headerLine isEqual:_header.lastObject])
+         headerLinePosition = CGPointMake(self.size.width * .5,
+                                              headerLine.position.y - HEADING_FONT_SIZE);
    }
 }
 
