@@ -8,13 +8,14 @@
 
 #import "GLToggleControl.h"
 #import "UIColor+Crayola.h"
+#import "GLHUDSettingsManager.h"
 
 #define TOGGLE_ANIMATION_DURATION .1
 #define TOGGLE_COLOR_ANIMATION_DURATION .2
 #define INNER_RING_OFFSET_FROM_CENTER 8
 #define INNER_RING_X_ANIMATION 18
 
-@interface GLToggleControl()
+@interface GLToggleControl()<HUDSettingsObserver>
 {
    SKSpriteNode *_innerRing;
    SKSpriteNode *_outerRing;

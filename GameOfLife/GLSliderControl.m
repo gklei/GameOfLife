@@ -198,15 +198,15 @@
 
 - (float)valueToPosition:(float)value
 {
-   if (_range.length)
-      return (value - _range.location) / _range.length;
+   if (_range.maxValue)
+      return (value - _range.minValue) / _range.maxValue;
    
    return 0;
 }
 
 - (float)positionToValue:(float)position
 {
-   return position * _range.length + _range.location;
+   return position * _range.maxValue + _range.minValue;
 }
 
 - (void)updateKnobPositionX:(float)x

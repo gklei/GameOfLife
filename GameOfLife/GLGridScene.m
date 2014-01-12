@@ -37,6 +37,7 @@
    BOOL _colorHudIsAnimating;
    BOOL _autoShowHideHudForStartStop;
    BOOL _generalHudShouldExpand;
+   BOOL _gameFinished;
 
    BOOL _shouldPlaySound;
    SKAction *_fingerDownSoundFX;
@@ -133,7 +134,7 @@
    HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
    hudItem.keyPath = @"GridLiveColorName";
    hudItem.label = @"Live Color Name";;
-   hudItem.range = HUDItemRangeMake(0, 1);
+   hudItem.range = HUDItemRangeMake(0, CCN_crayolaYellowSunshineColor);
    hudItem.type = HIT_NO_UI;
    hudItem.defaultvalue = [NSNumber numberWithUnsignedInt:CCN_crayolaCeruleanColor];
    hudItem.valueType = HVT_UINT;
@@ -148,6 +149,20 @@
                           andKeyPath:@"TileGenerationTracking"];
 }
 
+- (void)registerHighScoreHUD
+{
+   HUDPickerItemDescription * hudItem = [[HUDPickerItemDescription alloc] init];
+   hudItem.keyPath = @"HighScore";
+   hudItem.label = @"HIGH SCORE";
+   hudItem.range = HUDItemRangeMake(0, 100000);
+   hudItem.type = HIT_LABEL;
+   hudItem.valueType = HVT_ULONGLONG;
+   hudItem.defaultvalue = [NSNumber numberWithUnsignedLongLong:0];
+   
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addHudItem:hudItem];
+}
+
 - (void)registerHudParameters
 {
    [self registerSoundFxHUD];
@@ -157,6 +172,7 @@
    [self registerGridImagePickerHUD:_gridImagePairs];
    [self registerLiveColorNameChanges];
    [self registerGenerationTracking];
+   [self registerHighScoreHUD];
 }
 
 #pragma mark - observation methods
@@ -319,7 +335,10 @@
    _running = running;
    
    if (_running)
+   {
+      _gameFinished = NO;
       [self removeAllAlerts];
+   }
    else
       [self showGenerationCountAlert];
 }
@@ -372,11 +391,6 @@
    if (genCount)
    {
       [self removeAllAlerts];
-      
-//      CGSize alertSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 100);
-//      GLAlertLayer *alert = [[GLAlertLayer alloc] initWithSize:alertSize
-//                                                   anchorPoint:CGPointMake(0, 1)];
-//      alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
 
       NSString * header = nil;
       NSString * body = nil;
@@ -385,24 +399,20 @@
       {
          _highScore = genCount;
          [self storeHighScore:_highScore];
-         
-         header = @"CONGRATS!";
+
+         header = @"Congratulations!";
          body = [NSString stringWithFormat:@"New high score: %llu",
                  _highScore];
       }
       else
       {
-         header = [NSString stringWithFormat:@"You had %llu generation", genCount];
-         if (genCount > 1)
-            header = [header stringByAppendingString:@"s"];
-         
-         header = [header stringByAppendingString:@"!"];;
+         header = _gameFinished?  @"Game Finished" : @"Game Stopped";
+         body = [NSString stringWithFormat:@"Your score: %llu", genCount];
       }
 
       GLAlertLayer *alert = [[GLAlertLayer alloc] initWithHeader:header body:body];
       alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
-//      alert.headerText = header;
-//      alert.bodyText = body;
+      
       [self addChild:alert];
    }
 }
@@ -846,7 +856,10 @@
       if (!_grid.isInContinuousLoop)
          [_grid updateNextGeneration];
       else
+      {
+         _gameFinished = YES;
          [self toggleRunningButtonPressed];
+      }
    }
 }
 
