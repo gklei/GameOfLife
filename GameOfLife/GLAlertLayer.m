@@ -20,8 +20,9 @@
 @property (nonatomic, readonly) SKLabelNode *firstLine;
 @property (nonatomic, readonly) SKLabelNode *lastLine;
 
-- (void)addLine:(SKLabelNode *)line;
+- (void)addLine;
 - (SKLabelNode *)lineAtIndex:(unsigned)index;
+- (SKLabelNode *)labelNode;
 @end
 
 @implementation GLLabelCollection
@@ -32,6 +33,7 @@
 
    return self;
 }
+
 - (SKLabelNode *)firstLine
 {
    return _lines.firstObject;
@@ -42,14 +44,19 @@
    return _lines.lastObject;
 }
 
-- (void)addLine:(SKLabelNode *)line
+- (void)addLine
 {
-   [_lines addObject:line];
+   [_lines addObject:[self labelNode]];
 }
 
 - (SKLabelNode *)lineAtIndex:(unsigned int)index
 {
    return [_lines objectAtIndex:index];
+}
+
+- (SKLabelNode *)labelNode
+{
+   return nil;
 }
 @end
 
@@ -57,12 +64,32 @@
 @end
 
 @implementation GLHeaderLabel
+- (SKLabelNode *)labelNode
+{
+   SKLabelNode *headerLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
+   headerLabelNode.colorBlendFactor = 1.0;
+   headerLabelNode.color = [SKColor whiteColor];
+   headerLabelNode.alpha = 5;
+   headerLabelNode.fontSize = HEADING_FONT_SIZE;
+
+   return headerLabelNode;
+}
 @end
 
 @interface GLBodyLabel : GLLabelCollection
 @end
 
 @implementation GLBodyLabel
+- (SKLabelNode *)labelNode
+{
+   SKLabelNode *bodyLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
+   bodyLabelNode.colorBlendFactor = 1.0;
+   bodyLabelNode.color = [SKColor whiteColor];
+   bodyLabelNode.alpha = 5;
+   bodyLabelNode.fontSize = BODY_FONT_SIZE;
+
+   return bodyLabelNode;
+}
 @end
 
 @interface GLAlertLayer()
@@ -111,13 +138,13 @@
 - (void)setupHeader
 {
    _header = [GLHeaderLabel new];
-   [_header addLine:[self headerLabelNode]];
+   [_header addLine];
 }
 
 - (void)setupBody
 {
    _body = [GLBodyLabel new];
-   [_body addLine:[self bodyLabelNode]];
+   [_body addLine];
 }
 
 #pragma mark - Instance Methods
@@ -157,28 +184,6 @@
 }
 
 #pragma mark - Helper Methods
-- (SKLabelNode *)headerLabelNode
-{
-   SKLabelNode *headerLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
-   headerLabelNode.colorBlendFactor = 1.0;
-   headerLabelNode.color = [SKColor whiteColor];
-   headerLabelNode.alpha = 5;
-   headerLabelNode.fontSize = HEADING_FONT_SIZE;
-
-   return headerLabelNode;
-}
-
-- (SKLabelNode *)bodyLabelNode
-{
-   SKLabelNode *bodyLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
-   bodyLabelNode.colorBlendFactor = 1.0;
-   bodyLabelNode.color = [SKColor whiteColor];
-   bodyLabelNode.alpha = 5;
-   bodyLabelNode.fontSize = BODY_FONT_SIZE;
-
-   return bodyLabelNode;
-}
-
 - (void)addHeaderTextToLayer:(NSString *)headerText
 {
    // separate words by two spaces because the string is FUTURIZED
@@ -206,7 +211,7 @@
       if (![self labelFitsInFrame:[_header lineAtIndex:lineIndex]])
       {
          [_header lineAtIndex:lineIndex].text = currentStr;
-         [_header addLine:[self headerLabelNode]];
+         [_header addLine];
          [_header lineAtIndex:++lineIndex].text = word;
       }
    }
@@ -241,7 +246,7 @@
       if (![self labelFitsInFrame:[_body lineAtIndex:lineIndex]])
       {
          [_body lineAtIndex:lineIndex].text = currentStr;
-         [_body addLine:[self bodyLabelNode]];
+         [_body addLine];
          [_body lineAtIndex:++lineIndex].text = word;
       }
    }
