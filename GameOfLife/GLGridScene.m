@@ -372,19 +372,22 @@
    {
       [self removeAllAlerts];
       
-      CGSize alertSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 100);
-      GLAlertLayer *alert = [[GLAlertLayer alloc] initWithSize:alertSize
-                                                   anchorPoint:CGPointMake(0, 1)];
-      alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
-      
+//      CGSize alertSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 100);
+//      GLAlertLayer *alert = [[GLAlertLayer alloc] initWithSize:alertSize
+//                                                   anchorPoint:CGPointMake(0, 1)];
+//      alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
+
       NSString * header = nil;
+      NSString * body = nil;
+
       if (genCount > _highScore)
       {
          _highScore = genCount;
          [self storeHighScore:_highScore];
          
-         header = [NSString stringWithFormat:@"Congrats!\nNew high score: %llu",
-                   _highScore];
+         header = @"Congrats!";
+         body = [NSString stringWithFormat:@"New high score: %llu",
+                 _highScore];
       }
       else
       {
@@ -394,8 +397,11 @@
          
          header = [header stringByAppendingString:@"!"];;
       }
-      
-      alert.headerText = header;
+
+      GLAlertLayer *alert = [[GLAlertLayer alloc] initWithHeader:header body:body];
+      alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
+//      alert.headerText = header;
+//      alert.bodyText = body;
       [self addChild:alert];
    }
 }
