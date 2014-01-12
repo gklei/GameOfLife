@@ -22,6 +22,7 @@
 
 #define DEFAULT_GENERATION_DURATION 0.8
 
+#pragma mark - GLGridScene private interface
 @interface GLGridScene() <GLGeneralHudDelegate, GLColorHudDelegate>
 {
    GLGrid *_grid;
@@ -34,7 +35,6 @@
 
    BOOL _generalHudIsAnimating;
    BOOL _colorHudIsAnimating;
-   BOOL _running;
    BOOL _autoShowHideHudForStartStop;
    BOOL _generalHudShouldExpand;
 
@@ -55,7 +55,12 @@
 
    CGPoint _locationOfFirstTouch;
    NSArray * _gridImagePairs;
+   
+   unsigned long long _highScore;
 }
+
+@property (nonatomic, assign, setter = setRunning:) BOOL running;
+
 @end
 
 #pragma mark GLGridScene
@@ -194,6 +199,25 @@
    [self observeGridImageIndexChanges];
 }
 
+#pragma mark - high score
+- (unsigned long long)getHighScore
+{
+   unsigned long long result = 0;
+   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+   NSNumber * highScore = (NSNumber *)[defaults objectForKey:@"HighScore"];
+   if (highScore)
+      result = [highScore unsignedLongLongValue];
+   
+   return result;
+}
+
+- (void)storeHighScore:(unsigned long long)highScore
+{
+   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+   [defaults setObject:[NSNumber numberWithUnsignedLongLong:highScore] forKey:@"HighScore"];
+   [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 #pragma mark - Initializer Method
 - (id)initWithSize:(CGSize)size
 {
@@ -209,6 +233,8 @@
                           @"",                   @"tile.cylinder.png",
                           @"",                   @"tile.buldge.png"];
 
+      _highScore = [self getHighScore];
+      
       [self registerHudParameters];
 
       [self checkPhotoLibraryAuthorizationStatus];
@@ -287,6 +313,16 @@
    _photoLibraryAuthorizationStatus = [ALAssetsLibrary authorizationStatus];
 }
 
+- (void)setRunning:(BOOL)running
+{
+   _running = running;
+   
+   if (_running)
+      [self removeAllAlerts];
+   else
+      [self showGenerationCountAlert];
+}
+
 - (void)expandGeneralHUD
 {
    [_generalHudLayer expand];
@@ -331,7 +367,7 @@
 
 - (void)showGenerationCountAlert
 {
-   unsigned long genCount = [_grid generationCount];
+   unsigned long long genCount = [_grid generationCount];
    if (genCount)
    {
       [self removeAllAlerts];
@@ -341,12 +377,25 @@
                                                    anchorPoint:CGPointMake(0, 1)];
       alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
       
-      NSString * header = [NSString stringWithFormat:@"You had %lu generation", genCount];
-      if (genCount > 1)
-         header = [header stringByAppendingString:@"s"];
+      NSString * header = nil;
+      if (genCount > _highScore)
+      {
+         _highScore = genCount;
+         [self storeHighScore:_highScore];
+         
+         header = [NSString stringWithFormat:@"Congrats!\nNew high score: %llu",
+                   _highScore];
+      }
+      else
+      {
+         header = [NSString stringWithFormat:@"You had %llu generation", genCount];
+         if (genCount > 1)
+            header = [header stringByAppendingString:@"s"];
+         
+         header = [header stringByAppendingString:@"!"];;
+      }
       
-      alert.headerText = [header stringByAppendingString:@"!"];;
-      
+      alert.headerText = header;
       [self addChild:alert];
    }
 }
@@ -359,13 +408,15 @@
       [self updateGenerationDuration:_generationDuration];
 
       [_grid toggleRunning:!_running];
-      _running = !_running;
+      self.running = !_running;
+      
       [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
                                             withSound:NO];
    }
-   [_grid clearGrid];
+   else
+      [self removeAllAlerts];
    
-   [self removeAllAlerts];
+   [_grid clearGrid];
 }
 
 - (void)restoreButtonPressed
@@ -375,13 +426,15 @@
       [self updateGenerationDuration:_generationDuration];
 
       [_grid toggleRunning:!_running];
-      _running = !_running;
+      self.running = !_running;
+      
       [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
                                             withSound:NO];
    }
+   else
+      [self removeAllAlerts];
    
    [_grid restoreGrid];
-   [self removeAllAlerts];
 }
 
 - (void)updateGenerationDuration:(float)duration
@@ -401,7 +454,7 @@
    [self updateGenerationDuration:_generationDuration];
 
    [_grid toggleRunning:!_running];
-   _running = !_running;
+   self.running = !_running;
    
    [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
                                          withSound:!_autoShowHideHudForStartStop];
@@ -415,11 +468,6 @@
       else
          _generalHudShouldExpand = YES;
    }
-   
-   if (_running)
-      [self removeAllAlerts];
-   else
-      [self showGenerationCountAlert];
 }
 
 - (void)takeScreenShot

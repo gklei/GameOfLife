@@ -17,7 +17,7 @@ typedef struct {
 @class GLTileNode;
 @interface GLGrid : SKNode
 
-@property (nonatomic, readonly) NSUInteger generationCount;
+@property (nonatomic, readonly) unsigned long long generationCount;
 @property (nonatomic, assign) GridDimensions dimensions;
 @property (nonatomic, strong) NSArray *tiles;
 @property (nonatomic, readwrite, getter = isInContinuousLoop) BOOL inContinuousLoop;
