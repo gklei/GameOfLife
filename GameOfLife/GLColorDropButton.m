@@ -13,7 +13,7 @@
 - (void)setColorName:(CrayolaColorName)colorName
 {
    _colorName = colorName;
-   self.color = [UIColor colorForCrayolaColorName:_colorName];
+   self.color = [SKColor colorForCrayolaColorName:_colorName];
 }
 
 @end

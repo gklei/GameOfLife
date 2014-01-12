@@ -54,7 +54,7 @@
 
 - (void)setupGridWithSize:(CGSize)size
 {
-   SKColor * color = [UIColor colorForCrayolaColorName:_currentColorName];
+   SKColor * color = [SKColor colorForCrayolaColorName:_currentColorName];
    assert(color != nil);
    _dimensions.rows = size.width/TILESIZE.width;
    _dimensions.columns = size.width/TILESIZE.width;
@@ -216,7 +216,7 @@
          GLTileNode * tile = [_tiles objectAtIndex:i];
          tile.isLiving = _storedTileStates[i];
          [tile setColorCenter:center];
-         [tile clearActionsAndRestore];
+         [tile clearActionsAndRestore:YES];
       }
       
       _inContinuousLoop = NO;
@@ -227,7 +227,7 @@
 {
    for (GLTileNode *tile in _tiles)
    {
-      [tile clearActionsAndRestore];
+      [tile clearActionsAndRestore:YES];
       [tile clearTile];
    }
    

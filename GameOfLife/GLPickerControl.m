@@ -65,7 +65,7 @@
 {
    GLTileNode * node = (GLTileNode *)[self sprite];
    node.isLiving = living;
-   [node clearActionsAndRestore];
+   [node clearActionsAndRestore:YES];
 }
 
 @end

@@ -14,8 +14,13 @@
 #define LIVE_COLOR_BLEND_FACTOR  0.95
 
 @interface GLTileNode() <HUDSettingsObserver>
+{
+   NSInteger _generationCount;
+}
 
-@property (nonatomic, retain) SKColor *liveColor;
+@property (nonatomic, assign) BOOL trackGeneration;
+@property (nonatomic, assign) CrayolaColorName deadColorName;
+@property (nonatomic, assign) CrayolaColorName liveColorName;
 
 - (SKColor *)getLivingTileColor;
 - (void)updateColor;
@@ -48,8 +53,13 @@
 
          rotateRight.timingMode = SKActionTimingEaseInEaseOut;
          scaleUp.timingMode = SKActionTimingEaseInEaseOut;
-
-         tile.color = [tile getLivingTileColor];
+         
+         // uncomment both tile.isLiving statements to to make tiles animate
+         // in the living color, regardless of the _trackGeneration flag
+//         tile.isLiving = YES;
+         [tile restoreAsLiving];
+//         tile.isLiving = NO;
+         
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
          {
@@ -72,8 +82,10 @@
          if (tile.xScale != TILE_SCALE_DEFAULT || tile.yScale != TILE_SCALE_DEFAULT)
             [tile setScale:TILE_SCALE_DEFAULT];
          
-         tile.color = (tile.isLiving)? [tile getLivingTileColor] :
-                                       [SKColor colorForCrayolaColorName:tile.deadColorName];
+         if (tile.isLiving)
+            [tile restoreAsLiving];
+         else
+            [tile restoreAsDead];
       }];
    };
 
@@ -83,7 +95,7 @@
    tile.deadColorName = CCN_crayolaCoconutColor;
    tile.boardMaxDistance = 10000;
    tile.maxColorDistance = tile.boardMaxDistance;
-   [tile observeGridLiveColorNameChanges];
+   [tile setupObservations];
    
    return tile;
 }
@@ -92,6 +104,18 @@
 {
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
    [hudManager addObserver:self forKeyPath:@"GridLiveColorName"];
+}
+
+- (void)observeTileGenerationTracking
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"TileGenerationTracking"];
+}
+
+- (void)setupObservations
+{
+   [self observeGridLiveColorNameChanges];
+   [self observeTileGenerationTracking];
 }
 
 - (float)calcDistanceFromStart:(CGPoint)start toEnd:(CGPoint)end
@@ -109,30 +133,19 @@
    return dist;
 }
 
-// gets called when turning a tile on
 - (SKColor *)getLivingTileColor
 {
    float dist = [self colorDistance] * 1.15;
+
+   CGFloat r, g, b;
    
-   CGFloat r, g, b;
-
-   if ([_liveColor getRed:&r green:&g blue:&b alpha:nil])
-      return [SKColor colorWithRed:dist*r green:dist*g blue:dist*b alpha:1.0];
-   else
-      return [SKColor colorWithHue:[self colorDistance]
-                        saturation:(arc4random()/((float)RAND_MAX * 2)) + 0.25
-                        brightness:1.0
-                             alpha:1.0];
-}
-
-// gets called while the algorithm is running
-- (SKColor *)getNextColor
-{
-   float dist = [self colorDistance] * 1.15;
-
-   CGFloat r, g, b;
-
-   if ([_liveColor getRed:&r green:&g blue:&b alpha:0])
+   CrayolaColorName name =
+      (_trackGeneration)? [SKColor getColorNameForIndex:(_liveColorName + (_generationCount - 1))] :
+                          _liveColorName;
+   
+   SKColor * liveColor = [SKColor colorForCrayolaColorName:name];
+   
+   if ([liveColor getRed:&r green:&g blue:&b alpha:0])
       return [SKColor colorWithRed:dist*r green:dist*g blue:dist*b alpha:1.0];
    else
       return [SKColor colorWithHue:[self colorDistance]
@@ -143,10 +156,10 @@
 
 - (void)updateColor
 {
-   float duration = (_isLiving)? _birthingDuration : _dyingDuration;
+   float duration = ([self isLiving])? _birthingDuration : _dyingDuration;
    
-   SKColor *newColor = (_isLiving)? [self getNextColor] :
-                                    [SKColor colorForCrayolaColorName:_deadColorName];
+   SKColor *newColor = ([self isLiving])? [self getLivingTileColor] :
+                                          [SKColor colorForCrayolaColorName:_deadColorName];
    
    SKAction *changeColor = [SKAction colorizeWithColor:newColor
                                       colorBlendFactor:LIVE_COLOR_BLEND_FACTOR
@@ -176,9 +189,9 @@
 - (void)swapTextures
 {
    if ([self dualTextures])
-      self.texture = (_isLiving)? _liveTexture : _deadTexture;
+      self.texture = ([self isLiving])? _liveTexture : _deadTexture;
    else
-      self.zRotation = (_isLiving)? _liveRotation : _deadRotation;
+      self.zRotation = ([self isLiving])? _liveRotation : _deadRotation;
 }
 
 - (bool)dualTextures
@@ -186,26 +199,28 @@
    return !(_liveTexture == nil || _deadTexture == nil);
 }
 
+- (BOOL)isLiving
+{
+   return (_generationCount > 0);
+}
+
 - (void)setIsLiving:(BOOL)living
 {
-   if (_isLiving == living)
-      return;
-
-   _isLiving = living;
-   [self swapTextures]; 
+   _generationCount = (living)? _generationCount + 1 : 0;
+   [self swapTextures];
 }
 
 - (void)setLiveRotation:(double)rotation
 {
    _liveRotation = rotation;
-   if (_isLiving)
+   if ([self isLiving])
       self.zRotation = _liveRotation;
 }
 
 - (void)setDeadRotation:(double)rotation
 {
    _deadRotation = rotation;
-   if (!_isLiving)
+   if (![self isLiving])
       self.zRotation = _deadRotation;
 }
 
@@ -241,11 +256,28 @@
    [self runAction:changeColor];
 }
 
-- (void)clearActionsAndRestore
+- (void)restoreAsLiving
+{
+   self.color = [self getLivingTileColor];
+   self.colorBlendFactor = LIVE_COLOR_BLEND_FACTOR;
+}
+
+- (void)restoreAsDead
+{
+   self.color = [SKColor colorForCrayolaColorName:_deadColorName];
+   self.colorBlendFactor = 0.0;
+}
+
+- (void)clearActionsAndRestore:(BOOL)resetGenerations
 {
    [self removeAllActions];
-   self.color = _isLiving? [self getNextColor] : [SKColor colorForCrayolaColorName:_deadColorName];
-   self.colorBlendFactor = _isLiving? LIVE_COLOR_BLEND_FACTOR : 0.0;
+   
+   if (resetGenerations && _generationCount) _generationCount = 1;
+   
+   if ([self isLiving])
+      [self restoreAsLiving];
+   else
+      [self restoreAsDead];
 }
 
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
@@ -253,12 +285,22 @@
    if ([keyPath compare:@"GridLiveColorName"] == NSOrderedSame)
    {
       assert(type == HVT_UINT);
-      SKColor * color = [UIColor colorForCrayolaColorName:[value unsignedIntValue]];
-      if (color)
-      {
-         self.liveColor = color;
-         [self clearActionsAndRestore];
-      }
+      
+      // verify the live color name is valid;
+      CrayolaColorName liveColorName = [value unsignedIntValue];
+      SKColor * color = [SKColor colorForCrayolaColorName:liveColorName];
+      if (color == nil)
+         return;
+      
+      // use the new color
+      self.liveColorName = liveColorName;
+      [self clearActionsAndRestore:NO];
+   }
+   else if ([keyPath compare:@"TileGenerationTracking"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      
+      self.trackGeneration = [value boolValue];
    }
 }
 

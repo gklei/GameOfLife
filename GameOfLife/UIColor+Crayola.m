@@ -2247,11 +2247,23 @@
 
 + (CrayolaColorName)getNextColorName:(CrayolaColorName)colorName
 {
-   ++colorName;
+   ++colorName;      
    if (colorName > CCN_crayolaYellowSunshineColor)
       colorName = 0;
    
    return colorName;
+}
+
++ (CrayolaColorName)getColorNameForIndex:(NSInteger)index
+{
+   NSInteger result = index;
+   if (result < CCN_crayolaAbsoluteZeroColor)
+      result = CCN_crayolaYellowSunshineColor - result;
+   
+   if (result > CCN_crayolaYellowSunshineColor)
+      result = (result % CCN_crayolaYellowSunshineColor);
+   
+   return (CrayolaColorName)result;
 }
 
 + (instancetype)getPreviousColor:(CrayolaColorName)colorName

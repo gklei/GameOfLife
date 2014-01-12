@@ -56,7 +56,7 @@
 - (void)setColorName:(CrayolaColorName) colorName
 {
    _colorName = colorName;
-   UIColor * color = [UIColor colorForCrayolaColorName:_colorName];
+   UIColor * color = [SKColor colorForCrayolaColorName:_colorName];
    if (color)
       self.color = color;
    else
