@@ -353,6 +353,7 @@
 {
    [_grid loadLifeTileStates];
    [self restoreButtonPressed];
+   [_grid storeGridState];
 }
 
 - (void)loadLastGrid

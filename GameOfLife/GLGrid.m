@@ -68,6 +68,12 @@
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
          st = 12 * 16;
    
+   if (_life.size() <= st+109)
+   {
+      NSLog(@"Trying to initialize Life beyond grid size.");
+      return;
+   }
+   
    _life[st+1] = _life[st+2] = _life[st+3] = _life[st+5] = _life[st+7] = _life[st+11] =
    _life[st+12] = _life[st+13] = _life[st+17] = _life[st+21] = _life[st+23] = _life[st+27] =
    _life[st+33] = _life[st+37] = _life[st+39] = _life[st+43] = _life[st+49] = _life[st+53] =
