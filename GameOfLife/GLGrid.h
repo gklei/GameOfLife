@@ -30,6 +30,7 @@ typedef struct {
 - (void)updateNextGeneration;
 - (void)storeGridState;
 - (void)loadStoredTileStates;
+- (void)loadLifeTileStates;
 - (void)restoreGrid;
 - (void)clearGrid;
 - (void)toggleRunning:(BOOL)starting;

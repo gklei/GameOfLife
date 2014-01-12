@@ -19,6 +19,7 @@
 
 @interface GLGrid()
 {
+   std::vector<BOOL> _life;
    std::vector<BOOL> _storedTileStates;
    std::vector<BOOL> _nextGenerationTileStates;
    std::vector<BOOL> _currentGenerationTileStates;
@@ -43,6 +44,12 @@
    return self;
 }
 
+- (void)loadLifeTileStates
+{
+   for (int i = 0; i < _tiles.count; ++i)
+      _storedTileStates[i] = _life[i];
+}
+
 - (void)loadStoredTileStates
 {
    NSUserDefaults * standardDefaults = [NSUserDefaults standardUserDefaults];
@@ -50,6 +57,24 @@
    if (storedState && storedState.count == _tiles.count)
       for (int i = 0; i < _tiles.count; ++i)
          _storedTileStates[i] = [((NSNumber *)[storedState objectAtIndex:i]) boolValue];
+}
+
+- (void)buildLife:(CGSize)size
+{
+   NSUInteger st = 10 * 16;  // st = sarting tile in the row
+   
+   // check for iPhone 5 - if so, shift the game up
+   if (fabs((double)[[UIScreen mainScreen]bounds].size.height - (double)568) < DBL_EPSILON)
+      if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
+         st = 12 * 16;
+   
+   _life[st+1] = _life[st+2] = _life[st+3] = _life[st+5] = _life[st+7] = _life[st+11] =
+   _life[st+12] = _life[st+13] = _life[st+17] = _life[st+21] = _life[st+23] = _life[st+27] =
+   _life[st+33] = _life[st+37] = _life[st+39] = _life[st+43] = _life[st+49] = _life[st+53] =
+   _life[st+55] = _life[st+56] = _life[st+57] = _life[st+59] = _life[st+60] = _life[st+61] =
+   _life[st+65] = _life[st+71] = _life[st+75] = _life[st+81] = _life[st+85] = _life[st+87] =
+   _life[st+91] = _life[st+97] = _life[st+103] = _life[st+104] = _life[st+105] = _life[st+107] =
+   _life[st+108] = _life[st+109] = LIVING;
 }
 
 - (void)setupGridWithSize:(CGSize)size
@@ -90,6 +115,8 @@
    _currentGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
+   _life = std::vector<BOOL>(_tiles.count, DEAD);
+   [self buildLife:(CGSize)size];
    
    CGPoint boardCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
                                      _dimensions.rows * TILESIZE.height * 0.5);

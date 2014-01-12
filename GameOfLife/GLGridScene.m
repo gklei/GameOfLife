@@ -266,7 +266,9 @@
       self.backgroundColor = [SKColor crayolaPeriwinkleColor];
       self.userInteractionEnabled = YES;
 
-      if (![self firstTimeRunning])
+      if ([self firstTimeRunning])
+         [self loadLife];
+      else
          [self loadLastGrid];
    }
    return self;
@@ -345,6 +347,12 @@
 - (void)expandGeneralHUD
 {
    [_generalHudLayer expand];
+}
+
+- (void)loadLife
+{
+   [_grid loadLifeTileStates];
+   [self restoreButtonPressed];
 }
 
 - (void)loadLastGrid
