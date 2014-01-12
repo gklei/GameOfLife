@@ -10,6 +10,10 @@
 #import "NSString+Additions.h"
 #import "UIColor+Crayola.h"
 
+#define DEFAULT_ALERT_SIZE CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 150);
+#define DEFAULT_ALERT_ANCHOR_POINT CGPointMake(0, 1);
+#define SIDE_MARGIN_SPACE 10
+
 @interface GLAlertLayer()
 {
    // the header and body will be an array of label nodes
@@ -27,11 +31,27 @@
    if (self = [super initWithSize:size
                       anchorPoint:anchorPoint])
    {
+      // default color and alpha
       self.color = [SKColor crayolaBlackCoralPearlColor];
       self.alpha = .8;
       
       [self setupHeader];
       [self setupBody];
+   }
+   return self;
+}
+
+- (id)initWithHeader:(NSString *)header
+                body:(NSString *)body
+{
+   // cannot pass in defines for some reason!
+   CGSize defaultSize = DEFAULT_ALERT_SIZE;
+   CGPoint defaultAnchorPoint = DEFAULT_ALERT_ANCHOR_POINT;
+   if (self = [self initWithSize:defaultSize
+                      anchorPoint:defaultAnchorPoint])
+   {
+      self.headerText = header;
+      self.bodyText = body;
    }
    return self;
 }
@@ -54,12 +74,14 @@
 {
    _headerText = [NSString futurizedString:headerText];
    [self addHeaderTextToLayer:_headerText];
+   [self dynamicallySetSize];
 }
 
 - (void)setBodyText:(NSString *)bodyText
 {
    _bodyText = [NSString futurizedString:bodyText];
    [self addBodyTextToLayer:_bodyText];
+   [self dynamicallySetSize];
 }
 
 #pragma mark - Helper Methods
@@ -122,12 +144,43 @@
 
 - (void)addBodyTextToLayer:(NSString *)bodyText
 {
+   // separate words by two spaces because the string is FUTURIZED
+   NSArray *bodyTextWords = [bodyText componentsSeparatedByString:@"  "];
+   int lineIndex = 0;
+
+   ((SKLabelNode *)[_body objectAtIndex:lineIndex]).text = [bodyTextWords objectAtIndex:0];
+
+   // initial check to see if the first word in the header text is too large to display
+   if (![self labelFitsInFrame:[_body objectAtIndex:lineIndex]])
+   {
+      NSLog(@"GLAlertLayer: cannot set header text becuase the word '%@' will not fit",
+            [bodyTextWords objectAtIndex:0]);
+      return;
+   }
+
+   for (NSString *word in bodyTextWords)
+   {
+      if ([word isEqual:bodyTextWords.firstObject]) continue;
+
+      NSString *currentStr = ((SKLabelNode *)[_body objectAtIndex:lineIndex]).text;
+      NSString *nextStr = [currentStr stringByAppendingString:[NSString stringWithFormat:@"  %@", word]];
+      ((SKLabelNode *)[_body objectAtIndex:lineIndex]).text = nextStr;
+
+      if (![self labelFitsInFrame:[_body objectAtIndex:lineIndex]])
+      {
+         ((SKLabelNode *)[_body objectAtIndex:lineIndex]).text = currentStr;
+         [_body addObject:[self bodyLabelNode]];
+         ((SKLabelNode *)[_body objectAtIndex:++lineIndex]).text = word;
+      }
+   }
+
+   [self setPositionsForLinesInBody];
 }
 
 - (void)setPositionsForLinesInHeader
 {
    CGPoint headerLinePosition = CGPointMake(self.size.width * .5,
-                                            -(TOP_PADDING + HEADING_FONT_SIZE));
+                                            -(TOP_PADDING + HEADING_FONT_SIZE * .5));
    for (SKLabelNode *headerLine in _header)
    {
       headerLine.position = headerLinePosition;
@@ -139,9 +192,34 @@
    }
 }
 
+- (void)setPositionsForLinesInBody
+{
+   CGFloat yValue = ((SKLabelNode *)_header.lastObject).position.y - HEADING_FONT_SIZE * 2;
+   CGPoint bodyLinePosition = CGPointMake(SIDE_MARGIN_SPACE, yValue);
+   for (SKLabelNode *bodyLine in _body)
+   {
+      bodyLine.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
+      bodyLine.position = bodyLinePosition;
+      [self addChild:bodyLine];
+
+      if (![bodyLine isEqual:_body.lastObject])
+         bodyLinePosition = CGPointMake(SIDE_MARGIN_SPACE,
+                                        bodyLine.position.y - BODY_FONT_SIZE);
+   }
+}
+
+- (void)dynamicallySetSize
+{
+   CGFloat height = fabs((((SKLabelNode *)_header.firstObject).position.y + HEADING_FONT_SIZE * .5) -
+                         (((SKLabelNode *)_body.lastObject).position.y) + BODY_FONT_SIZE * .5) +
+                         TOP_PADDING * 1.5;
+
+   self.size = CGSizeMake(self.size.width, height);
+}
+
 - (BOOL)labelFitsInFrame:(SKLabelNode *)label
 {
-   return label.calculateAccumulatedFrame.size.width <= self.size.width;
+   return label.calculateAccumulatedFrame.size.width <= (self.size.width - SIDE_MARGIN_SPACE);
 }
 
 @end

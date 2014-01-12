@@ -49,8 +49,6 @@
    GLUIButton *button = [[self alloc] init];
    SKSpriteNode *sprite = [super spriteNodeWithImageNamed:name];
 
-//   button.hitBox.color = [SKColor orangeColor];
-//   button.hitBox.alpha = .5;
    button.hitBox.size = CGSizeMake(CGRectGetWidth(sprite.frame) + 20,
                                    CGRectGetHeight(sprite.frame) + 20);
    button.hitBox.position = sprite.position;
@@ -104,7 +102,7 @@
    // work around for weird rounding error
    if (_scalesOnTouch &&
        (fabs(_defaultXScale - self.xScale) >= .000001 ||
-        fabs(_defaultYScale - self.yScale) >= .0000001))
+        fabs(_defaultYScale - self.yScale) >= .000001))
       [self runAction:_scaleDown];
    
    _glowEffect.shouldEnableEffects = NO;
@@ -309,9 +307,9 @@
 {
    if (_sprite)
       _sprite.hidden = hidden;
-   
-   super.hidden = hidden;
+
    self.hitBox.hidden = hidden;
+   super.hidden = hidden;
 }
 
 @end

@@ -413,13 +413,11 @@
 
 - (void)screenShotButtonPressed
 {
-   CGSize alertSize = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 100);
-   GLAlertLayer *alert = [[GLAlertLayer alloc] initWithSize:alertSize
-                                                anchorPoint:CGPointMake(0, 1)];
-
+   NSString *header = @"ACCESS DENIED!";
+   NSString *body = @"This is a body message and it is meant to represent the body of the alert box.";
+   GLAlertLayer *alert = [[GLAlertLayer alloc] initWithHeader:header body:body];
    alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
-   alert.headerText = @"THIS IS A VERY VERY VERY VERY LONG TEST ALERT HEADER MESSAGE!";
-   
+
    [self addChild:alert];
 }
 

@@ -10,6 +10,9 @@
 
 @interface GLAlertLayer : GLMenuLayer
 
+- (id)initWithHeader:(NSString *)header
+                body:(NSString *)body;
+
 @property (nonatomic, copy) NSString *headerText;
 @property (nonatomic, copy) NSString *bodyText;
 
