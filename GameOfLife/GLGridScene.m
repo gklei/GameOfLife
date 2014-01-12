@@ -233,6 +233,7 @@
                           @"",                   @"tile.cylinder.png",
                           @"",                   @"tile.buldge.png"];
 
+      [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"HighScore"];
       _highScore = [self getHighScore];
       
       [self registerHudParameters];
@@ -385,7 +386,7 @@
          _highScore = genCount;
          [self storeHighScore:_highScore];
          
-         header = @"Congrats!";
+         header = @"CONGRATS!";
          body = [NSString stringWithFormat:@"New high score: %llu",
                  _highScore];
       }

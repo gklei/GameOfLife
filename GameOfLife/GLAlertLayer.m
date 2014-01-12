@@ -69,9 +69,24 @@
    [_body addObject:[self bodyLabelNode]];
 }
 
+#pragma mark - Instance Methods
+- (void)addHeaderText:(NSString *)headerText
+{
+}
+
+- (void)addBodyText:(NSString *)bodyText
+{
+}
+
 #pragma mark - Setter Methods
 - (void)setHeaderText:(NSString *)headerText
 {
+   if (!headerText)
+   {
+      _headerText = @"";
+      return;
+   }
+
    _headerText = [NSString futurizedString:headerText];
    [self addHeaderTextToLayer:_headerText];
    [self dynamicallySetSize];
@@ -79,6 +94,12 @@
 
 - (void)setBodyText:(NSString *)bodyText
 {
+   if (!bodyText)
+   {
+      _bodyText = @"";
+      return;
+   }
+
    _bodyText = [NSString futurizedString:bodyText];
    [self addBodyTextToLayer:_bodyText];
    [self dynamicallySetSize];
@@ -204,14 +225,16 @@
 
       if (![bodyLine isEqual:_body.lastObject])
          bodyLinePosition = CGPointMake(SIDE_MARGIN_SPACE,
-                                        bodyLine.position.y - BODY_FONT_SIZE);
+                                        bodyLine.position.y - BODY_FONT_SIZE * 1.25);
    }
 }
 
 - (void)dynamicallySetSize
 {
-   CGFloat height = fabs((((SKLabelNode *)_header.firstObject).position.y + HEADING_FONT_SIZE * .5) -
-                         (((SKLabelNode *)_body.lastObject).position.y) + BODY_FONT_SIZE * .5) +
+   CGFloat height = fabs((((SKLabelNode *)_header.firstObject).position.y +
+                          (_header.firstObject ? (HEADING_FONT_SIZE * .5) : 0)) -
+                         (((SKLabelNode *)_body.lastObject).position.y) +
+                         (_body.lastObject ? (BODY_FONT_SIZE * .5) : 0)) +
                          TOP_PADDING * 1.5;
 
    self.size = CGSizeMake(self.size.width, height);
