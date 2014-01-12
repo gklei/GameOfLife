@@ -131,6 +131,7 @@
 		ED820542187E471300BF7CD6 /* GLColorDropButton.m in Sources */ = {isa = PBXBuildFile; fileRef = ED820541187E471300BF7CD6 /* GLColorDropButton.m */; };
 		ED8EA7AC1873BDAA0073132A /* tile.snowflake.png in Resources */ = {isa = PBXBuildFile; fileRef = ED8EA7AB1873BDAA0073132A /* tile.snowflake.png */; };
 		ED8EA7AE1873C3470073132A /* tile.clear.png in Resources */ = {isa = PBXBuildFile; fileRef = ED8EA7AD1873C3470073132A /* tile.clear.png */; };
+		ED9D62681882531000B243D3 /* GLLabelControl.m in Sources */ = {isa = PBXBuildFile; fileRef = ED9D62671882531000B243D3 /* GLLabelControl.m */; };
 		EDB8C3A7187BF4310047AE52 /* GLToggleControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB8C3A6187BF4310047AE52 /* GLToggleControl.m */; };
 		EDE4505C1833F3380063DE36 /* clear.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505A1833F3380063DE36 /* clear.png */; };
 		EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505B1833F3380063DE36 /* clear@2x.png */; };
@@ -300,6 +301,8 @@
 		ED820541187E471300BF7CD6 /* GLColorDropButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorDropButton.m; sourceTree = "<group>"; };
 		ED8EA7AB1873BDAA0073132A /* tile.snowflake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.snowflake.png; path = Images/tile.snowflake.png; sourceTree = SOURCE_ROOT; };
 		ED8EA7AD1873C3470073132A /* tile.clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.clear.png; path = Images/tile.clear.png; sourceTree = SOURCE_ROOT; };
+		ED9D62661882531000B243D3 /* GLLabelControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLLabelControl.h; sourceTree = "<group>"; };
+		ED9D62671882531000B243D3 /* GLLabelControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLLabelControl.m; sourceTree = "<group>"; };
 		EDB8C3A5187BF4310047AE52 /* GLToggleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLToggleControl.h; sourceTree = "<group>"; };
 		EDB8C3A6187BF4310047AE52 /* GLToggleControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLToggleControl.m; sourceTree = "<group>"; };
 		EDE4505A1833F3380063DE36 /* clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = clear.png; path = Images/clear.png; sourceTree = SOURCE_ROOT; };
@@ -490,13 +493,13 @@
 				ED4C620A187B61C30001E7DC /* HUD */,
 				8ECA89A2182371AE009D906F /* Images.xcassets */,
 				8ECA8997182371AE009D906F /* Main.storyboard */,
+				8EAD55B71880B40100398596 /* NSString+Additions.h */,
+				8EAD55B81880B40100398596 /* NSString+Additions.m */,
 				8E2FA2A418695C480021A471 /* spark.png */,
 				8E2FA2A318695C480021A471 /* Spark.sks */,
 				8ECA898C182371AE009D906F /* Supporting Files */,
 				8E99B2A3182C14E300C7AEDB /* UIColor+Crayola.h */,
 				8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */,
-				8EAD55B71880B40100398596 /* NSString+Additions.h */,
-				8EAD55B81880B40100398596 /* NSString+Additions.m */,
 				8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */,
 				8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */,
 			);
@@ -563,14 +566,16 @@
 			children = (
 				ED820540187E471300BF7CD6 /* GLColorDropButton.h */,
 				ED820541187E471300BF7CD6 /* GLColorDropButton.m */,
-				8E2FA288186567B50021A471 /* GLUIActionButton.h */,
-				8E2FA289186567B50021A471 /* GLUIActionButton.m */,
+				ED9D62661882531000B243D3 /* GLLabelControl.h */,
+				ED9D62671882531000B243D3 /* GLLabelControl.m */,
 				ED4C6207187B615E0001E7DC /* GLPickerControl.h */,
 				ED4C6208187B615E0001E7DC /* GLPickerControl.m */,
 				8E254A84185BBD600068A3F9 /* GLSliderControl.h */,
 				8E254A85185BBD600068A3F9 /* GLSliderControl.m */,
 				EDB8C3A5187BF4310047AE52 /* GLToggleControl.h */,
 				EDB8C3A6187BF4310047AE52 /* GLToggleControl.m */,
+				8E2FA288186567B50021A471 /* GLUIActionButton.h */,
+				8E2FA289186567B50021A471 /* GLUIActionButton.m */,
 				8E254A81185BBB090068A3F9 /* GLUIButton.h */,
 				8E254A82185BBB090068A3F9 /* GLUIButton.m */,
 			);
@@ -767,6 +772,7 @@
 				8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */,
 				8E254A83185BBB090068A3F9 /* GLUIButton.m in Sources */,
 				8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */,
+				ED9D62681882531000B243D3 /* GLLabelControl.m in Sources */,
 				8ECA8992182371AE009D906F /* main.m in Sources */,
 				EDB8C3A7187BF4310047AE52 /* GLToggleControl.m in Sources */,
 				8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */,

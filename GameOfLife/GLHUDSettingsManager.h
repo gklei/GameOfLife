@@ -11,9 +11,10 @@
 typedef enum
 {
    HIT_NO_UI   = 0,
-   HIT_TOGGLER = 1,
-   HIT_SLIDER  = 2,
-   HIT_PICKER  = 3,
+   HIT_LABEL   = 1,
+   HIT_TOGGLER = 2,
+   HIT_SLIDER  = 3,
+   HIT_PICKER  = 4,
 } HUDItemType;
 
 typedef enum
@@ -41,15 +42,15 @@ typedef enum
 
 typedef struct HUDItemRange
 {
-   float location;
-   float length;
+   double minValue;
+   double maxValue;
 } HUDItemRange;
 
-NS_INLINE HUDItemRange HUDItemRangeMake(float location, float length)
+NS_INLINE HUDItemRange HUDItemRangeMake(double minValue, double maxValue)
 {
    HUDItemRange result;
-   result.location = location;
-   result.length = length;
+   result.minValue = minValue;
+   result.maxValue = maxValue;
    return result;
 }
 

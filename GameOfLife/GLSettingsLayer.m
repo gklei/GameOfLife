@@ -9,11 +9,11 @@
 #import "GLSettingsLayer.h"
 
 #import "GLHUDSettingsManager.h"
+#import "GLLabelControl.h"
 #import "GLPickerControl.h"
 #import "GLSettingsItem.h"
 #import "GLSliderControl.h"
 #import "GLToggleControl.h"
-#import "GLSettingsItem.h"
 #import "UIColor+Crayola.h"
 
 #import "GLAppDelegate.h"
@@ -26,11 +26,22 @@
 
 @implementation GLSettingsLayer
 
+- (void)addLabelControl:(HUDItemDescription *)item
+{
+   GLLabelControl * labelControl = [[GLLabelControl alloc] initWithHUDItemDescription:item];
+   GLSettingsItem * labelItem = [[GLSettingsItem alloc] initWithTitle:item.label
+                                                              control:labelControl];
+   labelItem.position = _nextControlPosition;
+   _nextControlPosition.y -= labelControl.controlHeight;
+   
+   [self addChild:labelItem];
+}
+
 - (void)addToggleControl:(HUDItemDescription *)item
 {
-   GLToggleControl *toggleControl = [[GLToggleControl alloc] initWithPreferenceKey:item.keyPath];
-   GLSettingsItem *toggleItem = [[GLSettingsItem alloc] initWithTitle:item.label
-                                                              control:toggleControl];
+   GLToggleControl * toggleControl = [[GLToggleControl alloc] initWithPreferenceKey:item.keyPath];
+   GLSettingsItem * toggleItem = [[GLSettingsItem alloc] initWithTitle:item.label
+                                                               control:toggleControl];
    toggleItem.position = _nextControlPosition;
    _nextControlPosition.y -= toggleControl.controlHeight;
    
@@ -70,6 +81,9 @@
 
    switch (item.type)
    {
+      case HIT_LABEL:
+         [self addLabelControl:item];
+         break;
       case HIT_TOGGLER:
          [self addToggleControl:item];
          break;
@@ -100,7 +114,8 @@
                       anchorPoint:anchorPoint])
    {
       [self setupSettingsLabel];
-      NSArray * keyPaths = [NSArray arrayWithObjects:@"GridImageIndex",
+      NSArray * keyPaths = [NSArray arrayWithObjects:@"HighScore",
+                                                     @"GridImageIndex",
                                                      @"GenerationDuration",
                                                      @"SoundFX",
                                                      @"SmartMenu",
@@ -125,7 +140,7 @@
                                         -(HEADING_FONT_SIZE + TOP_PADDING));
    [self addChild:settingsLabel];
    
-   _nextControlPosition = CGPointMake(0, -(TOP_PADDING * 2 + HEADING_FONT_SIZE * 2 + 10));
+   _nextControlPosition = CGPointMake(0, -(TOP_PADDING + HEADING_FONT_SIZE * 2 + 10));
 }
 
 - (void)setHidden:(BOOL)hidden

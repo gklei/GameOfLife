@@ -133,7 +133,7 @@
    HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
    hudItem.keyPath = @"GridLiveColorName";
    hudItem.label = @"Live Color Name";;
-   hudItem.range = HUDItemRangeMake(0, 1);
+   hudItem.range = HUDItemRangeMake(0, CCN_crayolaYellowSunshineColor);
    hudItem.type = HIT_NO_UI;
    hudItem.defaultvalue = [NSNumber numberWithUnsignedInt:CCN_crayolaCeruleanColor];
    hudItem.valueType = HVT_UINT;
@@ -148,6 +148,20 @@
                           andKeyPath:@"TileGenerationTracking"];
 }
 
+- (void)registerHighScoreHUD
+{
+   HUDPickerItemDescription * hudItem = [[HUDPickerItemDescription alloc] init];
+   hudItem.keyPath = @"HighScore";
+   hudItem.label = @"HIGH SCORE";
+   hudItem.range = HUDItemRangeMake(0, 100000);
+   hudItem.type = HIT_LABEL;
+   hudItem.valueType = HVT_ULONGLONG;
+   hudItem.defaultvalue = [NSNumber numberWithUnsignedLongLong:0];
+   
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addHudItem:hudItem];
+}
+
 - (void)registerHudParameters
 {
    [self registerSoundFxHUD];
@@ -157,6 +171,7 @@
    [self registerGridImagePickerHUD:_gridImagePairs];
    [self registerLiveColorNameChanges];
    [self registerGenerationTracking];
+   [self registerHighScoreHUD];
 }
 
 #pragma mark - observation methods
