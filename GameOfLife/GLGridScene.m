@@ -248,8 +248,7 @@
                           @"",                   @"tile.ring3d.png",
                           @"",                   @"tile.cylinder.png",
                           @"",                   @"tile.buldge.png"];
-
-      [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"HighScore"];
+      
       _highScore = [self getHighScore];
       
       [self registerHudParameters];
@@ -528,12 +527,7 @@
 
 - (void)screenShotButtonPressed
 {
-   NSString *header = @"ACCESS DENIED!";
-   NSString *body = @"This is a body message and it is meant to represent the body of the alert box.";
-   GLAlertLayer *alert = [[GLAlertLayer alloc] initWithHeader:header body:body];
-   alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
-
-   [self addChild:alert];
+   [self takeScreenShot];
 }
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
