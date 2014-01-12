@@ -94,6 +94,9 @@
 
 @interface GLAlertLayer()
 {
+   CGPoint _firstLabelPosition;
+   CGPoint _lastLabelPosition;
+
    // the header and body will be an array of label nodes
    GLHeaderLabel *_header;
    GLBodyLabel *_body;
@@ -112,6 +115,9 @@
       // default color and alpha
       self.color = [SKColor crayolaBlackCoralPearlColor];
       self.alpha = .8;
+
+      _firstLabelPosition = CGPointZero;
+      _lastLabelPosition = CGPointZero;
       
       [self setupHeader];
       [self setupBody];
@@ -128,8 +134,8 @@
    if (self = [self initWithSize:defaultSize
                       anchorPoint:defaultAnchorPoint])
    {
-      self.headerText = header;
-      self.bodyText = body;
+      [self setHeaderText:header];
+      [self setBodyText:body];
    }
    return self;
 }
@@ -160,26 +166,18 @@
 - (void)setHeaderText:(NSString *)headerText
 {
    if (!headerText)
-   {
-      _headerText = @"";
       return;
-   }
 
-   _headerText = [NSString futurizedString:headerText.uppercaseString];
-   [self addHeaderTextToLayer:_headerText];
+   [self addHeaderTextToLayer:[NSString futurizedString:headerText.uppercaseString]];
    [self dynamicallySetSize];
 }
 
 - (void)setBodyText:(NSString *)bodyText
 {
    if (!bodyText)
-   {
-      _bodyText = @"";
       return;
-   }
 
-   _bodyText = [NSString futurizedString:bodyText];
-   [self addBodyTextToLayer:_bodyText];
+   [self addBodyTextToLayer:[NSString futurizedString:bodyText]];
    [self dynamicallySetSize];
 }
 

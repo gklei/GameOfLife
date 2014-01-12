@@ -13,9 +13,6 @@
 - (id)initWithHeader:(NSString *)header
                 body:(NSString *)body;
 
-@property (nonatomic, readonly) NSString *headerText;
-@property (nonatomic, readonly) NSString *bodyText;
-
 - (void)addHeaderText:(NSString *)headerText;
 - (void)addBodyText:(NSString *)bodyText;
 
