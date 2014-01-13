@@ -16,15 +16,14 @@
 #define SIDE_MARGIN_SPACE 10
 
 @interface GLTextElement : NSObject
-
 @property (nonatomic, readonly) NSMutableArray *lines;
 @property (nonatomic, readonly) SKLabelNode *firstLine;
 @property (nonatomic, readonly) SKLabelNode *lastLine;
+@property (nonatomic, readonly) GL_ALERT_TEXT_ELEMENT type;
 
 - (void)addLine;
 - (SKLabelNode *)lineAtIndex:(unsigned)index;
 - (SKLabelNode *)labelNode;
-- (GL_ALERT_TEXT_ELEMENT)type;
 @end
 
 @implementation GLTextElement
@@ -132,15 +131,7 @@
       self.size = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 0);
       self.anchorPoint = CGPointMake(0, 1);
 
-      // default color and alpha
-      self.color = [SKColor crayolaBlackCoralPearlColor];
-      self.alpha = .8;
-
-      _firstLabelPosition = CGPointZero;
-      _lastLabelPosition = CGPointZero;
-
-      _headers = [NSMutableArray new];
-      _bodies = [NSMutableArray new];
+      [self setVariables];
    }
    return self;
 }
@@ -151,15 +142,7 @@
    if (self = [super initWithSize:size
                       anchorPoint:anchorPoint])
    {
-      // default color and alpha
-      self.color = [SKColor crayolaBlackCoralPearlColor];
-      self.alpha = .8;
-
-      _headers = [NSMutableArray new];
-      _bodies = [NSMutableArray new];
-
-      _firstLabelPosition = CGPointZero;
-      _lastLabelPosition = CGPointZero;
+      [self setVariables];
    }
    return self;
 }
@@ -173,29 +156,24 @@
    if (self = [self initWithSize:defaultSize
                       anchorPoint:defaultAnchorPoint])
    {
-      [self setHeaderText:header];
-      [self setBodyText:body];
+      [self addHeaderText:[NSString futurizedString:header].uppercaseString];
+      [self addBodyText:[NSString futurizedString:body]];
    }
    return self;
 }
 
-#pragma mark - Setter Methods
-- (void)setHeaderText:(NSString *)headerText
+#pragma mark - Setup Methods
+- (void)setVariables
 {
-   if (!headerText)
-      return;
+   // default color and alpha
+   self.color = [SKColor crayolaBlackCoralPearlColor];
+   self.alpha = .8;
 
-   [self addHeaderText:[NSString futurizedString:headerText.uppercaseString]];
-   [self dynamicallySetSize];
-}
+   _firstLabelPosition = CGPointZero;
+   _lastLabelPosition = CGPointZero;
 
-- (void)setBodyText:(NSString *)bodyText
-{
-   if (!bodyText)
-      return;
-
-   [self addBodyText:[NSString futurizedString:bodyText]];
-   [self dynamicallySetSize];
+   _headers = [NSMutableArray new];
+   _bodies = [NSMutableArray new];
 }
 
 #pragma mark - Instance Methods
