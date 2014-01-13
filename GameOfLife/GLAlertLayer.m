@@ -12,7 +12,8 @@
 
 #define DEFAULT_ALERT_SIZE CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 150);
 #define DEFAULT_ALERT_ANCHOR_POINT CGPointMake(0, 1);
-#define SIDE_MARGIN_SPACE 10
+#define HEADER_BODY_VERTICAL_SEPARATION 20
+#define SIDE_MARGIN_SPACE 20
 
 @interface GLLabelCollection : NSObject
 
@@ -97,10 +98,7 @@
    CGPoint _firstLabelPosition;
    CGPoint _lastLabelPosition;
 
-   // the header and body will be an array of label nodes
-   GLHeaderLabel *_header;
-   GLBodyLabel *_body;
-
+   // arrays to store off the headers and bodies in the alert
    NSMutableArray *_headers;
    NSMutableArray *_bodies;
 }
@@ -109,6 +107,27 @@
 @implementation GLAlertLayer
 
 #pragma mark - Init methods
+- (id)init
+{
+   if (self = [super init])
+   {
+      // default size and anchor point
+      self.size = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 0);
+      self.anchorPoint = CGPointMake(0, 1);
+
+      // default color and alpha
+      self.color = [SKColor crayolaBlackCoralPearlColor];
+      self.alpha = .8;
+
+      _firstLabelPosition = CGPointZero;
+      _lastLabelPosition = CGPointZero;
+
+      _headers = [NSMutableArray new];
+      _bodies = [NSMutableArray new];
+   }
+   return self;
+}
+
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint
 {
@@ -119,11 +138,11 @@
       self.color = [SKColor crayolaBlackCoralPearlColor];
       self.alpha = .8;
 
+      _headers = [NSMutableArray new];
+      _bodies = [NSMutableArray new];
+
       _firstLabelPosition = CGPointZero;
       _lastLabelPosition = CGPointZero;
-      
-      [self setupHeader];
-      [self setupBody];
    }
    return self;
 }
@@ -143,35 +162,13 @@
    return self;
 }
 
-#pragma mark - Setup Methods
-- (void)setupHeader
-{
-   _header = [GLHeaderLabel new];
-   [_header addLine];
-}
-
-- (void)setupBody
-{
-   _body = [GLBodyLabel new];
-   [_body addLine];
-}
-
-#pragma mark - Instance Methods
-- (void)addHeaderText:(NSString *)headerText
-{
-}
-
-- (void)addBodyText:(NSString *)bodyText
-{
-}
-
 #pragma mark - Setter Methods
 - (void)setHeaderText:(NSString *)headerText
 {
    if (!headerText)
       return;
 
-   [self addHeaderTextToLayer:[NSString futurizedString:headerText.uppercaseString]];
+   [self addHeaderText:[NSString futurizedString:headerText.uppercaseString]];
    [self dynamicallySetSize];
 }
 
@@ -180,21 +177,68 @@
    if (!bodyText)
       return;
 
-   [self addBodyTextToLayer:[NSString futurizedString:bodyText]];
+   [self addBodyText:[NSString futurizedString:bodyText]];
    [self dynamicallySetSize];
 }
 
+#pragma mark - Instance Methods
+- (void)addHeaderText:(NSString *)headerText
+{
+   if (CGPointEqualToPoint(_firstLabelPosition, CGPointZero))
+   {
+      _firstLabelPosition = CGPointMake(self.size.width * .5,
+                                        -(TOP_PADDING + HEADING_FONT_SIZE * .5));
+   }
+   GLHeaderLabel *header = [GLHeaderLabel new];
+   [header addLine];
+   [_headers addObject:header];
+
+   [self addHeaderTextToLayer:headerText];
+}
+
+- (void)addBodyText:(NSString *)bodyText
+{
+   if (CGPointEqualToPoint(_firstLabelPosition, CGPointZero))
+   {
+      _firstLabelPosition = CGPointMake(self.size.width * .5,
+                                        -(TOP_PADDING + BODY_FONT_SIZE * .5));
+   }
+   GLBodyLabel *body = [GLBodyLabel new];
+   [body addLine];
+   [_bodies addObject:body];
+
+   [self addBodyTextToLayer:bodyText];
+}
+
 #pragma mark - Helper Methods
+- (CGPoint)nextPositionForHeader
+{
+   return CGPointMake(self.size.width * .5,
+                      _lastLabelPosition.y -
+                      (HEADING_FONT_SIZE * .5) -
+                      HEADER_BODY_VERTICAL_SEPARATION);
+}
+
+- (CGPoint)nextPositionForBody
+{
+   return CGPointMake(SIDE_MARGIN_SPACE * .5,
+                      _lastLabelPosition.y -
+                      (BODY_FONT_SIZE * .5) -
+                      HEADER_BODY_VERTICAL_SEPARATION);
+}
+
 - (void)addHeaderTextToLayer:(NSString *)headerText
 {
    // separate words by two spaces because the string is FUTURIZED
    NSArray *headerTextWords = [headerText componentsSeparatedByString:@"  "];
    int lineIndex = 0;
 
-   [_header lineAtIndex:lineIndex].text = [headerTextWords objectAtIndex:0];
+   GLHeaderLabel *header = _headers.lastObject;
+
+   [header lineAtIndex:lineIndex].text = [headerTextWords objectAtIndex:0];
 
    // initial check to see if the first word in the header text is too large to display
-   if (![self labelFitsInFrame:[_header lineAtIndex:lineIndex]])
+   if (![self labelFitsInFrame:[header lineAtIndex:lineIndex]])
    {
       NSLog(@"GLAlertLayer: cannot set header text becuase the word '%@' will not fit",
             [headerTextWords objectAtIndex:0]);
@@ -205,19 +249,19 @@
    {
       if ([word isEqual:headerTextWords.firstObject]) continue;
 
-      NSString *currentStr = [_header lineAtIndex:lineIndex].text;
+      NSString *currentStr = [header lineAtIndex:lineIndex].text;
       NSString *nextStr = [currentStr stringByAppendingString:[NSString stringWithFormat:@"  %@", word]];
-      [_header lineAtIndex:lineIndex].text = nextStr;
+      [header lineAtIndex:lineIndex].text = nextStr;
 
-      if (![self labelFitsInFrame:[_header lineAtIndex:lineIndex]])
+      if (![self labelFitsInFrame:[header lineAtIndex:lineIndex]])
       {
-         [_header lineAtIndex:lineIndex].text = currentStr;
-         [_header addLine];
-         [_header lineAtIndex:++lineIndex].text = word;
+         [header lineAtIndex:lineIndex].text = currentStr;
+         [header addLine];
+         [header lineAtIndex:++lineIndex].text = word;
       }
    }
 
-   [self setPositionsForLinesInHeader];
+   [self setPositionsForLinesInHeader:header];
 }
 
 - (void)addBodyTextToLayer:(NSString *)bodyText
@@ -226,10 +270,12 @@
    NSArray *bodyTextWords = [bodyText componentsSeparatedByString:@"  "];
    int lineIndex = 0;
 
-   [_body lineAtIndex:lineIndex].text = [bodyTextWords objectAtIndex:0];
+   GLBodyLabel *body = _bodies.lastObject;
+
+   [body lineAtIndex:lineIndex].text = [bodyTextWords objectAtIndex:0];
 
    // initial check to see if the first word in the header text is too large to display
-   if (![self labelFitsInFrame:[_body lineAtIndex:lineIndex]])
+   if (![self labelFitsInFrame:[body lineAtIndex:lineIndex]])
    {
       NSLog(@"GLAlertLayer: cannot set header text becuase the word '%@' will not fit",
             [bodyTextWords objectAtIndex:0]);
@@ -240,60 +286,56 @@
    {
       if ([word isEqual:bodyTextWords.firstObject]) continue;
 
-      NSString *currentStr = [_body lineAtIndex:lineIndex].text;
+      NSString *currentStr = [body lineAtIndex:lineIndex].text;
       NSString *nextStr = [currentStr stringByAppendingString:[NSString stringWithFormat:@"  %@", word]];
-      [_body lineAtIndex:lineIndex].text = nextStr;
+      [body lineAtIndex:lineIndex].text = nextStr;
 
-      if (![self labelFitsInFrame:[_body lineAtIndex:lineIndex]])
+      if (![self labelFitsInFrame:[body lineAtIndex:lineIndex]])
       {
-         [_body lineAtIndex:lineIndex].text = currentStr;
-         [_body addLine];
-         [_body lineAtIndex:++lineIndex].text = word;
+         [body lineAtIndex:lineIndex].text = currentStr;
+         [body addLine];
+         [body lineAtIndex:++lineIndex].text = word;
       }
    }
 
-   [self setPositionsForLinesInBody];
+   [self setPositionsForLinesInBody:body];
 }
 
-- (void)setPositionsForLinesInHeader
+- (void)setPositionsForLinesInHeader:(GLHeaderLabel *)header
 {
-   CGPoint headerLinePosition = CGPointMake(self.size.width * .5,
-                                            -(TOP_PADDING + HEADING_FONT_SIZE * .5));
-   for (SKLabelNode *headerLine in _header.lines)
+
+   CGPoint headerLinePosition = [self nextPositionForHeader];
+   for (SKLabelNode *headerLine in header.lines)
    {
       headerLine.position = headerLinePosition;
       [self addChild:headerLine];
 
-      if (![headerLine isEqual:_header.lastLine])
+      if (![headerLine isEqual:header.lastLine])
          headerLinePosition = CGPointMake(self.size.width * .5,
                                           headerLine.position.y - HEADING_FONT_SIZE);
    }
+   _lastLabelPosition = headerLinePosition;
 }
 
-- (void)setPositionsForLinesInBody
+- (void)setPositionsForLinesInBody:(GLBodyLabel *)body
 {
-   CGFloat yValue = _header.lastLine.position.y - HEADING_FONT_SIZE * 2;
-   CGPoint bodyLinePosition = CGPointMake(SIDE_MARGIN_SPACE, yValue);
-   for (SKLabelNode *bodyLine in _body.lines)
+   CGPoint bodyLinePosition = [self nextPositionForBody];
+   for (SKLabelNode *bodyLine in body.lines)
    {
       bodyLine.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
       bodyLine.position = bodyLinePosition;
       [self addChild:bodyLine];
 
-      if (![bodyLine isEqual:_body.lastLine])
+      if (![bodyLine isEqual:body.lastLine])
          bodyLinePosition = CGPointMake(SIDE_MARGIN_SPACE,
                                         bodyLine.position.y - BODY_FONT_SIZE * 1.25);
    }
+   _lastLabelPosition = bodyLinePosition;
 }
 
 - (void)dynamicallySetSize
 {
-   CGFloat height = fabs(_header.firstLine.position.y +
-                         (_header.firstLine ? (HEADING_FONT_SIZE * .5) : 0) -
-                         _body.lastLine.position.y +
-                         (_body.lastLine ? (BODY_FONT_SIZE * .5) : 0)) +
-                         TOP_PADDING * 1.5;
-
+   CGFloat height = fabs(_firstLabelPosition.y - _lastLabelPosition.y) + TOP_PADDING * 2.5;
    self.size = CGSizeMake(self.size.width, height);
 }
 
