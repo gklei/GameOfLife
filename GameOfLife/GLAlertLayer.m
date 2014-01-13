@@ -100,6 +100,9 @@
    // the header and body will be an array of label nodes
    GLHeaderLabel *_header;
    GLBodyLabel *_body;
+
+   NSMutableArray *_headers;
+   NSMutableArray *_bodies;
 }
 @end
 

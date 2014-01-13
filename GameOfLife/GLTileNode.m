@@ -59,7 +59,7 @@
 //         tile.isLiving = YES;
          [tile restoreAsLiving];
 //         tile.isLiving = NO;
-         
+
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
          {
@@ -73,20 +73,23 @@
 
    LoseFocusActionBlock loseFocusActionBlock = ^
    {
-      SKAction *scaleDown = [SKAction scaleTo:TILE_SCALE_DEFAULT duration:.2];
-      scaleDown.timingMode = SKActionTimingEaseInEaseOut;
-
-      [tile runAction:scaleDown
-           completion:^
+      if (tile.isLiving)
       {
-         if (tile.xScale != TILE_SCALE_DEFAULT || tile.yScale != TILE_SCALE_DEFAULT)
-            [tile setScale:TILE_SCALE_DEFAULT];
-         
-         if (tile.isLiving)
+         SKAction *scaleDown = [SKAction scaleTo:TILE_SCALE_DEFAULT duration:.2];
+         scaleDown.timingMode = SKActionTimingEaseInEaseOut;
+         [tile runAction:scaleDown
+              completion:^
+         {
+            if (tile.xScale != TILE_SCALE_DEFAULT || tile.yScale != TILE_SCALE_DEFAULT)
+               [tile setScale:TILE_SCALE_DEFAULT];
+
             [tile restoreAsLiving];
-         else
-            [tile restoreAsDead];
-      }];
+         }];
+      }
+      else
+      {
+         [tile restoreAsDead];
+      }
    };
 
    tile.loseFocusActionBlock = loseFocusActionBlock;

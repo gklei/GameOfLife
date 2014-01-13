@@ -264,7 +264,7 @@
 		8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CrossFade.m"; sourceTree = "<group>"; };
 		8EB738CC1874B56600BB58C0 /* GLColorPaletteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorPaletteManager.h; sourceTree = "<group>"; };
 		8EB738CD1874B56600BB58C0 /* GLColorPaletteManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLColorPaletteManager.m; sourceTree = "<group>"; };
-		8ECA8980182371AE009D906F /* GameOfLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameOfLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8ECA8980182371AE009D906F /* LiFE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LiFE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ECA8983182371AE009D906F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8ECA8985182371AE009D906F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		8ECA8987182371AE009D906F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -451,7 +451,7 @@
 		8ECA8981182371AE009D906F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8ECA8980182371AE009D906F /* GameOfLife.app */,
+				8ECA8980182371AE009D906F /* LiFE.app */,
 				8ECA89A8182371AE009D906F /* GameOfLifeTests.xctest */,
 			);
 			name = Products;
@@ -599,7 +599,7 @@
 			);
 			name = LiFE;
 			productName = GameOfLife;
-			productReference = 8ECA8980182371AE009D906F /* GameOfLife.app */;
+			productReference = 8ECA8980182371AE009D906F /* LiFE.app */;
 			productType = "com.apple.product-type.application";
 		};
 		8ECA89A7182371AE009D906F /* GameOfLifeTests */ = {

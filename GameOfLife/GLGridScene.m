@@ -542,6 +542,7 @@
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
 {
+   [self removeAllAlerts];
    [_colorHudLayer runAction:action];
 }
 
@@ -561,6 +562,7 @@
 #pragma mark GLColorHud Delegate Method
 - (void)colorGridWillExpandWithRepositioningAction:(SKAction *)action
 {
+   [self removeAllAlerts];
    [_generalHudLayer runAction:action];
 }
 
