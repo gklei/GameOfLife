@@ -13,7 +13,7 @@
 #define DEFAULT_ALERT_SIZE CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 150);
 #define DEFAULT_ALERT_ANCHOR_POINT CGPointMake(0, 1);
 #define HEADER_BODY_VERTICAL_SEPARATION 20
-#define SIDE_MARGIN_SPACE 20
+#define SIDE_MARGIN_SPACE 10
 
 @interface GLLabelCollection : NSObject
 
@@ -193,7 +193,8 @@
    [header addLine];
    [_headers addObject:header];
 
-   [self addHeaderTextToLayer:headerText];
+   [self addHeaderTextToLayer:[NSString futurizedString:headerText.uppercaseString]];
+   [self dynamicallySetSize];
 }
 
 - (void)addBodyText:(NSString *)bodyText
@@ -207,7 +208,8 @@
    [body addLine];
    [_bodies addObject:body];
 
-   [self addBodyTextToLayer:bodyText];
+   [self addBodyTextToLayer:[NSString futurizedString:bodyText]];
+   [self dynamicallySetSize];
 }
 
 #pragma mark - Helper Methods
@@ -221,7 +223,7 @@
 
 - (CGPoint)nextPositionForBody
 {
-   return CGPointMake(SIDE_MARGIN_SPACE * .5,
+   return CGPointMake(SIDE_MARGIN_SPACE,
                       _lastLabelPosition.y -
                       (BODY_FONT_SIZE * .5) -
                       HEADER_BODY_VERTICAL_SEPARATION);
@@ -341,7 +343,7 @@
 
 - (BOOL)labelFitsInFrame:(SKLabelNode *)label
 {
-   return label.calculateAccumulatedFrame.size.width <= (self.size.width - SIDE_MARGIN_SPACE);
+   return label.calculateAccumulatedFrame.size.width <= (self.size.width - (SIDE_MARGIN_SPACE * 2));
 }
 
 @end
