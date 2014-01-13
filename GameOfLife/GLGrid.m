@@ -19,7 +19,7 @@
 
 @interface GLGrid()
 {
-   std::vector<BOOL> _life;
+   std::vector<BOOL> _LiFE;
    std::vector<BOOL> _storedTileStates;
    std::vector<BOOL> _nextGenerationTileStates;
    std::vector<BOOL> _currentGenerationTileStates;
@@ -47,7 +47,7 @@
 - (void)loadLifeTileStates
 {
    for (int i = 0; i < _tiles.count; ++i)
-      _storedTileStates[i] = _life[i];
+      _storedTileStates[i] = _LiFE[i];
 }
 
 - (void)loadStoredTileStates
@@ -68,19 +68,19 @@
       if ([[[UIDevice currentDevice] model] isEqualToString: @"iPhone"])
          st = 12 * 16;
    
-   if (_life.size() <= st+109)
+   if (_LiFE.size() <= st+109)
    {
       NSLog(@"Trying to initialize Life beyond grid size.");
       return;
    }
    
-   _life[st+1] = _life[st+2] = _life[st+3] = _life[st+5] = _life[st+7] = _life[st+11] =
-   _life[st+12] = _life[st+13] = _life[st+17] = _life[st+21] = _life[st+23] = _life[st+27] =
-   _life[st+33] = _life[st+37] = _life[st+39] = _life[st+43] = _life[st+49] = _life[st+53] =
-   _life[st+55] = _life[st+56] = _life[st+57] = _life[st+59] = _life[st+60] = _life[st+61] =
-   _life[st+65] = _life[st+71] = _life[st+75] = _life[st+81] = _life[st+85] = _life[st+87] =
-   _life[st+91] = _life[st+97] = _life[st+103] = _life[st+104] = _life[st+105] = _life[st+107] =
-   _life[st+108] = _life[st+109] = LIVING;
+   _LiFE[st+1]   = _LiFE[st+2]   = _LiFE[st+3]   = _LiFE[st+5]   = _LiFE[st+7]   = _LiFE[st+11]  =
+   _LiFE[st+12]  = _LiFE[st+13]  = _LiFE[st+17]  = _LiFE[st+21]  = _LiFE[st+23]  = _LiFE[st+27]  =
+   _LiFE[st+33]  = _LiFE[st+37]  = _LiFE[st+39]  = _LiFE[st+43]  = _LiFE[st+49]  = _LiFE[st+53]  =
+   _LiFE[st+55]  = _LiFE[st+56]  = _LiFE[st+57]  = _LiFE[st+59]  = _LiFE[st+60]  = _LiFE[st+61]  =
+   _LiFE[st+65]  = _LiFE[st+71]  = _LiFE[st+75]  = _LiFE[st+81]  = _LiFE[st+85]  = _LiFE[st+87]  =
+   _LiFE[st+91]  = _LiFE[st+97]  = _LiFE[st+103] = _LiFE[st+104] = _LiFE[st+105] = _LiFE[st+107] =
+   _LiFE[st+108] = _LiFE[st+109] = LIVING;
 }
 
 - (void)setupGridWithSize:(CGSize)size
@@ -121,7 +121,7 @@
    _currentGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
-   _life = std::vector<BOOL>(_tiles.count, DEAD);
+   _LiFE = std::vector<BOOL>(_tiles.count, DEAD);
    [self buildLife:(CGSize)size];
    
    CGPoint boardCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,

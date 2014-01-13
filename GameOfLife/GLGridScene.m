@@ -354,6 +354,7 @@
    [_grid loadLifeTileStates];
    [self restoreButtonPressed];
    [_grid storeGridState];
+   [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)loadLastGrid
