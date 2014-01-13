@@ -402,14 +402,13 @@
    unsigned long long genCount = [_grid generationCount];
    if (genCount)
    {
+      GLAlertLayer *alert = [[GLAlertLayer alloc] init];
+      
       BOOL bonus = [_grid isCleared];
       BOOL checkHighScore = ![_grid startedWithLife];
       
       [self removeAllAlerts];
-
-      NSString * header = nil;
-      NSString * body = nil;
-
+      
       unsigned long long totalScore = genCount;
       
       if (bonus)
@@ -420,28 +419,23 @@
          _highScore = totalScore;
          [self storeHighScore:_highScore];
 
-         header = @"Congratulations!";
-         body = [NSString stringWithFormat:@"New high score: %llu", _highScore];
+         [alert addHeaderText:@"High Score!"];\
       }
+      else if (_gameFinished)
+         [alert addHeaderText:@"Game Finished"];
       else
-      {
-         header = _gameFinished?  @"Game Finished" : @"Game Stopped";
-         body = [NSString stringWithFormat:@"Your score:  %llu", genCount];
+         [alert addHeaderText:@"Game Stopped"];
+      
+      [alert addBodyText:[NSString stringWithFormat:@"Game score: %llu", genCount]];
          
-         if (bonus)
-         {
-            NSString * bonusStr =
-               [NSString stringWithFormat:@" + BONUS (cleared): %u", BONUS_FOR_CLEARING_GRID];
-            body = [body stringByAppendingString:bonusStr];
-            
-            NSString * total = [NSString stringWithFormat:@"\n Total score: %llu", totalScore];
-            body = [body stringByAppendingString:total];
-         }
+      if (bonus)
+      {
+         [alert addBodyText:
+          [NSString stringWithFormat:@"Cleared board bonus: %u", BONUS_FOR_CLEARING_GRID]];
+         [alert addBodyText:[NSString stringWithFormat:@"Total score: %llu", totalScore]];
       }
 
-      GLAlertLayer *alert = [[GLAlertLayer alloc] initWithHeader:header body:body];
-      alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 50);
-      
+      alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 20);
       [self addChild:alert];
    }
 }
