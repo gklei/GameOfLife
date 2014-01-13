@@ -891,7 +891,7 @@
    {
       assert(type == HVT_BOOL);
       _grid.inContinuousLoop = NO;
-      _grid.considersContinuousBiLoops = [value boolValue];
+      _grid.considerDeeperLoops = [value boolValue];
    }
    else if ([keyPath compare:@"GridImageIndex"] == NSOrderedSame)
    {

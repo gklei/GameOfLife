@@ -21,7 +21,7 @@ typedef struct {
 @property (nonatomic, assign) GridDimensions dimensions;
 @property (nonatomic, strong) NSArray *tiles;
 @property (nonatomic, readwrite, getter = isInContinuousLoop) BOOL inContinuousLoop;
-@property (nonatomic, readwrite) BOOL considersContinuousBiLoops;
+@property (nonatomic, readwrite) BOOL considerDeeperLoops;
 @property (nonatomic, readwrite) BOOL usesMultiColors;
 
 - (id)initWithSize:(CGSize)size;
