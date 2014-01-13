@@ -558,7 +558,7 @@
 
 - (BOOL)startedWithLife
 {
-   return YES;
+   return _startedWithLife;
 }
 
 @end
