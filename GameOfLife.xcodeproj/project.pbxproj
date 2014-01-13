@@ -585,9 +585,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8ECA897F182371AE009D906F /* GameOfLife */ = {
+		8ECA897F182371AE009D906F /* LiFE */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8ECA89B9182371AE009D906F /* Build configuration list for PBXNativeTarget "GameOfLife" */;
+			buildConfigurationList = 8ECA89B9182371AE009D906F /* Build configuration list for PBXNativeTarget "LiFE" */;
 			buildPhases = (
 				8ECA897C182371AE009D906F /* Sources */,
 				8ECA897D182371AE009D906F /* Frameworks */,
@@ -597,7 +597,7 @@
 			);
 			dependencies = (
 			);
-			name = GameOfLife;
+			name = LiFE;
 			productName = GameOfLife;
 			productReference = 8ECA8980182371AE009D906F /* GameOfLife.app */;
 			productType = "com.apple.product-type.application";
@@ -648,7 +648,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8ECA897F182371AE009D906F /* GameOfLife */,
+				8ECA897F182371AE009D906F /* LiFE */,
 				8ECA89A7182371AE009D906F /* GameOfLifeTests */,
 			);
 		};
@@ -811,7 +811,7 @@
 /* Begin PBXTargetDependency section */
 		8ECA89AE182371AE009D906F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8ECA897F182371AE009D906F /* GameOfLife */;
+			target = 8ECA897F182371AE009D906F /* LiFE */;
 			targetProxy = 8ECA89AD182371AE009D906F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1000,7 +1000,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8ECA89B9182371AE009D906F /* Build configuration list for PBXNativeTarget "GameOfLife" */ = {
+		8ECA89B9182371AE009D906F /* Build configuration list for PBXNativeTarget "LiFE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8ECA89BA182371AE009D906F /* Debug */,
