@@ -45,4 +45,7 @@ typedef struct {
 - (void)setLiveImage:(NSString *)liveImageName;
 - (void)setLiveRotation:(double)rotation;
 
+- (BOOL)isCleared;
+- (BOOL)startedWithLife;
+
 @end

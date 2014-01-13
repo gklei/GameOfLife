@@ -29,6 +29,7 @@
    
    BOOL _clearingGrid;
    BOOL _running;
+   BOOL _startedWithLife;
    
    CrayolaColorName _currentColorName;
 }
@@ -119,13 +120,16 @@
    
    _tiles = [NSArray arrayWithArray:self.children];
    
-   _quadLooprGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
-   _triLooprGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
-   _priorGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
-   _currentGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
-   _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
-   _storedTileStates = std::vector<BOOL>(_tiles.count, DEAD);
-   _LiFE = std::vector<BOOL>(_tiles.count, DEAD);
+   NSUInteger gridSize = _tiles.count;
+   _quadLooprGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
+   _triLooprGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
+   _priorGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
+   _currentGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
+   _nextGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
+   _storedTileStates = std::vector<BOOL>(gridSize, DEAD);
+   
+   // build the default vector
+   _LiFE = std::vector<BOOL>(gridSize, DEAD);
    [self buildLife:(CGSize)size];
    
    CGPoint boardCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
@@ -259,11 +263,16 @@
 
 - (void)storeGridState
 {
+   _startedWithLife = YES;
+   
    NSMutableArray * storedState = [NSMutableArray arrayWithCapacity:_tiles.count];
    for (int i = 0; i < _tiles.count; ++i)
    {
       _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
       [storedState addObject:[NSNumber numberWithBool:_storedTileStates[i]]];
+      
+      if (_startedWithLife && _storedTileStates[i] != _LiFE[i])
+         _startedWithLife = NO;
    }
    
    _inContinuousLoop = NO;
@@ -278,7 +287,6 @@
    {
       CGPoint center = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
                                    _dimensions.rows * TILESIZE.height * 0.5);
-      
       for (int i = 0; i < _tiles.count; ++i)
       {
          GLTileNode * tile = [_tiles objectAtIndex:i];
@@ -537,6 +545,20 @@
    CGPoint position = ((GLTileNode *)[_tiles objectAtIndex:indexForColorCenter]).position;
    for (GLTileNode * tile in _tiles)
       tile.colorCenter = position;
+}
+
+- (BOOL)isCleared
+{
+   for (GLTileNode *tile in _tiles)
+      if ([tile isLiving])
+         return NO;
+   
+   return YES;
+}
+
+- (BOOL)startedWithLife
+{
+   return YES;
 }
 
 @end

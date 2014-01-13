@@ -20,7 +20,10 @@
 #include <AssetsLibrary/AssetsLibrary.h>
 #include <OpenGLES/ES1/glext.h>
 
+
 #define DEFAULT_GENERATION_DURATION 0.8
+#define BONUS_FOR_CLEARING_GRID     50
+
 
 #pragma mark - GLGridScene private interface
 @interface GLGridScene() <GLGeneralHudDelegate, GLColorHudDelegate>
@@ -399,24 +402,41 @@
    unsigned long long genCount = [_grid generationCount];
    if (genCount)
    {
+      BOOL bonus = [_grid isCleared];
+      BOOL checkHighScore = ![_grid startedWithLife];
+      
       [self removeAllAlerts];
 
       NSString * header = nil;
       NSString * body = nil;
 
-      if (genCount > _highScore)
+      unsigned long long totalScore = genCount;
+      
+      if (bonus)
+         totalScore += BONUS_FOR_CLEARING_GRID;
+      
+      if (checkHighScore && totalScore > _highScore)
       {
-         _highScore = genCount;
+         _highScore = totalScore;
          [self storeHighScore:_highScore];
 
          header = @"Congratulations!";
-         body = [NSString stringWithFormat:@"New high score: %llu",
-                 _highScore];
+         body = [NSString stringWithFormat:@"New high score: %llu", _highScore];
       }
       else
       {
          header = _gameFinished?  @"Game Finished" : @"Game Stopped";
-         body = [NSString stringWithFormat:@"Your score: %llu", genCount];
+         body = [NSString stringWithFormat:@"Your score:  %llu", genCount];
+         
+         if (bonus)
+         {
+            NSString * bonusStr =
+               [NSString stringWithFormat:@" + BONUS (cleared): %u", BONUS_FOR_CLEARING_GRID];
+            body = [body stringByAppendingString:bonusStr];
+            
+            NSString * total = [NSString stringWithFormat:@"\n Total score: %llu", totalScore];
+            body = [body stringByAppendingString:total];
+         }
       }
 
       GLAlertLayer *alert = [[GLAlertLayer alloc] initWithHeader:header body:body];
