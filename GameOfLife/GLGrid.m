@@ -24,7 +24,9 @@
    std::vector<BOOL> _nextGenerationTileStates;
    std::vector<BOOL> _currentGenerationTileStates;
    std::vector<BOOL> _priorGenerationTileStates;
-
+   std::vector<BOOL> _triLooprGenerationTileStates;
+   std::vector<BOOL> _quadLooprGenerationTileStates;
+   
    BOOL _clearingGrid;
    BOOL _running;
    
@@ -117,6 +119,8 @@
    
    _tiles = [NSArray arrayWithArray:self.children];
    
+   _quadLooprGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
+   _triLooprGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _priorGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _currentGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
    _nextGenerationTileStates = std::vector<BOOL>(_tiles.count, DEAD);
@@ -184,8 +188,11 @@
 
 - (void)updateNextGeneration
 {
+   // currently, we only track back four generations to track looping
    for (int i = 0; i < _tiles.count; ++i)
    {
+      _quadLooprGenerationTileStates[i] = _triLooprGenerationTileStates[i];
+      _triLooprGenerationTileStates[i] = _priorGenerationTileStates[i];
       _priorGenerationTileStates[i] = _currentGenerationTileStates[i];
       _currentGenerationTileStates[i] = _nextGenerationTileStates[i];
       _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
@@ -193,9 +200,19 @@
    
    _inContinuousLoop = [self currentlyInContinuousLoop];
    if (_inContinuousLoop)
-      return;
+      return;  // nothing new to generate
 
-   if ([self currentlyInContinuousBiLoop] == NO)
+   bool incrementGeneration = true;
+   if ([self currentlyInContinuousBiLoop])
+      incrementGeneration = false;
+   
+   if (incrementGeneration && [self currentlyInContinuousTriLoop])
+      incrementGeneration = false;
+   
+   if (incrementGeneration && [self currentlyInContinuousQuadLoop])
+      incrementGeneration = false;
+   
+   if (incrementGeneration)
       ++_generationCount;  // don't add to count if we are not generating new life
    
    for (int i = 0; i < _tiles.count; ++i)
@@ -204,11 +221,29 @@
    [self updateColorCenter];
 }
 
+- (BOOL)currentlyInContinuousQuadLoop
+{
+   for (int i = 0; i < _tiles.count; ++i)
+      if (_nextGenerationTileStates[i] != _quadLooprGenerationTileStates[i])
+         return NO;
+   
+   return YES;
+}
+
+- (BOOL)currentlyInContinuousTriLoop
+{
+   for (int i = 0; i < _tiles.count; ++i)
+      if (_nextGenerationTileStates[i] != _triLooprGenerationTileStates[i])
+         return _considerDeeperLoops? [self currentlyInContinuousQuadLoop] : NO;
+   
+   return YES;
+}
+
 - (BOOL)currentlyInContinuousBiLoop
 {
    for (int i = 0; i < _tiles.count; ++i)
       if (_nextGenerationTileStates[i] != _priorGenerationTileStates[i])
-         return NO;
+         return _considerDeeperLoops? [self currentlyInContinuousTriLoop] : NO;
    
    return YES;
 }
@@ -217,7 +252,7 @@
 {
    for (int i = 0; i < _tiles.count; ++i)
       if (((GLTileNode *)_tiles[i]).isLiving != _nextGenerationTileStates[i])
-         return (_considersContinuousBiLoops)? [self currentlyInContinuousBiLoop] : NO;
+         return _considerDeeperLoops? [self currentlyInContinuousBiLoop] : NO;
 
    return YES;
 }
