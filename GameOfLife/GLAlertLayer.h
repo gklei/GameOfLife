@@ -8,6 +8,12 @@
 
 #import "GLMenuLayer.h"
 
+typedef NS_ENUM(int, GL_ALERT_TEXT_ELEMENT)
+{
+   e_ALERT_TEXT_HEADER = 0,
+   e_ALERT_TEXT_BODY
+};
+
 @interface GLAlertLayer : GLMenuLayer
 
 - (id)initWithHeader:(NSString *)header
