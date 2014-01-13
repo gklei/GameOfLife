@@ -537,14 +537,14 @@
 
 - (void)screenShotButtonPressed
 {
-   GLAlertLayer *alert = [[GLAlertLayer alloc] init];
-   [alert addHeaderText:@"header 1"];
-   [alert addHeaderText:@"header 2"];
-   [alert addBodyText:@"This is a body!"];
-
-   alert.position = CGPointMake(0, self.size.height - 40);
-   [self addChild:alert];
-//   [self takeScreenShot];
+//   GLAlertLayer *alert = [[GLAlertLayer alloc] init];
+//   [alert addHeaderText:@"header 1"];
+//   [alert addHeaderText:@"header 2"];
+//   [alert addBodyText:@"This is a body!"];
+//
+//   alert.position = CGPointMake(0, self.size.height - 40);
+//   [self addChild:alert];
+   [self takeScreenShot];
 }
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
