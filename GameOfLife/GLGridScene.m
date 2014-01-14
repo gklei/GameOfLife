@@ -582,8 +582,8 @@
       
       UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
       UIGraphicsEndImageContext();
-      [_generalHudLayer setHidden:NO];
-      
+//      [_generalHudLayer setHidden:NO];
+
       if (viewImage)
       {
          // actually save the screenshot
@@ -626,8 +626,8 @@
    {
       case ALAuthorizationStatusRestricted:
       case ALAuthorizationStatusDenied:
-         header = @"This app does not have permission to access your photo library";
-         bodyLine1 = @"Give this app permission to save photos to your photo library by changing the settings in:";
+         header = @"Photo access denied!";
+         bodyLine1 = @"Give this app permission to save photos to your Photo Library by changing the settings in:";
          bodyLine2 = @"Settings > Privacy > Photos";
          break;
       case ALAuthorizationStatusNotDetermined:

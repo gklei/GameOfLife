@@ -140,7 +140,7 @@
                                         -(HEADING_FONT_SIZE + TOP_PADDING));
    [self addChild:settingsLabel];
    
-   _nextControlPosition = CGPointMake(0, -(TOP_PADDING + HEADING_FONT_SIZE * 2 + 10));
+   _nextControlPosition = CGPointMake(0, -(TOP_PADDING + HEADING_FONT_SIZE * 3));
 }
 
 - (void)setHidden:(BOOL)hidden
