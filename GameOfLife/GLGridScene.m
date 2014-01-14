@@ -575,12 +575,14 @@
    
    // block of code that takes a screen shot, runs an animation, and saves to the photo album
    void (^screenShotBlock)() = ^{
+      [_generalHudLayer setHidden:YES];
       CGFloat scale = self.view.contentScaleFactor;
       UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
       [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
       
       UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
       UIGraphicsEndImageContext();
+      [_generalHudLayer setHidden:NO];
       
       if (viewImage)
       {
