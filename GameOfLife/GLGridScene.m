@@ -551,7 +551,7 @@
    //  such as parental controls being in place.
    ALAuthorizationStatusDenied,            // User has explicitly denied this application access to photos data.
    ALAuthorizationStatusAuthorized
-    */
+   */
    NSString *header = nil;
    NSString *bodyLine1 = nil;
    NSString *bodyLine2 = nil;
@@ -568,7 +568,7 @@
          [self takeScreenShot];
          return;
       default:
-         NSLog(@"Authorization Status %d unrecognized", _photoLibraryAuthorizationStatus);
+         NSLog(@"Authorization Status %ld unrecognized", (long)_photoLibraryAuthorizationStatus);
          return;
    }
 
