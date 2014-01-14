@@ -402,8 +402,8 @@
    unsigned long long genCount = [_grid generationCount];
    if (genCount)
    {
-      GLAlertLayer *alert = [[GLAlertLayer alloc] init];
-      
+      GLAlertLayer *alert = [GLAlertLayer new];
+
       BOOL bonus = [_grid isCleared];
       BOOL checkHighScore = ![_grid startedWithLife];
       
@@ -551,7 +551,42 @@
 
 - (void)screenShotButtonPressed
 {
-   [self takeScreenShot];
+   [self removeAllAlerts];
+   /*
+   ALAuthorizationStatusNotDetermined = 0, // User has not yet made a choice with regards to this application
+   ALAuthorizationStatusRestricted,        // This application is not authorized to access photo data.
+   // The user cannot change this application’s status, possibly due to active restrictions
+   //  such as parental controls being in place.
+   ALAuthorizationStatusDenied,            // User has explicitly denied this application access to photos data.
+   ALAuthorizationStatusAuthorized
+    */
+   NSString *header = nil;
+   NSString *bodyLine1 = nil;
+   NSString *bodyLine2 = nil;
+   switch (_photoLibraryAuthorizationStatus)
+   {
+      case ALAuthorizationStatusNotDetermined:
+      case ALAuthorizationStatusRestricted:
+      case ALAuthorizationStatusDenied:
+         header = @"This app does not have permission to access your photo library";
+         bodyLine1 = @"Give this app permission to save photos to your photo library by changing the settings in:";
+         bodyLine2 = @"Settings > Privacy > Photos";
+         break;
+      case ALAuthorizationStatusAuthorized:
+         [self takeScreenShot];
+         return;
+      default:
+         NSLog(@"Authorization Status %d unrecognized", _photoLibraryAuthorizationStatus);
+         return;
+   }
+
+   GLAlertLayer *alert = [GLAlertLayer new];
+   [alert addHeaderText:header];
+   [alert addBodyText:bodyLine1];
+   [alert addBodyText:bodyLine2];
+
+   alert.position = CGPointMake(0, self.size.height - 20);
+   [self addChild:alert];
 }
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
