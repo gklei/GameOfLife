@@ -12,7 +12,7 @@
 
 + (NSString *)futurizedString:(NSString *)string
 {
-   if (string == nil)
+   if (!string.length)
       return nil;
 
    NSMutableString *futurizedString = [NSMutableString string];
