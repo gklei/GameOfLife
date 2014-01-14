@@ -622,13 +622,13 @@
    NSString *bodyLine2 = nil;
    switch (_photoLibraryAuthorizationStatus)
    {
-      case ALAuthorizationStatusNotDetermined:
       case ALAuthorizationStatusRestricted:
       case ALAuthorizationStatusDenied:
          header = @"This app does not have permission to access your photo library";
          bodyLine1 = @"Give this app permission to save photos to your photo library by changing the settings in:";
          bodyLine2 = @"Settings > Privacy > Photos";
          break;
+      case ALAuthorizationStatusNotDetermined:
       case ALAuthorizationStatusAuthorized:
          [self takeScreenShot:buttonPosition];
          return;
