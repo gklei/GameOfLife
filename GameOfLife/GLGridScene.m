@@ -582,7 +582,7 @@
       
       UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
       UIGraphicsEndImageContext();
-//      [_generalHudLayer setHidden:NO];
+      [_generalHudLayer setHidden:NO];
 
       if (viewImage)
       {
