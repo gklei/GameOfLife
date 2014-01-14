@@ -20,20 +20,31 @@
 
 @interface GLSettingsLayer()
 {
+   GLUIButton *_lastControl;
    CGPoint _nextControlPosition;
 }
 @end
 
 @implementation GLSettingsLayer
 
+- (BOOL)controlIsStartOfGroup:(GLUIButton *)control
+{
+   if ([control isKindOfClass:_lastControl.class])
+      return NO;
+   else
+      return YES;
+}
+
 - (void)addLabelControl:(HUDItemDescription *)item
 {
    GLLabelControl * labelControl = [[GLLabelControl alloc] initWithHUDItemDescription:item];
    GLSettingsItem * labelItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                               control:labelControl];
+   _nextControlPosition.y -= ([self controlIsStartOfGroup:labelControl])? 5 : 0;
    labelItem.position = _nextControlPosition;
    _nextControlPosition.y -= labelControl.controlHeight;
-   
+
+   _lastControl = labelControl;
    [self addChild:labelItem];
 }
 
@@ -42,9 +53,11 @@
    GLToggleControl * toggleControl = [[GLToggleControl alloc] initWithPreferenceKey:item.keyPath];
    GLSettingsItem * toggleItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                                control:toggleControl];
+   _nextControlPosition.y -= ([self controlIsStartOfGroup:toggleControl])? 5 : 0;
    toggleItem.position = _nextControlPosition;
    _nextControlPosition.y -= toggleControl.controlHeight;
-   
+
+   _lastControl = toggleControl;
    [self addChild:toggleItem];
 }
 
@@ -55,9 +68,11 @@
                                                             andPreferenceKey:item.keyPath];
    GLSettingsItem * sliderItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                                control:sliderControl];
+   _nextControlPosition.y -= ([self controlIsStartOfGroup:sliderControl])? 5 : 0;
    sliderItem.position = _nextControlPosition;
    _nextControlPosition.y -= sliderControl.controlHeight;
-   
+
+   _lastControl = sliderControl;
    [self addChild:sliderItem];
 }
 
@@ -68,9 +83,11 @@
    
    GLSettingsItem * pickerItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                                control:pickerControl];
+   _nextControlPosition.y -= ([self controlIsStartOfGroup:pickerControl])? 5 : 0;
    pickerItem.position = _nextControlPosition;
    _nextControlPosition.y -= pickerControl.controlHeight;
-   
+
+   _lastControl = pickerControl;
    [self addChild:pickerItem];
 }
 
