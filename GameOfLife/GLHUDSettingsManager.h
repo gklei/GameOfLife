@@ -15,7 +15,6 @@ typedef enum
    HIT_TOGGLER = 2,
    HIT_SLIDER  = 3,
    HIT_PICKER  = 4,
-   HIT_SPACING = 5,
 } HUDItemType;
 
 typedef enum

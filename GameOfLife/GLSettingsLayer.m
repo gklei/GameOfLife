@@ -29,10 +29,7 @@
 
 - (BOOL)controlIsStartOfGroup:(GLUIButton *)control
 {
-   if ([control isKindOfClass:_lastControl.class])
-      return NO;
-   else
-      return YES;
+   return ![control isKindOfClass:_lastControl.class];
 }
 
 - (void)addLabelControl:(HUDItemDescription *)item
