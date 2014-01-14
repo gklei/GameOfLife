@@ -215,8 +215,14 @@
    _cameraButton = [self buttonWithFilename:@"camera2" buttonName:@"camera"];
    _cameraButton.alpha =
       ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized)? 1 : .5;
-   ActionBlock cameraButtonActionBlock =
-      ^{[self.delegate screenShotButtonPressed:_cameraButton.position];};
+   ActionBlock cameraButtonActionBlock = ^
+   {
+      void (^completionBlock)() = ^{[self.delegate screenShotButtonPressed:_cameraButton.position];};
+      if (_settingsAreExpanded)
+         [self collapseSettingsWithCompletionBlock:completionBlock];
+      else
+         completionBlock();
+   };
    _cameraButton.actionBlock = cameraButtonActionBlock;
 
    _settingsButton = [self buttonWithFilename:@"cog" buttonName:@"settings"];
