@@ -515,36 +515,28 @@
    // weird work around for the first screen shot that's taken being slow
    if (_shouldPlaySound) [self runAction:_flashSound];
    
-   if (!_firstScreenShotTaken)
-   {
-      [_flashLayer runAction:_flashAnimation
-                  completion:^
-       {
-          CGFloat scale = self.view.contentScaleFactor;
-          UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
-          [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
-
-          UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
-          UIGraphicsEndImageContext();
-
-          if (viewImage)
-             UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
-          
-          _firstScreenShotTaken = YES;
-      }];
-   }
-   else
-   {
+   // block of code that takes a screen shot and saves it to the photo album
+   void (^screenShotBlock)() = ^{
       CGFloat scale = self.view.contentScaleFactor;
       UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
       [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
-
+      
       UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
       UIGraphicsEndImageContext();
-
+      
       if (viewImage)
          UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
-
+      
+      _firstScreenShotTaken = YES;
+   };
+   
+   if (!_firstScreenShotTaken)
+   {
+      [_flashLayer runAction:_flashAnimation completion:screenShotBlock];
+   }
+   else
+   {
+      screenShotBlock();
       [_flashLayer runAction:_flashAnimation];
    }
 }
