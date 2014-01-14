@@ -510,12 +510,70 @@
    }
 }
 
-- (void)takeScreenShot
+- (void)addNodeBehindFlashNode:(SKSpriteNode *)node
+{
+   // add the node
+   [self addChild:node];
+   
+   // remove the flash layer
+   NSArray * toRemove = @[_flashLayer];
+   [self removeChildrenInArray:toRemove];
+   
+   //  and add it back on top
+   [self addChild:_flashLayer];
+}
+
+- (SKSpriteNode *)addNodeForScreenShot:(UIImage *)viewImage
+{
+   // create a node from the screenshot
+   SKSpriteNode * node =
+      [SKSpriteNode spriteNodeWithTexture:[SKTexture textureWithImage:viewImage]];
+
+   // scale the node to fit the current view
+   if (node.size.width > [self size].width)
+      node.scale = [self size].width / node.size.width;
+
+   // postion the node
+   node.position = CGPointZero;
+   node.anchorPoint = CGPointZero;
+   
+   [self addNodeBehindFlashNode:node];
+   return node;
+}
+
+- (void)animateNode:(SKSpriteNode *)node toPosition:(CGPoint)position
+{
+   // set the animation end position
+   CGPoint point = position;
+   point.y *= -1;
+   SKAction * move = [SKAction moveTo:point duration:0.75];
+  
+   // scale the node
+   SKAction * scaleX = [SKAction scaleXBy:0.01 y:1.0 duration:0.75];
+   SKAction * pause = [SKAction waitForDuration:0.25];
+   SKAction * scaleY = [SKAction scaleXBy:1.0 y:0.01 duration:0.5];
+   
+   move.timingMode = SKActionTimingEaseInEaseOut;
+   scaleX.timingMode = SKActionTimingEaseInEaseOut;
+   scaleY.timingMode = SKActionTimingEaseInEaseOut;
+   
+   SKAction * pauseThenScaleY = [SKAction sequence:@[pause, scaleY]];
+   SKAction * group = [SKAction group:@[move, scaleX, pauseThenScaleY]];
+   
+   [node runAction:group completion:^
+    {
+       // remove the node now that we're done with it
+       NSArray * toRemove = @[node];
+       [self removeChildrenInArray:toRemove];
+    }];
+}
+
+- (void)takeScreenShot:(CGPoint)buttonPosition
 {
    // weird work around for the first screen shot that's taken being slow
    if (_shouldPlaySound) [self runAction:_flashSound];
    
-   // block of code that takes a screen shot and saves it to the photo album
+   // block of code that takes a screen shot, runs an animation, and saves to the photo album
    void (^screenShotBlock)() = ^{
       CGFloat scale = self.view.contentScaleFactor;
       UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
@@ -525,7 +583,14 @@
       UIGraphicsEndImageContext();
       
       if (viewImage)
+      {
+         // actually save the screenshot
          UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+         
+         SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
+         if (node)
+            [self animateNode:node toPosition:buttonPosition];
+      }
       
       _firstScreenShotTaken = YES;
    };
@@ -541,7 +606,7 @@
    }
 }
 
-- (void)screenShotButtonPressed
+- (void)screenShotButtonPressed:(CGPoint)buttonPosition
 {
    [self removeAllAlerts];
    /*
@@ -565,7 +630,7 @@
          bodyLine2 = @"Settings > Privacy > Photos";
          break;
       case ALAuthorizationStatusAuthorized:
-         [self takeScreenShot];
+         [self takeScreenShot:buttonPosition];
          return;
       default:
          NSLog(@"Authorization Status %ld unrecognized", (long)_photoLibraryAuthorizationStatus);

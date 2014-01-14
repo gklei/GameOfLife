@@ -19,7 +19,7 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
    - (void)clearButtonPressed;
    - (void)restoreButtonPressed;
    - (void)toggleRunningButtonPressed;
-   - (void)screenShotButtonPressed;
+   - (void)screenShotButtonPressed:(CGPoint)buttonPosition;
 
    - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action;
    - (void)settingsDidExpand;
