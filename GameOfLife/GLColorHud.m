@@ -245,16 +245,16 @@
 
    for (int i = 0; i < COLOR_DROP_CAPACITY; ++i)
    {
-      if (i == COLOR_DROP_CAPACITY - 1)
-      {
-         _lockControl = [[GLLockControl alloc] init];
-         _lockControl.position = CGPointMake(i*COLOR_DROP_PADDING + 78,
-                                             -_lockControl.size.height/2.0 - 5);
-         [_colorDrops insertObject:_lockControl atIndex:i];
-         [self addChild:_lockControl];
-      }
-      else
-      {
+//      if (i == COLOR_DROP_CAPACITY - 1)
+//      {
+//         _lockControl = [[GLLockControl alloc] init];
+//         _lockControl.position = CGPointMake(i*COLOR_DROP_PADDING + 78,
+//                                             -_lockControl.size.height/2.0 - 5);
+//         [_colorDrops insertObject:_lockControl atIndex:i];
+//         [self addChild:_lockControl];
+//      }
+//      else
+//      {
          GLColorDropButton *drop = ([self usingRetinaDisplay]) ?
             [GLColorDropButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
             [GLColorDropButton spriteNodeWithImageNamed:@"droplet.png"];
@@ -271,7 +271,7 @@
 
          [_colorDrops insertObject:drop atIndex:i];
          [self addChild:drop];
-      }
+//      }
    }
    
    [self initCurrentColorDrop];
