@@ -11,21 +11,23 @@
 #import "GLTileNode.h"
 #import "UIColor+CrossFade.h"
 
+#include <list>
 #include <vector>
 
 #define LIVING YES
 #define DEAD   NO
+
+#define MAX_LOOP_DETECT_DEPTH  120  // Figure eight on pentadecathlon repeats every 120 cycles
+
 #define TILESIZE CGSizeMake(20, 20)
 
 @interface GLGrid()
 {
-   std::vector<BOOL> _LiFE;
-   std::vector<BOOL> _storedTileStates;
-   std::vector<BOOL> _nextGenerationTileStates;
-   std::vector<BOOL> _currentGenerationTileStates;
-   std::vector<BOOL> _priorGenerationTileStates;
-   std::vector<BOOL> _triLooprGenerationTileStates;
-   std::vector<BOOL> _quadLooprGenerationTileStates;
+   std::list<std::vector<bool> > _generationLoops;
+   
+   std::vector<bool> _LiFE;
+   std::vector<bool> _storedTileStates;
+   std::vector<bool> _nextGenerationTileStates;
    
    BOOL _clearingGrid;
    BOOL _running;
@@ -62,7 +64,7 @@
          _storedTileStates[i] = [((NSNumber *)[storedState objectAtIndex:i]) boolValue];
 }
 
-- (void)buildLife:(CGSize)size
+- (void)buildLiFE:(CGSize)size
 {
    NSUInteger st = 10 * 16;  // st = sarting tile in the row
    
@@ -121,16 +123,11 @@
    _tiles = [NSArray arrayWithArray:self.children];
    
    NSUInteger gridSize = _tiles.count;
-   _quadLooprGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
-   _triLooprGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
-   _priorGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
-   _currentGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
-   _nextGenerationTileStates = std::vector<BOOL>(gridSize, DEAD);
-   _storedTileStates = std::vector<BOOL>(gridSize, DEAD);
+   _nextGenerationTileStates = std::vector<bool>(gridSize, DEAD);
+   _storedTileStates = std::vector<bool>(gridSize, DEAD);
+   _LiFE = std::vector<bool>(gridSize, DEAD);
    
-   // build the default vector
-   _LiFE = std::vector<BOOL>(gridSize, DEAD);
-   [self buildLife:(CGSize)size];
+   [self buildLiFE:(CGSize)size];
    
    CGPoint boardCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
                                      _dimensions.rows * TILESIZE.height * 0.5);
@@ -190,34 +187,39 @@
       tile.liveRotation = rotation;
 }
 
+- (void)addGenerationToLoopDetection:(std::vector<bool>)generation
+{
+   _generationLoops.push_front(generation);
+   
+   if (_generationLoops.size() > MAX_LOOP_DETECT_DEPTH)
+      _generationLoops.pop_back();
+}
+
 - (void)updateNextGeneration
 {
    // currently, we only track back four generations to track looping
    for (int i = 0; i < _tiles.count; ++i)
-   {
-      _quadLooprGenerationTileStates[i] = _triLooprGenerationTileStates[i];
-      _triLooprGenerationTileStates[i] = _priorGenerationTileStates[i];
-      _priorGenerationTileStates[i] = _currentGenerationTileStates[i];
-      _currentGenerationTileStates[i] = _nextGenerationTileStates[i];
       _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
-   }
    
    _inContinuousLoop = [self currentlyInContinuousLoop];
    if (_inContinuousLoop)
       return;  // nothing new to generate
-
-   bool incrementGeneration = true;
-   if ([self currentlyInContinuousBiLoop])
-      incrementGeneration = false;
    
-   if (incrementGeneration && [self currentlyInContinuousTriLoop])
-      incrementGeneration = false;
-   
-   if (incrementGeneration && [self currentlyInContinuousQuadLoop])
-      incrementGeneration = false;
-   
-   if (incrementGeneration)
-      ++_generationCount;  // don't add to count if we are not generating new life
+   bool deepLoop = [self currentlyInContinuousDeepLoop];
+   if (deepLoop)
+   {
+      if (_considerDeeperLoops)
+      {
+         _inContinuousLoop = YES;
+         _generationLoops.clear();
+         return;  // nothing new to generate
+      }
+   }
+   else
+   {
+      [self addGenerationToLoopDetection:_nextGenerationTileStates];
+      ++_generationCount;
+   }
    
    for (int i = 0; i < _tiles.count; ++i)
       ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
@@ -225,38 +227,30 @@
    [self updateColorCenter];
 }
 
-- (BOOL)currentlyInContinuousQuadLoop
+- (BOOL)isDuplicateLevel:(std::vector<bool> &)level
 {
    for (int i = 0; i < _tiles.count; ++i)
-      if (_nextGenerationTileStates[i] != _quadLooprGenerationTileStates[i])
+      if (_nextGenerationTileStates[i] != level[i])
          return NO;
    
    return YES;
 }
 
-- (BOOL)currentlyInContinuousTriLoop
+- (BOOL)currentlyInContinuousDeepLoop
 {
-   for (int i = 0; i < _tiles.count; ++i)
-      if (_nextGenerationTileStates[i] != _triLooprGenerationTileStates[i])
-         return _considerDeeperLoops? [self currentlyInContinuousQuadLoop] : NO;
+   std::list<std::vector<bool> >::iterator it = _generationLoops.begin();
+   for (; it != _generationLoops.end(); ++it)
+      if ([self isDuplicateLevel:*it])
+         return YES;
    
-   return YES;
-}
-
-- (BOOL)currentlyInContinuousBiLoop
-{
-   for (int i = 0; i < _tiles.count; ++i)
-      if (_nextGenerationTileStates[i] != _priorGenerationTileStates[i])
-         return _considerDeeperLoops? [self currentlyInContinuousTriLoop] : NO;
-   
-   return YES;
+   return NO;
 }
 
 - (BOOL)currentlyInContinuousLoop
 {
    for (int i = 0; i < _tiles.count; ++i)
       if (((GLTileNode *)_tiles[i]).isLiving != _nextGenerationTileStates[i])
-         return _considerDeeperLoops? [self currentlyInContinuousBiLoop] : NO;
+         return NO;
 
    return YES;
 }
@@ -329,14 +323,7 @@
 - (void)prepareForNextRun
 {
    _generationCount = 0;
-   
-   for (int i = 0; i < _tiles.count; ++i)
-   {
-      BOOL isLiving = ((GLTileNode*)[_tiles objectAtIndex:i]).isLiving;
-      _priorGenerationTileStates[i] = DEAD;
-      _currentGenerationTileStates[i] = isLiving;
-      _nextGenerationTileStates[i] = isLiving;
-   }
+   _generationLoops.clear();
 }
 
 - (void)toggleRunning:(BOOL)starting
