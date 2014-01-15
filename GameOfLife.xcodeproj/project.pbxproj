@@ -30,6 +30,9 @@
 		8E2FA2AE1869E3ED0021A471 /* GLColorGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */; };
 		8E2FA2B01869E4BA0021A471 /* color-swatch-fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E2FA2AF1869E4BA0021A471 /* color-swatch-fill.png */; };
 		8E5A5554187D005800483158 /* tile.leaf.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E5A5553187D005800483158 /* tile.leaf.png */; };
+		8E67648A1886544800084589 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E6764881886544800084589 /* lock.png */; };
+		8E67648B1886544800084589 /* unlock.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E6764891886544800084589 /* unlock.png */; };
+		8E676491188654F700084589 /* GLLockControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E676490188654F700084589 /* GLLockControl.m */; };
 		8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02B184164F7000AEEB8 /* expand_left.png */; };
 		8E75B02E184164F7000AEEB8 /* expand_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B02C184164F7000AEEB8 /* expand_left@2x.png */; };
 		8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B030184169BF000AEEB8 /* GLColorHud.m */; };
@@ -178,6 +181,10 @@
 		8E2FA2AD1869E3ED0021A471 /* GLColorGrid.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLColorGrid.m; sourceTree = "<group>"; };
 		8E2FA2AF1869E4BA0021A471 /* color-swatch-fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "color-swatch-fill.png"; path = "Images/color-swatch-fill.png"; sourceTree = SOURCE_ROOT; };
 		8E5A5553187D005800483158 /* tile.leaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.leaf.png; path = Images/tile.leaf.png; sourceTree = SOURCE_ROOT; };
+		8E6764881886544800084589 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lock.png; path = Images/lock.png; sourceTree = SOURCE_ROOT; };
+		8E6764891886544800084589 /* unlock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = unlock.png; path = Images/unlock.png; sourceTree = SOURCE_ROOT; };
+		8E67648F188654F700084589 /* GLLockControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLLockControl.h; sourceTree = "<group>"; };
+		8E676490188654F700084589 /* GLLockControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLLockControl.m; sourceTree = "<group>"; };
 		8E75B02B184164F7000AEEB8 /* expand_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = expand_left.png; path = Images/expand_left.png; sourceTree = SOURCE_ROOT; };
 		8E75B02C184164F7000AEEB8 /* expand_left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "expand_left@2x.png"; path = "Images/expand_left@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B02F184169BF000AEEB8 /* GLColorHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLColorHud.h; sourceTree = "<group>"; };
@@ -338,6 +345,8 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8E6764881886544800084589 /* lock.png */,
+				8E6764891886544800084589 /* unlock.png */,
 				8E5A5553187D005800483158 /* tile.leaf.png */,
 				8EA2651B185966A600351F5E /* arrow-right.png */,
 				8EA2651C185966A600351F5E /* arrow-right@2x.png */,
@@ -578,6 +587,8 @@
 				8E2FA289186567B50021A471 /* GLUIActionButton.m */,
 				8E254A81185BBB090068A3F9 /* GLUIButton.h */,
 				8E254A82185BBB090068A3F9 /* GLUIButton.m */,
+				8E67648F188654F700084589 /* GLLockControl.h */,
+				8E676490188654F700084589 /* GLLockControl.m */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -686,6 +697,7 @@
 				8E2FA28C186672E90021A471 /* tile.square.png in Resources */,
 				8E2FA2901866B3140021A471 /* palette.png in Resources */,
 				8E75B03518419630000AEEB8 /* splash@2x.png in Resources */,
+				8E67648A1886544800084589 /* lock.png in Resources */,
 				8EA264FD1850229100351F5E /* settings.expand.wav in Resources */,
 				8EAA59C1184B03C7008E34D9 /* up.finger.off.tile.wav in Resources */,
 				8E75B03C1841C909000AEEB8 /* drop.png in Resources */,
@@ -699,6 +711,7 @@
 				ED2CB96D185C105200319DE5 /* tile.spiral.png in Resources */,
 				8E75B04A1846CB23000AEEB8 /* restore.png in Resources */,
 				8EAA38AE185D918F00DA5CED /* slider-end-left.png in Resources */,
+				8E67648B1886544800084589 /* unlock.png in Resources */,
 				8E254A89185C3F980068A3F9 /* slider-end@2x.png in Resources */,
 				8E99B2AA182E0ABD00C7AEDB /* gear@2x.png in Resources */,
 				ED566DE7187FA1A300B28BBE /* tile.buldge.png in Resources */,
@@ -784,6 +797,7 @@
 				8E2FA29C1867BBED0021A471 /* GLMenuLayer.m in Sources */,
 				8E2FA2991867BB080021A471 /* GLColorSelectionLayer.m in Sources */,
 				8EB738CE1874B56600BB58C0 /* GLColorPaletteManager.m in Sources */,
+				8E676491188654F700084589 /* GLLockControl.m in Sources */,
 				8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */,
 				8E2FA28A186567B50021A471 /* GLUIActionButton.m in Sources */,
 				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,

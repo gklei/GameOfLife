@@ -12,6 +12,7 @@
 #import "GLColorDropButton.h"
 #import "GLColorSelectionLayer.h"
 #import "GLColorPaletteManager.h"
+#import "GLLockControl.h"
 
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 42
@@ -40,6 +41,7 @@
    GLColorDropButton *_currentColorDrop;
 
    NSMutableArray *_colorDrops;
+   GLLockControl *_lockControl;
 
    BOOL _shouldPlaySound;
    SKAction *_colorDropButtonSound;
@@ -134,7 +136,8 @@
          [self toggle];
    };
    _splashButton.actionBlock = splashButtonActionBlock;
-   
+
+
    [self addChild:_splashButton];
 }
 
@@ -242,22 +245,33 @@
 
    for (int i = 0; i < COLOR_DROP_CAPACITY; ++i)
    {
-      GLColorDropButton *drop = ([self usingRetinaDisplay]) ?
-         [GLColorDropButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
-         [GLColorDropButton spriteNodeWithImageNamed:@"droplet.png"];
-      
-      [drop setScale:COLOR_DROP_SCALE];
-      drop.position = CGPointMake(i*COLOR_DROP_PADDING + 78, -drop.size.height/2.0 - 5);
-      drop.colorBlendFactor = 1.0;
-      drop.colorName = [((NSNumber *)[colorDropColors objectAtIndex:i]) unsignedIntValue];
-      drop.alpha = .75;
-      drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
+      if (i == COLOR_DROP_CAPACITY - 1)
+      {
+         _lockControl = [[GLLockControl alloc] init];
+         _lockControl.position = CGPointMake(i*COLOR_DROP_PADDING + 78,
+                                             -_lockControl.size.height/2.0 - 5);
+         [_colorDrops insertObject:_lockControl atIndex:i];
+         [self addChild:_lockControl];
+      }
+      else
+      {
+         GLColorDropButton *drop = ([self usingRetinaDisplay]) ?
+            [GLColorDropButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
+            [GLColorDropButton spriteNodeWithImageNamed:@"droplet.png"];
+         
+         [drop setScale:COLOR_DROP_SCALE];
+         drop.position = CGPointMake(i*COLOR_DROP_PADDING + 78, -drop.size.height/2.0 - 5);
+         drop.colorBlendFactor = 1.0;
+         drop.colorName = [((NSNumber *)[colorDropColors objectAtIndex:i]) unsignedIntValue];
+         drop.alpha = .75;
+         drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
 
-      ActionBlock colorDropActionBlock = ^{[self updateCurrentColorDrop:drop];};
-      drop.actionBlock = colorDropActionBlock;
+         ActionBlock colorDropActionBlock = ^{[self updateCurrentColorDrop:drop];};
+         drop.actionBlock = colorDropActionBlock;
 
-      [_colorDrops insertObject:drop atIndex:i];
-      [self addChild:drop];
+         [_colorDrops insertObject:drop atIndex:i];
+         [self addChild:drop];
+      }
    }
    
    [self initCurrentColorDrop];
