@@ -40,7 +40,9 @@
    [hudManager addObserver:self forKeyPath:@"SoundFX"];
 }
 
-- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+- (void)settingChanged:(NSNumber *)value
+                ofType:(HUDValueType)type
+            forKeyPath:(NSString *)keyPath
 {
    if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
    {
@@ -75,6 +77,7 @@
 
 - (void)setupColorGridColors
 {
+   // a 5x5 color grid
    _colorGridColors =
    {
       CCN_crayolaFreshAirColor, CCN_crayolaGrannySmithAppleColor, CCN_crayolaPeachColor, CCN_crayolaDandelionColor, CCN_crayolaMelonColor,

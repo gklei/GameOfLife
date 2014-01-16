@@ -150,11 +150,7 @@
 - (id)initWithHeader:(NSString *)header
                 body:(NSString *)body
 {
-   // cannot pass in defines for some reason!
-   CGSize defaultSize = DEFAULT_ALERT_SIZE;
-   CGPoint defaultAnchorPoint = DEFAULT_ALERT_ANCHOR_POINT;
-   if (self = [self initWithSize:defaultSize
-                      anchorPoint:defaultAnchorPoint])
+   if (self = [super init])
    {
       [self addHeaderText:[NSString futurizedString:header].uppercaseString];
       [self addBodyText:[NSString futurizedString:body]];
@@ -208,7 +204,7 @@
 }
 
 #pragma mark - Helper Methods
-- (CGPoint)nextPositionForTextElement:(GL_ALERT_TEXT_ELEMENT)textElement
+- (CGPoint)nextPositionForTextElementType:(GL_ALERT_TEXT_ELEMENT)textElement
 {
    switch (textElement)
    {
@@ -265,7 +261,7 @@
 
 - (void)setPositionsForLinesInTextElement:(GLTextElement *)textElement
 {
-   CGPoint linePosition = [self nextPositionForTextElement:textElement.type];
+   CGPoint linePosition = [self nextPositionForTextElementType:textElement.type];
    for (SKLabelNode *line in textElement.lines)
    {
       line.position = linePosition;
