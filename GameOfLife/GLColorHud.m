@@ -282,6 +282,7 @@
       node.hidden = hidden;
 
    _paletteButton.hidden = hidden;
+   _lockControl.hidden = hidden;
 }
 
 - (void)updateCurrentColorDrop:(GLColorDropButton *)colorDropButton
