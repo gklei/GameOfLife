@@ -29,8 +29,9 @@
    std::vector<bool> _LiFE;
    std::vector<bool> _storedTileStates;
    std::vector<bool> _nextGenerationTileStates;
+   std::vector<CrayolaColorName> _storedTileColors;
+   std::vector<CrayolaColorName> _currentTileColors;
    
-   BOOL _clearingGrid;
    BOOL _running;
    BOOL _startedWithLife;
    
@@ -98,6 +99,17 @@
    if (storedState && storedState.count == _tiles.count)
       for (int i = 0; i < _tiles.count; ++i)
          _storedTileStates[i] = [((NSNumber *)[storedState objectAtIndex:i]) boolValue];
+   
+   NSArray * storedColors = ((NSArray *)[standardDefaults objectForKey:@"StoredTileColors"]);
+   if (storedColors && storedColors.count == _tiles.count)
+   {
+      for (int i = 0; i < _tiles.count; ++i)
+      {
+         _storedTileColors[i] = (CrayolaColorName)[((NSNumber *)[storedColors objectAtIndex:i])
+                                                   intValue];
+         _currentTileColors[i] = _storedTileColors[i];
+      }
+   }
 }
 
 - (void)buildLiFE:(CGSize)size
@@ -165,6 +177,9 @@
    _nextGenerationTileStates = std::vector<bool>(gridSize, DEAD);
    _storedTileStates = std::vector<bool>(gridSize, DEAD);
    _LiFE = std::vector<bool>(gridSize, DEAD);
+   
+   _storedTileColors = std::vector<CrayolaColorName>(gridSize, CCN_INVALID_CrayolaColor);
+   _currentTileColors = std::vector<CrayolaColorName>(gridSize, CCN_INVALID_CrayolaColor);
    
    [self buildLiFE:(CGSize)size];
 }
@@ -290,10 +305,13 @@
    _startedWithLife = YES;
    
    NSMutableArray * storedState = [NSMutableArray arrayWithCapacity:_tiles.count];
+   NSMutableArray * storedColors = [NSMutableArray arrayWithCapacity:_tiles.count];
+   
    for (int i = 0; i < _tiles.count; ++i)
    {
       _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
       [storedState addObject:[NSNumber numberWithBool:_storedTileStates[i]]];
+      [storedColors addObject:[NSNumber numberWithInteger:_storedTileColors[i]]];
       
       if (_startedWithLife && _storedTileStates[i] != _LiFE[i])
          _startedWithLife = NO;
@@ -303,6 +321,7 @@
    
    NSUserDefaults * standardDefaults = [NSUserDefaults standardUserDefaults];
    [standardDefaults setObject:[NSArray arrayWithArray:storedState] forKey:@"StoredTileState"];
+   [standardDefaults setObject:[NSArray arrayWithArray:storedColors] forKey:@"StoredTileColors"];
 }
 
 - (void)restoreGrid
@@ -330,6 +349,9 @@
       [tile clearActionsAndRestore:YES];
       [tile clearTile];
    }
+   
+   for (int i = 0; i < _currentTileColors.size(); ++i)
+      _currentTileColors[i] = CCN_INVALID_CrayolaColor;
    
    _inContinuousLoop = NO;
 }
@@ -576,20 +598,6 @@
    return _startedWithLife;
 }
 
-- (CGFloat)calcDistanceFromStart:(CGPoint)start toEnd:(CGPoint)end
-{
-   CGFloat dist = sqrt((start.x - end.x) * (start.x - end.x) +
-                       (start.y - end.y) * (start.y - end.y));
-   return dist;
-}
-
-- (CGFloat)colorDistanceForTile:(GLTileNode *)tile
-{
-   CGFloat dist = [self calcDistanceFromStart:_currentColorCenter toEnd:tile.position];
-   dist /= _boardMaxDistance;
-   return 1.0 - dist;
-}
-
 - (void)refreshBoard
 {
    for (GLTileNode *tile in _tiles)
@@ -610,41 +618,60 @@
          return;
       
       _currentColorName = colorName;
-      [self refreshBoard];
    }
    else if ([keyPath compare:@"TileGenerationTracking"] == NSOrderedSame)
    {
       assert(type == HVT_BOOL);
       
       _trackGeneration = [value boolValue];
-      [self refreshBoard];
    }
    else if ([keyPath compare:@"LockedColorMode"] == NSOrderedSame)
    {
       assert(type == HVT_BOOL);
       
       _lockedColorMode = [value boolValue];
-      [self refreshBoard];
    }
+   
+   [self refreshBoard];
 }
 
-#pragma mark - GLTileColorProvider protocol
+#pragma mark - color calculation helpers
 
-- (SKColor *)liveColorForNode:(GLTileNode *)node
+- (CGFloat)calcDistanceFromStart:(CGPoint)start toEnd:(CGPoint)end
 {
-   //TODO:LEA: use both _lockedColorMode and _trackGeneration
-   //          to determine the current color for the given tile
-   assert(node != nil);
+   CGFloat dist = sqrt((start.x - end.x) * (start.x - end.x) +
+                       (start.y - end.y) * (start.y - end.y));
+   return dist;
+}
+
+- (CGFloat)colorDistanceForTile:(GLTileNode *)tile
+{
+   CGFloat dist = [self calcDistanceFromStart:_currentColorCenter toEnd:tile.position];
+   dist /= _boardMaxDistance;
+   return 1.0 - dist;
+}
+
+- (NSUInteger)indexOfNode:(GLTileNode *)node
+{
+   NSUInteger location = 0;
+   for (GLTileNode * tile in _tiles)
+   {
+      if (tile == node) return location;
+      ++location;
+   }
    
-   CGFloat dist = [self colorDistanceForTile:node];// * 1.15;
-   
-   CrayolaColorName colorName = _currentColorName;
+   return location;
+}
+
+- (SKColor *)colorForNode:(GLTileNode *)node withColorName:(CrayolaColorName)colorName
+{
    if (_trackGeneration)
    {
       NSUInteger nodeGenCount = node.generationCount - 1;
       colorName = [SKColor getColorNameForIndex:(_currentColorName + nodeGenCount)];
    }
    
+   CGFloat   dist = [self colorDistanceForTile:node];
    SKColor * liveColor = [SKColor colorForCrayolaColorName:colorName];
    
    CGFloat r, g, b;
@@ -653,6 +680,34 @@
    
    NSLog(@"WTF???");
    return [SKColor colorForCrayolaColorName:_currentColorName];
+}
+
+- (SKColor *) unlockedColorForNode:(GLTileNode *)node
+{
+   NSUInteger index = [self indexOfNode:node];
+   if (index >= _tiles.count)
+      return [self colorForNode:node withColorName:_currentColorName];
+      
+   CrayolaColorName colorName = _currentTileColors[index];
+   if (colorName == CCN_INVALID_CrayolaColor)
+   {
+      colorName = _currentColorName;
+      _currentTileColors[index] = colorName;
+   }
+   
+   return [self colorForNode:node withColorName:colorName];
+}
+
+#pragma mark - GLTileColorProvider protocol
+
+- (SKColor *)liveColorForNode:(GLTileNode *)node
+{
+   assert(node != nil);
+   
+   if (_lockedColorMode)
+      return [self colorForNode:node withColorName:_currentColorName];
+   
+   return [self unlockedColorForNode:node];
 }
 
 - (SKColor *)deadColorForNode:(GLTileNode *)node

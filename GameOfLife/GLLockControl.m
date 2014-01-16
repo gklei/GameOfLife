@@ -7,9 +7,9 @@
 //
 
 #import "GLLockControl.h"
+#import "GLHUDSettingsManager.h"
 
-
-@interface GLLockControl()
+@interface GLLockControl() <HUDSettingsObserver>
 {
    SKTexture *_lockedTexture;
    SKTexture *_unlockedTexture;
@@ -21,12 +21,19 @@
 
 @implementation GLLockControl
 
+- (void)observeLockedColorMode
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"LockedColorMode"];
+}
+
 - (id)init
 {
    if (self = [super init])
    {
       [self setupVariables];
       [self setupSpriteProperty];
+      [self observeLockedColorMode];
    }
    return self;
 }
@@ -70,8 +77,17 @@
 - (void)handleTouchEnded:(UITouch *)touch
 {
    [self toggleState];
-   [self setTextureForState:_locked inverted:NO];
    [super handleTouchEnded:touch];
+}
+
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+{
+   if ([keyPath compare:@"LockedColorMode"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      
+      [self setTextureForState:[value boolValue] inverted:NO];
+   }
 }
 
 @end
