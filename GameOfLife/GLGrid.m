@@ -8,6 +8,7 @@
 
 #import "GLGrid.h"
 #import "GLAppDelegate.h"
+#import "GLHUDSettingsManager.h"
 #import "GLTileNode.h"
 #import "UIColor+CrossFade.h"
 
@@ -21,7 +22,7 @@
 
 #define TILESIZE CGSizeMake(20, 20)
 
-@interface GLGrid()
+@interface GLGrid() <GLTileColorProvider, HUDSettingsObserver>
 {
    std::list<std::vector<bool> > _generationLoops;
    
@@ -32,6 +33,10 @@
    BOOL _clearingGrid;
    BOOL _running;
    BOOL _startedWithLife;
+   BOOL _trackGeneration;
+   
+   CGFloat _boardMaxDistance;
+   CGPoint _currentColorCenter;
    
    CrayolaColorName _currentColorName;
 }
@@ -41,10 +46,31 @@
 
 @implementation GLGrid
 
+- (void)observeGridLiveColorNameChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"GridLiveColorName"];
+}
+
+- (void)observeTileGenerationTracking
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"TileGenerationTracking"];
+}
+
+- (void)setupObservations
+{
+   [self observeGridLiveColorNameChanges];
+   [self observeTileGenerationTracking];
+}
+
 - (id)initWithSize:(CGSize)size
 {
    if (self = [super init])
+   {
       [self setupGridWithSize:size];
+      [self setupObservations];
+   }
    
    return self;
 }
@@ -90,10 +116,12 @@
 
 - (void)setupGridWithSize:(CGSize)size
 {
-   SKColor * color = [SKColor colorForCrayolaColorName:_currentColorName];
-   assert(color != nil);
    _dimensions.rows = size.width/TILESIZE.width;
    _dimensions.columns = size.width/TILESIZE.width;
+   
+   _currentColorCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
+                                     _dimensions.rows * TILESIZE.height * 0.5);
+   _boardMaxDistance = sqrt(size.width * size.width * 3.25 + size.height * size.height * 3.25);
    
    SKTexture *texture = [SKTexture textureWithImageNamed:@"tile.square.png"];
    double textureRotation = -M_PI_2;
@@ -115,6 +143,7 @@
                                                                    TILESIZE.width - 1,
                                                                    TILESIZE.height - 1)
                                             andRotation:textureRotation];
+         tile.colorProvider = self;
          tile.deadRotation = textureRotation;
          [self addChild:tile];
       }
@@ -128,15 +157,6 @@
    _LiFE = std::vector<bool>(gridSize, DEAD);
    
    [self buildLiFE:(CGSize)size];
-   
-   CGPoint boardCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
-                                     _dimensions.rows * TILESIZE.height * 0.5);
-   float maxBoardDistance = sqrt(size.width * size.width * 3.25 + size.height * size.height * 3.25);
-   for (GLTileNode *tile in _tiles)
-   {
-      tile.boardMaxDistance = maxBoardDistance;
-      [tile setColorCenter:boardCenter];
-   }
 }
 
 - (GLTileNode *)tileAtTouch:(UITouch *)touch
@@ -279,13 +299,13 @@
 {
    if (!_running)
    {
-      CGPoint center = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
-                                   _dimensions.rows * TILESIZE.height * 0.5);
+      _currentColorCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,
+                                        _dimensions.rows * TILESIZE.height * 0.5);
+      
       for (int i = 0; i < _tiles.count; ++i)
       {
          GLTileNode * tile = [_tiles objectAtIndex:i];
          tile.isLiving = _storedTileStates[i];
-         [tile setColorCenter:center];
          [tile clearActionsAndRestore:YES];
       }
       
@@ -529,9 +549,7 @@
       }
    }
 
-   CGPoint position = ((GLTileNode *)[_tiles objectAtIndex:indexForColorCenter]).position;
-   for (GLTileNode * tile in _tiles)
-      tile.colorCenter = position;
+   _currentColorCenter = ((GLTileNode *)[_tiles objectAtIndex:indexForColorCenter]).position;
 }
 
 - (BOOL)isCleared
@@ -547,5 +565,79 @@
 {
    return _startedWithLife;
 }
+
+- (CGFloat)calcDistanceFromStart:(CGPoint)start toEnd:(CGPoint)end
+{
+   CGFloat dist = sqrt((start.x - end.x) * (start.x - end.x) +
+                       (start.y - end.y) * (start.y - end.y));
+   return dist;
+}
+
+- (CGFloat)colorDistanceForTile:(GLTileNode *)tile
+{
+   CGFloat dist = [self calcDistanceFromStart:_currentColorCenter toEnd:tile.position];
+   dist /= _boardMaxDistance;
+   return 1.0 - dist;
+}
+
+- (void)refreshBoard
+{
+   for (GLTileNode *tile in _tiles)
+      [tile clearActionsAndRestore:NO];
+}
+
+#pragma mark - HUDSettingsObserver protocol
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+{
+   if ([keyPath compare:@"GridLiveColorName"] == NSOrderedSame)
+   {
+      assert(type == HVT_UINT);
+      
+      // verify the live color name is valid;
+      CrayolaColorName colorName = (CrayolaColorName)[value unsignedIntValue];
+      SKColor * color = [SKColor colorForCrayolaColorName:colorName];
+      if (color == nil)
+         return;
+      
+      _currentColorName = colorName;
+      [self refreshBoard];
+   }
+   else if ([keyPath compare:@"TileGenerationTracking"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      
+      _trackGeneration = [value boolValue];
+      [self refreshBoard];
+   }
+}
+
+#pragma mark - GLTileColorProvider protocol
+
+- (SKColor *)liveColorForNode:(GLTileNode *)node
+{
+   assert(node != nil);
+   
+   CGFloat dist = [self colorDistanceForTile:node];// * 1.15;
+   NSUInteger nodeGenCount = node.generationCount - 1;
+   
+   CrayolaColorName name = (_trackGeneration)?
+      [SKColor getColorNameForIndex:(_currentColorName + nodeGenCount)] :
+      _currentColorName;
+   
+   SKColor * liveColor = [SKColor colorForCrayolaColorName:name];
+   
+   CGFloat r, g, b;
+   if ([liveColor getRed:&r green:&g blue:&b alpha:0])
+      return [SKColor colorWithRed:dist * r green:dist * g blue:dist * b alpha:1.0];
+   
+   NSLog(@"WTF???");
+   return [SKColor colorForCrayolaColorName:_currentColorName];
+}
+
+- (SKColor *)deadColorForNode:(GLTileNode *)node
+{
+   return [SKColor colorForCrayolaColorName:CCN_crayolaCoconutColor];
+}
+
 
 @end

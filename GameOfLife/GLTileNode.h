@@ -10,6 +10,18 @@
 #import "UIColor+Crayola.h"
 #import "GLUIActionButton.h"
 
+// forward declarations
+@class GLTileNode;
+
+
+@protocol GLTileColorProvider <NSObject>
+
+- (SKColor *)liveColorForNode:(GLTileNode *)node;
+- (SKColor *)deadColorForNode:(GLTileNode *)node;
+
+@end
+
+
 @interface GLTileNode : GLUIActionButton
 
 @property (nonatomic, assign) float birthingDuration;
@@ -20,9 +32,9 @@
 @property (nonatomic, retain, setter = setLiveTexture:) SKTexture * liveTexture;
 @property (nonatomic, retain, setter = setDeadTexture:) SKTexture * deadTexture;
 
-@property (nonatomic, assign) float boardMaxDistance; // should be global, not per tile
-@property (nonatomic, assign) float maxColorDistance;
-@property (nonatomic, assign) CGPoint colorCenter;
+@property (nonatomic, readonly) NSUInteger generationCount;
+
+@property (nonatomic, assign) id<GLTileColorProvider> colorProvider;
 
 + (id)tileWithTexture:(SKTexture *)texture rect:(CGRect)rect andRotation:(double)rotation;
 
