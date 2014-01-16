@@ -8,12 +8,16 @@
 
 #import "GLLockControl.h"
 
+
 @interface GLLockControl()
 {
    SKTexture *_lockedTexture;
    SKTexture *_unlockedTexture;
+   BOOL  _locked;
 }
+
 @end
+
 
 @implementation GLLockControl
 
@@ -29,7 +33,7 @@
 
 - (void)setupVariables
 {
-   _state = e_LOCK_CONTROL_LOCKED;
+   _locked = YES;
    _lockedTexture = [SKTexture textureWithImageNamed:@"lock.png"];
    _unlockedTexture = [SKTexture textureWithImageNamed:@"unlock.png"];
 }
@@ -46,31 +50,27 @@
 
 // this is setup this way just in case if we want to change the texture
 // before the state is set
-- (void)setTextureForState:(GL_LOCK_CONTROL_STATE)state
+- (void)setTextureForState:(BOOL)locked
                   inverted:(BOOL)inverted
 {
-   switch (state)
-   {
-      case e_LOCK_CONTROL_UNLOCKED:
-         self.texture = (inverted)? _lockedTexture : _unlockedTexture;
-         break;
-      case e_LOCK_CONTROL_LOCKED:
-         self.texture = (inverted)? _unlockedTexture : _lockedTexture;
-         break;
-      default:
-         return;
-   }
+   if (locked)
+      self.texture = (inverted)? _unlockedTexture : _lockedTexture;
+   else
+      self.texture = (inverted)? _lockedTexture : _unlockedTexture;
 }
 
 - (void)toggleState
 {
-   _state = (_state == e_LOCK_CONTROL_LOCKED)? e_LOCK_CONTROL_UNLOCKED : e_LOCK_CONTROL_LOCKED;
+   _locked = !_locked;
+   
+   NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+   [defaults setObject:[NSNumber numberWithBool:_locked] forKey:@"LockedColorMode"];
 }
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
    [self toggleState];
-   [self setTextureForState:_state inverted:NO];
+   [self setTextureForState:_locked inverted:NO];
    [super handleTouchEnded:touch];
 }
 
