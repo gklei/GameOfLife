@@ -29,7 +29,7 @@
    std::vector<bool> _LiFE;
    std::vector<bool> _storedTileStates;
    std::vector<bool> _nextGenerationTileStates;
-   std::vector<CrayolaColorName> _storedTileColors;
+   std::vector<CrayolaColorName> _storedTileColorNames;
    std::vector<CrayolaColorName> _currentTileColorNames;
    
    BOOL _running;
@@ -105,9 +105,9 @@
    {
       for (int i = 0; i < _tiles.count; ++i)
       {
-         _storedTileColors[i] = (CrayolaColorName)[((NSNumber *)[storedColors objectAtIndex:i])
-                                                   intValue];
-         _currentTileColorNames[i] = _storedTileColors[i];
+         _storedTileColorNames[i] = (CrayolaColorName)[((NSNumber *)[storedColors objectAtIndex:i])
+                                                       intValue];
+         _currentTileColorNames[i] = _storedTileColorNames[i];
       }
    }
 }
@@ -178,7 +178,7 @@
    _storedTileStates = std::vector<bool>(gridSize, DEAD);
    _LiFE = std::vector<bool>(gridSize, DEAD);
    
-   _storedTileColors = std::vector<CrayolaColorName>(gridSize, CCN_INVALID_CrayolaColor);
+   _storedTileColorNames = std::vector<CrayolaColorName>(gridSize, CCN_INVALID_CrayolaColor);
    _currentTileColorNames = std::vector<CrayolaColorName>(gridSize, CCN_INVALID_CrayolaColor);
    
    [self buildLiFE:(CGSize)size];
@@ -240,22 +240,41 @@
       _generationLoops.pop_back();
 }
 
-- (CrayolaColorName) calculateColorNameForNode:(GLTileNode *)node
+- (CrayolaColorName) calculateColorNameForTile:(GLTileNode *)node
 {
    if (_lockedColorMode)
       return _currentColorName;
    
+   u_int32_t item = arc4random_uniform(3);
+   NSArray * neighbors = [self getNeighborTilesForTile:node];
    
-   return CCN_crayolaAntiqueBrassColor;
+   u_int32_t count = 0;
+   for (GLTileNode * tile in neighbors)
+   {
+      if ([tile isLiving])
+      {
+         if (count == item)
+         {
+            NSUInteger index = [self indexOfTile:tile];
+            if (index < _currentTileColorNames.size())
+               return _currentTileColorNames[index];
+         }
+         ++count;
+      }
+   }
+   
+   NSLog(@"Couldn't find a neighboring node");
+   return _currentColorName;
 }
 
 - (void)updateLivingColors
 {
-   for (int i = 0; i < _tiles.count; ++i)
+   for (NSUInteger i = 0; i < _tiles.count; ++i)
    {
-      bool living = _nextGenerationTileStates[i];
-      _currentTileColorNames[i] = living? [self calculateColorNameForNode:_tiles[i]] :
-                                          CCN_INVALID_CrayolaColor;
+      GLTileNode * tile = _tiles[i];
+      bool alive = _nextGenerationTileStates[i];
+      if (alive && ![tile isLiving])
+         _currentTileColorNames[i] = [self calculateColorNameForTile:tile];
    }
 }
 
@@ -332,7 +351,7 @@
    {
       _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
       [storedState addObject:[NSNumber numberWithBool:_storedTileStates[i]]];
-      [storedColors addObject:[NSNumber numberWithInteger:_storedTileColors[i]]];
+      [storedColors addObject:[NSNumber numberWithInteger:_storedTileColorNames[i]]];
       
       if (_startedWithLife && _storedTileStates[i] != _LiFE[i])
          _startedWithLife = NO;
@@ -356,6 +375,7 @@
       {
          GLTileNode * tile = [_tiles objectAtIndex:i];
          tile.isLiving = _storedTileStates[i];
+         _currentTileColorNames[i] = _storedTileColorNames[i];
          [tile clearActionsAndRestore:YES];
       }
       
@@ -717,8 +737,11 @@
 {
    NSUInteger index = [self indexOfTile:node];
    if (index >= _tiles.count)
+   {
+      NSLog(@"indexOfTile returned invalid index (%d)", index);
       return [self colorForNode:node withColorName:_currentColorName];
-      
+   }
+   
    CrayolaColorName colorName = _currentTileColorNames[index];
    if (colorName == CCN_INVALID_CrayolaColor)
    {
