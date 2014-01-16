@@ -351,6 +351,7 @@
    {
       _storedTileStates[i] = ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving;
       [storedState addObject:[NSNumber numberWithBool:_storedTileStates[i]]];
+      _storedTileColorNames[i] = _currentTileColorNames[i];
       [storedColors addObject:[NSNumber numberWithInteger:_storedTileColorNames[i]]];
       
       if (_startedWithLife && _storedTileStates[i] != _LiFE[i])
@@ -719,7 +720,7 @@
    if (_trackGeneration)
    {
       NSUInteger nodeGenCount = node.generationCount - 1;
-      colorName = [SKColor getColorNameForIndex:(_currentColorName + nodeGenCount)];
+      colorName = [SKColor getColorNameForIndex:(colorName + nodeGenCount)];
    }
    
    CGFloat   dist = [self colorDistanceForTile:node];
@@ -738,7 +739,7 @@
    NSUInteger index = [self indexOfTile:node];
    if (index >= _tiles.count)
    {
-      NSLog(@"indexOfTile returned invalid index (%d)", index);
+      NSLog(@"indexOfTile returned invalid index (%lu)", (unsigned long)index);
       return [self colorForNode:node withColorName:_currentColorName];
    }
    
