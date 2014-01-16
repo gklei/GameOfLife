@@ -8,6 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 #import "UIColor+Crayola.h"
+#import "GLHUDSettingsManager.h"
 
 @class GLColorSwatch;
 
@@ -20,10 +21,11 @@ typedef struct {
 - (void)colorGridColorNameChanged:(CrayolaColorName)colorName;
 @end
 
-@interface GLColorGrid : SKNode
+@interface GLColorGrid : SKNode <HUDSettingsObserver>
 
 @property (nonatomic, readonly) ColorGridDimensions dimensions;
 @property (nonatomic, retain) id<GLColorGridDelegate> colorGridDelegate;
+@property (nonatomic, assign) BOOL soundEnabled;
 
 - (id)initWithSize:(CGSize)size;
 - (void)updateSelectedColorName:(CrayolaColorName)colorName;

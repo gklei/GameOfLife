@@ -120,6 +120,9 @@
 		8ECA89AC182371AE009D906F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8ECA8987182371AE009D906F /* UIKit.framework */; };
 		8ECA89B4182371AE009D906F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8ECA89B2182371AE009D906F /* InfoPlist.strings */; };
 		8ECA89B6182371AE009D906F /* GameOfLifeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ECA89B5182371AE009D906F /* GameOfLifeTests.m */; };
+		8ED7BE671887A19F00CA1CDD /* color.grid.down.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8ED7BE641887A19F00CA1CDD /* color.grid.down.wav */; };
+		8ED7BE681887A19F00CA1CDD /* color.grid.single.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8ED7BE651887A19F00CA1CDD /* color.grid.single.wav */; };
+		8ED7BE691887A19F00CA1CDD /* color.grid.up.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8ED7BE661887A19F00CA1CDD /* color.grid.up.wav */; };
 		8EF02CB51877DFF800E15705 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF02CB41877DFF800E15705 /* AssetsLibrary.framework */; };
 		ED292D1A185C90650031696D /* tile.frowny.png in Resources */ = {isa = PBXBuildFile; fileRef = ED292D18185C90650031696D /* tile.frowny.png */; };
 		ED292D1B185C90650031696D /* tile.smiley.png in Resources */ = {isa = PBXBuildFile; fileRef = ED292D19185C90650031696D /* tile.smiley.png */; };
@@ -291,6 +294,9 @@
 		8ECA89B1182371AE009D906F /* GameOfLifeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GameOfLifeTests-Info.plist"; sourceTree = "<group>"; };
 		8ECA89B3182371AE009D906F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8ECA89B5182371AE009D906F /* GameOfLifeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameOfLifeTests.m; sourceTree = "<group>"; };
+		8ED7BE641887A19F00CA1CDD /* color.grid.down.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = color.grid.down.wav; path = "GL Sound FX/color.grid.down.wav"; sourceTree = SOURCE_ROOT; };
+		8ED7BE651887A19F00CA1CDD /* color.grid.single.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = color.grid.single.wav; path = "GL Sound FX/color.grid.single.wav"; sourceTree = SOURCE_ROOT; };
+		8ED7BE661887A19F00CA1CDD /* color.grid.up.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = color.grid.up.wav; path = "GL Sound FX/color.grid.up.wav"; sourceTree = SOURCE_ROOT; };
 		8EF02CB41877DFF800E15705 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		ED292D18185C90650031696D /* tile.frowny.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.frowny.png; path = Images/tile.frowny.png; sourceTree = SOURCE_ROOT; };
 		ED292D19185C90650031696D /* tile.smiley.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.smiley.png; path = Images/tile.smiley.png; sourceTree = SOURCE_ROOT; };
@@ -420,6 +426,9 @@
 		8EAA59BB184B0218008E34D9 /* SoundFX */ = {
 			isa = PBXGroup;
 			children = (
+				8ED7BE641887A19F00CA1CDD /* color.grid.down.wav */,
+				8ED7BE651887A19F00CA1CDD /* color.grid.single.wav */,
+				8ED7BE661887A19F00CA1CDD /* color.grid.up.wav */,
 				8E2FA29D1867C7B70021A471 /* clear.1.wav */,
 				8E2FA29E1867C7B70021A471 /* reset.1.wav */,
 				8E2FA29F1867C7B70021A471 /* toggle.1.wav */,
@@ -685,6 +694,7 @@
 				EDE4505C1833F3380063DE36 /* clear.png in Resources */,
 				8E99B2C0182F7A1200C7AEDB /* stop.png in Resources */,
 				8E99B2A9182E0ABD00C7AEDB /* gear.png in Resources */,
+				8ED7BE671887A19F00CA1CDD /* color.grid.down.wav in Resources */,
 				8E2FA28E18667EA80021A471 /* eyedropper.png in Resources */,
 				8EA2651D185966A600351F5E /* arrow-right.png in Resources */,
 				8E75B04B1846CB23000AEEB8 /* restore@2x.png in Resources */,
@@ -739,9 +749,11 @@
 				8E99B2C1182F7A1200C7AEDB /* stop@2x.png in Resources */,
 				ED292D1B185C90650031696D /* tile.smiley.png in Resources */,
 				ED8EA7AC1873BDAA0073132A /* tile.snowflake.png in Resources */,
+				8ED7BE681887A19F00CA1CDD /* color.grid.single.wav in Resources */,
 				8E75B04718466F7F000AEEB8 /* camera@2x.png in Resources */,
 				ED8EA7AE1873C3470073132A /* tile.clear.png in Resources */,
 				8E2FA2AB1869DDD90021A471 /* color-swatch-ring-outer.png in Resources */,
+				8ED7BE691887A19F00CA1CDD /* color.grid.up.wav in Resources */,
 				8EA265391859723500351F5E /* droplet.png in Resources */,
 				8EAA38B0185D91EB00DA5CED /* slider-end-right.png in Resources */,
 				8EA265051858033A00351F5E /* flash.wav in Resources */,

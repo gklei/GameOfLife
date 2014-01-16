@@ -15,9 +15,7 @@
    SKTexture *_unlockedTexture;
    BOOL  _locked;
 }
-
 @end
-
 
 @implementation GLLockControl
 
@@ -50,7 +48,6 @@
    self.sprite = [SKSpriteNode spriteNodeWithTexture:_lockedTexture];
    self.hitBox.size = CGSizeMake(CGRectGetWidth(self.sprite.frame) + 10,
                                  CGRectGetHeight(self.sprite.frame) + 20);
-
    [self addChild:self.sprite];
    [self addChild:self.hitBox];
 }
@@ -74,9 +71,16 @@
    [defaults setObject:[NSNumber numberWithBool:_locked] forKey:@"LockedColorMode"];
 }
 
+- (BOOL)touchInsideHitBox:(UITouch *)touch
+{
+   return [self.hitBox containsPoint:[touch locationInNode:self]];
+}
+
 - (void)handleTouchEnded:(UITouch *)touch
 {
-   [self toggleState];
+   if ([self touchInsideHitBox:touch])
+      [self toggleState];
+   
    [super handleTouchEnded:touch];
 }
 

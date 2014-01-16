@@ -266,7 +266,7 @@
       drop.alpha = .75;
       drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
 
-      ActionBlock colorDropActionBlock = ^{[self updateCurrentColorDrop:drop];};
+      ActionBlock colorDropActionBlock = ^{[self updateCurrentColorDrop:drop fromTouch:YES];};
       drop.actionBlock = colorDropActionBlock;
 
       [_colorDrops insertObject:drop atIndex:i];
@@ -285,11 +285,15 @@
    _lockControl.hidden = hidden;
 }
 
-- (void)updateCurrentColorDrop:(GLColorDropButton *)colorDropButton
+- (void)updateCurrentColorDrop:(GLColorDropButton *)colorDropButton fromTouch:(BOOL)touch
 {
    if (_currentColorDrop != colorDropButton)
    {
-      if (_shouldPlaySound) [self runAction:_colorDropButtonSound];
+      if (_shouldPlaySound && touch)
+      {
+         _colorSelectionLayer.colorGrid.soundEnabled = NO;
+         [self runAction:_colorDropButtonSound];
+      }
       
       SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
       SKAction *deselectScaleAction = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
@@ -626,7 +630,7 @@
       if (drop.colorName == colorName)
       {
          colorExistsInCurrentPalette = YES;
-         [self updateCurrentColorDrop:drop];
+         [self updateCurrentColorDrop:drop fromTouch:NO];
          break;
       }
    }

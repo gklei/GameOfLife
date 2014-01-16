@@ -22,10 +22,32 @@
    NSArray *_colorSwatches;
    GLColorSwatch *_selectedColorSwatch;
    SKSpriteNode *_swatchSelectionRing;
+
+   SKAction *_upSoundFX;
+   SKAction *_downSoundFX;
+   SKAction *_singleMovementSoundFX;
+   SKAction *_noMovementSoundFX;
+
+   BOOL _shouldPlaySound;
 }
 @end
 
 @implementation GLColorGrid
+
+- (void)observeSoundFxChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
+
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+{
+   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _shouldPlaySound = [value boolValue];
+   }
+}
 
 - (id)initWithSize:(CGSize)size
 {
@@ -33,10 +55,22 @@
    {
       _dimensions.columns = size.height;
       _dimensions.rows = size.width;
+      _soundEnabled = YES;
+
       [self setupColorSwatches];
       [self setupSelectionRing];
+      [self setupSoundFX];
+      [self observeSoundFxChanges];
    }
    return self;
+}
+
+- (void)setupSoundFX
+{
+   _upSoundFX = [SKAction playSoundFileNamed:@"color.grid.up.wav" waitForCompletion:NO];
+   _downSoundFX = [SKAction playSoundFileNamed:@"color.grid.down.wav" waitForCompletion:NO];
+   _singleMovementSoundFX = [SKAction playSoundFileNamed:@"color.grid.single.wav" waitForCompletion:NO];
+   _noMovementSoundFX = [SKAction playSoundFileNamed:@"button.press.wav" waitForCompletion:NO];
 }
 
 - (void)setupColorGridColors
@@ -100,6 +134,23 @@
    BOOL sameX = (_selectedColorSwatch.position.x == swatch.position.x);
    BOOL sameY = (_selectedColorSwatch.position.y == swatch.position.y);
 
+   SKAction *playSound = _noMovementSoundFX;
+   if (_selectedColorSwatch.position.y < swatch.position.y)
+   {
+      playSound = (_selectedColorSwatch.position.x == swatch.position.x)?
+                   _singleMovementSoundFX : _upSoundFX;
+   }
+   else if (_selectedColorSwatch.position.y > swatch.position.y)
+   {
+      playSound = (_selectedColorSwatch.position.x == swatch.position.x)?
+                   _singleMovementSoundFX : _downSoundFX;
+   }
+   else if (_selectedColorSwatch.position.x != swatch.position.x)
+   {
+      playSound = _singleMovementSoundFX;
+   }
+
+
    _selectedColorSwatch = swatch;
    SKAction *moveX = [SKAction moveToX:_selectedColorSwatch.position.x
                               duration:(sameX)? 0 : .2];
@@ -109,7 +160,11 @@
    moveX.timingMode = SKActionTimingEaseInEaseOut;
    moveY.timingMode = SKActionTimingEaseInEaseOut;
 
+   if (!self.parent.hidden && _soundEnabled && _shouldPlaySound)
+      [self runAction:playSound];
+
    [_swatchSelectionRing runAction:[SKAction sequence:@[moveX, moveY]]];
+   _soundEnabled = YES;
 }
 
 - (void)swatchSelected:(GLColorSwatch *)swatch
