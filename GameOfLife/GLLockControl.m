@@ -37,8 +37,10 @@
 - (void)setupSpriteProperty
 {
    self.sprite = [SKSpriteNode spriteNodeWithTexture:_lockedTexture];
+   self.hitBox.size = CGSizeMake(CGRectGetWidth(self.sprite.frame) + 10,
+                                 CGRectGetHeight(self.sprite.frame) + 20);
+
    [self addChild:self.sprite];
-   self.hitBox.size = self.sprite.size;
    [self addChild:self.hitBox];
 }
 
