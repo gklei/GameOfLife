@@ -132,6 +132,11 @@
    [self registerToggleItemWithLabel:@"LOOP DETECTION" andKeyPath:@"LoopDetection"];
 }
 
+- (void)registerLockedColorMode
+{
+   [self registerToggleItemWithLabel:@"COLOR LOCKED" andKeyPath:@"LockedColorMode"];
+}
+
 - (void)registerLiveColorNameChanges
 {
    HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
@@ -145,7 +150,7 @@
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
    [hudManager addHudItem:hudItem];
 }
-
+   
 - (void)registerGenerationTracking
 {
    [self registerToggleItemWithLabel:@"COLOR FOR GENERATION"
@@ -172,6 +177,7 @@
    [self registerSmartMenuHUD];
    [self registerGeneralDurationHUD];
    [self registerLoopDetectionHUD];
+   [self registerLockedColorMode];
    [self registerGridImagePickerHUD:_gridImagePairs];
    [self registerLiveColorNameChanges];
    [self registerGenerationTracking];

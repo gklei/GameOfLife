@@ -33,6 +33,9 @@
    BOOL _clearingGrid;
    BOOL _running;
    BOOL _startedWithLife;
+   
+   // color handling
+   BOOL _lockedColorMode;
    BOOL _trackGeneration;
    
    CGFloat _boardMaxDistance;
@@ -52,6 +55,12 @@
    [hudManager addObserver:self forKeyPath:@"GridLiveColorName"];
 }
 
+- (void)observeLockedColorMode
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"LockedColorMode"];
+}
+
 - (void)observeTileGenerationTracking
 {
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
@@ -61,6 +70,7 @@
 - (void)setupObservations
 {
    [self observeGridLiveColorNameChanges];
+   [self observeLockedColorMode];
    [self observeTileGenerationTracking];
 }
 
@@ -609,22 +619,33 @@
       _trackGeneration = [value boolValue];
       [self refreshBoard];
    }
+   else if ([keyPath compare:@"LockedColorMode"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      
+      _lockedColorMode = [value boolValue];
+      [self refreshBoard];
+   }
 }
 
 #pragma mark - GLTileColorProvider protocol
 
 - (SKColor *)liveColorForNode:(GLTileNode *)node
 {
+   //TODO:LEA: use both _lockedColorMode and _trackGeneration
+   //          to determine the current color for the given tile
    assert(node != nil);
    
    CGFloat dist = [self colorDistanceForTile:node];// * 1.15;
-   NSUInteger nodeGenCount = node.generationCount - 1;
    
-   CrayolaColorName name = (_trackGeneration)?
-      [SKColor getColorNameForIndex:(_currentColorName + nodeGenCount)] :
-      _currentColorName;
+   CrayolaColorName colorName = _currentColorName;
+   if (_trackGeneration)
+   {
+      NSUInteger nodeGenCount = node.generationCount - 1;
+      colorName = [SKColor getColorNameForIndex:(_currentColorName + nodeGenCount)];
+   }
    
-   SKColor * liveColor = [SKColor colorForCrayolaColorName:name];
+   SKColor * liveColor = [SKColor colorForCrayolaColorName:colorName];
    
    CGFloat r, g, b;
    if ([liveColor getRed:&r green:&g blue:&b alpha:0])
