@@ -9,5 +9,4 @@
 #import "GLUIActionButton.h"
 
 @interface GLLockControl : GLUIActionButton
-
 @end
