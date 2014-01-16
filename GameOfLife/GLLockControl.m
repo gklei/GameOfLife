@@ -67,7 +67,10 @@
 
 - (void)handleTouchEnded:(UITouch *)touch
 {
-   [self toggleState];
+   CGPoint convertedPoint = [touch locationInNode:self];
+   if ([self.hitBox containsPoint:convertedPoint])
+      [self toggleState];
+   
    [self setTextureForState:_locked inverted:NO];
    [super handleTouchEnded:touch];
 }
