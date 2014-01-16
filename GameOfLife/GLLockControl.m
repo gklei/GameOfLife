@@ -15,9 +15,7 @@
    SKTexture *_unlockedTexture;
    BOOL  _locked;
 }
-
 @end
-
 
 @implementation GLLockControl
 
