@@ -48,4 +48,6 @@ typedef struct {
 - (BOOL)isCleared;
 - (BOOL)startedWithLife;
 
+- (void)toggleTileLiving:(GLTileNode *)tile;
+ 
 @end

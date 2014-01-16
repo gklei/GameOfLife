@@ -939,8 +939,7 @@
       
       _currentTileBeingTouched = tile;
       if (_shouldPlaySound) [self runAction:soundFX];
-      tile.isLiving = !tile.isLiving;
-      [_grid storeGridState];
+      [_grid toggleTileLiving:tile];
    }
 }
 

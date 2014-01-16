@@ -30,7 +30,7 @@
    std::vector<bool> _storedTileStates;
    std::vector<bool> _nextGenerationTileStates;
    std::vector<CrayolaColorName> _storedTileColors;
-   std::vector<CrayolaColorName> _currentTileColors;
+   std::vector<CrayolaColorName> _currentTileColorNames;
    
    BOOL _running;
    BOOL _startedWithLife;
@@ -107,7 +107,7 @@
       {
          _storedTileColors[i] = (CrayolaColorName)[((NSNumber *)[storedColors objectAtIndex:i])
                                                    intValue];
-         _currentTileColors[i] = _storedTileColors[i];
+         _currentTileColorNames[i] = _storedTileColors[i];
       }
    }
 }
@@ -179,7 +179,7 @@
    _LiFE = std::vector<bool>(gridSize, DEAD);
    
    _storedTileColors = std::vector<CrayolaColorName>(gridSize, CCN_INVALID_CrayolaColor);
-   _currentTileColors = std::vector<CrayolaColorName>(gridSize, CCN_INVALID_CrayolaColor);
+   _currentTileColorNames = std::vector<CrayolaColorName>(gridSize, CCN_INVALID_CrayolaColor);
    
    [self buildLiFE:(CGSize)size];
 }
@@ -240,6 +240,25 @@
       _generationLoops.pop_back();
 }
 
+- (CrayolaColorName) calculateColorNameForNode:(GLTileNode *)node
+{
+   if (_lockedColorMode)
+      return _currentColorName;
+   
+   
+   return CCN_crayolaAntiqueBrassColor;
+}
+
+- (void)updateLivingColors
+{
+   for (int i = 0; i < _tiles.count; ++i)
+   {
+      bool living = _nextGenerationTileStates[i];
+      _currentTileColorNames[i] = living? [self calculateColorNameForNode:_tiles[i]] :
+                                          CCN_INVALID_CrayolaColor;
+   }
+}
+
 - (void)updateNextGeneration
 {
    // currently, we only track back four generations to track looping
@@ -266,8 +285,10 @@
       ++_generationCount;
    }
    
+   [self updateLivingColors];
+   
    for (int i = 0; i < _tiles.count; ++i)
-      ((GLTileNode *)[_tiles objectAtIndex:i]).isLiving = _nextGenerationTileStates[i];
+      [((GLTileNode *)[_tiles objectAtIndex:i]) setIsLiving:_nextGenerationTileStates[i]];
 
    [self updateColorCenter];
 }
@@ -350,8 +371,8 @@
       [tile clearTile];
    }
    
-   for (int i = 0; i < _currentTileColors.size(); ++i)
-      _currentTileColors[i] = CCN_INVALID_CrayolaColor;
+   for (int i = 0; i < _currentTileColorNames.size(); ++i)
+      _currentTileColorNames[i] = CCN_INVALID_CrayolaColor;
    
    _inContinuousLoop = NO;
 }
@@ -604,6 +625,28 @@
       [tile clearActionsAndRestore:NO];
 }
 
+- (NSUInteger)indexOfTile:(GLTileNode *)tile
+{
+   NSUInteger location = 0;
+   for (GLTileNode * node in _tiles)
+   {
+      if (tile == node) return location;
+      ++location;
+   }
+   
+   return location;
+}
+
+- (void)toggleTileLiving:(GLTileNode *)tile
+{
+   NSUInteger index = [self indexOfTile:tile];
+   if (index < _tiles.count)
+      _currentTileColorNames[index] = CCN_INVALID_CrayolaColor;
+   
+   [tile setIsLiving:![tile isLiving]];
+   [self storeGridState];
+}
+
 #pragma mark - HUDSettingsObserver protocol
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
 {
@@ -651,18 +694,6 @@
    return 1.0 - dist;
 }
 
-- (NSUInteger)indexOfNode:(GLTileNode *)node
-{
-   NSUInteger location = 0;
-   for (GLTileNode * tile in _tiles)
-   {
-      if (tile == node) return location;
-      ++location;
-   }
-   
-   return location;
-}
-
 - (SKColor *)colorForNode:(GLTileNode *)node withColorName:(CrayolaColorName)colorName
 {
    if (_trackGeneration)
@@ -684,15 +715,15 @@
 
 - (SKColor *) unlockedColorForNode:(GLTileNode *)node
 {
-   NSUInteger index = [self indexOfNode:node];
+   NSUInteger index = [self indexOfTile:node];
    if (index >= _tiles.count)
       return [self colorForNode:node withColorName:_currentColorName];
       
-   CrayolaColorName colorName = _currentTileColors[index];
+   CrayolaColorName colorName = _currentTileColorNames[index];
    if (colorName == CCN_INVALID_CrayolaColor)
    {
       colorName = _currentColorName;
-      _currentTileColors[index] = colorName;
+      _currentTileColorNames[index] = colorName;
    }
    
    return [self colorForNode:node withColorName:colorName];

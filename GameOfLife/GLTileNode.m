@@ -23,7 +23,7 @@
                                rect.origin.y + rect.size.height * 0.5);
    tile.size = rect.size;
    tile.colorBlendFactor = LIVE_COLOR_BLEND_FACTOR;
-   tile.isLiving = NO;
+   [tile setIsLiving:NO];
    tile.scalesOnTouch = NO;
    tile.liveRotation = rotation;
 
