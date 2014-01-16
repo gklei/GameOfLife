@@ -16,7 +16,7 @@
 
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 42
-#define COLOR_DROP_CAPACITY 5
+#define COLOR_DROP_CAPACITY 4
 #define COLOR_DROP_SCALE .75
 #define SELECTED_COLOR_DROP_SCALE 1.15
 #define HIT_DIST_FROM_POSITION 4
@@ -39,9 +39,9 @@
    GLUIActionButton  *_splashButton;
    GLUIActionButton  *_paletteButton;
    GLColorDropButton *_currentColorDrop;
+   GLLockControl *_lockControl;
 
    NSMutableArray *_colorDrops;
-   GLLockControl *_lockControl;
 
    BOOL _shouldPlaySound;
    SKAction *_colorDropButtonSound;
@@ -75,6 +75,7 @@
       [self setupSplashButtonColorChangingAnimation];
       [self addColorDrops];
       [self setupPaletteButton];
+      [self setupLockControl];
 
       [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
       [self runSplashButtonColorChangeAnimation];
@@ -197,6 +198,15 @@
    [self addChild:_paletteButton];
 }
 
+- (void)setupLockControl
+{
+   _lockControl = [GLLockControl new];
+   [_lockControl setScale:.95];
+   _lockControl.position = CGPointMake(_colorDrops.count * COLOR_DROP_PADDING + 75,
+                                       -_lockControl.size.height/2.0 - 5);
+   [self addChild:_lockControl];
+}
+
 - (void)initCurrentColorDrop
 {
    // get the current color name
@@ -245,33 +255,22 @@
 
    for (int i = 0; i < COLOR_DROP_CAPACITY; ++i)
    {
-//      if (i == COLOR_DROP_CAPACITY - 1)
-//      {
-//         _lockControl = [[GLLockControl alloc] init];
-//         _lockControl.position = CGPointMake(i*COLOR_DROP_PADDING + 78,
-//                                             -_lockControl.size.height/2.0 - 5);
-//         [_colorDrops insertObject:_lockControl atIndex:i];
-//         [self addChild:_lockControl];
-//      }
-//      else
-//      {
-         GLColorDropButton *drop = ([self usingRetinaDisplay]) ?
-            [GLColorDropButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
-            [GLColorDropButton spriteNodeWithImageNamed:@"droplet.png"];
-         
-         [drop setScale:COLOR_DROP_SCALE];
-         drop.position = CGPointMake(i*COLOR_DROP_PADDING + 78, -drop.size.height/2.0 - 5);
-         drop.colorBlendFactor = 1.0;
-         drop.colorName = [((NSNumber *)[colorDropColors objectAtIndex:i]) unsignedIntValue];
-         drop.alpha = .75;
-         drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
+      GLColorDropButton *drop = ([self usingRetinaDisplay]) ?
+         [GLColorDropButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
+         [GLColorDropButton spriteNodeWithImageNamed:@"droplet.png"];
+      
+      [drop setScale:COLOR_DROP_SCALE];
+      drop.position = CGPointMake(i*COLOR_DROP_PADDING + 78, -drop.size.height/2.0 - 5);
+      drop.colorBlendFactor = 1.0;
+      drop.colorName = [((NSNumber *)[colorDropColors objectAtIndex:i]) unsignedIntValue];
+      drop.alpha = .75;
+      drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
 
-         ActionBlock colorDropActionBlock = ^{[self updateCurrentColorDrop:drop];};
-         drop.actionBlock = colorDropActionBlock;
+      ActionBlock colorDropActionBlock = ^{[self updateCurrentColorDrop:drop];};
+      drop.actionBlock = colorDropActionBlock;
 
-         [_colorDrops insertObject:drop atIndex:i];
-         [self addChild:drop];
-//      }
+      [_colorDrops insertObject:drop atIndex:i];
+      [self addChild:drop];
    }
    
    [self initCurrentColorDrop];
@@ -439,6 +438,9 @@
       [_paletteButton runAction:slide];
       [_paletteButton.hitBox runAction:slide];
 
+      [_lockControl runAction:slide];
+      [_lockControl.hitBox runAction:slide];
+
       _shouldRunSplashButtonColorChangingAnimation = NO;
       [_splashButton runAction:buttonActions
                     completion:^
@@ -455,6 +457,10 @@
          _paletteButton.hidden = NO;
          [_paletteButton runAction:moveDrop];
          [_paletteButton.hitBox runAction:moveDrop];
+
+         _lockControl.hidden = NO;
+         [_lockControl runAction:moveDrop];
+         [_lockControl.hitBox runAction:moveDrop];
 
          if (_currentColorDrop)
          {
@@ -517,6 +523,9 @@
    [_paletteButton runAction:slide];
    [_paletteButton.hitBox runAction:slide];
 
+   [_lockControl runAction:slide];
+   [_lockControl.hitBox runAction:slide];
+
    if (_shouldPlaySound) [self runAction:self.defaultCollapsingSoundFX];
    
    [_backgroundLayer runAction:hudBackgroundActions
@@ -532,6 +541,9 @@
 
       [_paletteButton runAction:moveDrop];
       [_paletteButton.hitBox runAction:moveDrop];
+
+      [_lockControl runAction:moveDrop];
+      [_lockControl.hitBox runAction:moveDrop];
 
       [self.delegate hudDidCollapse:self];
       self.animating = NO;
@@ -571,6 +583,7 @@
    _backgroundLayer.hidden = YES;
    _splashButton.hidden = YES;
    _paletteButton.hidden = YES;
+   _lockControl.hidden = YES;
 }
 
 - (void)show
@@ -579,6 +592,7 @@
    _backgroundLayer.hidden = NO;
    _splashButton.hidden = NO;
    _paletteButton.hidden = NO;
+   _lockControl.hidden = NO;
 }
 
 - (NSArray *)getCurrentDropColorNames
