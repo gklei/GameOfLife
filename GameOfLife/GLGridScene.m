@@ -142,7 +142,7 @@
    HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
    hudItem.keyPath = @"GridLiveColorName";
    hudItem.label = @"Live Color Name";;
-   hudItem.range = HUDItemRangeMake(0, CCN_crayolaYellowSunshineColor);
+   hudItem.range = HUDItemRangeMake(0, CCN_crayolaBrickRedColor);
    hudItem.type = HIT_NO_UI;
    hudItem.defaultvalue = [NSNumber numberWithUnsignedInt:CCN_crayolaCeruleanColor];
    hudItem.valueType = HVT_UINT;

@@ -246,8 +246,8 @@
    {
       colorDropColors = @[[NSNumber numberWithUnsignedInt:CCN_crayolaCeruleanColor],
                           [NSNumber numberWithUnsignedInt:CCN_crayolaCaribbeanGreenColor],
-                          [NSNumber numberWithUnsignedInt:CCN_crayolaLimeColor],
-                          [NSNumber numberWithUnsignedInt:CCN_crayolaOrangeRedColor],
+                          [NSNumber numberWithUnsignedInt:CCN_crayolaElectricLimeColor],
+                          [NSNumber numberWithUnsignedInt:CCN_crayolaBrickRedColor],
                           [NSNumber numberWithUnsignedInt:CCN_crayolaPinkFlamingoColor]];
 
       [GLColorPaletteManager sharedManager].storedColorPalette = colorDropColors;
