@@ -153,7 +153,6 @@
       playSound = _singleMovementSoundFX;
    }
 
-
    _selectedColorSwatch = swatch;
    SKAction *moveX = [SKAction moveToX:_selectedColorSwatch.position.x
                               duration:(sameX)? 0 : .2];
