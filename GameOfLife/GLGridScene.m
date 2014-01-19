@@ -393,14 +393,15 @@
 
 -(void)removeAllAlerts
 {
-   NSMutableArray * removable = [[NSMutableArray alloc] init];
-   
-   NSArray * children = [self children];
-   for (id child in children)
+//   NSMutableArray * removable = [[NSMutableArray alloc] init];
+
+//   NSArray * children = [self children];
+   for (id child in self.children)
       if ([child isKindOfClass:[GLAlertLayer class]])
-         [removable addObject:child];
-   
-   [self removeChildrenInArray:removable];
+//         [removable addObject:child];
+         [child hide];
+
+//   [self removeChildrenInArray:removable];
 }
 
 - (void)showGenerationCountAlert
@@ -442,7 +443,7 @@
       }
 
       alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 20);
-      [self addChild:alert];
+      [alert showWithParent:self];
    }
 }
 
@@ -652,6 +653,7 @@
 
    alert.position = CGPointMake(0, self.size.height - 20);
    [self addChild:alert];
+   [alert showWithParent:self];
 }
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action

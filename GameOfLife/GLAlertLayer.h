@@ -25,7 +25,7 @@ typedef NS_ENUM(int, GL_ALERT_TEXT_ELEMENT)
 - (void)addHeaderText:(NSString *)headerText;
 - (void)addBodyText:(NSString *)bodyText;
 
-- (void)animateInWithCompletion:(void (^)())completion;
-- (void)animateOutWithCompletion:(void (^)())completion;
+- (void)showWithParent:(SKNode *)parent;
+- (void)hide;
 
 @end

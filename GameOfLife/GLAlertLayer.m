@@ -130,6 +130,7 @@
       // default size and anchor point
       self.size = CGSizeMake(CGRectGetWidth([UIScreen mainScreen].bounds), 0);
       self.anchorPoint = CGPointMake(0, 1);
+      self.hidden = YES;
 
       [self setVariables];
    }
@@ -142,6 +143,7 @@
    if (self = [super initWithSize:size
                       anchorPoint:anchorPoint])
    {
+      self.hidden = YES;
       [self setVariables];
    }
    return self;
@@ -150,7 +152,7 @@
 - (id)initWithHeader:(NSString *)header
                 body:(NSString *)body
 {
-   if (self = [super init])
+   if (self = [self init])
    {
       [self addHeaderText:[NSString futurizedString:header].uppercaseString];
       [self addBodyText:[NSString futurizedString:body]];
@@ -201,6 +203,18 @@
 
    [self addTextToLayer:[NSString futurizedString:bodyText] forTextElement:body];
    [self dynamicallySetSize];
+}
+
+- (void)showWithParent:(SKNode *)parent
+{
+   [parent addChild:self];
+   self.hidden = NO;
+}
+
+- (void)hide
+{
+   if (self.parent)
+      [self removeFromParent];
 }
 
 #pragma mark - Helper Methods
@@ -287,10 +301,22 @@
 
 - (void)animateInWithCompletion:(void (^)())completion
 {
+   if (!self.parent)
+      return;
 }
 
 - (void)animateOutWithCompletion:(void (^)())completion
 {
+   if (!self.parent)
+      return;
+}
+
+- (void)setHidden:(BOOL)hidden
+{
+   for (SKLabelNode *label in self.children)
+      label.hidden = hidden;
+
+   [super setHidden:hidden];
 }
 
 @end
