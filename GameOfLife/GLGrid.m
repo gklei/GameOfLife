@@ -242,28 +242,21 @@
 
 - (CrayolaColorName) calculateColorNameForTile:(GLTileNode *)node
 {
-   if (_lockedColorMode)
-      return _currentColorName;
-   
-   u_int32_t item = arc4random_uniform(3);
-   NSArray * neighbors = [self getNeighborTilesForTile:node];
-   
-   u_int32_t count = 0;
-   for (GLTileNode * tile in neighbors)
+   if (!_lockedColorMode)
    {
-      if ([tile isLiving])
+      NSArray * neighbors = [self geLiveNeighborTilesForTile:node];
+      if (neighbors.count == 3)
       {
-         if (count == item)
-         {
-            NSUInteger index = [self indexOfTile:tile];
-            if (index < _currentTileColorNames.size())
-               return _currentTileColorNames[index];
-         }
-         ++count;
+         u_int32_t item = arc4random_uniform(3);
+         GLTileNode * tile = ((GLTileNode *)[neighbors objectAtIndex:item]);
+         NSUInteger index = [self indexOfTile:tile];
+         if (index < _currentTileColorNames.size())
+            return _currentTileColorNames[index];
       }
+      
+      NSLog(@"Couldn't find a neighboring node");
    }
    
-   NSLog(@"Couldn't find a neighboring node");
    return _currentColorName;
 }
 
@@ -273,7 +266,7 @@
    {
       GLTileNode * tile = _tiles[i];
       bool alive = _nextGenerationTileStates[i];
-      if (alive && ![tile isLiving])
+      if (alive && ![tile isLiving])   // tile is coming alive
          _currentTileColorNames[i] = [self calculateColorNameForTile:tile];
    }
 }
@@ -454,19 +447,22 @@
 }
 
 #pragma mark Helper Methods
-- (NSArray *)getNeighborTilesForTile:(GLTileNode *)tile
+- (NSArray *)geLiveNeighborTilesForTile:(GLTileNode *)tile
 {
    int tileIndex = (int)[_tiles indexOfObject:tile];
    NSMutableArray *neighbors = [NSMutableArray arrayWithCapacity:8];
 
    for (GLTileNode *tile in [self getCenterNeighborTilesForTileAtIndex:tileIndex])
-      [neighbors addObject:tile];
+      if (tile.isLiving)
+         [neighbors addObject:tile];
 
    for (GLTileNode *tile in [self getEastNeighborTilesForTileAtIndex:tileIndex])
-      [neighbors addObject:tile];
+      if (tile.isLiving)
+         [neighbors addObject:tile];
 
    for (GLTileNode *tile in [self getWestNeighborTilesForTileAtIndex:tileIndex])
-      [neighbors addObject:tile];
+      if (tile.isLiving)
+         [neighbors addObject:tile];
 
    return [NSArray arrayWithArray:neighbors];
 }
