@@ -285,4 +285,12 @@
    return label.calculateAccumulatedFrame.size.width <= (self.size.width - (SIDE_MARGIN_SPACE * 2));
 }
 
+- (void)animateInWithCompletion:(void (^)())completion
+{
+}
+
+- (void)animateOutWithCompletion:(void (^)())completion
+{
+}
+
 @end

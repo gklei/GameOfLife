@@ -15,7 +15,6 @@
 @interface GLColorSwatch()
 {
    SKSpriteNode *_swatch;
-
 }
 @end
 
