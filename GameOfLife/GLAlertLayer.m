@@ -2,7 +2,7 @@
 //  GLAlertLayer.m
 //  GameOfLife
 //
-//  Created by Gregory Klein on 1/9/14. (made in Mexico)
+//  Created by Gregory Klein on 1/9/14. (Made in Mexico)
 //  Copyright (c) 2014 Gregory Klein. All rights reserved.
 //
 
@@ -117,6 +117,9 @@
    // arrays to store off the headers and bodies in the alert
    NSMutableArray *_headers;
    NSMutableArray *_bodies;
+
+   BOOL _shouldHide;
+   BOOL _animating;
 }
 @end
 
@@ -207,14 +210,29 @@
 
 - (void)showWithParent:(SKNode *)parent
 {
-   [parent addChild:self];
    self.hidden = NO;
+
+   if (_animatesIn)
+      self.position = CGPointMake(self.position.x - self.size.width,
+                                  self.position.y);
+   [parent addChild:self];
+
+   if (_animatesIn)
+      [self animateInWithCompletion:
+       ^{
+          _animating = NO;
+       }];
 }
 
 - (void)hide
 {
-   if (self.parent)
-      [self removeFromParent];
+   if (_animating)
+   {
+      _shouldHide = YES;
+      return;
+   }
+
+   [self hideAndRemoveFromParent];
 }
 
 #pragma mark - Helper Methods
@@ -303,12 +321,26 @@
 {
    if (!self.parent)
       return;
+
+   SKAction *slideRight = [SKAction moveTo:CGPointMake(0, self.position.y) duration:.2];
+   slideRight.timingMode = SKActionTimingEaseInEaseOut;
+
+   _animating = YES;
+   [self runAction:slideRight completion:
+    ^{
+       completion();
+       if (_shouldHide)
+          [self hideAndRemoveFromParent];
+    }];
 }
 
-- (void)animateOutWithCompletion:(void (^)())completion
+- (void)hideAndRemoveFromParent
 {
-   if (!self.parent)
-      return;
+   self.hidden = YES;
+   if (self.parent)
+      [self removeFromParent];
+   
+   _shouldHide = NO;
 }
 
 - (void)setHidden:(BOOL)hidden

@@ -347,7 +347,7 @@
    if (_running)
    {
       _gameFinished = NO;
-      [self removeAllAlerts];
+      [self removeAllAlertsForcefully:NO];
    }
    else
       [self showGenerationCountAlert];
@@ -391,17 +391,16 @@
    [_grid clearGrid];
 }
 
--(void)removeAllAlerts
+-(void)removeAllAlertsForcefully:(BOOL)force
 {
-//   NSMutableArray * removable = [[NSMutableArray alloc] init];
-
-//   NSArray * children = [self children];
    for (id child in self.children)
       if ([child isKindOfClass:[GLAlertLayer class]])
-//         [removable addObject:child];
-         [child hide];
-
-//   [self removeChildrenInArray:removable];
+      {
+         if (force)
+            [child removeFromParent];
+         else
+            [child hide];
+      }
 }
 
 - (void)showGenerationCountAlert
@@ -414,7 +413,7 @@
       BOOL bonus = [_grid isCleared];
       BOOL checkHighScore = ![_grid startedWithLife];
       
-      [self removeAllAlerts];
+      [self removeAllAlertsForcefully:NO];
       
       unsigned long long totalScore = genCount;
       
@@ -443,6 +442,7 @@
       }
 
       alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 20);
+      alert.animatesIn = YES;
       [alert showWithParent:self];
    }
 }
@@ -461,7 +461,7 @@
                                             withSound:NO];
    }
    else
-      [self removeAllAlerts];
+      [self removeAllAlertsForcefully:NO];
    
    [_grid clearGrid];
 }
@@ -479,7 +479,7 @@
                                             withSound:NO];
    }
    else
-      [self removeAllAlerts];
+      [self removeAllAlertsForcefully:NO];
    
    [_grid restoreGrid];
 }
@@ -617,7 +617,7 @@
 
 - (void)screenShotButtonPressed:(CGPoint)buttonPosition
 {
-   [self removeAllAlerts];
+   [self removeAllAlertsForcefully:YES];
    /*
    ALAuthorizationStatusNotDetermined = 0, // User has not yet made a choice with regards to this application
    ALAuthorizationStatusRestricted,        // This application is not authorized to access photo data.
@@ -652,13 +652,13 @@
    [alert addBodyText:bodyLine2];
 
    alert.position = CGPointMake(0, self.size.height - 20);
-   [self addChild:alert];
+   alert.animatesIn = YES;
    [alert showWithParent:self];
 }
 
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
 {
-   [self removeAllAlerts];
+   [self removeAllAlertsForcefully:YES];
    [_colorHudLayer runAction:action];
 }
 
@@ -678,7 +678,7 @@
 #pragma mark GLColorHud Delegate Method
 - (void)colorGridWillExpandWithRepositioningAction:(SKAction *)action
 {
-   [self removeAllAlerts];
+   [self removeAllAlertsForcefully:YES];
    [_generalHudLayer runAction:action];
 }
 
@@ -929,7 +929,7 @@
 #pragma mark Helper Methods
 - (void)toggleLivingForTileAtTouch:(UITouch *)touch withSoundFX:(SKAction *)soundFX
 {
-   [self removeAllAlerts];
+   [self removeAllAlertsForcefully:NO];
    
    GLTileNode *tile = [_grid tileAtTouch:touch];
    if (_currentTileBeingTouched != tile)

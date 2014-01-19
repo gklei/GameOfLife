@@ -17,7 +17,7 @@ typedef NS_ENUM(int, GL_ALERT_TEXT_ELEMENT)
 @interface GLAlertLayer : GLMenuLayer
 
 @property (nonatomic, readonly) BOOL animating;
-@property (nonatomic, assign) BOOL animatesInAndOut;
+@property (nonatomic, assign) BOOL animatesIn;
 
 - (id)initWithHeader:(NSString *)header
                 body:(NSString *)body;
