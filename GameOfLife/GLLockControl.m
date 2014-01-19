@@ -55,12 +55,8 @@
 // this is setup this way just in case if we want to change the texture
 // before the state is set
 - (void)setTextureForState:(BOOL)locked
-                  inverted:(BOOL)inverted
 {
-   if (locked)
-      self.texture = (inverted)? _unlockedTexture : _lockedTexture;
-   else
-      self.texture = (inverted)? _lockedTexture : _unlockedTexture;
+   self.texture = (locked)? _lockedTexture : _unlockedTexture;
 }
 
 - (void)toggleState
@@ -90,7 +86,7 @@
    {
       assert(type == HVT_BOOL);
       
-      [self setTextureForState:[value boolValue] inverted:NO];
+      [self setTextureForState:[value boolValue]];
    }
 }
 

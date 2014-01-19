@@ -350,7 +350,10 @@
       [self removeAllAlertsForcefully:NO];
    }
    else
+   {
       [self showGenerationCountAlert];
+      _gameFinished = NO;
+   }
 }
 
 - (void)expandGeneralHUD

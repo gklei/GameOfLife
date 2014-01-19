@@ -425,6 +425,7 @@
    if (starting)
    {
       _running = YES;
+      _inContinuousLoop = NO;
       [self prepareForNextRun];
    }
    else
