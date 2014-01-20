@@ -62,7 +62,7 @@
 - (void)toggleState
 {
    _locked = !_locked;
-   
+
    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
    [defaults setObject:[NSNumber numberWithBool:_locked] forKey:@"LockedColorMode"];
 }
@@ -85,8 +85,9 @@
    if ([keyPath compare:@"LockedColorMode"] == NSOrderedSame)
    {
       assert(type == HVT_BOOL);
-      
-      [self setTextureForState:[value boolValue]];
+
+      _locked = value.boolValue;
+      [self setTextureForState:value.boolValue];
    }
 }
 

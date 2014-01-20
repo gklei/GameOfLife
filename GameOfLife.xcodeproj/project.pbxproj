@@ -49,6 +49,8 @@
 		8E75B04A1846CB23000AEEB8 /* restore.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B0481846CB23000AEEB8 /* restore.png */; };
 		8E75B04B1846CB23000AEEB8 /* restore@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E75B0491846CB23000AEEB8 /* restore@2x.png */; };
 		8E75B04E18490C0A000AEEB8 /* GLGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E75B04D18490C0A000AEEB8 /* GLGrid.m */; };
+		8E821F79188CF26500460AA2 /* Splash.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8E821F77188CF26500460AA2 /* Splash.sks */; };
+		8E821F7A188CF26500460AA2 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E821F78188CF26500460AA2 /* spark.png */; };
 		8E99B29F182BFE7600C7AEDB /* GLGridScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B29E182BFE7600C7AEDB /* GLGridScene.m */; };
 		8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A1182C013D00C7AEDB /* GLTileNode.m */; };
 		8E99B2A5182C14E300C7AEDB /* UIColor+Crayola.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */; };
@@ -208,6 +210,8 @@
 		8E75B0491846CB23000AEEB8 /* restore@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "restore@2x.png"; path = "Images/restore@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E75B04C18490C0A000AEEB8 /* GLGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGrid.h; sourceTree = "<group>"; };
 		8E75B04D18490C0A000AEEB8 /* GLGrid.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLGrid.m; sourceTree = "<group>"; };
+		8E821F77188CF26500460AA2 /* Splash.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Splash.sks; sourceTree = "<group>"; };
+		8E821F78188CF26500460AA2 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		8E99B29D182BFE7600C7AEDB /* GLGridScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLGridScene.h; sourceTree = "<group>"; };
 		8E99B29E182BFE7600C7AEDB /* GLGridScene.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = GLGridScene.m; sourceTree = "<group>"; };
 		8E99B2A0182C013D00C7AEDB /* GLTileNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLTileNode.h; sourceTree = "<group>"; };
@@ -457,6 +461,8 @@
 		8ECA8977182371AE009D906F = {
 			isa = PBXGroup;
 			children = (
+				8E821F77188CF26500460AA2 /* Splash.sks */,
+				8E821F78188CF26500460AA2 /* spark.png */,
 				8ECA898B182371AE009D906F /* GameOfLife */,
 				8EAA59BB184B0218008E34D9 /* SoundFX */,
 				8E99B2A6182E098800C7AEDB /* Images */,
@@ -702,6 +708,7 @@
 				8EA264FA1850229100351F5E /* menu.close.wav in Resources */,
 				8EA2650B1858045800351F5E /* start.algorithm.2.wav in Resources */,
 				8E99B2BF182F7A1200C7AEDB /* start@2x.png in Resources */,
+				8E821F7A188CF26500460AA2 /* spark.png in Resources */,
 				8EA2653D1859841F00351F5E /* close.png in Resources */,
 				8EA26544185990EA00351F5E /* radio-unchecked@2x.png in Resources */,
 				8E2FA28C186672E90021A471 /* tile.square.png in Resources */,
@@ -731,6 +738,7 @@
 				ED2CB971185C157500319DE5 /* tile.ring3d.png in Resources */,
 				8E75B03818419670000AEEB8 /* ring.png in Resources */,
 				8E2FA2A01867C7B70021A471 /* clear.1.wav in Resources */,
+				8E821F79188CF26500460AA2 /* Splash.sks in Resources */,
 				8EAA5A10184B29EC008E34D9 /* button.press.wav in Resources */,
 				8EA264FC1850229100351F5E /* settings.collapse.wav in Resources */,
 				8ECA8999182371AE009D906F /* Main.storyboard in Resources */,

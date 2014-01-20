@@ -303,7 +303,7 @@
                           @"",                   @"tile.buldge.png"];
       
       _highScore = [self getHighScore];
-      
+
       [self registerHudParameters];
 
       [self checkPhotoLibraryAuthorizationStatus];
@@ -312,7 +312,7 @@
       [self setupColorHud];
       [self setupSoundFX];
       [self setupFlashLayerAndAnimation];
-      
+
       [self observeHudParameterChanges];
 
       // set background color for the scene
