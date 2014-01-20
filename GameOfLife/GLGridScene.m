@@ -55,7 +55,6 @@
    ALAuthorizationStatus _photoLibraryAuthorizationStatus;
    SKSpriteNode *_flashLayer;
    SKAction *_flashAnimation;
-   BOOL _firstScreenShotTaken;
    
    GLUIButton *_focusedButton;
    
