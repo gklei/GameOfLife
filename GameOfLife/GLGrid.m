@@ -138,7 +138,7 @@
 
 - (void)setupGridWithSize:(CGSize)size
 {
-   _dimensions.rows = size.width/TILESIZE.width;
+   _dimensions.rows = size.height/TILESIZE.height;
    _dimensions.columns = size.width/TILESIZE.width;
    
    _currentColorCenter = CGPointMake(_dimensions.columns * TILESIZE.width * 0.5,

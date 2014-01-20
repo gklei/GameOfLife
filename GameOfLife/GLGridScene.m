@@ -323,8 +323,8 @@
    _flashLayer.anchorPoint = CGPointZero;
    _flashLayer.position = CGPointZero;
 
-   SKAction *flashIn = [SKAction fadeAlphaTo:1 duration:0.125];
-   SKAction *flashOut = [SKAction fadeAlphaTo:0 duration:0.625];
+   SKAction * flashIn = [SKAction fadeAlphaTo:1 duration:0.125];
+   SKAction * flashOut = [SKAction fadeAlphaTo:0 duration:0.625];
    _flashAnimation = [SKAction sequence:@[flashIn, flashOut]];
 
    [self addChild:_flashLayer];
@@ -586,19 +586,22 @@
    // block of code that takes a screen shot, runs an animation, and saves to the photo album
    void (^screenShotBlock)() = ^{
       [_generalHudLayer setHidden:YES];
+      
       CGFloat scale = self.view.contentScaleFactor;
-      UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, NO, scale);
-      [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:YES];
+      UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, scale);
+      [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:NO];
       
       UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
       UIGraphicsEndImageContext();
+
       [_generalHudLayer setHidden:NO];
 
       if (viewImage)
       {
-         // actually save the screenshot
+         // save the screenshot
          UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
          
+         // create and animate the screenshot
          SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
          if (node)
             [self animateNode:node toPosition:buttonPosition];
@@ -607,15 +610,13 @@
       _firstScreenShotTaken = YES;
    };
    
-   if (!_firstScreenShotTaken)
-   {
-      [_flashLayer runAction:_flashAnimation completion:screenShotBlock];
-   }
-   else
+   if (_firstScreenShotTaken)
    {
       screenShotBlock();
       [_flashLayer runAction:_flashAnimation];
    }
+   else
+      [_flashLayer runAction:_flashAnimation completion:screenShotBlock];
 }
 
 - (void)screenShotButtonPressed:(CGPoint)buttonPosition
