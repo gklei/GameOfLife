@@ -16,7 +16,7 @@
 
 // These are dependant on the knob image and track end image sizes
 #define FULLY_EXTENDED_TRACK_SCALE_FACTOR .5 //.503318573
-#define HALF_EXTENDED_TRACK_SCALE_FACTOR .225
+#define HALF_EXTENDED_TRACK_SCALE_FACTOR .227
 
 // These assure that the correct regions of the track end images are
 // stretched when adjusting the xScale property
@@ -109,6 +109,8 @@
    float currentPosition = _sliderPosition;
    _sliderPosition = 1;
    CGRect largestPossibleAccumulatedFrame = self.calculateAccumulatedFrame;
+   largestPossibleAccumulatedFrame.size = CGSizeMake(CGRectGetWidth(largestPossibleAccumulatedFrame) + 30,
+                                                     CGRectGetHeight(largestPossibleAccumulatedFrame));
    _sliderPosition = currentPosition;
    return largestPossibleAccumulatedFrame;
 }

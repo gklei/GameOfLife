@@ -34,7 +34,6 @@
    if (self = [super init])
    {
       [self setupTitle:title];
-      [self setupStatusLabelWithControl:control];
       [self setupControl:control];
    }
    return self;
@@ -77,6 +76,17 @@
    [self addChild:_itemStatusLabel];
 }
 
+- (void)setUIControlPosition
+{
+   _itemUIControl.position = (_itemStatusLabel.text)?
+   CGPointMake(_itemStatusLabel.position.x -
+               CGRectGetWidth(_itemStatusLabel.calculateAccumulatedFrame) * 0.5 -
+               CGRectGetWidth(_itemUIControl.largestPossibleAccumulatedFrame) * 0.5, 0) :
+   CGPointMake(CGRectGetWidth([UIScreen mainScreen].bounds) -
+               _itemUIControl.largestPossibleAccumulatedFrame.size.width * .5,
+               0);
+}
+
 - (void)setupControl:(GLUIButton *)control
 {
    _itemUIControl = control;
@@ -84,11 +94,7 @@
 
    _itemStatusLabel.text = [NSString futurizedString:control.longestPossibleStringValue];
 
-   _itemUIControl.position = (_itemStatusLabel.text)?
-      CGPointMake(_itemStatusLabel.position.x -
-                  CGRectGetWidth(_itemStatusLabel.calculateAccumulatedFrame) * 0.5 -
-                  CGRectGetWidth(_itemUIControl.largestPossibleAccumulatedFrame) * 0.5, 0) :
-      CGPointMake(CGRectGetWidth(_itemTitleLabel.calculateAccumulatedFrame), 0);
+   [self setUIControlPosition];
 
    _itemStatusLabel.text = [NSString futurizedString:control.stringValue];
    [self addChild:_itemUIControl];
@@ -97,6 +103,16 @@
 - (void)controlValueChangedForKey:(NSString *)key;
 {
    _itemStatusLabel.text = [NSString futurizedString:_itemUIControl.stringValue];
+}
+
+- (void)setUsesStatusLabel:(BOOL)usesStatusLabel
+{
+   if (!usesStatusLabel)
+      _itemStatusLabel = nil;
+   else
+      [self setupStatusLabelWithControl:_itemUIControl];
+
+   [self setUIControlPosition];
 }
 
 - (void)setHidden:(BOOL)hidden

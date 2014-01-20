@@ -37,6 +37,7 @@
    GLLabelControl * labelControl = [[GLLabelControl alloc] initWithHUDItemDescription:item];
    GLSettingsItem * labelItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                               control:labelControl];
+   labelItem.usesStatusLabel = YES;
    _nextControlPosition.y -= ([self controlIsStartOfGroup:labelControl])? 5 : 0;
    labelItem.position = _nextControlPosition;
    _nextControlPosition.y -= labelControl.controlHeight;
@@ -60,7 +61,7 @@
 
 - (void)addSliderControl:(HUDItemDescription *)item
 {
-   GLSliderControl * sliderControl = [[GLSliderControl alloc] initWithLength:180
+   GLSliderControl * sliderControl = [[GLSliderControl alloc] initWithLength:210
                                                                        range:item.range
                                                             andPreferenceKey:item.keyPath];
    GLSettingsItem * sliderItem = [[GLSettingsItem alloc] initWithTitle:item.label
@@ -80,6 +81,7 @@
    
    GLSettingsItem * pickerItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                                control:pickerControl];
+
    _nextControlPosition.y -= ([self controlIsStartOfGroup:pickerControl])? 5 : 0;
    pickerItem.position = _nextControlPosition;
    _nextControlPosition.y -= pickerControl.controlHeight;
@@ -153,8 +155,8 @@
    settingsLabel.position = CGPointMake(self.size.width * 0.5,
                                         -(HEADING_FONT_SIZE + TOP_PADDING));
    [self addChild:settingsLabel];
-   
-   _nextControlPosition = CGPointMake(0, -(TOP_PADDING + HEADING_FONT_SIZE * 3));
+
+   _nextControlPosition = CGPointMake(0, -(TOP_PADDING + 5 + HEADING_FONT_SIZE * 3));
 }
 
 - (void)setHidden:(BOOL)hidden

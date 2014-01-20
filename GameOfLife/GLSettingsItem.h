@@ -11,6 +11,8 @@
 @class GLUIButton;
 @interface GLSettingsItem : SKSpriteNode
 
+@property (nonatomic, assign) BOOL usesStatusLabel;
+
 - (id)initWithTitle:(NSString *)title
             control:(GLUIButton *)control;
 @end

@@ -24,7 +24,8 @@
 #define BACKGROUND_ALPHA_SETTINGS_EXPANDED .85
 
 #define BOTTOM_BAR_HEIGHT 60
-#define SETTINGS_HEIGHT [UIScreen mainScreen].bounds.size.height - BOTTOM_BAR_HEIGHT//(BOTTOM_BAR_HEIGHT * 6) + 20
+#define SETTINGS_HEIGHT_IPHONE_4 [UIScreen mainScreen].bounds.size.height - BOTTOM_BAR_HEIGHT
+#define SETTINGS_HEIGHT_IPHONE_5 (BOTTOM_BAR_HEIGHT * 7) + 20
 #define SETTINGS_EXPAND_COLLAPSE_DUATION .25
 #define BOTTOM_BAR_EXPAND_COLLAPSE_DURATION .5
 #define REPOSITION_BUTTONS_DURATION .25
@@ -33,6 +34,8 @@
 @interface GLGeneralHud()
 {
    CGSize _defaultSize;
+   CGFloat _settingsHeight;
+
    SKSpriteNode *_backgroundLayer;
    GLSettingsLayer *_settingsLayer;
 
@@ -74,6 +77,10 @@
       _particleGenerator = [NSKeyedUnarchiver unarchiveObjectWithFile:sparkPath];
 
       _defaultSize = [UIScreen mainScreen].bounds.size;
+      _settingsHeight =
+         (fabs((double)CGRectGetHeight([UIScreen mainScreen].bounds) - (double)568) < DBL_EPSILON )?
+         SETTINGS_HEIGHT_IPHONE_5 : SETTINGS_HEIGHT_IPHONE_4;
+
       [self setupSoundFX];
       [self setupBackgroundWithSize:_defaultSize];
       [self setupSettingsWithSize:_defaultSize];
@@ -137,7 +144,9 @@
 
 - (void)setupSettingsWithSize:(CGSize)size
 {
-   CGSize settingsSize = CGSizeMake(size.width, SETTINGS_HEIGHT);
+
+
+   CGSize settingsSize = CGSizeMake(size.width, _settingsHeight);
    _settingsLayer = [[GLSettingsLayer alloc] initWithSize:settingsSize
                                               anchorPoint:_backgroundLayer.anchorPoint];
    _settingsLayer.alpha = 5;
@@ -282,7 +291,7 @@
    _settingsAreExpanded = YES;
 
    SKAction *expand = [SKAction moveByX:0
-                                      y:SETTINGS_HEIGHT
+                                      y:_settingsHeight
                                duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
    SKAction *spin = [SKAction rotateByAngle:M_PI
                                    duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
@@ -322,7 +331,7 @@
    _settingsLayer.hidden = YES;
 
    SKAction *collapse = [SKAction moveByX:0
-                                        y:-(SETTINGS_HEIGHT)
+                                        y:-(_settingsHeight)
                                  duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
    SKAction *spin = [SKAction rotateByAngle:-M_PI
                                    duration:SETTINGS_EXPAND_COLLAPSE_DUATION];

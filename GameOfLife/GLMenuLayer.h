@@ -8,7 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-#define TOP_PADDING 15
+#define TOP_PADDING 18
 #define HEADING_FONT_SIZE 16
 #define BODY_FONT_SIZE 14
 
