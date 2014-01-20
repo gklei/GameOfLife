@@ -25,49 +25,94 @@
 #define BONUS_FOR_CLEARING_GRID     50
 
 
+@class ScreenShotPerformer;
+
 #pragma mark - GLGridScene private interface
 @interface GLGridScene() <GLGeneralHudDelegate, GLColorHudDelegate>
 {
    GLGrid *_grid;
-
+   
    GLTileNode *_currentTileBeingTouched;
    BOOL _oneTileTouched;
-
+   
    GLGeneralHud *_generalHudLayer;
    GLColorHud *_colorHudLayer;
-
+   
    BOOL _generalHudIsAnimating;
    BOOL _colorHudIsAnimating;
    BOOL _autoShowHideHudForStartStop;
    BOOL _generalHudShouldExpand;
    BOOL _gameFinished;
-
+   
    BOOL _shouldPlaySound;
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;
    SKAction *_flashSound;
-
+   
    CFTimeInterval _lastGenerationTime;
    CFTimeInterval _generationDuration;
-
+   
    ALAuthorizationStatus _photoLibraryAuthorizationStatus;
    SKSpriteNode *_flashLayer;
    SKAction *_flashAnimation;
    BOOL _firstScreenShotTaken;
-
+   
    GLUIButton *_focusedButton;
-
+   
    CGPoint _locationOfFirstTouch;
    NSArray * _gridImagePairs;
    
    unsigned long long _highScore;
+   
+   ScreenShotPerformer * _screenShotPerformer;
 }
 
 @property (nonatomic, assign, setter = setRunning:) BOOL running;
 
+-(void)doScreenShot:(CGPoint)buttonPosition;
+
 @end
 
-#pragma mark GLGridScene
+
+#pragma mark - ScreenShotPerformer
+#pragma mark ScreenShotPerformer interface
+@interface ScreenShotPerformer : NSObject
+{
+@private
+   GLGridScene * _gridScene;
+   CGPoint  _buttonPosition;
+}
+
+- (id)initWithGridScene:(GLGridScene *)scene;
+- (void)performScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay;
+@end
+
+#pragma mark ScreenShotPerformer implementation
+@implementation ScreenShotPerformer
+
+- (id)initWithGridScene:(GLGridScene *)scene
+{
+   if (self = [super init])
+      _gridScene = scene;
+   
+   return self;
+}
+
+- (void)performScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay
+{
+   _buttonPosition = buttonPosition;
+   [self performSelector:@selector(doScreenShot) withObject:nil afterDelay:delay];
+}
+
+- (void)doScreenShot
+{
+   [_gridScene doScreenShot:_buttonPosition];
+}
+
+@end
+
+
+#pragma mark - GLGridScene implementation
 @implementation GLGridScene
 
 #pragma mark - registration methods
@@ -279,6 +324,8 @@
          [self loadLife];
       else
          [self loadLastGrid];
+      
+      _screenShotPerformer = [[ScreenShotPerformer alloc] initWithGridScene:self];
    }
    return self;
 }
@@ -397,6 +444,7 @@
 -(void)removeAllAlertsForcefully:(BOOL)force
 {
    for (id child in self.children)
+   {
       if ([child isKindOfClass:[GLAlertLayer class]])
       {
          if (force)
@@ -404,6 +452,7 @@
          else
             [child hide];
       }
+   }
 }
 
 - (void)showGenerationCountAlert
@@ -508,7 +557,6 @@
    
    [_generalHudLayer updateStartStopButtonForState:(_running)? GL_RUNNING : GL_STOPPED
                                          withSound:!_autoShowHideHudForStartStop];
-   
    if (_autoShowHideHudForStartStop)
    {
       if (_running)
@@ -520,6 +568,7 @@
    }
 }
 
+#pragma mark - sceenshot related functions
 - (void)addNodeBehindFlashNode:(SKSpriteNode *)node
 {
    // add the node
@@ -557,7 +606,7 @@
    CGPoint point = position;
    point.y *= -1;
    SKAction * move = [SKAction moveTo:point duration:0.75];
-  
+   
    // scale the node
    SKAction * scaleX = [SKAction scaleXBy:0.01 y:1.0 duration:0.75];
    SKAction * pause = [SKAction waitForDuration:0.25];
@@ -578,24 +627,23 @@
     }];
 }
 
-- (void)takeScreenShot:(CGPoint)buttonPosition
+- (void)doScreenShot:(CGPoint)buttonPosition
 {
-   // weird work around for the first screen shot that's taken being slow
    if (_shouldPlaySound) [self runAction:_flashSound];
    
    // block of code that takes a screen shot, runs an animation, and saves to the photo album
    void (^screenShotBlock)() = ^{
-      [_generalHudLayer setHidden:YES];
-      
       CGFloat scale = self.view.contentScaleFactor;
       UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, scale);
       [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:NO];
       
       UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
       UIGraphicsEndImageContext();
-
+      
+      // make certain the HUDs are restored
       [_generalHudLayer setHidden:NO];
-
+      [_colorHudLayer setHidden:NO];
+      
       if (viewImage)
       {
          // save the screenshot
@@ -643,7 +691,12 @@
          break;
       case ALAuthorizationStatusNotDetermined:
       case ALAuthorizationStatusAuthorized:
-         [self takeScreenShot:buttonPosition];
+         // hack to get the HUD hidden when taking a screenshot
+         // we hide the HUD, set up a delayed callback and exit
+         // When the delay expires, the screen shot is taken and the HUD restored (see doScreenShot:)
+         [_generalHudLayer setHidden:YES];
+         [_colorHudLayer setHidden:YES];
+         [_screenShotPerformer performScreenShot:buttonPosition afterDelay:0.02];
          return;
       default:
          NSLog(@"Authorization Status %ld unrecognized", (long)_photoLibraryAuthorizationStatus);
@@ -660,6 +713,7 @@
    [alert showWithParent:self];
 }
 
+#pragma mark -
 - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action
 {
    [self removeAllAlertsForcefully:YES];
