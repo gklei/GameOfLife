@@ -86,9 +86,7 @@
 }
 
 @property (nonatomic, strong) NSArray *items;
-
 @end
-
 
 @implementation GLPickerControl
 
