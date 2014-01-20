@@ -75,6 +75,7 @@
    {
       NSString *sparkPath = [[NSBundle mainBundle] pathForResource:@"Spark" ofType:@"sks"];
       _particleGenerator = [NSKeyedUnarchiver unarchiveObjectWithFile:sparkPath];
+      _particleGenerator.position = CGPointMake(550, 30);
 
       _defaultSize = [UIScreen mainScreen].bounds.size;
       _settingsHeight =
@@ -144,8 +145,6 @@
 
 - (void)setupSettingsWithSize:(CGSize)size
 {
-
-
    CGSize settingsSize = CGSizeMake(size.width, _settingsHeight);
    _settingsLayer = [[GLSettingsLayer alloc] initWithSize:settingsSize
                                               anchorPoint:_backgroundLayer.anchorPoint];
@@ -159,6 +158,7 @@
 {
    [self setupExpandCollapseButton];
    [self setupCoreFunctionButtons];
+   [self addChild:_particleGenerator];
 }
 
 - (void)setupExpandCollapseButton
@@ -365,6 +365,8 @@
 
 - (void)toggleSettings
 {
+
+   [_particleGenerator resetSimulation];
    if (_settingsAreExpanded)
       [self collapseSettingsWithCompletionBlock:^
        {
