@@ -764,7 +764,7 @@
 
 - (SKColor *)deadColorForNode:(GLTileNode *)node
 {
-   return [SKColor crayolaCoconutColor];//[SKColor colorForCrayolaColorName:CCN_crayolaCoconutColor];
+   return [SKColor crayolaCoconutColor];
 }
 
 

@@ -68,12 +68,18 @@
    [node clearActionsAndRestore:YES];
 }
 
+- (void)invalidateImage
+{
+   GLTileNode * node = (GLTileNode *)[self sprite];
+   [node clearActionsAndRestore:YES];
+}
+
 @end
 
 //
 // GLPickerControl
 //
-@interface GLPickerControl()
+@interface GLPickerControl()<GLTileColorProvider>
 {
    NSArray * _imagePairs;
    
@@ -83,6 +89,8 @@
    
    NSString *_preferenceKey;
    HUDItemRange _range;
+   
+   CrayolaColorName  _currentColorName;
 }
 
 @property (nonatomic, strong) NSArray *items;
@@ -102,6 +110,12 @@
    [hudManager addObserver:self forKeyPath:@"GridImageIndex"];
 }
 
+- (void)observeGridLiveColorNameChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"GridLiveColorName"];
+}
+
 - (id)initWithHUDPickerItemDescription:(HUDPickerItemDescription *)itemDesc
 {
    if (self = [super init])
@@ -116,6 +130,7 @@
       [self setupSoundFX];
       [self observeSoundFxChanges];
       [self observeGridImageIndexChanges];
+      [self observeGridLiveColorNameChanges];
       
       NSNumber * value = [[NSUserDefaults standardUserDefaults] objectForKey:@"GridImageIndex"];
       [self setupImagePairs:[value unsignedIntegerValue]];
@@ -147,6 +162,7 @@
                                          andRotation:rotation];
       tile.deadRotation = 0;
       tile.position = CGPointMake(xPos, yPos);
+      tile.colorProvider = self;
       
       NSString * liveName = [_imagePairs objectAtIndex:imageIndex];
       if (liveName.length > 0)
@@ -225,9 +241,30 @@
       [item setIsLiving:(item.imageIndex == index)];
 }
 
+- (void)invalidateImages
+{
+   for (GLPickerItem *item in self.items)
+      [item invalidateImage];
+      
+}
+
+#pragma mark - HUDSettingsObserver protocol
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
 {
-   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   if ([keyPath compare:@"GridLiveColorName"] == NSOrderedSame)
+   {
+      assert(type == HVT_UINT);
+      
+      // verify the live color name is valid;
+      CrayolaColorName colorName = (CrayolaColorName)[value unsignedIntValue];
+      SKColor * color = [SKColor colorForCrayolaColorName:colorName];
+      if (color == nil)
+         return;
+      
+      _currentColorName = colorName;
+      [self invalidateImages];
+   }
+   else if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
    {
       assert(type == HVT_BOOL);
       _shouldPlaySound = [value boolValue];
@@ -252,6 +289,16 @@
    super.hidden = hidden;
    for (GLPickerItem *item in self.items)
       item.hidden = hidden;
+}
+
+- (SKColor *)liveColorForNode:(GLTileNode *)node
+{
+   return [SKColor colorForCrayolaColorName:_currentColorName];
+}
+
+- (SKColor *)deadColorForNode:(GLTileNode *)node
+{
+   return [SKColor crayolaCoconutColor];
 }
 
 @end
