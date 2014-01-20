@@ -385,6 +385,13 @@
    // register for a notification when the authorization status changes, but
    // instead, simply check to see what it is every time the app starts.
    _photoLibraryAuthorizationStatus = [ALAssetsLibrary authorizationStatus];
+
+   if (_photoLibraryAuthorizationStatus == ALAuthorizationStatusAuthorized ||
+       _photoLibraryAuthorizationStatus == ALAuthorizationStatusNotDetermined)
+   {
+      // connect to the photo library!
+      UIImageWriteToSavedPhotosAlbum(nil, nil, nil, nil);
+   }
 }
 
 - (void)setRunning:(BOOL)running
@@ -630,41 +637,29 @@
 - (void)doScreenShot:(CGPoint)buttonPosition
 {
    if (_shouldPlaySound) [self runAction:_flashSound];
+
+   CGFloat scale = self.view.contentScaleFactor;
+   UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, scale);
+   [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:NO];
    
-   // block of code that takes a screen shot, runs an animation, and saves to the photo album
-   void (^screenShotBlock)() = ^{
-      CGFloat scale = self.view.contentScaleFactor;
-      UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, scale);
-      [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:NO];
-      
-      UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
-      UIGraphicsEndImageContext();
-      
-      // make certain the HUDs are restored
-      [_generalHudLayer setHidden:NO];
-      [_colorHudLayer setHidden:NO];
-      
-      if (viewImage)
-      {
-         // save the screenshot
-         UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
-         
-         // create and animate the screenshot
-         SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
-         if (node)
-            [self animateNode:node toPosition:buttonPosition];
-      }
-      
-      _firstScreenShotTaken = YES;
-   };
+   UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+   UIGraphicsEndImageContext();
    
-   if (_firstScreenShotTaken)
+   // make certain the HUDs are restored
+   [_generalHudLayer setHidden:NO];
+   [_colorHudLayer setHidden:NO];
+   
+   if (viewImage)
    {
-      screenShotBlock();
-      [_flashLayer runAction:_flashAnimation];
+      // save the screenshot
+      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+      
+      // create and animate the screenshot
+      SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
+      if (node)
+         [self animateNode:node toPosition:buttonPosition];
    }
-   else
-      [_flashLayer runAction:_flashAnimation completion:screenShotBlock];
+   [_flashLayer runAction:_flashAnimation];
 }
 
 - (void)screenShotButtonPressed:(CGPoint)buttonPosition
