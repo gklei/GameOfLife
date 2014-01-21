@@ -231,7 +231,7 @@
    {
       void (^completionBlock)() = ^{[self.delegate screenShotButtonPressed:_cameraButton.position];};
       if (_settingsAreExpanded)
-         [self collapseSettingsWithCompletionBlock:completionBlock];
+         [self toggleSettingsWithCompletion:completionBlock];
       else
          completionBlock();
    };
@@ -241,7 +241,7 @@
    ActionBlock settingsButtonActionBlock= ^
    {
       if (!self.isAnimating)
-         [self toggleSettings];
+         [self toggleSettingsWithCompletion:nil];
    };
    _settingsButton.actionBlock = settingsButtonActionBlock;
 
@@ -366,21 +366,27 @@
    [_settingsButton runAction:spin completion:completionBlock];
 }
 
-- (void)toggleSettings
+- (void)toggleSettingsWithCompletion:(void (^)())completion
 {
-
    [_particleGenerator resetSimulation];
    if (_settingsAreExpanded)
+   {
+      [_settingsButton loseFocus];
       [self collapseSettingsWithCompletionBlock:^
        {
           _settingsButton.color = [SKColor whiteColor];
           _settingsLayer.hidden = YES;
+          if (completion)
+             completion();
        }];
+   }
    else
       [self expandSettingsWithCompletionBlock:^
        {
           if (_settingsAreExpanded)
              _settingsLayer.hidden = NO;
+          if (completion)
+             completion();
        }];
 }
 
