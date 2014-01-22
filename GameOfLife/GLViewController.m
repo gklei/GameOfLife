@@ -16,8 +16,10 @@
 @interface GLViewController()<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
    GLGridScene * _gridScene;
-   PhotoPickingCompletionBlock _photoCompletionBlock;
 }
+
+@property (readwrite, copy) PhotoPickingCompletionBlock photoCompletionBlock;
+
 @end
 
 @implementation GLViewController
@@ -108,7 +110,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 - (void)showMediaBrowserWithCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
 {
-   _photoCompletionBlock = completionBlock;
+   self.photoCompletionBlock = completionBlock;
    
    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
    imagePicker.delegate = self;

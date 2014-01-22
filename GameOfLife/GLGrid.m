@@ -665,6 +665,11 @@
    [self storeGridState];
 }
 
+- (void)scanImageForGameBoard:(UIImage *)image
+{
+   NSLog(@"Implement scan on image picked from the photo library");
+}
+
 #pragma mark - HUDSettingsObserver protocol
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
 {

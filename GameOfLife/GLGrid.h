@@ -49,5 +49,6 @@ typedef struct {
 - (BOOL)startedWithLife;
 
 - (void)toggleTileLiving:(GLTileNode *)tile;
- 
+- (void)scanImageForGameBoard:(UIImage *)image;
+
 @end

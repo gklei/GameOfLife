@@ -718,25 +718,11 @@
 
 - (void)beginPhotoImportAtPosition:(CGPoint)position
 {
-   NSLog(@"Do photo import");
-   
    PhotoPickingCompletionBlock completionBlock =
-      ^(UIImage * image)
-      {
-         if (image)
-         {
-            NSLog(@"Implement scan on image picked from the photo library");
-         }
-         else
-         {
-            NSLog(@"No image picked from the photo library");
-         }
-      };
+      ^(UIImage * image) { if (_grid && image) [_grid scanImageForGameBoard:image]; };
    
    if (_viewController)
-   {
       [_viewController showMediaBrowserWithCompletionBlock:completionBlock];
-   }
 }
 
 - (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position
