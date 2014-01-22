@@ -101,8 +101,8 @@
 {
    // work around for weird rounding error
    if (_scalesOnTouch &&
-       (fabs(_defaultXScale - self.xScale) >= .000001 ||
-        fabs(_defaultYScale - self.yScale) >= .000001))
+       (fabs(_defaultXScale - self.xScale) >= .0001 ||
+        fabs(_defaultYScale - self.yScale) >= .0001))
       [self runAction:_scaleDown];
    
    _glowEffect.shouldEnableEffects = NO;

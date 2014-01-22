@@ -76,6 +76,10 @@
       NSString *sparkPath = [[NSBundle mainBundle] pathForResource:@"Spark" ofType:@"sks"];
       _particleGenerator = [NSKeyedUnarchiver unarchiveObjectWithFile:sparkPath];
 
+      // hack: this happens to be where the settings button winds up when the bottom
+      // bar is expanded.
+      _particleGenerator.position = CGPointMake(550, 30);
+
       _defaultSize = [UIScreen mainScreen].bounds.size;
       _settingsHeight =
          (fabs((double)CGRectGetHeight([UIScreen mainScreen].bounds) - (double)568) < DBL_EPSILON )?
@@ -144,8 +148,6 @@
 
 - (void)setupSettingsWithSize:(CGSize)size
 {
-
-
    CGSize settingsSize = CGSizeMake(size.width, _settingsHeight);
    _settingsLayer = [[GLSettingsLayer alloc] initWithSize:settingsSize
                                               anchorPoint:_backgroundLayer.anchorPoint];
@@ -159,6 +161,7 @@
 {
    [self setupExpandCollapseButton];
    [self setupCoreFunctionButtons];
+   [self addChild:_particleGenerator];
 }
 
 - (void)setupExpandCollapseButton
@@ -230,15 +233,16 @@
          ^{[self.delegate screenShotButtonPressed:holdTime buttonPosition:_cameraButton.position];};
       
       if (_settingsAreExpanded)
-         [self collapseSettingsWithCompletionBlock:completionBlock];
+         [self toggleSettingsWithCompletion:completionBlock];
       else
          completionBlock();
    };
    _cameraButton.actionBlock = cameraButtonActionBlock;
 
    _settingsButton = [self buttonWithFilename:@"cog" buttonName:@"settings"];
+   
    ActionBlock settingsButtonActionBlock =
-      ^(NSTimeInterval holdTime) { if (!self.isAnimating) [self toggleSettings];  };
+      ^(NSTimeInterval holdTime) {if (!self.isAnimating) [self toggleSettingsWithCompletion:nil];};
    
    _settingsButton.actionBlock = settingsButtonActionBlock;
 
@@ -363,19 +367,27 @@
    [_settingsButton runAction:spin completion:completionBlock];
 }
 
-- (void)toggleSettings
+- (void)toggleSettingsWithCompletion:(void (^)())completion
 {
+   [_particleGenerator resetSimulation];
    if (_settingsAreExpanded)
+   {
+      [_settingsButton loseFocus];
       [self collapseSettingsWithCompletionBlock:^
        {
           _settingsButton.color = [SKColor whiteColor];
           _settingsLayer.hidden = YES;
+          if (completion)
+             completion();
        }];
+   }
    else
       [self expandSettingsWithCompletionBlock:^
        {
           if (_settingsAreExpanded)
              _settingsLayer.hidden = NO;
+          if (completion)
+             completion();
        }];
 }
 
