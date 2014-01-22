@@ -9,9 +9,14 @@
 #import "GLViewController.h"
 #import "GLGridScene.h"
 
-@interface GLViewController()
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+
+
+@interface GLViewController()<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
-   GLGridScene *_gridScene;
+   GLGridScene * _gridScene;
+   PhotoPickingCompletionBlock _photoCompletionBlock;
 }
 @end
 
@@ -22,12 +27,10 @@
    [super viewDidLoad];
 
    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)])
-      // iOS 7
-      [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+      [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)]; // iOS 7
    else
-      // iOS 6
       [[UIApplication sharedApplication] setStatusBarHidden:YES
-                                              withAnimation:UIStatusBarAnimationSlide];
+                                              withAnimation:UIStatusBarAnimationSlide]; // iOS 6
 
    // Configure the view.
    SKView * skView = (SKView *)self.view;
@@ -35,7 +38,7 @@
 //    skView.showsNodeCount = YES;
 
    // Create and configure the scene.
-   _gridScene = [GLGridScene sceneWithSize:skView.bounds.size];
+   _gridScene = [GLGridScene sceneWithViewController:self];
    _gridScene.scaleMode = SKSceneScaleModeAspectFill;
    // Present the scene.
    [skView presentScene:_gridScene];
@@ -81,6 +84,40 @@
 {
    [super didReceiveMemoryWarning];
    // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)callAndReleasePhotoCompletionBlock:(UIImage *)image
+{
+   if (_photoCompletionBlock)
+      _photoCompletionBlock(image);
+   
+   _photoCompletionBlock = nil;
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+   UIImage *image = info[UIImagePickerControllerOriginalImage];
+   [self dismissViewControllerAnimated:YES completion:nil];
+   [self callAndReleasePhotoCompletionBlock:image];
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+   [self dismissViewControllerAnimated:YES completion:nil];
+   [self callAndReleasePhotoCompletionBlock:nil];
+}
+
+- (void)showMediaBrowserWithCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
+{
+   _photoCompletionBlock = completionBlock;
+   
+   UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+   imagePicker.delegate = self;
+   imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+   imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];
+   imagePicker.allowsEditing = NO;
+   [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
 @end

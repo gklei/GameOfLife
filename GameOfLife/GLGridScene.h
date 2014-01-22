@@ -11,7 +11,11 @@
 #import "GLSettingsItem.h"
 #import "GLHUDSettingsManager.h"
 
+@class GLViewController;
+
 @interface GLGridScene : SKScene<HUDSettingsObserver>
+
++ (instancetype)sceneWithViewController:(GLViewController *)controller;
 
 - (void)expandGeneralHUD;
 

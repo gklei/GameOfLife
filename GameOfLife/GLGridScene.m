@@ -15,10 +15,11 @@
 #import "GLUIButton.h"
 #import "GLSettingsLayer.h"
 #import "GLTileNode.h"
+#import "GLViewController.h"
 #import "UIColor+Crayola.h"
 
-#include <AssetsLibrary/AssetsLibrary.h>
-#include <OpenGLES/ES1/glext.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <OpenGLES/ES1/glext.h>
 
 
 #define DEFAULT_GENERATION_DURATION 0.8
@@ -67,6 +68,7 @@
 }
 
 @property (nonatomic, assign, setter = setRunning:) BOOL running;
+@property (nonatomic, assign) GLViewController * viewController;
 
 -(void)doScreenShot:(CGPoint)buttonPosition;
 
@@ -113,6 +115,13 @@
 
 #pragma mark - GLGridScene implementation
 @implementation GLGridScene
+
++ (instancetype)sceneWithViewController:(GLViewController *)controller
+{
+   GLGridScene * result = [super sceneWithSize:controller.view.bounds.size];
+   result.viewController = controller;
+   return result;
+}
 
 #pragma mark - registration methods
 - (void)registerGeneralDurationHUD
@@ -710,6 +719,24 @@
 - (void)beginPhotoImportAtPosition:(CGPoint)position
 {
    NSLog(@"Do photo import");
+   
+   PhotoPickingCompletionBlock completionBlock =
+      ^(UIImage * image)
+      {
+         if (image)
+         {
+            NSLog(@"Implement scan on image picked from the photo library");
+         }
+         else
+         {
+            NSLog(@"No image picked from the photo library");
+         }
+      };
+   
+   if (_viewController)
+   {
+      [_viewController showMediaBrowserWithCompletionBlock:completionBlock];
+   }
 }
 
 - (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position

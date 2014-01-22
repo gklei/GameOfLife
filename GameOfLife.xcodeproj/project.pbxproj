@@ -141,6 +141,7 @@
 		ED8EA7AE1873C3470073132A /* tile.clear.png in Resources */ = {isa = PBXBuildFile; fileRef = ED8EA7AD1873C3470073132A /* tile.clear.png */; };
 		ED9D62681882531000B243D3 /* GLLabelControl.m in Sources */ = {isa = PBXBuildFile; fileRef = ED9D62671882531000B243D3 /* GLLabelControl.m */; };
 		EDB8C3A7187BF4310047AE52 /* GLToggleControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EDB8C3A6187BF4310047AE52 /* GLToggleControl.m */; };
+		EDC31A46188F77F2008E229D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDC31A45188F77F2008E229D /* MobileCoreServices.framework */; };
 		EDE4505C1833F3380063DE36 /* clear.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505A1833F3380063DE36 /* clear.png */; };
 		EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EDE4505B1833F3380063DE36 /* clear@2x.png */; };
 /* End PBXBuildFile section */
@@ -322,6 +323,7 @@
 		ED9D62671882531000B243D3 /* GLLabelControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLLabelControl.m; sourceTree = "<group>"; };
 		EDB8C3A5187BF4310047AE52 /* GLToggleControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLToggleControl.h; sourceTree = "<group>"; };
 		EDB8C3A6187BF4310047AE52 /* GLToggleControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLToggleControl.m; sourceTree = "<group>"; };
+		EDC31A45188F77F2008E229D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		EDE4505A1833F3380063DE36 /* clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = clear.png; path = Images/clear.png; sourceTree = SOURCE_ROOT; };
 		EDE4505B1833F3380063DE36 /* clear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear@2x.png"; path = "Images/clear@2x.png"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -331,6 +333,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDC31A46188F77F2008E229D /* MobileCoreServices.framework in Frameworks */,
 				8EF02CB51877DFF800E15705 /* AssetsLibrary.framework in Frameworks */,
 				8ECA8986182371AE009D906F /* CoreGraphics.framework in Frameworks */,
 				8ECA8988182371AE009D906F /* UIKit.framework in Frameworks */,
@@ -484,6 +487,7 @@
 		8ECA8982182371AE009D906F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EDC31A45188F77F2008E229D /* MobileCoreServices.framework */,
 				8EF02CB41877DFF800E15705 /* AssetsLibrary.framework */,
 				8ECA8983182371AE009D906F /* Foundation.framework */,
 				8ECA8985182371AE009D906F /* CoreGraphics.framework */,
