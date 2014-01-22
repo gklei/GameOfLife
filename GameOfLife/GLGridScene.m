@@ -671,8 +671,6 @@ typedef void (^PhotoWorkBlock)();
    [_flashLayer runAction:_flashAnimation];
 }
 
-
-
 - (void)doPhotoAccessWithBlock:(PhotoWorkBlock)doWork
 {
    [self removeAllAlertsForcefully:YES];
@@ -732,6 +730,15 @@ typedef void (^PhotoWorkBlock)();
 
 - (void)scanImageForGameBoard:(UIImage *)image
 {
+   GLAlertLayer *alert = [GLAlertLayer new];
+   [alert addHeaderText:@"Got image picking callback"];
+   NSString * body = (image)? image.description : @"Image is nil";
+   [alert addBodyText:body];
+   
+   alert.position = CGPointMake(0, self.size.height - 20);
+   alert.animatesIn = YES;
+   [alert showWithParent:self];
+   
    if (_grid && image)
       [_grid scanImageForGameBoard:image];
 }
