@@ -86,12 +86,10 @@
    // Release any cached data, images, etc that aren't in use.
 }
 
-- (void)callAndReleasePhotoCompletionBlock:(UIImage *)image
+- (void)callPhotoPickingCompletionBlock:(UIImage *)image
 {
    if (_photoCompletionBlock)
       _photoCompletionBlock(image);
-   
-   _photoCompletionBlock = nil;
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker
@@ -99,13 +97,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
    UIImage *image = info[UIImagePickerControllerOriginalImage];
    [self dismissViewControllerAnimated:YES completion:nil];
-   [self callAndReleasePhotoCompletionBlock:image];
+   [self callPhotoPickingCompletionBlock:image];
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
    [self dismissViewControllerAnimated:YES completion:nil];
-   [self callAndReleasePhotoCompletionBlock:nil];
+   [self callPhotoPickingCompletionBlock:nil];
 }
 
 - (void)showMediaBrowserWithCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
