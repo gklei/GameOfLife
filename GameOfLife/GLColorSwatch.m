@@ -26,7 +26,7 @@
    {
       _state = e_COLOR_SWATCH_DISABLED;
 
-      ActionBlock actionBlock = ^{[self toggle];};
+      ActionBlock actionBlock = ^(NSTimeInterval holdTime) { [self toggle]; };
       self.actionBlock = actionBlock;
 
       [self setupSwatchImages];

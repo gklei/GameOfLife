@@ -47,7 +47,7 @@
    
    item.hitBox.position = tileNode.position;
 
-   ActionBlock itemActionBlock = ^
+   ActionBlock itemActionBlock = ^(NSTimeInterval holdTime)
    {
       NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
       [defaults setObject:[NSNumber numberWithUnsignedLong:item.imageIndex]

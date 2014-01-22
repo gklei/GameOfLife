@@ -178,11 +178,9 @@
 
    _expandCollapseButton.name = @"expand_collapse";
 
-   ActionBlock expandCollapseActionBlock = ^
-   {
-      if (!self.isAnimating)
-         [self toggle];
-   };
+   ActionBlock expandCollapseActionBlock =
+      ^(NSTimeInterval holdTime) { if (!self.isAnimating) [self toggle]; };
+   
    _expandCollapseButton.actionBlock = expandCollapseActionBlock;
    [self addChild:_expandCollapseButton];
 }
@@ -201,7 +199,7 @@
 - (void)setupCoreFunctionButtons
 {
    _clearButton = [self buttonWithFilename:@"cancel-circle" buttonName:@"clear"];
-   ActionBlock clearButtonActionBlock = ^
+   ActionBlock clearButtonActionBlock = ^(NSTimeInterval holdTime)
    {
       if (_shouldPlaySound) [self runAction:_clearSound];
       [self.delegate clearButtonPressed];
@@ -209,7 +207,7 @@
    _clearButton.actionBlock = clearButtonActionBlock;
 
    _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
-   ActionBlock restoreButtonActionBlock = ^
+   ActionBlock restoreButtonActionBlock = ^(NSTimeInterval holdTime)
    {
       if (_shouldPlaySound) [self runAction:_restoreSound];
       [self.delegate restoreButtonPressed];
@@ -218,15 +216,19 @@
 
    _startStopButton = [self buttonWithFilename:@"play2" buttonName:@"start_stop"];
    _startStopButton.color = [SKColor crayolaLimeColor];
-   ActionBlock startStopButtonActionBlock = ^{[self.delegate toggleRunningButtonPressed];};
+   ActionBlock startStopButtonActionBlock =
+      ^(NSTimeInterval holdTime) { [self.delegate toggleRunningButtonPressed]; };
+   
    _startStopButton.actionBlock = startStopButtonActionBlock;
 
    _cameraButton = [self buttonWithFilename:@"camera2" buttonName:@"camera"];
    _cameraButton.alpha =
       ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized)? 1 : .5;
-   ActionBlock cameraButtonActionBlock = ^
+   ActionBlock cameraButtonActionBlock = ^(NSTimeInterval holdTime)
    {
-      void (^completionBlock)() = ^{[self.delegate screenShotButtonPressed:_cameraButton.position];};
+      void (^completionBlock)() =
+         ^{[self.delegate screenShotButtonPressed:holdTime buttonPosition:_cameraButton.position];};
+      
       if (_settingsAreExpanded)
          [self collapseSettingsWithCompletionBlock:completionBlock];
       else
@@ -235,11 +237,9 @@
    _cameraButton.actionBlock = cameraButtonActionBlock;
 
    _settingsButton = [self buttonWithFilename:@"cog" buttonName:@"settings"];
-   ActionBlock settingsButtonActionBlock= ^
-   {
-      if (!self.isAnimating)
-         [self toggleSettings];
-   };
+   ActionBlock settingsButtonActionBlock =
+      ^(NSTimeInterval holdTime) { if (!self.isAnimating) [self toggleSettings];  };
+   
    _settingsButton.actionBlock = settingsButtonActionBlock;
 
    _coreFunctionButtons = @[_clearButton,

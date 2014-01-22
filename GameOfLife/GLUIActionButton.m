@@ -8,6 +8,13 @@
 
 #import "GLUIActionButton.h"
 
+@interface GLUIActionButton()
+{
+   NSTimeInterval _touchPressTime;
+}
+
+@end;
+
 @implementation GLUIActionButton
 
 + (instancetype)spriteNodeWithImageNamed:(NSString *)name
@@ -28,6 +35,8 @@
 
 - (void)handleTouchBegan:(UITouch *)touch
 {
+   _touchPressTime = touch.timestamp;
+   
    if (_beganFocusActionBlock)
       _beganFocusActionBlock();
 
@@ -37,8 +46,10 @@
 - (void)handleTouchEnded:(UITouch *)touch
 {
    CGPoint convertedPoint = [touch locationInNode:self];
+   NSTimeInterval touchHoldTime = (touch.timestamp - _touchPressTime);
+   
    if ([self.hitBox containsPoint:convertedPoint] && _actionBlock)
-      _actionBlock();
+      _actionBlock(touchHoldTime);
 
    if (_loseFocusActionBlock)
       _loseFocusActionBlock();

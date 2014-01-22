@@ -131,14 +131,11 @@
    _splashButton.position = CGPointMake(HUD_BUTTON_EDGE_PADDING - _splashButton.size.width/2.0 - 2,
                                         HUD_BUTTON_EDGE_PADDING - _splashButton.size.height/2.0);
    _splashButton.name = @"splash";
-   ActionBlock splashButtonActionBlock = ^
-   {
-      if (!self.isAnimating)
-         [self toggle];
-   };
+   ActionBlock splashButtonActionBlock =
+      ^(NSTimeInterval holdTime) { if (!self.isAnimating) [self toggle]; };
+   
    _splashButton.actionBlock = splashButtonActionBlock;
-
-
+   
    [self addChild:_splashButton];
 }
 
@@ -188,11 +185,8 @@
                                          -_splashButton.size.height/2.0);
    _paletteButton.name = @"palette";
 
-   ActionBlock paletteButtonActionBlock = ^
-   {
-      if (!self.isAnimating)
-         [self toggleColorGrid];
-   };
+   ActionBlock paletteButtonActionBlock =
+      ^(NSTimeInterval holdTime) { if (!self.isAnimating) [self toggleColorGrid]; };
    _paletteButton.actionBlock = paletteButtonActionBlock;
    
    [self addChild:_paletteButton];
@@ -266,7 +260,8 @@
       drop.alpha = .75;
       drop.hitBox.size = CGSizeMake(drop.hitBox.size.width, drop.hitBox.size.height + 10);
 
-      ActionBlock colorDropActionBlock = ^{[self updateCurrentColorDrop:drop fromTouch:YES];};
+      ActionBlock colorDropActionBlock =
+         ^(NSTimeInterval holdTime) {[self updateCurrentColorDrop:drop fromTouch:YES];};
       drop.actionBlock = colorDropActionBlock;
 
       [_colorDrops insertObject:drop atIndex:i];

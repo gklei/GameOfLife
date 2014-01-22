@@ -667,7 +667,7 @@
       [_flashLayer runAction:_flashAnimation completion:screenShotBlock];
 }
 
-- (void)screenShotButtonPressed:(CGPoint)buttonPosition
+- (void)beginScreenShotAtPosition:(CGPoint)buttonPosition
 {
    [self removeAllAlertsForcefully:YES];
    /*
@@ -711,6 +711,19 @@
    alert.position = CGPointMake(0, self.size.height - 20);
    alert.animatesIn = YES;
    [alert showWithParent:self];
+}
+
+- (void)beginPhotoImportAtPosition:(CGPoint)position
+{
+   NSLog(@"Do photo import");
+}
+
+- (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position
+{
+   if (holdTime > 2.0)
+      [self beginPhotoImportAtPosition:position];
+   else
+      [self beginScreenShotAtPosition:position];
 }
 
 #pragma mark -

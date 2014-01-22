@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GLUIButton.h"
 
-typedef void (^ActionBlock)();
+typedef void (^ActionBlock)(NSTimeInterval);
 typedef void (^BeganFocusActionBlock)();
 typedef void (^LoseFocusActionBlock)();
 
