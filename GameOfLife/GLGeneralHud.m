@@ -337,6 +337,7 @@
    SKAction *collapse = [SKAction moveByX:0
                                         y:-(_settingsHeight)
                                  duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
+
    SKAction *spin = [SKAction rotateByAngle:-M_PI
                                    duration:SETTINGS_EXPAND_COLLAPSE_DUATION];
 

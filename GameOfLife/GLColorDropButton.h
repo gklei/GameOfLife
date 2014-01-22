@@ -13,5 +13,6 @@
 @interface GLColorDropButton : GLUIActionButton
 
 @property (nonatomic, assign, setter = setColorName:) CrayolaColorName colorName;
+@property (nonatomic, assign) BOOL usesSplashAnimation;
 
 @end
