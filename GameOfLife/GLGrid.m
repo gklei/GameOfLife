@@ -41,6 +41,7 @@
    
    CGFloat _boardMaxDistance;
    CGPoint _currentColorCenter;
+   CGSize  _gridSize;
    
    CrayolaColorName _currentColorName;
 }
@@ -138,6 +139,7 @@
 
 - (void)setupGridWithSize:(CGSize)size
 {
+   _gridSize = size;
    _dimensions.rows = size.height/TILESIZE.height;
    _dimensions.columns = size.width/TILESIZE.width;
    
@@ -665,9 +667,65 @@
    [self storeGridState];
 }
 
+- (void)scanPreScaledImageForGameBoard:(UIImage *)image
+{
+   assert(image.size.width == _gridSize.width);
+   assert(image.size.height == _gridSize.height);
+   
+   std::vector<bool> scannedTileStates = std::vector<bool>(_tiles.count, DEAD);
+   std::vector<CrayolaColorName> scannedTileColorNames =
+      std::vector<CrayolaColorName>(_tiles.count, CCN_INVALID_CrayolaColor);
+   
+   NSLog(@"Implement scan on pre-scaled image");
+   
+   // TODO:LEA: fill in the board and colors and then reload the game
+//   CGFloat scanWidth = image.size.width / _dimensions.columns;
+//   CGFloat scanHeight = image.size.height / _dimensions.rows;
+//   
+//   CFDataRef pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage));
+//   const UInt8* data = CFDataGetBytePtr(pixelData);
+//   
+//   for (int row = 0; row < _dimensions.rows; ++row)
+//   {
+//      for (int col = 0; col < _dimensions.columns; ++col)
+//      {
+//         int xPos = (int)(col * scanWidth + scanWidth * 0.5);
+//         int yPos = (int)(row * scanHeight + scanHeight * 0.5);
+//         
+//         int pixelInfo = ((image.size.width  * yPos) + xPos ) * 4;
+//         
+//         CGFloat red = data[pixelInfo] / 255.0;
+//         CGFloat green = data[(pixelInfo + 1)] / 255.0;
+//         CGFloat blue = data[pixelInfo + 2] / 255.0;
+//         CGFloat alpha = data[pixelInfo + 3] / 255.0;
+//         NSLog(@"color for (%d, %d): rgba = %0.2f, %0.2f, %0.2f, %0.2f",
+//               xPos, yPos, red, green, blue, alpha);
+//      }
+//   }
+//   
+//   CFRelease(pixelData);
+}
+
 - (void)scanImageForGameBoard:(UIImage *)image
 {
-   NSLog(@"Implement scan on image picked from the photo library");
+   if (image)
+   {
+      CGSize imageSize = image.size;
+      CGFloat imageAspect = imageSize.width / imageSize.height;
+      CGFloat gridAspect  = _gridSize.width / _gridSize.height;
+      if (imageAspect == gridAspect)
+      {
+         CGFloat scale = imageSize.width / _gridSize.width;
+         if (scale != 1.0)
+         {
+            image = [UIImage imageWithCGImage:image.CGImage
+                                        scale:scale
+                                  orientation:image.imageOrientation];
+         }
+         
+         [self scanPreScaledImageForGameBoard:image];
+      }
+   }
 }
 
 #pragma mark - HUDSettingsObserver protocol

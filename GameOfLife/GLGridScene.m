@@ -25,6 +25,7 @@
 #define DEFAULT_GENERATION_DURATION 0.8
 #define BONUS_FOR_CLEARING_GRID     50
 
+typedef void (^PhotoWorkBlock)();
 
 @class ScreenShotPerformer;
 
@@ -670,17 +671,20 @@
    [_flashLayer runAction:_flashAnimation];
 }
 
-- (void)beginScreenShotAtPosition:(CGPoint)buttonPosition
+
+
+- (void)doPhotoAccessWithBlock:(PhotoWorkBlock)doWork
 {
    [self removeAllAlertsForcefully:YES];
+   
    /*
-   ALAuthorizationStatusNotDetermined = 0, // User has not yet made a choice with regards to this application
-   ALAuthorizationStatusRestricted,        // This application is not authorized to access photo data.
-   // The user cannot change this application’s status, possibly due to active restrictions
-   //  such as parental controls being in place.
-   ALAuthorizationStatusDenied,            // User has explicitly denied this application access to photos data.
-   ALAuthorizationStatusAuthorized
-   */
+    ALAuthorizationStatusNotDetermined = 0, // User has not yet made a choice with regards to this application
+    ALAuthorizationStatusRestricted,        // This application is not authorized to access photo data.
+    // The user cannot change this application’s status, possibly due to active restrictions
+    //  such as parental controls being in place.
+    ALAuthorizationStatusDenied,            // User has explicitly denied this application access to photos data.
+    ALAuthorizationStatusAuthorized
+    */
    NSString *header = nil;
    NSString *bodyLine1 = nil;
    NSString *bodyLine2 = nil;
@@ -694,35 +698,58 @@
          break;
       case ALAuthorizationStatusNotDetermined:
       case ALAuthorizationStatusAuthorized:
-         // hack to get the HUD hidden when taking a screenshot
-         // we hide the HUD, set up a delayed callback and exit
-         // When the delay expires, the screen shot is taken and the HUD restored (see doScreenShot:)
-         [_generalHudLayer setHidden:YES];
-         [_colorHudLayer setHidden:YES];
-         [_screenShotPerformer performScreenShot:buttonPosition afterDelay:0.02];
+         doWork();  // do the work (read from/write to the photo library)
          return;
       default:
          NSLog(@"Authorization Status %ld unrecognized", (long)_photoLibraryAuthorizationStatus);
          return;
    }
-
+   
    GLAlertLayer *alert = [GLAlertLayer new];
    [alert addHeaderText:header];
    [alert addBodyText:bodyLine1];
    [alert addBodyText:bodyLine2];
-
+   
    alert.position = CGPointMake(0, self.size.height - 20);
    alert.animatesIn = YES;
    [alert showWithParent:self];
 }
 
-- (void)beginPhotoImportAtPosition:(CGPoint)position
+- (void)beginScreenShotAtPosition:(CGPoint)buttonPosition
 {
-   PhotoPickingCompletionBlock completionBlock =
-      ^(UIImage * image) { if (_grid && image) [_grid scanImageForGameBoard:image]; };
+   // hack to get the HUD hidden when taking a screenshot
+   // we hide the HUD, set up a delayed callback and exit
+   // When the delay expires, the screen shot is taken and the HUD restored (see doScreenShot:)
+   PhotoWorkBlock work = ^()
+   {
+      [_generalHudLayer setHidden:YES];
+      [_colorHudLayer setHidden:YES];
+      [_screenShotPerformer performScreenShot:buttonPosition afterDelay:0.02];
+   };
    
-   if (_viewController)
-      [_viewController showMediaBrowserWithCompletionBlock:completionBlock];
+   [self doPhotoAccessWithBlock:work];
+}
+
+- (void)scanImageForGameBoard:(UIImage *)image
+{
+   if (_grid && image)
+      [_grid scanImageForGameBoard:image];
+}
+
+- (void)beginPhotoImportAtPosition:(CGPoint)position
+{  
+   PhotoWorkBlock work = ^()
+   {
+      if (_viewController)
+      {
+         PhotoPickingCompletionBlock completionBlock =
+            ^(UIImage * image) { [self scanImageForGameBoard:image]; };
+      
+         [_viewController showMediaBrowserWithCompletionBlock:completionBlock];
+      }
+   };
+   
+   [self doPhotoAccessWithBlock:work];
 }
 
 - (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position

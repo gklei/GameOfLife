@@ -112,6 +112,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
    self.photoCompletionBlock = completionBlock;
    
+   // TODO:LEA: test for iPad and put the image picker in a popover
    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
    imagePicker.delegate = self;
    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
