@@ -18,7 +18,7 @@
 #define COLOR_DROP_PADDING 42
 #define COLOR_DROP_CAPACITY 4
 #define COLOR_DROP_SCALE .75
-#define SELECTED_COLOR_DROP_SCALE 1.15
+#define SELECTED_COLOR_DROP_SCALE 1.12
 #define HIT_DIST_FROM_POSITION 4
 
 #define BACKGROUND_ALPHA_SETTINGS_COLLAPSED .7
@@ -348,8 +348,10 @@
       _currentColorName = _currentColorDrop.colorName;
 
       [_splashParticleEmitter resetSimulation];
-      _splashParticleEmitter.position = CGPointMake(_splashParticleEmitter.position.x - 5,
-                                                      _splashParticleEmitter.position.y +5);
+
+      NSLog(@"current drop position: %@", NSStringFromCGPoint(_currentColorDrop.position));
+      _splashParticleEmitter.position = CGPointMake(_currentColorDrop.position.x - 260,
+                                                    40);
       _splashParticleEmitter.particleColor = [UIColor colorForCrayolaColorName:_currentColorName];
 
       [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
