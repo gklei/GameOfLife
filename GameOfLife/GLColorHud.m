@@ -89,9 +89,6 @@
 
 - (void)setupParticleEmitter
 {
-//   NSString *splashPath = [[NSBundle mainBundle] pathForResource:@"Splash" ofType:@"sks"];
-//   _splashParticleEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:splashPath];
-
    _splashParticleEmitter = [[SKEmitterNode alloc] init];
    _splashParticleEmitter.particleTexture = [SKTexture textureWithImageNamed:@"droplet.png"];
 
@@ -346,10 +343,12 @@
       _currentColorDrop = colorDropButton;
       _currentColorName = _currentColorDrop.colorName;
 
-      [_splashParticleEmitter resetSimulation];
-
-      _splashParticleEmitter.position = CGPointMake(_currentColorDrop.position.x - 260, 40);
-      _splashParticleEmitter.particleColor = [UIColor colorForCrayolaColorName:_currentColorName];
+      if (touch)
+      {
+         [_splashParticleEmitter resetSimulation];
+         _splashParticleEmitter.position = CGPointMake(_currentColorDrop.position.x - 260, 40);
+         _splashParticleEmitter.particleColor = [UIColor colorForCrayolaColorName:_currentColorName];
+      }
 
       [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
    }
