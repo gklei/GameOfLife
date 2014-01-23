@@ -121,7 +121,6 @@
    _splashParticleEmitter.particleRotationRange = M_PI;
 
    _splashParticleEmitter.particleColorBlendFactor = 1;
-   _splashParticleEmitter.particleColor = [SKColor crayolaWinterSkyColor];
 
    [self addChild:_splashParticleEmitter];
 }
@@ -348,7 +347,7 @@
       _currentColorName = _currentColorDrop.colorName;
 
       [_splashParticleEmitter resetSimulation];
-      
+
       _splashParticleEmitter.position = CGPointMake(_currentColorDrop.position.x - 260, 40);
       _splashParticleEmitter.particleColor = [UIColor colorForCrayolaColorName:_currentColorName];
 
