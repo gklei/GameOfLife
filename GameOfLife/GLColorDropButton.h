@@ -14,5 +14,6 @@
 
 @property (nonatomic, assign, setter = setColorName:) CrayolaColorName colorName;
 @property (nonatomic, assign) BOOL usesSplashAnimation;
+@property (nonatomic, strong) SKEmitterNode *particleEmitter;
 
 @end

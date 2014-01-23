@@ -10,6 +10,23 @@
 
 @implementation GLColorDropButton
 
++ (id)spriteNodeWithImageNamed:(NSString *)name
+{
+   GLColorDropButton *button = [super spriteNodeWithImageNamed:name];
+   NSString *splashPath = [[NSBundle mainBundle] pathForResource:@"Splash" ofType:@"sks"];
+
+   button.particleEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:splashPath];
+   button.particleEmitter.particleColor = [SKColor redColor];
+
+   return button;
+}
+
+- (void)handleTouchEnded:(UITouch *)touch
+{
+   [_particleEmitter resetSimulation];
+   [super handleTouchEnded:touch];
+}
+
 - (void)setColorName:(CrayolaColorName)colorName
 {
    _colorName = colorName;

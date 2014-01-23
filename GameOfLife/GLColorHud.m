@@ -53,6 +53,8 @@
    BOOL _shouldRunSplashButtonColorChangingAnimation;
    NSArray *_splashButtonColors;
    NSUInteger _splashButtonColorIndex;
+
+   SKEmitterNode *_splashParticleEmitter;
 }
 @end
 
@@ -80,8 +82,48 @@
       [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
       [self runSplashButtonColorChangeAnimation];
       [self observeSoundFxChanges];
+      [self setupParticleEmitter];
    }
    return self;
+}
+
+- (void)setupParticleEmitter
+{
+//   NSString *splashPath = [[NSBundle mainBundle] pathForResource:@"Splash" ofType:@"sks"];
+//   _splashParticleEmitter = [NSKeyedUnarchiver unarchiveObjectWithFile:splashPath];
+
+   _splashParticleEmitter = [[SKEmitterNode alloc] init];
+   _splashParticleEmitter.particleTexture = [SKTexture textureWithImageNamed:@"droplet.png"];
+
+   _splashParticleEmitter.particleBirthRate = 1750;
+   _splashParticleEmitter.numParticlesToEmit = 100;
+
+   _splashParticleEmitter.particleLifetime = .2;
+   _splashParticleEmitter.particleLifetimeRange = .5;
+
+   _splashParticleEmitter.particlePositionRange = CGVectorMake(-10, -20);
+   _splashParticleEmitter.emissionAngle = M_PI_2;
+   _splashParticleEmitter.emissionAngleRange = 2.2689;
+
+   _splashParticleEmitter.particleSpeed = 200;
+   _splashParticleEmitter.particleSpeedRange = -50;
+
+   _splashParticleEmitter.yAcceleration = -1000;
+
+   _splashParticleEmitter.particleAlpha = 1;
+   _splashParticleEmitter.particleAlphaRange = -5;
+   _splashParticleEmitter.particleAlphaSpeed = .02;
+
+   _splashParticleEmitter.particleScale = .005;
+   _splashParticleEmitter.particleScaleRange = -1;
+
+   _splashParticleEmitter.particleRotation = -M_PI;
+   _splashParticleEmitter.particleRotationRange = M_PI;
+
+   _splashParticleEmitter.particleColorBlendFactor = 1;
+   _splashParticleEmitter.particleColor = [SKColor crayolaWinterSkyColor];
+
+   [self addChild:_splashParticleEmitter];
 }
 
 - (void)setupVariables
@@ -304,6 +346,12 @@
 
       _currentColorDrop = colorDropButton;
       _currentColorName = _currentColorDrop.colorName;
+
+      [_splashParticleEmitter resetSimulation];
+      _splashParticleEmitter.position = CGPointMake(_splashParticleEmitter.position.x - 5,
+                                                      _splashParticleEmitter.position.y +5);
+      _splashParticleEmitter.particleColor = [UIColor colorForCrayolaColorName:_currentColorName];
+
       [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
    }
 }
