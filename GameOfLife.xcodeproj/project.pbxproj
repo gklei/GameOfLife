@@ -59,6 +59,8 @@
 		8E99B2C0182F7A1200C7AEDB /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B2BC182F7A1200C7AEDB /* stop.png */; };
 		8E99B2C1182F7A1200C7AEDB /* stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B2BD182F7A1200C7AEDB /* stop@2x.png */; };
 		8E9EDE48188F843B005C66BB /* Splash.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8E9EDE47188F843B005C66BB /* Splash.sks */; };
+		8E9EDE4B1890EB04005C66BB /* lock.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E9EDE491890EB04005C66BB /* lock.wav */; };
+		8E9EDE4C1890EB04005C66BB /* unlock.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E9EDE4A1890EB04005C66BB /* unlock.wav */; };
 		8E9F2AF2187F667A001669BC /* GLAlertLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E9F2AF1187F667A001669BC /* GLAlertLayer.m */; };
 		8EA264F1184EEB1B00351F5E /* color.change.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA264EE184EEB1B00351F5E /* color.change.wav */; };
 		8EA264FA1850229100351F5E /* menu.close.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EA264F41850229100351F5E /* menu.close.wav */; };
@@ -223,6 +225,8 @@
 		8E99B2BC182F7A1200C7AEDB /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stop.png; path = Images/stop.png; sourceTree = SOURCE_ROOT; };
 		8E99B2BD182F7A1200C7AEDB /* stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "stop@2x.png"; path = "Images/stop@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E9EDE47188F843B005C66BB /* Splash.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Splash.sks; path = GameOfLife/Splash.sks; sourceTree = "<group>"; };
+		8E9EDE491890EB04005C66BB /* lock.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = lock.wav; path = "GL Sound FX/lock.wav"; sourceTree = SOURCE_ROOT; };
+		8E9EDE4A1890EB04005C66BB /* unlock.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = unlock.wav; path = "GL Sound FX/unlock.wav"; sourceTree = SOURCE_ROOT; };
 		8E9F2AF0187F667A001669BC /* GLAlertLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLAlertLayer.h; sourceTree = "<group>"; };
 		8E9F2AF1187F667A001669BC /* GLAlertLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLAlertLayer.m; sourceTree = "<group>"; };
 		8EA264EE184EEB1B00351F5E /* color.change.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = color.change.wav; path = "GL Sound FX/color.change.wav"; sourceTree = SOURCE_ROOT; };
@@ -431,6 +435,8 @@
 		8EAA59BB184B0218008E34D9 /* SoundFX */ = {
 			isa = PBXGroup;
 			children = (
+				8E9EDE491890EB04005C66BB /* lock.wav */,
+				8E9EDE4A1890EB04005C66BB /* unlock.wav */,
 				8ED7BE641887A19F00CA1CDD /* color.grid.down.wav */,
 				8ED7BE651887A19F00CA1CDD /* color.grid.single.wav */,
 				8ED7BE661887A19F00CA1CDD /* color.grid.up.wav */,
@@ -744,6 +750,7 @@
 				8ECA8999182371AE009D906F /* Main.storyboard in Resources */,
 				8E2FA2921866B4640021A471 /* splash2.png in Resources */,
 				8EAA38B5185EC32300DA5CED /* radio-unchecked-glow.png in Resources */,
+				8E9EDE4C1890EB04005C66BB /* unlock.wav in Resources */,
 				8EA264FF1850229100351F5E /* stop.algorithm.wav in Resources */,
 				8E99B2BE182F7A1200C7AEDB /* start.png in Resources */,
 				8EA2652218596A7D00351F5E /* cancel-circle@2x.png in Resources */,
@@ -751,6 +758,7 @@
 				8E75B03D1841C909000AEEB8 /* drop@2x.png in Resources */,
 				ED292D1A185C90650031696D /* tile.frowny.png in Resources */,
 				8EA2653018596F3E00351F5E /* cog@2x.png in Resources */,
+				8E9EDE4B1890EB04005C66BB /* lock.wav in Resources */,
 				8E75B02D184164F7000AEEB8 /* expand_left.png in Resources */,
 				8EAA59BF184B03C7008E34D9 /* down.finger.on.tile.wav in Resources */,
 				EDE4505D1833F3380063DE36 /* clear@2x.png in Resources */,

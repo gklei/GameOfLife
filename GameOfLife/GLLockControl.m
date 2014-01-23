@@ -14,6 +14,11 @@
    SKTexture *_lockedTexture;
    SKTexture *_unlockedTexture;
    BOOL  _locked;
+
+   BOOL _shouldPlaySound;
+
+   SKAction *_playLockSound;
+   SKAction *_playUnlockSound;
 }
 @end
 
@@ -25,6 +30,12 @@
    [hudManager addObserver:self forKeyPath:@"LockedColorMode"];
 }
 
+- (void)observeSoundFxChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
+
 - (id)init
 {
    if (self = [super init])
@@ -32,6 +43,7 @@
       [self setupVariables];
       [self setupSpriteProperty];
       [self observeLockedColorMode];
+      [self observeSoundFxChanges];
    }
    return self;
 }
@@ -41,6 +53,9 @@
    _locked = YES;
    _lockedTexture = [SKTexture textureWithImageNamed:@"lock.png"];
    _unlockedTexture = [SKTexture textureWithImageNamed:@"unlock.png"];
+
+   _playLockSound = [SKAction playSoundFileNamed:@"lock.wav" waitForCompletion:NO];
+   _playUnlockSound = [SKAction playSoundFileNamed:@"unlock.wav" waitForCompletion:NO];
 }
 
 - (void)setupSpriteProperty
@@ -75,7 +90,10 @@
 - (void)handleTouchEnded:(UITouch *)touch
 {
    if ([self touchInsideHitBox:touch])
+   {
       [self toggleState];
+      if (_shouldPlaySound) [self runAction:(_locked)? _playLockSound : _playUnlockSound];
+   }
    
    [super handleTouchEnded:touch];
 }
@@ -88,6 +106,11 @@
 
       _locked = value.boolValue;
       [self setTextureForState:value.boolValue];
+   }
+   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _shouldPlaySound = [value boolValue];
    }
 }
 
