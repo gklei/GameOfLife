@@ -285,6 +285,7 @@
 //   CCN_crayolaYellowGreenColor,
 //   CCN_crayolaYellowOrangeColor,
 //   CCN_crayolaYellowSunshineColor,
+//   CCN_MAXIMUM_CrayolaColor,
 //} CrayolaColorName;
 
 typedef enum
@@ -345,7 +346,8 @@ typedef enum
    CCN_crayolaRadicalRedColor,
    CCN_crayolaWildWatermelonColor,
    CCN_crayolaScarletColor,
-   CCN_crayolaBrickRedColor
+   CCN_crayolaBrickRedColor,
+   CCN_MAXIMUM_CrayolaColor,
 } CrayolaColorName;
 
 @interface UIColor (Crayola)
@@ -360,6 +362,9 @@ typedef enum
 + (instancetype)getPreviousColor:(CrayolaColorName)colorName;
 + (instancetype)getNextColor:(CrayolaColorName)colorName;
 
+// find the nearest Crayola color Name given a UIColor
++ (CrayolaColorName)nearestCrayolaColorNameForR:(float)r g:(float)g b:(float)b a:(float)a;
++ (CrayolaColorName)nearestCrayolaColorName:(UIColor *)color;
 
 // crayola colors
 + (instancetype)crayolaAbsoluteZeroColor;

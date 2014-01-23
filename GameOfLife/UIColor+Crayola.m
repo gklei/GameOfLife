@@ -2239,8 +2239,8 @@
 + (CrayolaColorName)getPreviousColorName:(CrayolaColorName)colorName
 {
    --colorName;
-   if (colorName > CCN_crayolaBrickRedColor)
-      colorName = CCN_crayolaBrickRedColor;
+   if (colorName >= CCN_MAXIMUM_CrayolaColor)
+      colorName = CCN_MAXIMUM_CrayolaColor - 1;
    
    return colorName;
 }
@@ -2248,7 +2248,7 @@
 + (CrayolaColorName)getNextColorName:(CrayolaColorName)colorName
 {
    ++colorName;      
-   if (colorName > CCN_crayolaBrickRedColor)
+   if (colorName >= CCN_MAXIMUM_CrayolaColor)
       colorName = 0;
    
    return colorName;
@@ -2257,11 +2257,11 @@
 + (CrayolaColorName)getColorNameForIndex:(NSInteger)index
 {
    NSInteger result = index;
-   if (result < CCN_crayolaMahoganyColor)
-      result = CCN_crayolaBrickRedColor - result;
+   if (result <= CCN_INVALID_CrayolaColor)
+      result = (CCN_MAXIMUM_CrayolaColor - 1) - result;
    
-   if (result > CCN_crayolaBrickRedColor)
-      result = (result % CCN_crayolaBrickRedColor);
+   if (result >= CCN_MAXIMUM_CrayolaColor)
+      result = (result % (CCN_MAXIMUM_CrayolaColor - 1));
    
    return (CrayolaColorName)result;
 }
@@ -2274,6 +2274,46 @@
 + (instancetype)getNextColor:(CrayolaColorName)colorName
 {
    return [UIColor colorForCrayolaColorName:[UIColor getNextColorName:colorName]];
+}
+
++ (float)distanceFromColor:(UIColor *)color toR:(float)r g:(float)g b:(float)b a:(float)a
+{
+   CGFloat red, green, blue, alpha;
+   if (![color getRed:&red green:&green blue:&blue alpha:&alpha])
+      return DBL_MAX;
+   
+   return fabs(red - r) + fabs(green - g) + fabs(blue - b) + fabs(alpha - a);
+}
+
++ (CrayolaColorName)nearestCrayolaColorNameForR:(float)r g:(float)g b:(float)b a:(float)a;
+{
+   if (a == 0) return CCN_INVALID_CrayolaColor;
+   
+   CrayolaColorName result = CCN_INVALID_CrayolaColor + 1;
+   UIColor * crayColor = [self colorForCrayolaColorName:result];
+   float currentDistance = [self distanceFromColor:crayColor toR:r g:g b:b a:a];
+   
+   for (CrayolaColorName name = result + 1; name < CCN_MAXIMUM_CrayolaColor; ++name)
+   {
+      crayColor = [self colorForCrayolaColorName:name];
+      float distance = [self distanceFromColor:crayColor toR:r g:g b:b a:a];
+      if (distance < currentDistance)
+      {
+         currentDistance = distance;
+         result = name;
+      }
+   }
+   
+   return result;
+}
+
++ (CrayolaColorName)nearestCrayolaColorName:(UIColor *)color
+{
+   CGFloat red, green, blue, alpha;
+   if (![color getRed:&red green:&green blue:&blue alpha:&alpha])
+      return CCN_INVALID_CrayolaColor; // this will fail for one dimensional colors
+   
+   return [self nearestCrayolaColorNameForR:red g:green b:blue a:alpha];
 }
 
 @end
