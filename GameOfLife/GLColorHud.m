@@ -348,10 +348,8 @@
       _currentColorName = _currentColorDrop.colorName;
 
       [_splashParticleEmitter resetSimulation];
-
-      NSLog(@"current drop position: %@", NSStringFromCGPoint(_currentColorDrop.position));
-      _splashParticleEmitter.position = CGPointMake(_currentColorDrop.position.x - 260,
-                                                    40);
+      
+      _splashParticleEmitter.position = CGPointMake(_currentColorDrop.position.x - 260, 40);
       _splashParticleEmitter.particleColor = [UIColor colorForCrayolaColorName:_currentColorName];
 
       [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
