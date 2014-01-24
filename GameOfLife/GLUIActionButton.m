@@ -11,6 +11,7 @@
 @interface GLUIActionButton()
 {
    NSTimeInterval _touchPressTime;
+   BOOL _delayedFocusActionBlockExecuted;
 }
 
 @end;
@@ -22,12 +23,11 @@
    GLUIActionButton *button = [[super alloc] init];
    SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:name];
 
-//   button.hitBox.color = [SKColor redColor];
-//   button.hitBox.alpha = .5;
    button.hitBox.size = CGSizeMake(CGRectGetWidth(sprite.frame) + 20,
                                    CGRectGetHeight(sprite.frame) + 20);
    button.hitBox.position = sprite.position;
    button.sprite = sprite;
+   button.delayBeforeFocusActionBlock = 1.0;
    [button addChild:sprite];
    [button addChild:button.hitBox];
    return button;
@@ -40,6 +40,18 @@
    if (_beganFocusActionBlock)
       _beganFocusActionBlock();
 
+   if (_delayedFocusActionBlock)
+   {
+      if (_delayBeforeFocusActionBlock)
+         [NSTimer scheduledTimerWithTimeInterval:_delayBeforeFocusActionBlock
+                                          target:self
+                                        selector:@selector(executeDelayedFocusActionBlock)
+                                        userInfo:nil
+                                         repeats:NO];
+      else
+         _delayedFocusActionBlock();
+   }
+
    [super handleTouchBegan:touch];
 }
 
@@ -48,13 +60,29 @@
    CGPoint convertedPoint = [touch locationInNode:self];
    NSTimeInterval touchHoldTime = (touch.timestamp - _touchPressTime);
    
-   if ([self.hitBox containsPoint:convertedPoint] && _actionBlock)
+   if ([self.hitBox containsPoint:convertedPoint] && _actionBlock && !_delayedFocusActionBlockExecuted)
+   {
       _actionBlock(touchHoldTime);
+   }
 
    if (_loseFocusActionBlock)
       _loseFocusActionBlock();
 
+   // reset this variable to NO for the next press
+   _delayedFocusActionBlockExecuted = NO;
    [super handleTouchEnded:touch];
+}
+
+#pragma mark - Helper Methods
+- (void)executeDelayedFocusActionBlock
+{
+   if (_delayedFocusActionBlock && self.hasFocus)
+   {
+      _delayedFocusActionBlock();
+      _delayedFocusActionBlockExecuted = YES;
+   }
+
+   [self handleTouchEnded:nil];
 }
 
 @end

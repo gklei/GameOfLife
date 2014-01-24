@@ -10,13 +10,18 @@
 #import "GLUIButton.h"
 
 typedef void (^ActionBlock)(NSTimeInterval);
+typedef void (^DelayedFocusActionBlock)();
 typedef void (^BeganFocusActionBlock)();
 typedef void (^LoseFocusActionBlock)();
 
 @interface GLUIActionButton : GLUIButton
 
 @property (readwrite, copy) ActionBlock actionBlock;
+@property (readwrite, copy) DelayedFocusActionBlock delayedFocusActionBlock;
 @property (readwrite, copy) BeganFocusActionBlock beganFocusActionBlock;
 @property (readwrite, copy) LoseFocusActionBlock loseFocusActionBlock;
+
+// Defaults to 1.0 seconds
+@property (readwrite, assign) NSTimeInterval delayBeforeFocusActionBlock;
 
 @end

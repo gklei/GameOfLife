@@ -82,7 +82,7 @@
 
       _defaultSize = [UIScreen mainScreen].bounds.size;
       _settingsHeight =
-         (fabs((double)CGRectGetHeight([UIScreen mainScreen].bounds) - (double)568) < DBL_EPSILON )?
+         (fabs((double)CGRectGetHeight([UIScreen mainScreen].bounds) - (double)568) < DBL_EPSILON)?
          SETTINGS_HEIGHT_IPHONE_5 : SETTINGS_HEIGHT_IPHONE_4;
 
       [self setupSoundFX];
@@ -227,10 +227,16 @@
    _cameraButton = [self buttonWithFilename:@"camera2" buttonName:@"camera"];
    _cameraButton.alpha =
       ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized)? 1 : .5;
+
+   DelayedFocusActionBlock cameraDelayedFocusActionBlock =
+   ^{
+      [self.delegate screenShotButtonPressed:2 buttonPosition:_cameraButton.position];
+   };
+   _cameraButton.delayedFocusActionBlock = cameraDelayedFocusActionBlock;
    ActionBlock cameraButtonActionBlock = ^(NSTimeInterval holdTime)
    {
       void (^completionBlock)() =
-         ^{[self.delegate screenShotButtonPressed:holdTime buttonPosition:_cameraButton.position];};
+         ^{[self.delegate screenShotButtonPressed:0 buttonPosition:_cameraButton.position];};
       
       if (_settingsAreExpanded)
          [self toggleSettingsWithCompletion:completionBlock];
