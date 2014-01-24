@@ -2276,13 +2276,16 @@
    return [UIColor colorForCrayolaColorName:[UIColor getNextColorName:colorName]];
 }
 
-+ (float)distanceFromColor:(UIColor *)color toR:(float)r g:(float)g b:(float)b a:(float)a
++ (float)distanceFromColor:(UIColor *)color toR:(float)r g:(float)g b:(float)b
 {
    CGFloat red, green, blue, alpha;
    if (![color getRed:&red green:&green blue:&blue alpha:&alpha])
       return DBL_MAX;
    
-   return fabs(red - r) + fabs(green - g) + fabs(blue - b) + fabs(alpha - a);
+   // this it the actual difference, but for relative
+   // distance, we can use the cheaper second calculation
+//   return sqrt(powf((red - r), 2) + powf((green - g), 2) + powf((blue - b), 2));
+   return fabs(red - r) + fabs(green - g) + fabs(blue - b);
 }
 
 + (CrayolaColorName)nearestCrayolaColorNameForR:(float)r g:(float)g b:(float)b a:(float)a;
@@ -2291,12 +2294,14 @@
    
    CrayolaColorName result = CCN_INVALID_CrayolaColor + 1;
    UIColor * crayColor = [self colorForCrayolaColorName:result];
-   float currentDistance = [self distanceFromColor:crayColor toR:r g:g b:b a:a];
-   
+   float currentDistance = [self distanceFromColor:crayColor toR:r g:g b:b];
+//   NSLog(@"nearestCrayolaColorNameForR %0.2f, %0.2f, %0.2f", r, g, b);
+//   NSLog(@"firstDistance = %0.4f for color name = %d", currentDistance, result);
    for (CrayolaColorName name = result + 1; name < CCN_MAXIMUM_CrayolaColor; ++name)
    {
       crayColor = [self colorForCrayolaColorName:name];
-      float distance = [self distanceFromColor:crayColor toR:r g:g b:b a:a];
+      float distance = [self distanceFromColor:crayColor toR:r g:g b:b];
+//      NSLog(@"     distance = %0.4f for color name = %d", distance, name);
       if (distance < currentDistance)
       {
          currentDistance = distance;
@@ -2304,6 +2309,7 @@
       }
    }
    
+//   NSLog(@"---END distance = %0.4f for color name = %d", currentDistance, result);
    return result;
 }
 

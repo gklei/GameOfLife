@@ -730,15 +730,6 @@ typedef void (^PhotoWorkBlock)();
 
 - (void)scanImageForGameBoard:(UIImage *)image
 {
-   GLAlertLayer *alert = [GLAlertLayer new];
-   [alert addHeaderText:@"Got image picking callback"];
-   NSString * body = (image)? image.description : @"Image is nil";
-   [alert addBodyText:body];
-   
-   alert.position = CGPointMake(0, self.size.height - 20);
-   alert.animatesIn = YES;
-   [alert showWithParent:self];
-   
    if (_grid && image)
       [_grid scanImageForGameBoard:image];
 }
@@ -761,7 +752,7 @@ typedef void (^PhotoWorkBlock)();
 
 - (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position
 {
-   if (holdTime > 2.0)
+   if (holdTime > 1.0)
       [self beginPhotoImportAtPosition:position];
    else
       [self beginScreenShotAtPosition:position];

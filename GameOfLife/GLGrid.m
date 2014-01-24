@@ -7,13 +7,16 @@
 //
 
 #import "GLGrid.h"
+#import "GLAlertLayer.h"
 #import "GLAppDelegate.h"
 #import "GLHUDSettingsManager.h"
 #import "GLTileNode.h"
 #import "UIColor+CrossFade.h"
 
 #include <list>
+#include <map>
 #include <vector>
+
 
 #define LIVING YES
 #define DEAD   NO
@@ -676,55 +679,113 @@
    std::vector<CrayolaColorName> scannedTileColorNames =
       std::vector<CrayolaColorName>(_tiles.count, CCN_INVALID_CrayolaColor);
    
-   NSLog(@"Implement scan on pre-scaled image");
+   CGImageRef imageRef = [image CGImage];
+   CFDataRef pixelData = CGDataProviderCopyData(CGImageGetDataProvider(imageRef));
+   const UInt8* data = CFDataGetBytePtr(pixelData);
    
-   // TODO:LEA: fill in the board and colors and then reload the game
-//   CGFloat scanWidth = image.size.width / _dimensions.columns;
-//   CGFloat scanHeight = image.size.height / _dimensions.rows;
-//   
-//   CFDataRef pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image.CGImage));
-//   const UInt8* data = CFDataGetBytePtr(pixelData);
-//   
-//   for (int row = 0; row < _dimensions.rows; ++row)
-//   {
-//      for (int col = 0; col < _dimensions.columns; ++col)
-//      {
-//         int xPos = (int)(col * scanWidth + scanWidth * 0.5);
-//         int yPos = (int)(row * scanHeight + scanHeight * 0.5);
-//         
-//         int pixelInfo = ((image.size.width  * yPos) + xPos ) * 4;
-//         
-//         CGFloat red = data[pixelInfo] / 255.0;
-//         CGFloat green = data[(pixelInfo + 1)] / 255.0;
-//         CGFloat blue = data[pixelInfo + 2] / 255.0;
-//         CGFloat alpha = data[pixelInfo + 3] / 255.0;
-//         NSLog(@"color for (%d, %d): rgba = %0.2f, %0.2f, %0.2f, %0.2f",
-//               xPos, yPos, red, green, blue, alpha);
-//      }
-//   }
-//   
-//   CFRelease(pixelData);
+   size_t pixelWidth = CGImageGetWidth(imageRef);
+   size_t pixelHeight = CGImageGetHeight(imageRef);
+   
+   int scanWidth  = (int)((float)pixelWidth  / _dimensions.columns);
+   int scanHeight = (int)((float)pixelHeight / _dimensions.rows);
+   
+//   NSLog(@"pixelWidth  == %zu, _gridSize.width  == %0.1f", pixelWidth, _gridSize.width);
+//   NSLog(@"pixelHeight == %zu, _gridSize.height == %0.1f", pixelHeight, _gridSize.height);
+//   NSLog(@"  scanWidth == %d", scanWidth);
+//   NSLog(@" scanHeight == %d", scanHeight);
+   
+   int scanWidthOffset  = scanWidth * 0.5;
+   int scanHeightOffset = scanHeight * 0.5;
+   
+   for (int row = 0; row < _dimensions.rows; ++row)
+   {
+      for (int col = 0; col < _dimensions.columns; ++col)
+      {
+         int xPos = col * scanWidth + scanWidthOffset;
+         int yPos = row * scanHeight + scanHeightOffset;
+         
+         int pixelPos = ((image.size.width  * yPos) + xPos) * 4;
+         
+         CGFloat red   = data[pixelPos] / 255.0;
+         CGFloat green = data[(pixelPos + 1)] / 255.0;
+         CGFloat blue  = data[pixelPos + 2] / 255.0;
+         CGFloat alpha = data[pixelPos + 3] / 255.0;
+         
+//         int index = ((_dimensions.rows - 1) - row) * _dimensions.columns + col;
+//         NSLog(@"---index = %d", index);
+         CrayolaColorName name = [UIColor nearestCrayolaColorNameForR:red g:green b:blue a:alpha];
+         
+         // this index calculation flips the image (we're ignoring image orientation
+         // for now, but openGL is flipped compared to cocoa, so we're inverting it here
+            int index = ((_dimensions.rows - 1) - row) * _dimensions.columns + col;
+         scannedTileColorNames[index] = name;
+      }
+   }
+   
+   CFRelease(pixelData);
+   
+   // count the color name occurances
+   std::map<CrayolaColorName, uint32_t> colorAndCount;
+   for (int i = 0; i < scannedTileColorNames.size(); ++i)
+      colorAndCount[scannedTileColorNames[i]]++;
+   
+   // find the background color name
+   CrayolaColorName bgrndColorName = CCN_INVALID_CrayolaColor;
+   uint32_t largestOccurance = 0;
+   std::map<CrayolaColorName, uint32_t>::iterator it = colorAndCount.begin();
+   for (; it != colorAndCount.end(); ++it)
+   {
+      if (it->second > largestOccurance)
+      {
+         largestOccurance = it->second;
+         bgrndColorName = it->first;
+      }
+   }
+   
+//   NSLog(@"largestOccurance = %u, bgrndColor = %d", largestOccurance, bgrndColorName);
+   
+   // set the tiles that should be living
+   uint32_t liveCount = 0;
+   uint32_t deadCount = 0;
+   for (int i = 0; i < scannedTileStates.size(); ++i)
+      if (scannedTileColorNames[i] == bgrndColorName)
+      {
+         scannedTileColorNames[i] = CCN_INVALID_CrayolaColor;
+         ++deadCount;
+      }
+      else if (scannedTileColorNames[i] != CCN_INVALID_CrayolaColor)
+      {
+         scannedTileStates[i] = LIVING;
+//         NSLog(@"scannedTileColorNames[%d] = %d", i, scannedTileColorNames[i]);
+         ++liveCount;
+      }
+   
+//      NSLog(@"Live tile count = %u, dead tile count = %u", liveCount, deadCount);
+   
+   // now load the scanned game
+   for (int i = 0; i < scannedTileStates.size(); ++i)
+   {
+      _storedTileStates[i] = scannedTileStates[i];
+      _storedTileColorNames[i] = scannedTileColorNames[i];
+   }
+   
+   [self restoreGrid];
 }
 
 - (void)scanImageForGameBoard:(UIImage *)image
 {
    if (image)
    {
-      CGSize imageSize = image.size;
-      CGFloat imageAspect = imageSize.width / imageSize.height;
-      CGFloat gridAspect  = _gridSize.width / _gridSize.height;
-      if (imageAspect == gridAspect)
+      if (image.size.width != _gridSize.width || image.size.height != _gridSize.height)
       {
-         CGFloat scale = imageSize.width / _gridSize.width;
-         if (scale != 1.0)
-         {
-            image = [UIImage imageWithCGImage:image.CGImage
-                                        scale:scale
-                                  orientation:image.imageOrientation];
-         }
-         
-         [self scanPreScaledImageForGameBoard:image];
+         CGRect imageRect = CGRectMake(0, 0, _gridSize.width, _gridSize.height);
+         UIGraphicsBeginImageContextWithOptions(imageRect.size, NO, 1.0);
+         [image drawInRect:imageRect];
+         image = UIGraphicsGetImageFromCurrentImageContext();
+         UIGraphicsEndImageContext();
       }
+      
+      [self scanPreScaledImageForGameBoard:image];
    }
 }
 
@@ -742,6 +803,10 @@
          return;
       
       _currentColorName = colorName;
+      NSLog(@"settingChanged:_currentColorName = %d", _currentColorName);
+      CGFloat red, green, blue, alpha;
+      [color getRed:&red green:&green blue:&blue alpha:&alpha];
+      NSLog(@"   rgb = %0.2f, %0.2f, %0.2f", red, green, blue);
    }
    else if ([keyPath compare:@"TileGenerationTracking"] == NSOrderedSame)
    {
@@ -794,7 +859,7 @@
    return [SKColor colorForCrayolaColorName:_currentColorName];
 }
 
-- (SKColor *) unlockedColorForNode:(GLTileNode *)node
+- (SKColor *)unlockedColorForNode:(GLTileNode *)node
 {
    NSUInteger index = [self indexOfTile:node];
    if (index >= _tiles.count)
