@@ -511,7 +511,11 @@ typedef void (^PhotoWorkBlock)();
 
       alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds) - 20);
       alert.animatesIn = YES;
-      [alert showWithParent:self];
+
+      if (_generalHudLayer.settingsAreExpanded)
+         [_generalHudLayer toggleSettingsWithCompletion:^{[alert showWithParent:self];}];
+      else
+         [alert showWithParent:self];
    }
 }
 

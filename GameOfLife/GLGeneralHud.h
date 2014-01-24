@@ -36,6 +36,7 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
                             withSound:(BOOL)sound;
 - (void)collapse;
 - (void)expand;
+- (void)toggleSettingsWithCompletion:(void (^)())completion;
 
 - (NSArray *)coreFunctionButtons;
 - (void)setCoreFunctionButtonsHidden:(BOOL)hidden;
