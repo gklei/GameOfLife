@@ -734,6 +734,23 @@ typedef void (^PhotoWorkBlock)();
       [_grid scanImageForGameBoard:image];
 }
 
+- (void)beginCameraImportAtPosition:(CGPoint)position
+{
+   PhotoWorkBlock work = ^()
+   {
+      if (_viewController)
+      {
+         PhotoPickingCompletionBlock completionBlock =
+         ^(UIImage * image) { [self scanImageForGameBoard:image]; };
+         
+        [_viewController acquireImageFromSource:UIImagePickerControllerSourceTypeCamera
+                            withCompletionBlock:completionBlock];
+      }
+   };
+   
+   [self doPhotoAccessWithBlock:work];
+}
+
 - (void)beginPhotoImportAtPosition:(CGPoint)position
 {  
    PhotoWorkBlock work = ^()
@@ -743,7 +760,8 @@ typedef void (^PhotoWorkBlock)();
          PhotoPickingCompletionBlock completionBlock =
             ^(UIImage * image) { [self scanImageForGameBoard:image]; };
       
-         [_viewController showMediaBrowserWithCompletionBlock:completionBlock];
+         [_viewController acquireImageFromSource:UIImagePickerControllerSourceTypePhotoLibrary
+                             withCompletionBlock:completionBlock];
       }
    };
    
@@ -752,7 +770,9 @@ typedef void (^PhotoWorkBlock)();
 
 - (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position
 {
-   if (holdTime > 1.0)
+   if (holdTime > 4.0)
+      [self beginCameraImportAtPosition:position];
+   else if (holdTime > 1.0)
       [self beginPhotoImportAtPosition:position];
    else
       [self beginScreenShotAtPosition:position];

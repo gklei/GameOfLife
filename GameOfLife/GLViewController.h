@@ -13,6 +13,7 @@ typedef void (^PhotoPickingCompletionBlock)(UIImage * image);
 
 @interface GLViewController : UIViewController
 
-- (void)showMediaBrowserWithCompletionBlock:(PhotoPickingCompletionBlock)completionBlock;
+- (void)acquireImageFromSource:(NSInteger)sourceType
+           withCompletionBlock:(PhotoPickingCompletionBlock)completionBlock;
 
 @end
