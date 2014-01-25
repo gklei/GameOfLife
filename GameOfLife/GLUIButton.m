@@ -62,10 +62,10 @@
 {
    _glowEffect = [SKEffectNode node];
    CIFilter *filter = [CIFilter filterWithName:@"CIBloom"];
-   [filter setValue:[NSNumber numberWithFloat:2.0f] forKey:@"inputIntensity"];
+   [filter setValue:[NSNumber numberWithFloat:1.5f] forKey:@"inputIntensity"];
 
    // Large radius makes result EVEN SMALLER:
-   [filter setValue:[NSNumber numberWithFloat:2.5f] forKey:@"inputRadius"];
+   [filter setValue:[NSNumber numberWithFloat:3.0f] forKey:@"inputRadius"];
 
    _glowEffect.filter = filter;
    _glowEffect.shouldEnableEffects = NO;
