@@ -14,6 +14,7 @@
 #import "GLSettingsItem.h"
 #import "GLSliderControl.h"
 #import "GLToggleControl.h"
+#import "GLUIActionButton.h"
 #import "UIColor+Crayola.h"
 
 #import "GLAppDelegate.h"
@@ -22,6 +23,8 @@
 {
    GLUIButton *_lastControl;
    CGPoint _nextControlPosition;
+
+   GLUIActionButton *_aboutButton;
 }
 @end
 

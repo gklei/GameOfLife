@@ -10,7 +10,4 @@
 #import "GLMenuLayer.h"
 
 @interface GLSettingsLayer : GLMenuLayer
-
-- (id)initWithSize:(CGSize)size
-       anchorPoint:(CGPoint)anchorPoint;
 @end

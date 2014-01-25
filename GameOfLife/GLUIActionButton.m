@@ -18,6 +18,15 @@
 
 @implementation GLUIActionButton
 
+- (id)init
+{
+   if (self = [super init])
+   {
+      _delayBeforeFocusActionBlock = 1.0;
+   }
+   return self;
+}
+
 + (instancetype)spriteNodeWithImageNamed:(NSString *)name
 {
    GLUIActionButton *button = [[super alloc] init];
@@ -60,7 +69,9 @@
    CGPoint convertedPoint = [touch locationInNode:self];
    NSTimeInterval touchHoldTime = (touch.timestamp - _touchPressTime);
    
-   if ([self.hitBox containsPoint:convertedPoint] && _actionBlock && !_delayedFocusActionBlockExecuted)
+   if ([self.hitBox containsPoint:convertedPoint] &&
+       !_delayedFocusActionBlockExecuted &&
+       _actionBlock)
    {
       _actionBlock(touchHoldTime);
    }
@@ -81,7 +92,6 @@
       _delayedFocusActionBlock();
       _delayedFocusActionBlockExecuted = YES;
    }
-
    [self handleTouchEnded:nil];
 }
 

@@ -17,7 +17,6 @@
 #include <map>
 #include <vector>
 
-
 #define LIVING YES
 #define DEAD   NO
 
@@ -48,9 +47,7 @@
    
    CrayolaColorName _currentColorName;
 }
-
 @end
-
 
 @implementation GLGrid
 

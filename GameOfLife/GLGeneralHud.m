@@ -49,6 +49,8 @@
    GLUIActionButton *_cameraButton;
    GLUIActionButton *_settingsButton;
 
+   GLUIActionButton *_aboutButton;
+
    BOOL _shouldPlaySound;
    SKAction *_expandSettingsSound;
    SKAction *_collapseSettingsSound;
@@ -161,6 +163,7 @@
 {
    [self setupExpandCollapseButton];
    [self setupCoreFunctionButtons];
+   [self setupAboutButton];
    [self addChild:_particleGenerator];
 }
 
@@ -267,6 +270,29 @@
    [self setButtonPositionsAndAddToLayer:_coreFunctionButtons];
 }
 
+- (void)setupAboutButton
+{
+   _aboutButton = [GLUIActionButton spriteNodeWithImageNamed:@"question.png"];
+
+   _aboutButton.color = [SKColor whiteColor];
+   _aboutButton.colorBlendFactor = 1.0;
+   [_aboutButton setScale:.70];
+
+   _aboutButton.position = CGPointMake(22, -30);
+   _aboutButton.hidden = YES;
+
+   ActionBlock aboutActionBlock =
+   ^(NSTimeInterval interval)
+   {
+      SKAction *moveRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
+                                    duration:.2];
+      [_settingsLayer runAction:moveRight];
+   };
+   _aboutButton.actionBlock = aboutActionBlock;
+
+   [_backgroundLayer addChild:_aboutButton];
+}
+
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state
                             withSound:(BOOL)sound
 {
@@ -274,7 +300,7 @@
    {
       case GL_RUNNING:
          if (sound && _shouldPlaySound) [self runAction:_startAlgorithmSound];
-         _startStopButton.texture = [SKTexture textureWithImageNamed:@"pause"];
+         _startStopButton.texture = [SKTexture textureWithImageNamed:@"stop2.png"];
          _startStopButton.color = [SKColor crayolaRustyRedColor];
          break;
       case GL_STOPPED:
@@ -339,6 +365,7 @@
    self.animating = YES;
    _settingsAreExpanded = NO;
    _settingsLayer.hidden = YES;
+   _aboutButton.hidden = YES;
 
    SKAction *collapse = [SKAction moveByX:0
                                         y:-(_settingsHeight)
@@ -384,6 +411,7 @@
        {
           _settingsButton.color = [SKColor whiteColor];
           _settingsLayer.hidden = YES;
+          _aboutButton.hidden = YES;
           if (completion)
              completion();
        }];
@@ -392,7 +420,10 @@
       [self expandSettingsWithCompletionBlock:^
        {
           if (_settingsAreExpanded)
+          {
              _settingsLayer.hidden = NO;
+             _aboutButton.hidden = NO;
+          }
           if (completion)
              completion();
        }];
