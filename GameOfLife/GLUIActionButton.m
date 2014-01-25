@@ -49,17 +49,7 @@
    if (_beganFocusActionBlock)
       _beganFocusActionBlock();
 
-   if (_delayedFocusActionBlock)
-   {
-      if (_delayBeforeFocusActionBlock)
-         [NSTimer scheduledTimerWithTimeInterval:_delayBeforeFocusActionBlock
-                                          target:self
-                                        selector:@selector(executeDelayedFocusActionBlock)
-                                        userInfo:nil
-                                         repeats:NO];
-      else
-         _delayedFocusActionBlock();
-   }
+   [self checkForDelayedFocusActionBlockAndExecuteSelector:@selector(executeDelayedFocusActionBlock)];
 
    [super handleTouchBegan:touch];
 }
@@ -85,6 +75,21 @@
 }
 
 #pragma mark - Helper Methods
+- (void)checkForDelayedFocusActionBlockAndExecuteSelector:(SEL)selector
+{
+   if (_delayedFocusActionBlock)
+   {
+      if (_delayBeforeFocusActionBlock)
+         [NSTimer scheduledTimerWithTimeInterval:_delayBeforeFocusActionBlock
+                                          target:self
+                                        selector:selector
+                                        userInfo:nil
+                                         repeats:NO];
+      else
+         _delayedFocusActionBlock();
+   }
+}
+
 - (void)executeDelayedFocusActionBlock
 {
    if (_delayedFocusActionBlock && self.hasFocus)
