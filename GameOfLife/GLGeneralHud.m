@@ -281,14 +281,14 @@
    _aboutButton.position = CGPointMake(22, -30);
    _aboutButton.hidden = YES;
 
-   ActionBlock aboutActionBlock =
-   ^(NSTimeInterval interval)
-   {
-      SKAction *moveRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
-                                    duration:.2];
-      [_settingsLayer runAction:moveRight];
-   };
-   _aboutButton.actionBlock = aboutActionBlock;
+//   ActionBlock aboutActionBlock =
+//   ^(NSTimeInterval interval)
+//   {
+//      SKAction *moveRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
+//                                    duration:.2];
+//      [_settingsLayer runAction:moveRight];
+//   };
+//   _aboutButton.actionBlock = aboutActionBlock;
 
    [_backgroundLayer addChild:_aboutButton];
 }

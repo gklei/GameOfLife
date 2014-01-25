@@ -10,6 +10,6 @@
 
 @interface GLTextButton : GLUIActionButton
 
-@property (nonatomic, copy) NSString *label;
+@property (nonatomic, copy) NSString *textLabel;
 
 @end
