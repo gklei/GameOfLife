@@ -25,6 +25,7 @@
 - (void)reset;
 - (SKLabelNode *)lineAtIndex:(unsigned)index;
 - (SKLabelNode *)labelNode;
+- (CGFloat)fontSize;
 @end
 
 @implementation GLTextElement
@@ -68,6 +69,11 @@
 - (SKLabelNode *)labelNode
 {
    return nil;
+}
+
+- (CGFloat)fontSize
+{
+   return self.labelNode.fontSize;
 }
 
 - (GL_PAGE_TEXT_ELEMENT)type
@@ -117,6 +123,25 @@
 - (GL_PAGE_TEXT_ELEMENT)type
 {
    return e_PAGE_TEXT_BODY;
+}
+@end
+
+@interface GLNewLineLabel : GLTextElement
+@end
+
+@implementation GLNewLineLabel
+
+- (SKLabelNode *)labelNode
+{
+   SKLabelNode *newLineLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedMedium"];
+   newLineLabelNode.alpha = 0;
+   newLineLabelNode.fontSize = BODY_FONT_SIZE - 4;
+   return newLineLabelNode;
+}
+
+- (GL_PAGE_TEXT_ELEMENT)type
+{
+   return e_PAGE_TEXT_NEWLINE;
 }
 @end
 
@@ -212,12 +237,20 @@
 
 - (void)addNewLines:(NSInteger)lines
 {
+   if (CGPointEqualToPoint(_firstLabelPosition, CGPointZero))
+   {
+      _firstLabelPosition = CGPointMake(self.size.width * .5,
+                                        -(TOP_PADDING + NEW_LINE_HEIGHT * .5));
+   }
    for (int i = 0; i < lines; ++i)
    {
-      GLBodyLabel *emptyBody = [GLBodyLabel new];
-      [emptyBody addLine];
-      [self addTextToLayer:@"   " forTextElement:emptyBody];
+      GLNewLineLabel *newLine = [GLNewLineLabel new];
+      [newLine addLine];
+      [self addTextToLayer:@"   " forTextElement:newLine];
    }
+
+   if (_dynamicallySetsSize)
+      [self dynamicallySetSize];
 }
 
 #pragma mark - Helper Methods
@@ -234,6 +267,11 @@
          return CGPointMake(SIDE_MARGIN_SPACE,
                             _lastLabelPosition.y -
                             (BODY_FONT_SIZE * .5) -
+                            HEADER_BODY_VERTICAL_SEPARATION);
+      case e_PAGE_TEXT_NEWLINE:
+         return CGPointMake(SIDE_MARGIN_SPACE,
+                            _lastLabelPosition.y -
+                            (NEW_LINE_HEIGHT * .5) -
                             HEADER_BODY_VERTICAL_SEPARATION);
       default:
          NSLog(@"text element %d not supported", textElement);

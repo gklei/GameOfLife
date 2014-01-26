@@ -11,6 +11,7 @@
 #define TOP_PADDING 18
 #define HEADING_FONT_SIZE 16
 #define BODY_FONT_SIZE 14
+#define NEW_LINE_HEIGHT -10
 
 @interface GLMenuLayer : SKSpriteNode
 
