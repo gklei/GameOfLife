@@ -16,11 +16,10 @@
 + (instancetype)pageCollectionWithPages:(NSArray *)pages;
 
 - (void)addPage:(GLPageLayer *)page;
-- (void)removePage:(GLPageLayer *)page;
-- (void)removeFirstPage;
-- (void)removeLastPage;
-
 - (GLPageLayer *)firstPage;
 - (GLPageLayer *)lastPage;
 
+- (void)removePage:(GLPageLayer *)page;
+- (void)removeFirstPage;
+- (void)removeLastPage;
 @end

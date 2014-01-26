@@ -7,7 +7,28 @@
 //
 
 #import "GLPageCollectionLayer.h"
+#import "GLPageCollection.h"
+
+#import "GLUITextButton.h"
+
+@interface GLPageCollectionLayer()
+{
+   GLUITextButton *_leftButton;
+   GLUITextButton *_rightButton;
+}
+@end
 
 @implementation GLPageCollectionLayer
+
+- (id)initWithSize:(CGSize)size
+       anchorPoint:(CGPoint)anchorPoint
+    pageCollection:(GLPageCollection *)pageCollection
+{
+   if (self = [super initWithSize:size anchorPoint:anchorPoint])
+   {
+      _pageCollection = (pageCollection)? pageCollection : [GLPageCollection new];
+   }
+   return self;
+}
 
 @end

@@ -135,6 +135,7 @@
       self.anchorPoint = CGPointMake(0, 1);
       self.hidden = YES;
 
+      _dynamicallySetsSize = YES;
       [self setVariables];
    }
    return self;
@@ -174,7 +175,9 @@
    [_headers addObject:header];
 
    [self addTextToLayer:[NSString futurizedString:headerText.uppercaseString] forTextElement:header];
-   [self dynamicallySetSize];
+
+   if (_dynamicallySetsSize)
+      [self dynamicallySetSize];
 }
 
 - (void)addBodyText:(NSString *)bodyText
@@ -189,7 +192,9 @@
    [_bodies addObject:body];
 
    [self addTextToLayer:[NSString futurizedString:bodyText] forTextElement:body];
-   [self dynamicallySetSize];
+
+   if (_dynamicallySetsSize)
+      [self dynamicallySetSize];
 }
 
 #pragma mark - Helper Methods

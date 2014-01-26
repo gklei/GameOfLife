@@ -42,6 +42,16 @@
    [_pages addObject:page];
 }
 
+- (GLPageLayer *)firstPage
+{
+   return _pages.firstObject;
+}
+
+- (GLPageLayer *)lastPage
+{
+   return _pages.lastObject;
+}
+
 - (void)removePage:(GLPageLayer *)page
 {
    [_pages removeObject:page];
@@ -56,16 +66,6 @@
 - (void)removeLastPage
 {
    [_pages removeLastObject];
-}
-
-- (GLPageLayer *)firstPage
-{
-   return _pages.firstObject;
-}
-
-- (GLPageLayer *)lastPage
-{
-   return _pages.lastObject;
 }
 
 @end

@@ -8,7 +8,12 @@
 
 #import "GLMenuLayer.h"
 
-@class GLPageLayer;
-
+@class GLPageCollection;
 @interface GLPageCollectionLayer : GLMenuLayer
+
+@property (nonatomic, strong) GLPageCollection *pageCollection;
+
+- (id)initWithSize:(CGSize)size
+       anchorPoint:(CGPoint)anchorPoint
+    pageCollection:(GLPageCollection *)pageCollection;
 @end

@@ -17,6 +17,9 @@ typedef NS_ENUM(int, GL_PAGE_TEXT_ELEMENT)
 
 @interface GLPageLayer : GLMenuLayer
 
+// Defaults to YES
+@property (nonatomic, assign) BOOL dynamicallySetsSize;
+
 - (void)addHeaderText:(NSString *)headerText;
 - (void)addBodyText:(NSString *)bodyText;
 
