@@ -16,4 +16,7 @@
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint
     pageCollection:(GLPageCollection *)pageCollection;
+
+- (id)initWithSize:(CGSize)size
+    pageCollection:(GLPageCollection *)pageCollection;
 @end
