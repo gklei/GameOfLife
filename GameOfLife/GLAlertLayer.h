@@ -13,6 +13,9 @@
 @property (nonatomic, readonly) BOOL animating;
 @property (nonatomic, assign) BOOL animatesIn;
 
+- (id)initWithHeader:(NSString *)header
+                body:(NSString *)body;
+
 - (void)showWithParent:(SKNode *)parent;
 - (void)hide;
 

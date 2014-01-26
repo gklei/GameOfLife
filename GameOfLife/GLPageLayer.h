@@ -17,9 +17,6 @@ typedef NS_ENUM(int, GL_PAGE_TEXT_ELEMENT)
 
 @interface GLPageLayer : GLMenuLayer
 
-- (id)initWithHeader:(NSString *)header
-                body:(NSString *)body;
-
 - (void)addHeaderText:(NSString *)headerText;
 - (void)addBodyText:(NSString *)bodyText;
 

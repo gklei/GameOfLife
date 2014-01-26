@@ -7,6 +7,8 @@
 //
 
 #import "GLAlertLayer.h"
+#import "UIColor+Crayola.h"
+#import "NSString+Additions.h"
 
 @interface GLAlertLayer()
 {
@@ -15,6 +17,28 @@
 @end
 
 @implementation GLAlertLayer
+
+- (id)init
+{
+   if (self = [super init])
+   {
+      // default alert color and alpha
+      self.color = [SKColor crayolaBlackCoralPearlColor];
+      self.alpha = .8;
+   }
+   return self;
+}
+
+- (id)initWithHeader:(NSString *)header
+                body:(NSString *)body
+{
+   if (self = [self init])
+   {
+      [self addHeaderText:[NSString futurizedString:header].uppercaseString];
+      [self addBodyText:[NSString futurizedString:body]];
+   }
+   return self;
+}
 
 - (void)showWithParent:(SKNode *)parent
 {

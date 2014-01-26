@@ -152,24 +152,9 @@
    return self;
 }
 
-- (id)initWithHeader:(NSString *)header
-                body:(NSString *)body
-{
-   if (self = [self init])
-   {
-      [self addHeaderText:[NSString futurizedString:header].uppercaseString];
-      [self addBodyText:[NSString futurizedString:body]];
-   }
-   return self;
-}
-
 #pragma mark - Setup Methods
 - (void)setVariables
 {
-   // default color and alpha
-   self.color = [SKColor crayolaBlackCoralPearlColor];
-   self.alpha = .8;
-
    _firstLabelPosition = CGPointZero;
    _lastLabelPosition = CGPointZero;
 
