@@ -2295,13 +2295,10 @@
    CrayolaColorName result = CCN_INVALID_CrayolaColor + 1;
    UIColor * crayColor = [self colorForCrayolaColorName:result];
    float currentDistance = [self distanceFromColor:crayColor toR:r g:g b:b];
-//   NSLog(@"nearestCrayolaColorNameForR %0.2f, %0.2f, %0.2f", r, g, b);
-//   NSLog(@"firstDistance = %0.4f for color name = %d", currentDistance, result);
    for (CrayolaColorName name = result + 1; name < CCN_MAXIMUM_CrayolaColor; ++name)
    {
       crayColor = [self colorForCrayolaColorName:name];
       float distance = [self distanceFromColor:crayColor toR:r g:g b:b];
-//      NSLog(@"     distance = %0.4f for color name = %d", distance, name);
       if (distance < currentDistance)
       {
          currentDistance = distance;
@@ -2309,7 +2306,6 @@
       }
    }
    
-//   NSLog(@"---END distance = %0.4f for color name = %d", currentDistance, result);
    return result;
 }
 
