@@ -16,8 +16,8 @@
 
 @interface GLPageCollectionLayer()
 {
-   GLUITextButton *_leftButton;
-   GLUITextButton *_rightButton;
+   GLUITextButton *_primaryButton;
+   GLUITextButton *_secondaryButton;
 }
 @end
 
@@ -30,8 +30,10 @@
    if (self = [super initWithSize:size anchorPoint:anchorPoint])
    {
       _pageCollection = (pageCollection)? pageCollection : [GLPageCollection new];
-      [self setPageAnchorPoints];
       [self setPageSizes];
+      [self addPagesToLayer];
+
+      [self setupNavigationButtons];
    }
    return self;
 }
@@ -47,20 +49,29 @@
 }
 
 #pragma mark - Helper Methods
-- (void)setPageAnchorPoints
-{
-   for (GLPageLayer *page in _pageCollection.pages)
-      page.anchorPoint = self.anchorPoint;
-}
-
 - (void)setPageSizes
 {
    NSAssert(self.size.height - PAGE_NAVIGATION_AREA_HEIGHT > 0,
-            @"Page collection size not large enough for navigation buttons");
+            @"Page collection layer size not large enough for navigation buttons");
    
    for (GLPageLayer *page in _pageCollection.pages)
       page.size = CGSizeMake(self.size.width,
                              self.size.height - PAGE_NAVIGATION_AREA_HEIGHT);
+}
+
+- (void)addPagesToLayer
+{
+   for (GLPageLayer *page in _pageCollection.pages)
+   {
+      page.hidden = NO;
+      [self addChild:page];
+   }
+}
+
+- (void)setupNavigationButtons
+{
+   _primaryButton = [GLUITextButton textButtonWithTitle:@"OK"];
+   _secondaryButton = [GLUITextButton textButtonWithTitle:@"CANCEL"];
 }
 
 @end

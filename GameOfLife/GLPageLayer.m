@@ -73,6 +73,7 @@
 - (SKLabelNode *)labelNode
 {
    SKLabelNode *headerLabelNode = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
+   headerLabelNode.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
    headerLabelNode.colorBlendFactor = 1.0;
    headerLabelNode.color = [SKColor whiteColor];
    headerLabelNode.alpha = 5;
@@ -197,6 +198,12 @@
       [self dynamicallySetSize];
 }
 
+- (void)addNewLines:(NSInteger)lines
+{
+   _lastLabelPosition = CGPointMake(_lastLabelPosition.x,
+                                    _lastLabelPosition.y - (BODY_FONT_SIZE * lines));
+}
+
 #pragma mark - Helper Methods
 - (CGPoint)nextPositionForTextElementType:(GL_PAGE_TEXT_ELEMENT)textElement
 {
@@ -279,7 +286,20 @@
    return label.calculateAccumulatedFrame.size.width <= (self.size.width - (SIDE_MARGIN_SPACE * 2));
 }
 
+- (void)repositionHeadersForSize:(CGSize)size
+{
+   for (GLHeaderLabel *header in _headers)
+      for (SKLabelNode *line in header.lines)
+         line.position = CGPointMake(size.width * .5, line.position.y);
+}
+
 #pragma mark - Overridden Methods
+- (void)setSize:(CGSize)size
+{
+   [self repositionHeadersForSize:size];
+   super.size = size;
+}
+
 - (void)setHidden:(BOOL)hidden
 {
    for (SKLabelNode *label in self.children)

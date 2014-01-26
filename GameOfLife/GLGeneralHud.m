@@ -15,6 +15,10 @@
 #import "GLSettingsLayer.h"
 #import "UIColor+Crayola.h"
 
+#import "GLPageCollectionLayer.h"
+#import "GLPageCollection.h"
+#import "GLPageLayer.h"
+
 #include <AssetsLibrary/AssetsLibrary.h>
 
 #define CORE_FUNCTION_BUTTON_PADDING 52
@@ -287,14 +291,26 @@
 //   {
 //      SKAction *moveRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
 //                                    duration:.2];
-//      [_settingsLayer runAction:moveRight];
+//      [_settingsLayer runAction:moveRight
+//                     completion:^
+//      {
+//         GLPageLayer *page1 = [GLPageLayer new];
+//         [page1 addHeaderText:@"HOW TO PLAY"];
+//         [page1 addNewLines:1];
+//         [page1 addBodyText:@"Rules of the game:"];
+//         [page1 addBodyText:@"1. blah blah blah blah blah"];
+//
+//         GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1]];
+//         GLPageCollectionLayer *pageCollectionLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
+//                                                                                                             _settingsLayer.size.height)
+//                                                                                      anchorPoint:_backgroundLayer.anchorPoint
+//                                                                                   pageCollection:pageCollection];
+//
+//         pageCollectionLayer.position = CGPointMake((_backgroundLayer.size.width - pageCollectionLayer.size.width) * .5, -HEADING_FONT_SIZE*.5);
+//         [_backgroundLayer addChild:pageCollectionLayer];
+//      }];
 //   };
 //   _aboutButton.actionBlock = aboutActionBlock;
-//
-//   GLUITextButton *textButton = [GLUITextButton textButtonWithTitle:@"NEXT"];
-//   textButton.position = CGPointMake(30, -30);
-//
-//   [_backgroundLayer addChild:textButton];
    [_backgroundLayer addChild:_aboutButton];
 }
 

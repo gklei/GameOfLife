@@ -22,5 +22,6 @@ typedef NS_ENUM(int, GL_PAGE_TEXT_ELEMENT)
 
 - (void)addHeaderText:(NSString *)headerText;
 - (void)addBodyText:(NSString *)bodyText;
+- (void)addNewLines:(NSInteger)lines;
 
 @end
