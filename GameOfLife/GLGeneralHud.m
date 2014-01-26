@@ -10,6 +10,7 @@
 #import "GLGridScene.h"
 
 #import "GLUIActionButton.h"
+#import "GLUITextButton.h"
 
 #import "GLSettingsLayer.h"
 #import "UIColor+Crayola.h"
@@ -290,6 +291,11 @@
 //   };
 //   _aboutButton.actionBlock = aboutActionBlock;
 
+//   GLUITextButton *textButton = [GLUITextButton textButtonWithTitle:@"HELLO"];
+//   GLUITextButton *textButton = [GLUITextButton textButtonWithTitle:@"HIGH"];
+//   textButton.position = CGPointMake(30, -30);
+//
+//   [_backgroundLayer addChild:textButton];
    [_backgroundLayer addChild:_aboutButton];
 }
 

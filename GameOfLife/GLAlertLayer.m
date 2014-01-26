@@ -343,6 +343,7 @@
    _shouldHide = NO;
 }
 
+#pragma mark - Overridden Methods
 - (void)setHidden:(BOOL)hidden
 {
    for (SKLabelNode *label in self.children)
