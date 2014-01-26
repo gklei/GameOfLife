@@ -33,7 +33,7 @@
 		8E3BAB0D1893555E00A56812 /* question.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E3BAB0C1893555E00A56812 /* question.png */; };
 		8E3BAB10189386F500A56812 /* GLPageCollectionLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB0F189386F500A56812 /* GLPageCollectionLayer.m */; };
 		8E3BAB13189389C300A56812 /* GLUITextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB12189389C300A56812 /* GLUITextButton.m */; };
-		8E3BAB161893971F00A56812 /* GLPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB151893971F00A56812 /* GLPage.m */; };
+		8E3BAB161893971F00A56812 /* GLPageLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB151893971F00A56812 /* GLPageLayer.m */; };
 		8E5A5554187D005800483158 /* tile.leaf.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E5A5553187D005800483158 /* tile.leaf.png */; };
 		8E67648A1886544800084589 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E6764881886544800084589 /* lock.png */; };
 		8E67648B1886544800084589 /* unlock.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E6764891886544800084589 /* unlock.png */; };
@@ -196,8 +196,8 @@
 		8E3BAB0F189386F500A56812 /* GLPageCollectionLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPageCollectionLayer.m; sourceTree = "<group>"; };
 		8E3BAB11189389C300A56812 /* GLUITextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLUITextButton.h; sourceTree = "<group>"; };
 		8E3BAB12189389C300A56812 /* GLUITextButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLUITextButton.m; sourceTree = "<group>"; };
-		8E3BAB141893971F00A56812 /* GLPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPage.h; sourceTree = "<group>"; };
-		8E3BAB151893971F00A56812 /* GLPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPage.m; sourceTree = "<group>"; };
+		8E3BAB141893971F00A56812 /* GLPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPageLayer.h; sourceTree = "<group>"; };
+		8E3BAB151893971F00A56812 /* GLPageLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPageLayer.m; sourceTree = "<group>"; };
 		8E5A5553187D005800483158 /* tile.leaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.leaf.png; path = Images/tile.leaf.png; sourceTree = SOURCE_ROOT; };
 		8E6764881886544800084589 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lock.png; path = Images/lock.png; sourceTree = SOURCE_ROOT; };
 		8E6764891886544800084589 /* unlock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = unlock.png; path = Images/unlock.png; sourceTree = SOURCE_ROOT; };
@@ -599,8 +599,8 @@
 				8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */,
 				8E3BAB0E189386F500A56812 /* GLPageCollectionLayer.h */,
 				8E3BAB0F189386F500A56812 /* GLPageCollectionLayer.m */,
-				8E3BAB141893971F00A56812 /* GLPage.h */,
-				8E3BAB151893971F00A56812 /* GLPage.m */,
+				8E3BAB141893971F00A56812 /* GLPageLayer.h */,
+				8E3BAB151893971F00A56812 /* GLPageLayer.m */,
 			);
 			name = HUD;
 			sourceTree = "<group>";
@@ -842,7 +842,7 @@
 				8EB738CE1874B56600BB58C0 /* GLColorPaletteManager.m in Sources */,
 				8E676491188654F700084589 /* GLLockControl.m in Sources */,
 				8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */,
-				8E3BAB161893971F00A56812 /* GLPage.m in Sources */,
+				8E3BAB161893971F00A56812 /* GLPageLayer.m in Sources */,
 				8E3BAB13189389C300A56812 /* GLUITextButton.m in Sources */,
 				8E2FA28A186567B50021A471 /* GLUIActionButton.m in Sources */,
 				8E99B2A2182C013D00C7AEDB /* GLTileNode.m in Sources */,
