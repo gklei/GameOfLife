@@ -12,7 +12,7 @@
 @interface GLUITextButton()
 {
    SKLabelNode *_labelNode;
-   SKSpriteNode *_buttonRing;
+   GLUIButton *_buttonRing;
 }
 @end
 
@@ -29,16 +29,17 @@
       _labelNode.alpha = 5.0;
       _labelNode.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
       
-      _buttonRing = [SKSpriteNode spriteNodeWithImageNamed:@"toggle-ring-outer.png"];
+      _buttonRing = [GLUIButton spriteNodeWithImageNamed:@"toggle-ring-outer.png"];
       _buttonRing.centerRect = CGRectMake(24.0/50.0, 10.0/32.0, 2.0/50.0, 10.0/32.0);
       _buttonRing.xScale = 2.75;
       _buttonRing.yScale = 1.5;
       _buttonRing.colorBlendFactor = 1.0;
       _buttonRing.color = [SKColor whiteColor];
       _buttonRing.alpha = 1.0;
+      _buttonRing.scalesOnTouch = NO;
 
-      self.scalesOnTouch = NO;
-      self.glowEnabled = NO;
+      self.hitBox.size = CGSizeMake(_buttonRing.size.width + 10,
+                                    _buttonRing.size.width + 10);
 
       [self addChild:_labelNode];
       [self addChild:_buttonRing];

@@ -312,4 +312,21 @@
    super.hidden = hidden;
 }
 
+- (void)setCenterRect:(CGRect)centerRect
+{
+   if (_sprite)
+   {
+      _sprite.centerRect = centerRect;
+      return;
+   }
+   super.centerRect = centerRect;
+}
+
+- (CGRect)centerRect
+{
+   if (_sprite)
+      return _sprite.centerRect;
+   return [super centerRect];
+}
+
 @end

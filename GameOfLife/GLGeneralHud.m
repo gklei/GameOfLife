@@ -290,9 +290,8 @@
 //      [_settingsLayer runAction:moveRight];
 //   };
 //   _aboutButton.actionBlock = aboutActionBlock;
-
-//   GLUITextButton *textButton = [GLUITextButton textButtonWithTitle:@"HELLO"];
-//   GLUITextButton *textButton = [GLUITextButton textButtonWithTitle:@"HIGH"];
+//
+//   GLUITextButton *textButton = [GLUITextButton textButtonWithTitle:@"NEXT"];
 //   textButton.position = CGPointMake(30, -30);
 //
 //   [_backgroundLayer addChild:textButton];
