@@ -8,10 +8,15 @@
 
 #import "GLMenuLayer.h"
 
+typedef void (^PrimaryButtonActionBlock)();
+typedef void (^SecondaryButtonActionBlock)();
+
 @class GLPageCollection;
 @interface GLPageCollectionLayer : GLMenuLayer
 
 @property (nonatomic, strong) GLPageCollection *pageCollection;
+@property (nonatomic, copy) PrimaryButtonActionBlock primaryButtonActionBlock;
+@property (nonatomic, copy) SecondaryButtonActionBlock secondaryButtonActionBlock;
 
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint
