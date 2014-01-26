@@ -221,7 +221,7 @@
    ActionBlock restoreButtonActionBlock = ^(NSTimeInterval holdTime)
    {
       if (_shouldPlaySound) [self runAction:_restoreSound];
-      [self.delegate restoreButtonPressed];
+      [self.delegate restoreButtonPressed:holdTime];
    };
    _restoreButton.actionBlock = restoreButtonActionBlock;
 

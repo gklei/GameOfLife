@@ -427,7 +427,7 @@ typedef void (^PhotoWorkBlock)();
 - (void)loadLife
 {
    [_grid loadLifeTileStates];
-   [self restoreButtonPressed];
+   [self restoreButtonPressed:0];
    [_grid storeGridState];
    [[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -435,7 +435,7 @@ typedef void (^PhotoWorkBlock)();
 - (void)loadLastGrid
 {
    [_grid loadStoredTileStates];
-   [self restoreButtonPressed];
+   [self restoreButtonPressed:0];
 }
 
 - (BOOL)firstTimeRunning
@@ -538,8 +538,14 @@ typedef void (^PhotoWorkBlock)();
    [_grid clearGrid];
 }
 
-- (void)restoreButtonPressed
+- (void)restoreButtonPressed:(NSTimeInterval)holdTime
 {
+   if (holdTime > 2)
+   {
+      [self beginCameraImportAtPosition:CGPointZero];
+      return;
+   }
+   
    if (_running)
    {
       [self updateGenerationDuration:_generationDuration];
@@ -774,9 +780,7 @@ typedef void (^PhotoWorkBlock)();
 
 - (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position
 {
-   if (holdTime > 4.0)
-      [self beginCameraImportAtPosition:position];
-   else if (holdTime > 1.0)
+   if (holdTime > 1.0)
       [self beginPhotoImportAtPosition:position];
    else
       [self beginScreenShotAtPosition:position];
