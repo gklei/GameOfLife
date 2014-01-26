@@ -297,11 +297,10 @@
          GLPageLayer *page1 = [GLPageLayer new];
          [page1 addHeaderText:@"HOW TO PLAY"];
          [page1 addNewLines:1];
-         [page1 addBodyText:@"Rules of the game:"];
-         [page1 addNewLines:1];
-         [page1 addBodyText:@"1. blah blah blah blah blah a;dfl asdf ;alsdj f;la jsdfl ja;sld jf;lka jsd;f aj;sdj f;a dsf;l a;sldfj la;sd faj "];
+         [page1 addBodyText:@"1. The Game of Life was orginally created by a British mathematician named John Conway."];
          [page1 addBodyText:@"2. The second thing that you really have to realize about this game is that it is actually very pointless and there is a good chance that you will waste a fair amount of time playing it."];
-         [page1 addBodyText:@"3. This is another line"];
+         [page1 addBodyText:@"3. This is another line that is really important."];
+         [page1 addBodyText:@"4. The last thing that that you should really be aware of is that Leif Alton is the best programmer EVER."];
 
          GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1]];
          GLPageCollectionLayer *pageCollectionLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,

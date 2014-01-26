@@ -63,16 +63,16 @@
 {
    for (GLPageLayer *page in _pageCollection.pages)
    {
-      page.hidden = NO;
 //      page.alpha = .8;
 //      page.color = [SKColor redColor];
       [self addChild:page];
    }
+   ((GLPageLayer *)_pageCollection.pages.firstObject).hidden = NO;
 }
 
 - (void)setupNavigationButtons
 {
-   _primaryButton = [GLUITextButton textButtonWithTitle:@"OK"];
+   _primaryButton = [GLUITextButton textButtonWithTitle:(_pageCollection.pages.count > 1)? @"NEXT" : @"OK"];
    _secondaryButton = [GLUITextButton textButtonWithTitle:@"CANCEL"];
 
    [self setNavigationButtonPositions];
