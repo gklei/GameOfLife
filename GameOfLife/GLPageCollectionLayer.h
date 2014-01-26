@@ -8,6 +8,7 @@
 
 #import "GLMenuLayer.h"
 
-@interface GLPageCollectionLayer : GLMenuLayer
+@class GLPageLayer;
 
+@interface GLPageCollectionLayer : GLMenuLayer
 @end

@@ -51,10 +51,7 @@
    [parent addChild:self];
 
    if (_animatesIn)
-      [self animateInWithCompletion:
-       ^{
-          _animating = NO;
-       }];
+      [self animateInWithCompletion:^{_animating = NO;}];
 }
 
 - (void)hide

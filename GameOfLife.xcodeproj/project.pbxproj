@@ -34,6 +34,7 @@
 		8E3BAB10189386F500A56812 /* GLPageCollectionLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB0F189386F500A56812 /* GLPageCollectionLayer.m */; };
 		8E3BAB13189389C300A56812 /* GLUITextButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB12189389C300A56812 /* GLUITextButton.m */; };
 		8E3BAB161893971F00A56812 /* GLPageLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB151893971F00A56812 /* GLPageLayer.m */; };
+		8E3BAB191894CC7D00A56812 /* GLPageCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB181894CC7D00A56812 /* GLPageCollection.m */; };
 		8E5A5554187D005800483158 /* tile.leaf.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E5A5553187D005800483158 /* tile.leaf.png */; };
 		8E67648A1886544800084589 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E6764881886544800084589 /* lock.png */; };
 		8E67648B1886544800084589 /* unlock.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E6764891886544800084589 /* unlock.png */; };
@@ -198,6 +199,8 @@
 		8E3BAB12189389C300A56812 /* GLUITextButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLUITextButton.m; sourceTree = "<group>"; };
 		8E3BAB141893971F00A56812 /* GLPageLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPageLayer.h; sourceTree = "<group>"; };
 		8E3BAB151893971F00A56812 /* GLPageLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPageLayer.m; sourceTree = "<group>"; };
+		8E3BAB171894CC7D00A56812 /* GLPageCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLPageCollection.h; sourceTree = "<group>"; };
+		8E3BAB181894CC7D00A56812 /* GLPageCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPageCollection.m; sourceTree = "<group>"; };
 		8E5A5553187D005800483158 /* tile.leaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.leaf.png; path = Images/tile.leaf.png; sourceTree = SOURCE_ROOT; };
 		8E6764881886544800084589 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lock.png; path = Images/lock.png; sourceTree = SOURCE_ROOT; };
 		8E6764891886544800084589 /* unlock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = unlock.png; path = Images/unlock.png; sourceTree = SOURCE_ROOT; };
@@ -601,6 +604,8 @@
 				8E3BAB0F189386F500A56812 /* GLPageCollectionLayer.m */,
 				8E3BAB141893971F00A56812 /* GLPageLayer.h */,
 				8E3BAB151893971F00A56812 /* GLPageLayer.m */,
+				8E3BAB171894CC7D00A56812 /* GLPageCollection.h */,
+				8E3BAB181894CC7D00A56812 /* GLPageCollection.m */,
 			);
 			name = HUD;
 			sourceTree = "<group>";
@@ -838,6 +843,7 @@
 				8E2FA2AE1869E3ED0021A471 /* GLColorGrid.m in Sources */,
 				ED820542187E471300BF7CD6 /* GLColorDropButton.m in Sources */,
 				8E2FA29C1867BBED0021A471 /* GLMenuLayer.m in Sources */,
+				8E3BAB191894CC7D00A56812 /* GLPageCollection.m in Sources */,
 				8E2FA2991867BB080021A471 /* GLColorSelectionLayer.m in Sources */,
 				8EB738CE1874B56600BB58C0 /* GLColorPaletteManager.m in Sources */,
 				8E676491188654F700084589 /* GLLockControl.m in Sources */,
