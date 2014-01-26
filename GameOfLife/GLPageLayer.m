@@ -146,7 +146,6 @@
    if (self = [super initWithSize:size
                       anchorPoint:anchorPoint])
    {
-      self.hidden = YES;
       [self setVariables];
    }
    return self;

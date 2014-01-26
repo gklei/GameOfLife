@@ -25,6 +25,7 @@
       // default alert color and alpha
       self.color = [SKColor crayolaBlackCoralPearlColor];
       self.alpha = .8;
+      self.hidden = YES;
    }
    return self;
 }
