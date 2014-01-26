@@ -12,7 +12,7 @@
 typedef NS_ENUM(int, GL_PAGE_TEXT_ELEMENT)
 {
    e_PAGE_TEXT_HEADER = 0,
-   e_PAGE_TEXT_BODY
+   e_PAGE_TEXT_BODY,
 };
 
 @interface GLPageLayer : GLMenuLayer

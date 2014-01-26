@@ -40,6 +40,7 @@
 
       self.hitBox.size = CGSizeMake(_buttonRing.size.width + 10,
                                     _buttonRing.size.width + 10);
+      self.size = _buttonRing.size;
 
       [self addChild:_labelNode];
       [self addChild:_buttonRing];

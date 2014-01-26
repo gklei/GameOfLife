@@ -22,6 +22,7 @@
 @property (nonatomic, readonly) GL_PAGE_TEXT_ELEMENT type;
 
 - (void)addLine;
+- (void)reset;
 - (SKLabelNode *)lineAtIndex:(unsigned)index;
 - (SKLabelNode *)labelNode;
 @end
@@ -30,7 +31,10 @@
 - (id)init
 {
    if (self = [super init])
+   {
       _lines = [NSMutableArray new];
+      [self addLine];
+   }
 
    return self;
 }
@@ -48,6 +52,12 @@
 - (void)addLine
 {
    [_lines addObject:[self labelNode]];
+}
+
+- (void)reset
+{
+   [_lines removeAllObjects];
+   [self addLine];
 }
 
 - (SKLabelNode *)lineAtIndex:(unsigned int)index
@@ -115,12 +125,14 @@
    CGPoint _firstLabelPosition;
    CGPoint _lastLabelPosition;
 
-   // arrays to store off the headers and bodies in the alert
+   // arrays to store off the headers and bodies in the page
    NSMutableArray *_headers;
    NSMutableArray *_bodies;
 
-   BOOL _shouldHide;
-   BOOL _animating;
+   NSMutableArray *_textElements;
+   NSMutableArray *_textElementStrings;
+
+   BOOL _rewrappingLines;
 }
 @end
 
@@ -161,6 +173,8 @@
 
    _headers = [NSMutableArray new];
    _bodies = [NSMutableArray new];
+   _textElements = [NSMutableArray new];
+   _textElementStrings = [NSMutableArray new];
 }
 
 #pragma mark - Instance Methods
@@ -172,7 +186,6 @@
                                         -(TOP_PADDING + HEADING_FONT_SIZE * .5));
    }
    GLHeaderLabel *header = [GLHeaderLabel new];
-   [header addLine];
    [_headers addObject:header];
 
    [self addTextToLayer:[NSString futurizedString:headerText.uppercaseString] forTextElement:header];
@@ -189,7 +202,6 @@
                                         -(TOP_PADDING + BODY_FONT_SIZE * .5));
    }
    GLBodyLabel *body = [GLBodyLabel new];
-   [body addLine];
    [_bodies addObject:body];
 
    [self addTextToLayer:[NSString futurizedString:bodyText] forTextElement:body];
@@ -200,8 +212,12 @@
 
 - (void)addNewLines:(NSInteger)lines
 {
-   _lastLabelPosition = CGPointMake(_lastLabelPosition.x,
-                                    _lastLabelPosition.y - (BODY_FONT_SIZE * lines));
+   for (int i = 0; i < lines; ++i)
+   {
+      GLBodyLabel *emptyBody = [GLBodyLabel new];
+      [emptyBody addLine];
+      [self addTextToLayer:@"   " forTextElement:emptyBody];
+   }
 }
 
 #pragma mark - Helper Methods
@@ -227,6 +243,12 @@
 
 - (void)addTextToLayer:(NSString *)text forTextElement:(GLTextElement *)textElement
 {
+   if (!_rewrappingLines)
+   {
+      [_textElements addObject:textElement];
+      [_textElementStrings addObject:text];
+   }
+
    // separate words by two spaces because the string is FUTURIZED
    NSArray *words = [text componentsSeparatedByString:@"  "];
    int lineIndex = 0;
@@ -278,7 +300,7 @@
 - (void)dynamicallySetSize
 {
    CGFloat height = fabs(_firstLabelPosition.y - _lastLabelPosition.y) + TOP_PADDING * 2.5;
-   self.size = CGSizeMake(self.size.width, height);
+   super.size = CGSizeMake(self.size.width, height);
 }
 
 - (BOOL)labelFitsInFrame:(SKLabelNode *)label
@@ -286,18 +308,25 @@
    return label.calculateAccumulatedFrame.size.width <= (self.size.width - (SIDE_MARGIN_SPACE * 2));
 }
 
-- (void)repositionHeadersForSize:(CGSize)size
+- (void)reAddAllTextElements
 {
-   for (GLHeaderLabel *header in _headers)
-      for (SKLabelNode *line in header.lines)
-         line.position = CGPointMake(size.width * .5, line.position.y);
+   _lastLabelPosition = CGPointZero;
+   _rewrappingLines = YES;
+   for (GLTextElement *textElement in _textElements)
+   {
+      [textElement reset];
+      [self addTextToLayer:[_textElementStrings objectAtIndex:[_textElements indexOfObject:textElement]]
+            forTextElement:textElement];
+   }
+   _rewrappingLines = NO;
 }
 
 #pragma mark - Overridden Methods
 - (void)setSize:(CGSize)size
 {
-   [self repositionHeadersForSize:size];
    super.size = size;
+   [self removeAllChildren];
+   [self reAddAllTextElements];
 }
 
 - (void)setHidden:(BOOL)hidden

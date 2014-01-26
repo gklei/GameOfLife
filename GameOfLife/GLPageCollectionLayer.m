@@ -12,7 +12,7 @@
 
 #import "GLUITextButton.h"
 
-#define PAGE_NAVIGATION_AREA_HEIGHT 30
+#define PAGE_NAVIGATION_AREA_HEIGHT 50
 
 @interface GLPageCollectionLayer()
 {
@@ -64,6 +64,8 @@
    for (GLPageLayer *page in _pageCollection.pages)
    {
       page.hidden = NO;
+//      page.alpha = .8;
+//      page.color = [SKColor redColor];
       [self addChild:page];
    }
 }
@@ -72,6 +74,21 @@
 {
    _primaryButton = [GLUITextButton textButtonWithTitle:@"OK"];
    _secondaryButton = [GLUITextButton textButtonWithTitle:@"CANCEL"];
+
+   [self setNavigationButtonPositions];
+
+   [self addChild:_primaryButton];
+   [self addChild:_secondaryButton];
+}
+
+- (void)setNavigationButtonPositions
+{
+   CGFloat primaryX = (self.size.width * .5) + (_primaryButton.size.width * .5) + 10;
+   CGFloat secondaryX = (self.size.width * .5) - (_primaryButton.size.width * .5) - 10;
+   CGFloat yPos = -self.size.height + (_primaryButton.size.height * .5);
+
+   _primaryButton.position = CGPointMake(primaryX, yPos);
+   _secondaryButton.position = CGPointMake(secondaryX, yPos);
 }
 
 @end

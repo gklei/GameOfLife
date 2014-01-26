@@ -286,31 +286,36 @@
    _aboutButton.position = CGPointMake(22, -30);
    _aboutButton.hidden = YES;
 
-//   ActionBlock aboutActionBlock =
-//   ^(NSTimeInterval interval)
-//   {
-//      SKAction *moveRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
-//                                    duration:.2];
-//      [_settingsLayer runAction:moveRight
-//                     completion:^
-//      {
-//         GLPageLayer *page1 = [GLPageLayer new];
-//         [page1 addHeaderText:@"HOW TO PLAY"];
-//         [page1 addNewLines:1];
-//         [page1 addBodyText:@"Rules of the game:"];
-//         [page1 addBodyText:@"1. blah blah blah blah blah"];
-//
-//         GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1]];
-//         GLPageCollectionLayer *pageCollectionLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
-//                                                                                                             _settingsLayer.size.height)
-//                                                                                      anchorPoint:_backgroundLayer.anchorPoint
-//                                                                                   pageCollection:pageCollection];
-//
-//         pageCollectionLayer.position = CGPointMake((_backgroundLayer.size.width - pageCollectionLayer.size.width) * .5, -HEADING_FONT_SIZE*.5);
-//         [_backgroundLayer addChild:pageCollectionLayer];
-//      }];
-//   };
-//   _aboutButton.actionBlock = aboutActionBlock;
+   ActionBlock aboutActionBlock =
+   ^(NSTimeInterval interval)
+   {
+      SKAction *moveRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
+                                    duration:.2];
+      [_settingsLayer runAction:moveRight
+                     completion:^
+      {
+         GLPageLayer *page1 = [GLPageLayer new];
+         [page1 addHeaderText:@"HOW TO PLAY"];
+         [page1 addNewLines:1];
+         [page1 addBodyText:@"Rules of the game:"];
+         [page1 addNewLines:1];
+         [page1 addBodyText:@"1. blah blah blah blah blah a;dfl asdf ;alsdj f;la jsdfl ja;sld jf;lka jsd;f aj;sdj f;a dsf;l a;sldfj la;sd faj "];
+         [page1 addBodyText:@"2. The second thing that you really have to realize about this game is that it is actually very pointless and there is a good chance that you will waste a fair amount of time playing it."];
+         [page1 addBodyText:@"3. This is another line"];
+
+         GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1]];
+         GLPageCollectionLayer *pageCollectionLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
+                                                                                                             _settingsLayer.size.height - 30)
+                                                                                      anchorPoint:_backgroundLayer.anchorPoint
+                                                                                   pageCollection:pageCollection];
+
+         pageCollectionLayer.position = CGPointMake((_backgroundLayer.size.width - pageCollectionLayer.size.width) * .5, -HEADING_FONT_SIZE*.5);
+//         pageCollectionLayer.alpha = .5;
+//         pageCollectionLayer.color = [SKColor blueColor];
+         [_backgroundLayer addChild:pageCollectionLayer];
+      }];
+   };
+   _aboutButton.actionBlock = aboutActionBlock;
    [_backgroundLayer addChild:_aboutButton];
 }
 
