@@ -13,7 +13,6 @@
 @interface GLAlertLayer()
 {
    BOOL _shouldHide;
-   SKNode * _parent;
 }
 @end
 
@@ -43,22 +42,11 @@
    return layer;
 }
 
-- (void)dealloc
-{
-   if (_parent)
-   {
-      [_parent removeChildrenInArray:@[self]];
-      _parent = nil;
-   }
-}
 
 - (void)endMyLife
 {
-   if (_parent)
-   {
-      [_parent removeChildrenInArray:@[self]];
-      _parent = nil;
-   }
+   if (self.parent)
+      [self removeFromParent];
 }
 
 - (id)init
@@ -86,8 +74,6 @@
 
 - (void)showWithParent:(SKNode *)parent
 {
-   _parent = parent;
-   
    self.hidden = NO;
 
    if (_animatesIn)

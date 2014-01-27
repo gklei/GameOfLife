@@ -63,6 +63,7 @@
    SKAction *_stopAlgorithmSound;
    SKAction *_clearSound;
    SKAction *_restoreSound;
+   SKAction *_aboutButtonSound;
 
    SKEmitterNode *_particleGenerator;
    GLPageCollectionLayer *_aboutLayer;
@@ -113,6 +114,7 @@
    _stopAlgorithmSound = [SKAction playSoundFileNamed:@"stop.algorithm.2.wav" waitForCompletion:NO];
    _clearSound = [SKAction playSoundFileNamed:@"clear.1.wav" waitForCompletion:NO];
    _restoreSound = [SKAction playSoundFileNamed:@"reset.1.wav" waitForCompletion:NO];
+   _aboutButtonSound = [SKAction playSoundFileNamed:@"button.press.wav" waitForCompletion:NO];
 
    [super setupSoundFX];
 }
@@ -295,22 +297,27 @@
    {
       if (!_aboutLayerIsAnimatingIn)
       {
+         if (_shouldPlaySound) [self runAction:_aboutButtonSound];
          _aboutLayerIsAnimatingIn = YES;
-         SKAction *moveSettingsRight = [SKAction moveByX:_settingsLayer.size.width y:0
-                                       duration:.2];
+
+         SKAction *moveSettingsRight = [SKAction moveByX:_settingsLayer.size.width y:0 duration:.2];
          moveSettingsRight.timingMode = SKActionTimingEaseInEaseOut;
+
          [_settingsLayer runAction:moveSettingsRight
                         completion:^
          {
             [_backgroundLayer addChild:_aboutLayer];
             _aboutLayer.hidden = NO;
 
-            SKAction *moveAboutLayerIn = [SKAction moveToX:(_backgroundLayer.size.width - _aboutLayer.size.width) * .5 duration:.2];
-            moveAboutLayerIn.timingMode = SKActionTimingEaseInEaseOut;
-            [_aboutLayer runAction:moveAboutLayerIn];
-
+            SKAction *moveAboutLayerIn = [SKAction moveToX:(_backgroundLayer.size.width -
+                                                            _aboutLayer.size.width) * .5
+                                                  duration:.2];
             SKAction *fadeOut = [SKAction fadeOutWithDuration:.2];
+            
+            moveAboutLayerIn.timingMode = SKActionTimingEaseInEaseOut;
             fadeOut.timingMode = SKActionTimingEaseInEaseOut;
+
+            [_aboutLayer runAction:moveAboutLayerIn];
             [_aboutButton runAction:fadeOut
                          completion:^
             {
