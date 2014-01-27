@@ -302,16 +302,30 @@
          [page1 addBodyText:@"3. This is another line that is really important."];
          [page1 addBodyText:@"4. The last thing that that you should really be aware of is that Leif Alton is the best programmer EVER."];
 
-         GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1]];
+         GLPageLayer *page2 = [GLPageLayer new];
+         [page2 addHeaderText:@"ABOUT"];
+         [page2 addNewLines:1];
+         [page2 addBodyText:@"This game was created by:"];
+         [page2 addNewLines:1];
+         [page2 addBodyText:@"- Leif Alton (developer)"];
+         [page2 addBodyText:@"- Gregory Klein (developer)"];
+         [page2 addBodyText:@"- Nico Grossfeld (sound fx)"];
+
+         GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1, page2]];
          GLPageCollectionLayer *pageCollectionLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
                                                                                                              _settingsLayer.size.height - 30)
                                                                                       anchorPoint:_backgroundLayer.anchorPoint
                                                                                    pageCollection:pageCollection];
 
-         pageCollectionLayer.position = CGPointMake((_backgroundLayer.size.width - pageCollectionLayer.size.width) * .5, -HEADING_FONT_SIZE*.5);
+         pageCollectionLayer.position = CGPointMake((_backgroundLayer.size.width - pageCollectionLayer.size.width) * .5,
+                                                    -HEADING_FONT_SIZE*.5);
 //         pageCollectionLayer.alpha = .5;
 //         pageCollectionLayer.color = [SKColor blueColor];
          [_backgroundLayer addChild:pageCollectionLayer];
+         SKAction *fadeOut = [SKAction fadeOutWithDuration:.5];
+         fadeOut.timingMode = SKActionTimingEaseInEaseOut;
+         [_aboutButton runAction:fadeOut
+                      completion:^{_aboutButton.hidden = YES;}];
       }];
    };
    _aboutButton.actionBlock = aboutActionBlock;

@@ -18,6 +18,12 @@
 {
    GLUITextButton *_primaryButton;
    GLUITextButton *_secondaryButton;
+   GLMenuLayer *_pageContainter;
+
+   SKAction *_nextPageAnimation;
+   SKAction *_previousPageAnimation;
+
+   CGFloat _pageHorizontalPadding;
 }
 @end
 
@@ -30,8 +36,11 @@
    if (self = [super initWithSize:size anchorPoint:anchorPoint])
    {
       _pageCollection = (pageCollection)? pageCollection : [GLPageCollection new];
-      [self setPageSizes];
-      [self addPagesToLayer];
+      [self setupVariables];
+
+      [self setPageSizesAndPositions];
+      [self setupPageContainer];
+      [self addPagesToContainer];
 
       [self setupNavigationButtons];
    }
@@ -49,31 +58,73 @@
 }
 
 #pragma mark - Helper Methods
-- (void)setPageSizes
+- (void)setupVariables
+{
+   _pageHorizontalPadding = CGRectGetWidth([UIScreen mainScreen].bounds);
+
+   _nextPageAnimation = [SKAction moveByX:-_pageHorizontalPadding y:0 duration:.2];
+   _previousPageAnimation = [SKAction moveByX:_pageHorizontalPadding y:0 duration:.2];
+
+   _nextPageAnimation.timingMode = SKActionTimingEaseInEaseOut;
+   _previousPageAnimation.timingMode = SKActionTimingEaseInEaseOut;
+}
+
+- (void)setPageSizesAndPositions
 {
    NSAssert(self.size.height - PAGE_NAVIGATION_AREA_HEIGHT > 0,
             @"Page collection layer size not large enough for navigation buttons");
-   
+
+   CGPoint nextPagePosition = CGPointZero;
    for (GLPageLayer *page in _pageCollection.pages)
+   {
       page.size = CGSizeMake(self.size.width,
                              self.size.height - PAGE_NAVIGATION_AREA_HEIGHT);
+
+      page.position = nextPagePosition;
+      nextPagePosition = CGPointMake(page.position.x + _pageHorizontalPadding,
+                                     page.position.y);
+   }
 }
 
-- (void)addPagesToLayer
+- (void)setupPageContainer
+{
+   _pageContainter = [[GLMenuLayer alloc] initWithSize:CGSizeMake(_pageCollection.pages.count *
+                                                                  _pageCollection.firstPage.size.width,
+                                                                  _pageCollection.firstPage.size.height)
+                                           anchorPoint:self.anchorPoint];
+   [self addChild:_pageContainter];
+}
+
+- (void)addPagesToContainer
 {
    for (GLPageLayer *page in _pageCollection.pages)
    {
 //      page.alpha = .8;
 //      page.color = [SKColor redColor];
-      [self addChild:page];
+      page.hidden = NO;
+      [_pageContainter addChild:page];
    }
-   ((GLPageLayer *)_pageCollection.pages.firstObject).hidden = NO;
 }
 
 - (void)setupNavigationButtons
 {
    _primaryButton = [GLUITextButton textButtonWithTitle:(_pageCollection.pages.count > 1)? @"NEXT" : @"OK"];
    _secondaryButton = [GLUITextButton textButtonWithTitle:@"CANCEL"];
+
+   ActionBlock primaryActionBlock =
+   ^(NSTimeInterval interval)
+   {
+      [_pageContainter runAction:_nextPageAnimation];
+   };
+
+   ActionBlock secondaryActionBlock =
+   ^(NSTimeInterval interval)
+   {
+      [_pageContainter runAction:_previousPageAnimation];
+   };
+
+   _primaryButton.actionBlock = primaryActionBlock;
+   _secondaryButton.actionBlock = secondaryActionBlock;
 
    [self setNavigationButtonPositions];
 

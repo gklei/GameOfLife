@@ -44,6 +44,7 @@
 
       [self addChild:_labelNode];
       [self addChild:_buttonRing];
+      [self addChild:self.hitBox];
    }
    return self;
 }
@@ -64,5 +65,4 @@
 {
    return _labelNode.text;
 }
-
 @end
