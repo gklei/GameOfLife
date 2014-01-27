@@ -296,7 +296,7 @@
       if (!_aboutLayerIsAnimatingIn)
       {
          _aboutLayerIsAnimatingIn = YES;
-         SKAction *moveSettingsRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
+         SKAction *moveSettingsRight = [SKAction moveByX:_settingsLayer.size.width y:0
                                        duration:.2];
          moveSettingsRight.timingMode = SKActionTimingEaseInEaseOut;
          [_settingsLayer runAction:moveSettingsRight

@@ -18,7 +18,7 @@ typedef void (^PreDismissalBlock)();
 @property (nonatomic, strong) GLPageCollection *pageCollection;
 @property (nonatomic, copy) PrimaryButtonCompletionBlock primaryButtonCompletionBlock;
 @property (nonatomic, copy) SecondaryButtonCompletionBlock secondaryButtonCompletionBlock;
-@property (nonatomic, copy) SKAction *preDismissalAction;
+@property (nonatomic, strong) SKAction *preDismissalAction;
 
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint

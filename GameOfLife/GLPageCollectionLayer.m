@@ -115,31 +115,21 @@
    ActionBlock primaryButtonCompletionBlock =
    ^(NSTimeInterval interval)
    {
-      SKAction *dismissBlock = [SKAction runBlock:^
-      {
-         [self resetPagePositionsAndCurrentPage];
-      }];
-
       if (_preDismissalAction)
       {
          [self runAction:_preDismissalAction completion:^
          {
-            [self runAction:dismissBlock
-                 completion:
-             ^{
-                if (_primaryButtonCompletionBlock)
-                   _primaryButtonCompletionBlock();
-             }];
+
+            [self resetPagePositionsAndCurrentPage];
+             if (_primaryButtonCompletionBlock)
+                _primaryButtonCompletionBlock();
          }];
       }
       else
       {
-         [self runAction:dismissBlock
-              completion:
-          ^{
-             if (_primaryButtonCompletionBlock)
-                _primaryButtonCompletionBlock();
-          }];
+         [self resetPagePositionsAndCurrentPage];
+          if (_primaryButtonCompletionBlock)
+             _primaryButtonCompletionBlock();
       }
    };
    _primaryButtonPreCompletionBlock = primaryButtonCompletionBlock;
@@ -147,30 +137,20 @@
    ActionBlock secondaryButtonCompletionBlock =
    ^(NSTimeInterval interval)
    {
-      SKAction *dismissBlock = [SKAction runBlock:^
-      {
-         [self resetPagePositionsAndCurrentPage];
-      }];
       if (_preDismissalAction)
       {
          [self runAction:_preDismissalAction completion:^
           {
-             [self runAction:dismissBlock
-                  completion:
-              ^{
-                 if (_primaryButtonCompletionBlock)
-                    _primaryButtonCompletionBlock();
-              }];
+             [self resetPagePositionsAndCurrentPage];
+              if (_primaryButtonCompletionBlock)
+                 _primaryButtonCompletionBlock();
           }];
       }
       else
       {
-         [self runAction:dismissBlock
-              completion:
-          ^{
-             if (_primaryButtonCompletionBlock)
-                _primaryButtonCompletionBlock();
-          }];
+         [self resetPagePositionsAndCurrentPage];
+          if (_primaryButtonCompletionBlock)
+             _primaryButtonCompletionBlock();
       }
    };
    _secondaryButtonPreCompletionBlock = secondaryButtonCompletionBlock;
