@@ -65,6 +65,7 @@
    SKAction *_restoreSound;
 
    SKEmitterNode *_particleGenerator;
+   GLPageCollectionLayer *_aboutLayer;
 }
 @end
 
@@ -96,6 +97,8 @@
       [self setupBackgroundWithSize:_defaultSize];
       [self setupSettingsWithSize:_defaultSize];
       [self setupButtons];
+
+      [self setupAboutLayer];
       [self observeSoundFxChanges];
    }
    return self;
@@ -291,38 +294,13 @@
    {
       SKAction *moveRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
                                     duration:.2];
+      moveRight.timingMode = SKActionTimingEaseInEaseOut;
       [_settingsLayer runAction:moveRight
                      completion:^
       {
-         GLPageLayer *page1 = [GLPageLayer new];
-         [page1 addHeaderText:@"HOW TO PLAY"];
-         [page1 addNewLines:1];
-         [page1 addBodyText:@"1. The Game of Life was orginally created by a British mathematician named John Conway."];
-         [page1 addBodyText:@"2. The second thing that you really have to realize about this game is that it is actually very pointless and there is a good chance that you will waste a fair amount of time playing it."];
-         [page1 addBodyText:@"3. This is another line that is really important."];
-         [page1 addBodyText:@"4. The last thing that that you should really be aware of is that Leif Alton is the best programmer EVER."];
-
-         GLPageLayer *page2 = [GLPageLayer new];
-         [page2 addHeaderText:@"ABOUT"];
-         [page2 addNewLines:1];
-         [page2 addBodyText:@"This game was created by:"];
-         [page2 addNewLines:1];
-         [page2 addBodyText:@"- Leif Alton (developer)"];
-         [page2 addBodyText:@"- Gregory Klein (developer)"];
-         [page2 addBodyText:@"- Nico Grossfeld (sound fx)"];
-
-         GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1, page2]];
-         GLPageCollectionLayer *pageCollectionLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
-                                                                                                             _settingsLayer.size.height - 30)
-                                                                                      anchorPoint:_backgroundLayer.anchorPoint
-                                                                                   pageCollection:pageCollection];
-
-         pageCollectionLayer.position = CGPointMake((_backgroundLayer.size.width - pageCollectionLayer.size.width) * .5,
-                                                    -HEADING_FONT_SIZE*.5);
-//         pageCollectionLayer.alpha = .5;
-//         pageCollectionLayer.color = [SKColor blueColor];
-         [_backgroundLayer addChild:pageCollectionLayer];
-         SKAction *fadeOut = [SKAction fadeOutWithDuration:.5];
+         [_backgroundLayer addChild:_aboutLayer];
+         _aboutLayer.hidden = NO;
+         SKAction *fadeOut = [SKAction fadeOutWithDuration:.2];
          fadeOut.timingMode = SKActionTimingEaseInEaseOut;
          [_aboutButton runAction:fadeOut
                       completion:^{_aboutButton.hidden = YES;}];
@@ -330,6 +308,56 @@
    };
    _aboutButton.actionBlock = aboutActionBlock;
    [_backgroundLayer addChild:_aboutButton];
+}
+
+- (void)setupAboutLayer
+{
+   GLPageLayer *page1 = [GLPageLayer new];
+   [page1 addHeaderText:@"HOW TO PLAY"];
+   [page1 addNewLines:1];
+   [page1 addBodyText:@"1. The Game of Life was orginally created by a British mathematician named John Conway."];
+   [page1 addBodyText:@"2. The second thing that you really have to realize about this game is that it is actually very pointless and there is a good chance that you will waste a fair amount of time playing it."];
+   [page1 addBodyText:@"3. This is another line that is really important."];
+   [page1 addBodyText:@"4. The last thing that that you should really be aware of is that Leif Alton is the best programmer EVER."];
+
+   GLPageLayer *page2 = [GLPageLayer new];
+   [page2 addHeaderText:@"ABOUT"];
+   [page2 addNewLines:1];
+   [page2 addBodyText:@"This game was created by:"];
+   [page2 addNewLines:1];
+   [page2 addBodyText:@"- Leif Alton (developer)"];
+   [page2 addBodyText:@"- Gregory Klein (developer)"];
+   [page2 addBodyText:@"- Nico Grossfeld (sound fx)"];
+
+   GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1, page2]];
+   _aboutLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
+                                                                        _settingsLayer.size.height - 30)
+                                                 anchorPoint:_backgroundLayer.anchorPoint
+                                              pageCollection:pageCollection];
+
+   _aboutLayer.position = CGPointMake((_backgroundLayer.size.width - _aboutLayer.size.width) * .5,
+                                              -HEADING_FONT_SIZE*.5);
+
+   SKAction *moveSettingsLeft = [SKAction moveBy:CGVectorMake(-_settingsLayer.size.width, 0)
+                                        duration:.2];
+   moveSettingsLeft.timingMode = SKActionTimingEaseInEaseOut;
+   PrimaryButtonCompletionBlock primaryCompletionBlock = ^
+   {
+      [_aboutLayer removeFromParent];
+      [_settingsLayer runAction:moveSettingsLeft];
+      _aboutButton.alpha = 1.0;
+      _aboutButton.hidden = NO;
+   };
+   _aboutLayer.primaryButtonCompletionBlock = primaryCompletionBlock;
+
+   SecondaryButtonCompletionBlock secondaryCompletionBlock = ^
+   {
+      [_aboutLayer removeFromParent];
+      [_settingsLayer runAction:moveSettingsLeft];
+      _aboutButton.alpha = 1.0;
+      _aboutButton.hidden = NO;
+   };
+   _aboutLayer.secondaryButtonCompletionBlock = secondaryCompletionBlock;
 }
 
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state

@@ -107,7 +107,10 @@
    ActionBlock primaryButtonCompletionBlock =
    ^(NSTimeInterval interval)
    {
-      SKAction *dismissBlock = [SKAction runBlock:^{self.hidden = YES;}];
+      SKAction *dismissBlock = [SKAction runBlock:^
+      {
+         [self resetPagePositionsAndCurrentPage];
+      }];
       [self runAction:dismissBlock
            completion:
        ^{
@@ -120,7 +123,10 @@
    ActionBlock secondaryButtonCompletionBlock =
    ^(NSTimeInterval interval)
    {
-      SKAction *dismissBlock = [SKAction runBlock:^{self.hidden = YES;}];
+      SKAction *dismissBlock = [SKAction runBlock:^
+      {
+         [self resetPagePositionsAndCurrentPage];
+      }];
       [self runAction:dismissBlock
            completion:
        ^{
@@ -159,6 +165,14 @@
    }
 }
 
+- (void)resetPagePositionsAndCurrentPage
+{
+   self.hidden = YES;
+   _pageContainter.position = CGPointZero;
+   _currentPage = _pageCollection.firstPage;
+   [self setButtonTitlesAndBlocksForCurrentPage];
+}
+
 - (void)setPageSizesAndPositions
 {
    NSAssert(self.size.height - PAGE_NAVIGATION_AREA_HEIGHT > 0,
@@ -189,8 +203,6 @@
 {
    for (GLPageLayer *page in _pageCollection.pages)
    {
-//      page.alpha = .8;
-//      page.color = [SKColor redColor];
       page.hidden = NO;
       [_pageContainter addChild:page];
    }
