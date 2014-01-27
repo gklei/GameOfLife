@@ -25,6 +25,9 @@
    ActionBlock _nextPageActionBlock;
    ActionBlock _previousPageActionBlock;
 
+   ActionBlock _primaryButtonPreCompletionBlock;
+   ActionBlock _secondaryButtonPreCompletionBlock;
+
    CGFloat _pageHorizontalPadding;
 }
 @end
@@ -80,16 +83,7 @@
 
       [_pageContainter runAction:nextPageAnimation completion:^
       {
-         if (_currentPage == _pageCollection.lastPage)
-         {
-            _primaryButton.buttonTitle = @"OK";
-            _secondaryButton.buttonTitle = @"BACK";
-         }
-         else
-         {
-            _primaryButton.buttonTitle = @"NEXT";
-            _secondaryButton.buttonTitle = (_currentPage == _pageCollection.firstPage)? @"CANCEL" : @"BACK";
-         }
+         [self setButtonTitlesAndBlocksForCurrentPage];
       }];
       _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] + 1)];
    };
@@ -104,20 +98,65 @@
       [_pageContainter runAction:previousPageAnimation
                       completion:^
        {
-          if (_currentPage == _pageCollection.firstPage)
-          {
-             _primaryButton.buttonTitle = @"NEXT";
-             _secondaryButton.buttonTitle = @"CANCEL";
-          }
-          else
-          {
-             _primaryButton.buttonTitle = (_currentPage == _pageCollection.lastPage)? @"OK" : @"NEXT";
-             _secondaryButton.buttonTitle = @"BACK";
-          }
+          [self setButtonTitlesAndBlocksForCurrentPage];
        }];
       _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] - 1)];
    };
    _previousPageActionBlock = prevPageBlock;
+
+   ActionBlock primaryButtonCompletionBlock =
+   ^(NSTimeInterval interval)
+   {
+      SKAction *dismissBlock = [SKAction runBlock:^{self.hidden = YES;}];
+      [self runAction:dismissBlock
+           completion:
+       ^{
+          if (_primaryButtonCompletionBlock)
+             _primaryButtonCompletionBlock();
+       }];
+   };
+   _primaryButtonPreCompletionBlock = primaryButtonCompletionBlock;
+
+   ActionBlock secondaryButtonCompletionBlock =
+   ^(NSTimeInterval interval)
+   {
+      SKAction *dismissBlock = [SKAction runBlock:^{self.hidden = YES;}];
+      [self runAction:dismissBlock
+           completion:
+       ^{
+          if (_secondaryButtonCompletionBlock)
+             _secondaryButtonCompletionBlock();
+       }];
+   };
+   _secondaryButtonPreCompletionBlock = secondaryButtonCompletionBlock;
+}
+
+- (void)setButtonTitlesAndBlocksForCurrentPage
+{
+   if (_currentPage == _pageCollection.firstPage)
+   {
+      _primaryButton.buttonTitle = @"NEXT";
+      _secondaryButton.buttonTitle = @"CANCEL";
+
+      _primaryButton.actionBlock = _nextPageActionBlock;
+      _secondaryButton.actionBlock = _secondaryButtonPreCompletionBlock;
+   }
+   else if (_currentPage == _pageCollection.lastPage)
+   {
+      _primaryButton.buttonTitle = @"OK";
+      _secondaryButton.buttonTitle = @"BACK";
+
+      _primaryButton.actionBlock = _primaryButtonPreCompletionBlock;
+      _secondaryButton.actionBlock = _previousPageActionBlock;
+   }
+   else
+   {
+      _primaryButton.buttonTitle = @"NEXT";
+      _secondaryButton.buttonTitle = @"BACK";
+
+      _primaryButton.actionBlock = _nextPageActionBlock;
+      _secondaryButton.actionBlock = _previousPageActionBlock;
+   }
 }
 
 - (void)setPageSizesAndPositions
@@ -163,7 +202,7 @@
    _secondaryButton = [GLUITextButton textButtonWithTitle:@"CANCEL"];
 
    _primaryButton.actionBlock = _nextPageActionBlock;
-   _secondaryButton.actionBlock = _previousPageActionBlock;
+   _secondaryButton.actionBlock = _secondaryButtonPreCompletionBlock;
 
    [self setNavigationButtonPositions];
 
