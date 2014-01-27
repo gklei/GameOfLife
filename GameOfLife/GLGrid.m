@@ -770,7 +770,8 @@
                                               andRed:offsetR
                                        andBlueOffset:offsetB];
          
-         int index = ((flipped)? ((_dimensions.rows - 1) - row) : row) * _dimensions.columns + col;
+//         int index = ((flipped)? ((_dimensions.rows - 1) - row) : row) * _dimensions.columns + col;
+         int index = ((_dimensions.rows - 1) - row) * _dimensions.columns + col;
          colors[index] = name;
       }
    }
