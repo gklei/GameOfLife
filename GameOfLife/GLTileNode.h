@@ -40,6 +40,7 @@
 
 - (BOOL)isLiving;
 - (void)setIsLiving:(BOOL)living;
+- (void)setIsLivingAndUpdateColor:(BOOL)living;
 - (void)clearTile;
 - (void)clearActionsAndRestore:(BOOL)resetGenerations;
 

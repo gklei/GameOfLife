@@ -296,7 +296,8 @@
    [self updateLivingColors];
    
    for (int i = 0; i < _tiles.count; ++i)
-      [((GLTileNode *)[_tiles objectAtIndex:i]) setIsLiving:_nextGenerationTileStates[i]];
+      [((GLTileNode *)[_tiles objectAtIndex:i])
+         setIsLivingAndUpdateColor:_nextGenerationTileStates[i]];
 
    [self updateColorCenter];
 }
@@ -356,7 +357,7 @@
       for (int i = 0; i < _tiles.count; ++i)
       {
          GLTileNode * tile = [_tiles objectAtIndex:i];
-         tile.isLiving = _storedTileStates[i];
+         [tile setIsLiving:_storedTileStates[i]];
          _currentTileColorNames[i] = _storedTileColorNames[i];
          [tile clearActionsAndRestore:YES];
       }

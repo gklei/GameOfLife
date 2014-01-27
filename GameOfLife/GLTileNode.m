@@ -39,19 +39,15 @@
 
          rotateRight.timingMode = SKActionTimingEaseInEaseOut;
          scaleUp.timingMode = SKActionTimingEaseInEaseOut;
-         
-         // uncomment both tile.isLiving statements to to make tiles animate
-         // in the living color, regardless of the _trackGeneration flag
-//         tile.isLiving = YES;
+
          [tile restoreAsLiving];
-//         tile.isLiving = NO;
 
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
-         {
-            [tile setScale:TILE_SCALE_FOCUSED];
-            tile.zRotation = tile.liveRotation;
-         }];
+                        {
+                           [tile setScale:TILE_SCALE_FOCUSED];
+                           tile.zRotation = tile.liveRotation;
+                        }];
       }
    };
 
@@ -120,6 +116,11 @@
 {
    _generationCount = (living)? _generationCount + 1 : 0;
    [self swapTextures];
+}
+
+- (void)setIsLivingAndUpdateColor:(BOOL)living
+{
+   [self setIsLiving:living];
    [self updateColor];
 }
 

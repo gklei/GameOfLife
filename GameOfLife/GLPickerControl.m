@@ -64,7 +64,7 @@
 - (void)setIsLiving:(BOOL)living
 {
    GLTileNode * node = (GLTileNode *)[self sprite];
-   node.isLiving = living;
+   [node setIsLivingAndUpdateColor:living];
    [node clearActionsAndRestore:YES];
 }
 
