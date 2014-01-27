@@ -718,6 +718,7 @@
 
 - (BOOL)scanImage:(CGImageRef)imageRef
            colors:(std::vector<CrayolaColorName> &)colors
+          flipped:(BOOL)flipped
 {
    // verify we can scan the image and the color offsets
    int offsetR, offsetB;
@@ -769,9 +770,7 @@
                                               andRed:offsetR
                                        andBlueOffset:offsetB];
          
-         // this index calculation flips the image (we're ignoring image orientation
-         // for now, but openGL is flipped compared to cocoa, so we're inverting it here
-         int index = ((_dimensions.rows - 1) - row) * _dimensions.columns + col;
+         int index = ((flipped)? ((_dimensions.rows - 1) - row) : row) * _dimensions.columns + col;
          colors[index] = name;
       }
    }
@@ -832,12 +831,12 @@
    [self restoreGrid];
 }
 
-- (void)scanPreScaledImageForGameBoard:(CGImageRef)imageRef
+- (void)scanPreScaledImageForGameBoard:(CGImageRef)imageRef flipped:(BOOL)flipped
 {
    std::vector<CrayolaColorName> scannedColors =
       std::vector<CrayolaColorName>(_tiles.count, CCN_INVALID_CrayolaColor);
    
-   if (![self scanImage:imageRef colors:scannedColors])
+   if (![self scanImage:imageRef colors:scannedColors flipped:flipped])
       return;
    
    CrayolaColorName bgrndColor = [self calculateBackgroundColor:scannedColors];
@@ -851,20 +850,100 @@
    [self loadGameWithState:scannedStates andColor:scannedColors];
 }
 
+//UIImageOrientationUp,            // default orientation
+//UIImageOrientationDown,          // 180 deg rotation
+//UIImageOrientationLeft,          // 90 deg CCW
+//UIImageOrientationRight,         // 90 deg CW
+//UIImageOrientationUpMirrored,    // as above but image mirrored along other axis. horizontal flip
+//UIImageOrientationDownMirrored,  // horizontal flip
+//UIImageOrientationLeftMirrored,  // vertical flip
+//UIImageOrientationRightMirrored,
+
+static inline double radians(double degrees) {return degrees * M_PI/180;}
+
 - (void)scanImageForGameBoard:(UIImage *)image
 {
    if (image)
    {
-      if (image.size.width != _viewSize.width || image.size.height != _viewSize.height)
+      BOOL flipped = NO;
+      BOOL rotate90 = NO;
+      
+//UIImageOrientationUp,
+//UIImageOrientationDown,
+//UIImageOrientationLeft,
+//UIImageOrientationRight,
+//UIImageOrientationUpMirrored,
+//UIImageOrientationDownMirrored,
+//UIImageOrientationLeftMirrored,
+//UIImageOrientationRightMirrored
+      
+//      UIImageOrientation orientation = image.imageOrientation;
+//      switch (orientation)
+//      {
+//         case UIImageOrientationLeftMirrored:   // fall through
+//         case UIImageOrientationRightMirrored:
+//            flipped = YES;                      // keep falling through
+//         case UIImageOrientationLeft:           // fall through
+//         case UIImageOrientationRight:          // fall through
+//            rotate90 = YES;
+//            break;
+//         case UIImageOrientationDown:           // fall through
+//         case UIImageOrientationDownMirrored:
+//            flipped = YES;
+//            break;
+//         default:
+//            break;
+//      }
+      
+      if (image.size.width > _viewSize.height)
+         rotate90 = YES;
+      
+      BOOL resize = NO;
+      if (rotate90)
+         resize = (image.size.width != _viewSize.height || image.size.height != _viewSize.width);
+      else
+         resize = (image.size.width != _viewSize.width || image.size.height != _viewSize.height);
+      
+//     [GLAlertLayer debugAlert:[NSString stringWithFormat:@"rotate90 = %d, resize = %d",
+//                                                         rotate90, resize]
+//                   withParent:self
+//                  andDuration:20];
+      
+      if (resize)
       {
+//         if (rotate90)
+//         {
+//            UIGraphicsBeginImageContext(image.size);
+//            CGContextRef context = UIGraphicsGetCurrentContext();
+//            CGContextTranslateCTM(context, image.size.width * 0.5, image.size.height * 0.5);
+//            CGContextRotateCTM(context, radians(-90));
+//            [image drawAtPoint:CGPointMake(0, 0)];
+//            image = UIGraphicsGetImageFromCurrentImageContext();
+//            UIGraphicsEndImageContext();
+//         }
+//         if (rotate90)
+//         {
+//            CGRect imageRect = CGRectMake(0, 0, image.size.height, image.size.width);
+//            UIGraphicsBeginImageContext(imageRect.size);
+//            CGContextRef context = UIGraphicsGetCurrentContext();
+//            CGContextTranslateCTM(context,
+//                                  imageRect.size.width * 0.5,
+//                                  imageRect.size.height * 0.5);
+//            CGContextRotateCTM(context, M_PI_2);   // rotate 90˚
+//            [image drawInRect:imageRect];
+//            image = UIGraphicsGetImageFromCurrentImageContext();
+//            UIGraphicsEndImageContext();
+//         }
+         
          CGRect imageRect = CGRectMake(0, 0, _viewSize.width, _viewSize.height);
-         UIGraphicsBeginImageContextWithOptions(imageRect.size, YES, 1.0);
+         
+         UIGraphicsBeginImageContext(imageRect.size);
          [image drawInRect:imageRect];
          image = UIGraphicsGetImageFromCurrentImageContext();
          UIGraphicsEndImageContext();
       }
       
-      [self scanPreScaledImageForGameBoard:[image CGImage]];
+      [self scanPreScaledImageForGameBoard:[image CGImage] flipped:flipped];
    }
 }
 

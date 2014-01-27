@@ -13,10 +13,53 @@
 @interface GLAlertLayer()
 {
    BOOL _shouldHide;
+   SKNode * _parent;
 }
 @end
 
 @implementation GLAlertLayer
+
++ (void)debugAlert:(NSString *)body withParent:(SKNode *)parent andDuration:(NSTimeInterval)seconds
+{
+   GLAlertLayer * alert = [[GLAlertLayer alloc] initWithHeader:@"Debug Message" body:body];
+   if (alert)
+   {
+      alert.position = CGPointMake(0, CGRectGetHeight([UIScreen mainScreen].bounds));
+      [alert showWithParent:parent];
+      [NSTimer scheduledTimerWithTimeInterval:seconds
+                                       target:alert
+                                     selector:@selector(endMyLife)
+                                     userInfo:nil repeats:NO];
+   }
+}
+
++ (id)alertWithHeader:(NSString *)header
+                 body:(NSString *)body
+             position:(CGPoint)position
+            andParent:(SKNode *)parent
+{
+   GLAlertLayer * layer = [[GLAlertLayer alloc] initWithHeader:header body:body];
+   if (layer) [layer showWithParent:parent andPosition:position];
+   return layer;
+}
+
+- (void)dealloc
+{
+   if (_parent)
+   {
+      [_parent removeChildrenInArray:@[self]];
+      _parent = nil;
+   }
+}
+
+- (void)endMyLife
+{
+   if (_parent)
+   {
+      [_parent removeChildrenInArray:@[self]];
+      _parent = nil;
+   }
+}
 
 - (id)init
 {
@@ -43,6 +86,8 @@
 
 - (void)showWithParent:(SKNode *)parent
 {
+   _parent = parent;
+   
    self.hidden = NO;
 
    if (_animatesIn)
@@ -52,6 +97,12 @@
 
    if (_animatesIn)
       [self animateInWithCompletion:^{_animating = NO;}];
+}
+
+- (void)showWithParent:(SKNode *)parent andPosition:(CGPoint)position
+{
+   self.position = position;
+   [self showWithParent:parent];
 }
 
 - (void)hide
