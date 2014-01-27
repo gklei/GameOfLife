@@ -13,7 +13,6 @@
    NSTimeInterval _touchPressTime;
    BOOL _delayedFocusActionBlockExecuted;
 }
-
 @end;
 
 @implementation GLUIActionButton

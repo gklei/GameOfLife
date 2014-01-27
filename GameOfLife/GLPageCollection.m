@@ -30,10 +30,8 @@
 {
    GLPageCollection *pageCollection = [[GLPageCollection alloc] init];
    for (NSObject *page in pages)
-   {
       NSAssert(page.class == [GLPageLayer class],
                @"must instantiate GLPageCollection with GLPageLayer objects");
-   }
 
    if (pages) pageCollection.pages = pages;
    return pageCollection;
@@ -71,8 +69,7 @@
 
 - (void)removeFirstPage
 {
-   if (_pages.count)
-      [_pages removeObjectAtIndex:0];
+   if (_pages.count) [_pages removeObjectAtIndex:0];
 }
 
 - (void)removeLastPage
