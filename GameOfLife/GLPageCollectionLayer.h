@@ -8,16 +8,14 @@
 
 #import "GLMenuLayer.h"
 
-typedef void (^PrimaryButtonCompletionBlock)();
-typedef void (^SecondaryButtonCompletionBlock)();
-typedef void (^PreDismissalBlock)();
+typedef void (^PageCollectionLayerCompletionBlock)();
 
 @class GLPageCollection;
 @interface GLPageCollectionLayer : GLMenuLayer
 
 @property (nonatomic, strong) GLPageCollection *pageCollection;
-@property (nonatomic, copy) PrimaryButtonCompletionBlock primaryButtonCompletionBlock;
-@property (nonatomic, copy) SecondaryButtonCompletionBlock secondaryButtonCompletionBlock;
+@property (nonatomic, copy) PageCollectionLayerCompletionBlock primaryButtonCompletionBlock;
+@property (nonatomic, copy) PageCollectionLayerCompletionBlock secondaryButtonCompletionBlock;
 @property (nonatomic, strong) SKAction *preDismissalAction;
 
 - (id)initWithSize:(CGSize)size

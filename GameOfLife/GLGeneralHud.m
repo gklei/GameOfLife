@@ -365,7 +365,7 @@
    SKAction *moveSettingsLeft = [SKAction moveBy:CGVectorMake(-_settingsLayer.size.width, 0)
                                         duration:.2];
    moveSettingsLeft.timingMode = SKActionTimingEaseInEaseOut;
-   PrimaryButtonCompletionBlock primaryCompletionBlock = ^
+   PageCollectionLayerCompletionBlock primaryCompletionBlock = ^
    {
       [_aboutLayer removeFromParent];
       [_settingsLayer runAction:moveSettingsLeft];
@@ -374,7 +374,7 @@
    };
    _aboutLayer.primaryButtonCompletionBlock = primaryCompletionBlock;
 
-   SecondaryButtonCompletionBlock secondaryCompletionBlock = ^
+   PageCollectionLayerCompletionBlock secondaryCompletionBlock = ^
    {
        [_aboutLayer removeFromParent];
        [_settingsLayer runAction:moveSettingsLeft];
