@@ -335,13 +335,16 @@
    [page1 addBodyText:@"4. The last thing that that you should really be aware of is that Leif Alton is the best programmer EVER."];
 
    GLPageLayer *page2 = [GLPageLayer new];
-   [page2 addHeaderText:@"ABOUT"];
+   [page2 addHeaderText:@"CREDITS"];
    [page2 addNewLines:1];
    [page2 addBodyText:@"This game was created by:"];
    [page2 addNewLines:1];
-   [page2 addBodyText:@"- Leif Alton (developer)"];
-   [page2 addBodyText:@"- Gregory Klein (developer)"];
-   [page2 addBodyText:@"- Nico Grossfeld (sound fx)"];
+   [page2 addBodyText:@"- Leif A. (Developer)"];
+   [page2 addBodyText:@"- Gregory K. (Developer)"];
+   [page2 addBodyText:@"- Nico G. (Sound FX + Creative Work)"];
+   [page2 addBodyText:@"- John Conway (Algorithm)"];
+   [page2 addNewLines:1];
+   [page2 addBodyText:@"If you hate this game and think that the algorithm sucks, please contact John Conway.  Thank you for trying out LiFE!"];
 
    GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1, page2]];
    _aboutLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
