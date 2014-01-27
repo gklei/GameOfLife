@@ -998,12 +998,20 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
 {
    if (_trackGeneration)
    {
-      NSUInteger nodeGenCount = node.generationCount - 1;
+      NSInteger nodeGenCount = node.generationCount - 1;
       colorName = [SKColor getColorNameForIndex:(colorName + nodeGenCount)];
    }
    
    CGFloat   dist = [self colorDistanceForTile:node];
    SKColor * liveColor = [SKColor colorForCrayolaColorName:colorName];
+   
+   if (node.generationCount == 0)
+   {
+      // special case for handling  
+      CGFloat h, s, b;
+      if ([liveColor getHue:&h saturation:&s brightness:&b alpha:0])
+         return [SKColor colorWithHue:h saturation:s * 2 brightness:b * 2 alpha:1.0];
+   }
    
    CGFloat r, g, b;
    if ([liveColor getRed:&r green:&g blue:&b alpha:0])
