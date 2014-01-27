@@ -35,6 +35,7 @@
 
 @implementation GLPageCollectionLayer
 
+#pragma mark - Init Methods
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint
     pageCollection:(GLPageCollection *)pageCollection
@@ -45,12 +46,12 @@
       _currentPage = _pageCollection.firstPage;
 
       [self setupVariables];
+      [self setupNavigationButtons];
 
       [self setPageSizesAndPositions];
       [self setupPageContainer];
       [self addPagesToContainer];
 
-      [self setupNavigationButtons];
    }
    return self;
 }
@@ -65,7 +66,7 @@
    return self;
 }
 
-#pragma mark - Helper Methods
+#pragma mark - Setup Methods
 - (void)setupVariables
 {
    _pageHorizontalPadding = CGRectGetWidth([UIScreen mainScreen].bounds);
@@ -92,9 +93,8 @@
       _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] + 1)];
       _currentPage.hidden = NO;
    };
-   _nextPageActionBlock = nextPageBlock;
 
-   ActionBlock prevPageBlock =
+   ActionBlock previousPageBlock =
    ^(NSTimeInterval interval)
    {
       if (_currentPage == _pageCollection.firstPage)
@@ -110,7 +110,6 @@
       _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] - 1)];
       _currentPage.hidden = NO;
    };
-   _previousPageActionBlock = prevPageBlock;
 
    ActionBlock primaryButtonCompletionBlock =
    ^(NSTimeInterval interval)
@@ -132,7 +131,6 @@
              _primaryButtonCompletionBlock();
       }
    };
-   _primaryButtonPreCompletionBlock = primaryButtonCompletionBlock;
 
    ActionBlock secondaryButtonCompletionBlock =
    ^(NSTimeInterval interval)
@@ -142,18 +140,47 @@
          [self runAction:_preDismissalAction completion:^
           {
              [self resetPagePositionsAndCurrentPage];
-              if (_primaryButtonCompletionBlock)
-                 _primaryButtonCompletionBlock();
+              if (_secondaryButtonCompletionBlock)
+                 _secondaryButtonCompletionBlock();
           }];
       }
       else
       {
          [self resetPagePositionsAndCurrentPage];
-          if (_primaryButtonCompletionBlock)
-             _primaryButtonCompletionBlock();
+         if (_secondaryButtonCompletionBlock)
+            _secondaryButtonCompletionBlock();
       }
    };
+
+   _nextPageActionBlock = nextPageBlock;
+   _previousPageActionBlock = previousPageBlock;
+   _primaryButtonPreCompletionBlock = primaryButtonCompletionBlock;
    _secondaryButtonPreCompletionBlock = secondaryButtonCompletionBlock;
+}
+
+#pragma mark - Navigation Button Setup and Helper Methods
+- (void)setupNavigationButtons
+{
+   _primaryButton = [GLUITextButton textButtonWithTitle:(_pageCollection.pages.count > 1)? @"NEXT" : @"OK"];
+   _secondaryButton = [GLUITextButton textButtonWithTitle:@"CANCEL"];
+
+   _primaryButton.actionBlock = _nextPageActionBlock;
+   _secondaryButton.actionBlock = _secondaryButtonPreCompletionBlock;
+
+   [self setNavigationButtonPositions];
+
+   [self addChild:_primaryButton];
+   [self addChild:_secondaryButton];
+}
+
+- (void)setNavigationButtonPositions
+{
+   CGFloat primaryX = (self.size.width * .5) + (_primaryButton.size.width * .5) + 10;
+   CGFloat secondaryX = (self.size.width * .5) - (_primaryButton.size.width * .5) - 10;
+   CGFloat yPos = -self.size.height + (_primaryButton.size.height * .5);
+
+   _primaryButton.position = CGPointMake(primaryX, yPos);
+   _secondaryButton.position = CGPointMake(secondaryX, yPos);
 }
 
 - (void)setButtonTitlesAndBlocksForCurrentPage
@@ -184,14 +211,7 @@
    }
 }
 
-- (void)resetPagePositionsAndCurrentPage
-{
-   self.hidden = YES;
-   _pageContainter.position = CGPointZero;
-   _currentPage = _pageCollection.firstPage;
-   [self setButtonTitlesAndBlocksForCurrentPage];
-}
-
+#pragma mark - Page Setup and Helper Methods
 - (void)setPageSizesAndPositions
 {
    NSAssert(self.size.height - PAGE_NAVIGATION_AREA_HEIGHT > 0,
@@ -218,37 +238,19 @@
    [self addChild:_pageContainter];
 }
 
+- (void)resetPagePositionsAndCurrentPage
+{
+   self.hidden = YES;
+   _pageContainter.position = CGPointZero;
+   _currentPage = _pageCollection.firstPage;
+   [self setButtonTitlesAndBlocksForCurrentPage];
+}
+
 - (void)addPagesToContainer
 {
    for (GLPageLayer *page in _pageCollection.pages)
-   {
       [_pageContainter addChild:page];
-   }
+
    _pageCollection.firstPage.hidden = NO;
 }
-
-- (void)setupNavigationButtons
-{
-   _primaryButton = [GLUITextButton textButtonWithTitle:(_pageCollection.pages.count > 1)? @"NEXT" : @"OK"];
-   _secondaryButton = [GLUITextButton textButtonWithTitle:@"CANCEL"];
-
-   _primaryButton.actionBlock = _nextPageActionBlock;
-   _secondaryButton.actionBlock = _secondaryButtonPreCompletionBlock;
-
-   [self setNavigationButtonPositions];
-
-   [self addChild:_primaryButton];
-   [self addChild:_secondaryButton];
-}
-
-- (void)setNavigationButtonPositions
-{
-   CGFloat primaryX = (self.size.width * .5) + (_primaryButton.size.width * .5) + 10;
-   CGFloat secondaryX = (self.size.width * .5) - (_primaryButton.size.width * .5) - 10;
-   CGFloat yPos = -self.size.height + (_primaryButton.size.height * .5);
-
-   _primaryButton.position = CGPointMake(primaryX, yPos);
-   _secondaryButton.position = CGPointMake(secondaryX, yPos);
-}
-
 @end
