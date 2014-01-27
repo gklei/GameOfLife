@@ -66,6 +66,7 @@
 
    SKEmitterNode *_particleGenerator;
    GLPageCollectionLayer *_aboutLayer;
+   BOOL _aboutLayerIsAnimatingIn;
 }
 @end
 
@@ -292,19 +293,32 @@
    ActionBlock aboutActionBlock =
    ^(NSTimeInterval interval)
    {
-      SKAction *moveRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
-                                    duration:.2];
-      moveRight.timingMode = SKActionTimingEaseInEaseOut;
-      [_settingsLayer runAction:moveRight
-                     completion:^
+      if (!_aboutLayerIsAnimatingIn)
       {
-         [_backgroundLayer addChild:_aboutLayer];
-         _aboutLayer.hidden = NO;
-         SKAction *fadeOut = [SKAction fadeOutWithDuration:.2];
-         fadeOut.timingMode = SKActionTimingEaseInEaseOut;
-         [_aboutButton runAction:fadeOut
-                      completion:^{_aboutButton.hidden = YES;}];
-      }];
+         _aboutLayerIsAnimatingIn = YES;
+         SKAction *moveSettingsRight = [SKAction moveBy:CGVectorMake(_settingsLayer.size.width, 0)
+                                       duration:.2];
+         moveSettingsRight.timingMode = SKActionTimingEaseInEaseOut;
+         [_settingsLayer runAction:moveSettingsRight
+                        completion:^
+         {
+            [_backgroundLayer addChild:_aboutLayer];
+            _aboutLayer.hidden = NO;
+
+            SKAction *moveAboutLayerIn = [SKAction moveToX:(_backgroundLayer.size.width - _aboutLayer.size.width) * .5 duration:.2];
+            moveAboutLayerIn.timingMode = SKActionTimingEaseInEaseOut;
+            [_aboutLayer runAction:moveAboutLayerIn];
+
+            SKAction *fadeOut = [SKAction fadeOutWithDuration:.2];
+            fadeOut.timingMode = SKActionTimingEaseInEaseOut;
+            [_aboutButton runAction:fadeOut
+                         completion:^
+            {
+               _aboutButton.hidden = YES;
+               _aboutLayerIsAnimatingIn = NO;
+            }];
+         }];
+      }
    };
    _aboutButton.actionBlock = aboutActionBlock;
    [_backgroundLayer addChild:_aboutButton];
@@ -335,8 +349,8 @@
                                                  anchorPoint:_backgroundLayer.anchorPoint
                                               pageCollection:pageCollection];
 
-   _aboutLayer.position = CGPointMake((_backgroundLayer.size.width - _aboutLayer.size.width) * .5,
-                                              -HEADING_FONT_SIZE*.5);
+   _aboutLayer.position = CGPointMake(_backgroundLayer.size.width,
+                                      -HEADING_FONT_SIZE*.5);
 
    SKAction *moveSettingsLeft = [SKAction moveBy:CGVectorMake(-_settingsLayer.size.width, 0)
                                         duration:.2];
@@ -352,12 +366,16 @@
 
    SecondaryButtonCompletionBlock secondaryCompletionBlock = ^
    {
-      [_aboutLayer removeFromParent];
-      [_settingsLayer runAction:moveSettingsLeft];
-      _aboutButton.alpha = 1.0;
-      _aboutButton.hidden = NO;
+       [_aboutLayer removeFromParent];
+       [_settingsLayer runAction:moveSettingsLeft];
+       _aboutButton.alpha = 1.0;
+       _aboutButton.hidden = NO;
    };
    _aboutLayer.secondaryButtonCompletionBlock = secondaryCompletionBlock;
+
+   SKAction *moveAboutLayerOut = [SKAction moveToX:_backgroundLayer.size.width duration:.2];
+   moveAboutLayerOut.timingMode = SKActionTimingEaseInEaseOut;
+   _aboutLayer.preDismissalAction = moveAboutLayerOut;
 }
 
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state

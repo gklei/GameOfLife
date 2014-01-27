@@ -10,6 +10,7 @@
 
 typedef void (^PrimaryButtonCompletionBlock)();
 typedef void (^SecondaryButtonCompletionBlock)();
+typedef void (^PreDismissalBlock)();
 
 @class GLPageCollection;
 @interface GLPageCollectionLayer : GLMenuLayer
@@ -17,6 +18,7 @@ typedef void (^SecondaryButtonCompletionBlock)();
 @property (nonatomic, strong) GLPageCollection *pageCollection;
 @property (nonatomic, copy) PrimaryButtonCompletionBlock primaryButtonCompletionBlock;
 @property (nonatomic, copy) SecondaryButtonCompletionBlock secondaryButtonCompletionBlock;
+@property (nonatomic, copy) SKAction *preDismissalAction;
 
 - (id)initWithSize:(CGSize)size
        anchorPoint:(CGPoint)anchorPoint

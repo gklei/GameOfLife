@@ -21,6 +21,7 @@
 
    GLMenuLayer *_pageContainter;
    GLPageLayer *_currentPage;
+   GLPageLayer *_previousPage;
 
    ActionBlock _nextPageActionBlock;
    ActionBlock _previousPageActionBlock;
@@ -81,11 +82,15 @@
       if (_currentPage == _pageCollection.lastPage)
          return;
 
-      [_pageContainter runAction:nextPageAnimation completion:^
+      [_pageContainter runAction:nextPageAnimation
+                      completion:^
       {
          [self setButtonTitlesAndBlocksForCurrentPage];
+         _previousPage.hidden = YES;
       }];
+      _previousPage = _currentPage;
       _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] + 1)];
+      _currentPage.hidden = NO;
    };
    _nextPageActionBlock = nextPageBlock;
 
@@ -99,8 +104,11 @@
                       completion:^
        {
           [self setButtonTitlesAndBlocksForCurrentPage];
+          _previousPage.hidden = YES;
        }];
+      _previousPage = _currentPage;
       _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] - 1)];
+      _currentPage.hidden = NO;
    };
    _previousPageActionBlock = prevPageBlock;
 
@@ -111,12 +119,28 @@
       {
          [self resetPagePositionsAndCurrentPage];
       }];
-      [self runAction:dismissBlock
-           completion:
-       ^{
-          if (_primaryButtonCompletionBlock)
-             _primaryButtonCompletionBlock();
-       }];
+
+      if (_preDismissalAction)
+      {
+         [self runAction:_preDismissalAction completion:^
+         {
+            [self runAction:dismissBlock
+                 completion:
+             ^{
+                if (_primaryButtonCompletionBlock)
+                   _primaryButtonCompletionBlock();
+             }];
+         }];
+      }
+      else
+      {
+         [self runAction:dismissBlock
+              completion:
+          ^{
+             if (_primaryButtonCompletionBlock)
+                _primaryButtonCompletionBlock();
+          }];
+      }
    };
    _primaryButtonPreCompletionBlock = primaryButtonCompletionBlock;
 
@@ -127,12 +151,27 @@
       {
          [self resetPagePositionsAndCurrentPage];
       }];
-      [self runAction:dismissBlock
-           completion:
-       ^{
-          if (_secondaryButtonCompletionBlock)
-             _secondaryButtonCompletionBlock();
-       }];
+      if (_preDismissalAction)
+      {
+         [self runAction:_preDismissalAction completion:^
+          {
+             [self runAction:dismissBlock
+                  completion:
+              ^{
+                 if (_primaryButtonCompletionBlock)
+                    _primaryButtonCompletionBlock();
+              }];
+          }];
+      }
+      else
+      {
+         [self runAction:dismissBlock
+              completion:
+          ^{
+             if (_primaryButtonCompletionBlock)
+                _primaryButtonCompletionBlock();
+          }];
+      }
    };
    _secondaryButtonPreCompletionBlock = secondaryButtonCompletionBlock;
 }
@@ -203,9 +242,9 @@
 {
    for (GLPageLayer *page in _pageCollection.pages)
    {
-      page.hidden = NO;
       [_pageContainter addChild:page];
    }
+   _pageCollection.firstPage.hidden = NO;
 }
 
 - (void)setupNavigationButtons
