@@ -19,6 +19,9 @@
 - (GLPageLayer *)firstPage;
 - (GLPageLayer *)lastPage;
 
+- (GLPageLayer *)pageAtIndex:(NSInteger)index;
+- (NSInteger)indexOfPage:(GLPageLayer *)page;
+
 - (void)removePage:(GLPageLayer *)page;
 - (void)removeFirstPage;
 - (void)removeLastPage;

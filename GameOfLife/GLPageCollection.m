@@ -54,6 +54,16 @@
    return _pages.lastObject;
 }
 
+- (GLPageLayer *)pageAtIndex:(NSInteger)index
+{
+   return [_pages objectAtIndex:index];
+}
+
+- (NSInteger)indexOfPage:(GLPageLayer *)page
+{
+   return [_pages indexOfObject:page];
+}
+
 - (void)removePage:(GLPageLayer *)page
 {
    [_pages removeObject:page];

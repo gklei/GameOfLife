@@ -18,10 +18,12 @@
 {
    GLUITextButton *_primaryButton;
    GLUITextButton *_secondaryButton;
-   GLMenuLayer *_pageContainter;
 
-   SKAction *_nextPageAnimation;
-   SKAction *_previousPageAnimation;
+   GLMenuLayer *_pageContainter;
+   GLPageLayer *_currentPage;
+
+   ActionBlock _nextPageActionBlock;
+   ActionBlock _previousPageActionBlock;
 
    CGFloat _pageHorizontalPadding;
 }
@@ -36,6 +38,8 @@
    if (self = [super initWithSize:size anchorPoint:anchorPoint])
    {
       _pageCollection = (pageCollection)? pageCollection : [GLPageCollection new];
+      _currentPage = _pageCollection.firstPage;
+
       [self setupVariables];
 
       [self setPageSizesAndPositions];
@@ -62,11 +66,58 @@
 {
    _pageHorizontalPadding = CGRectGetWidth([UIScreen mainScreen].bounds);
 
-   _nextPageAnimation = [SKAction moveByX:-_pageHorizontalPadding y:0 duration:.2];
-   _previousPageAnimation = [SKAction moveByX:_pageHorizontalPadding y:0 duration:.2];
+   SKAction *nextPageAnimation = [SKAction moveByX:-_pageHorizontalPadding y:0 duration:.2];
+   SKAction *previousPageAnimation = [SKAction moveByX:_pageHorizontalPadding y:0 duration:.2];
 
-   _nextPageAnimation.timingMode = SKActionTimingEaseInEaseOut;
-   _previousPageAnimation.timingMode = SKActionTimingEaseInEaseOut;
+   nextPageAnimation.timingMode = SKActionTimingEaseInEaseOut;
+   previousPageAnimation.timingMode = SKActionTimingEaseInEaseOut;
+
+   ActionBlock nextPageBlock =
+   ^(NSTimeInterval interval)
+   {
+      if (_currentPage == _pageCollection.lastPage)
+         return;
+
+      [_pageContainter runAction:nextPageAnimation completion:^
+      {
+         if (_currentPage == _pageCollection.lastPage)
+         {
+            _primaryButton.buttonTitle = @"OK";
+            _secondaryButton.buttonTitle = @"BACK";
+         }
+         else
+         {
+            _primaryButton.buttonTitle = @"NEXT";
+            _secondaryButton.buttonTitle = (_currentPage == _pageCollection.firstPage)? @"CANCEL" : @"BACK";
+         }
+      }];
+      _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] + 1)];
+   };
+   _nextPageActionBlock = nextPageBlock;
+
+   ActionBlock prevPageBlock =
+   ^(NSTimeInterval interval)
+   {
+      if (_currentPage == _pageCollection.firstPage)
+         return;
+
+      [_pageContainter runAction:previousPageAnimation
+                      completion:^
+       {
+          if (_currentPage == _pageCollection.firstPage)
+          {
+             _primaryButton.buttonTitle = @"NEXT";
+             _secondaryButton.buttonTitle = @"CANCEL";
+          }
+          else
+          {
+             _primaryButton.buttonTitle = (_currentPage == _pageCollection.lastPage)? @"OK" : @"NEXT";
+             _secondaryButton.buttonTitle = @"BACK";
+          }
+       }];
+      _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] - 1)];
+   };
+   _previousPageActionBlock = prevPageBlock;
 }
 
 - (void)setPageSizesAndPositions
@@ -111,20 +162,8 @@
    _primaryButton = [GLUITextButton textButtonWithTitle:(_pageCollection.pages.count > 1)? @"NEXT" : @"OK"];
    _secondaryButton = [GLUITextButton textButtonWithTitle:@"CANCEL"];
 
-   ActionBlock primaryActionBlock =
-   ^(NSTimeInterval interval)
-   {
-      [_pageContainter runAction:_nextPageAnimation];
-   };
-
-   ActionBlock secondaryActionBlock =
-   ^(NSTimeInterval interval)
-   {
-      [_pageContainter runAction:_previousPageAnimation];
-   };
-
-   _primaryButton.actionBlock = primaryActionBlock;
-   _secondaryButton.actionBlock = secondaryActionBlock;
+   _primaryButton.actionBlock = _nextPageActionBlock;
+   _secondaryButton.actionBlock = _previousPageActionBlock;
 
    [self setNavigationButtonPositions];
 
