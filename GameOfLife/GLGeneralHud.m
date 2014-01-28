@@ -342,12 +342,23 @@
    _aboutButton.actionBlock = aboutActionBlock;
    [_backgroundLayer addChild:_aboutButton];
 }
+- (void)moveSettingsBackIn
+{
+   SKAction *moveSettingsLeft = [SKAction moveBy:CGVectorMake(-_settingsLayer.size.width, 0)
+                                        duration:.2];
+   moveSettingsLeft.timingMode = SKActionTimingEaseInEaseOut;
+   [_aboutLayer removeFromParent];
+   [_settingsLayer runAction:moveSettingsLeft];
+   _aboutButton.alpha = 1.0;
+   _aboutButton.hidden = NO;
+}
 
 - (void)setupAboutLayer
 {
-   GLInformativePage *aboutPage = [GLInformativePage aboutPage];
-   GLInformativePage *creditsPage = [GLInformativePage creditsPage];
-   GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[aboutPage, creditsPage]];
+   GLPageCollection *pageCollection =
+      [GLPageCollection pageCollectionWithPages:@[[GLInformativePage aboutPage],
+                                                  [GLInformativePage creditsPage]]];
+
    _aboutLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
                                                                         _settingsLayer.size.height - 30)
                                                  anchorPoint:_backgroundLayer.anchorPoint
@@ -356,25 +367,10 @@
    _aboutLayer.position = CGPointMake(_backgroundLayer.size.width,
                                       -HEADING_FONT_SIZE*.5);
 
-   SKAction *moveSettingsLeft = [SKAction moveBy:CGVectorMake(-_settingsLayer.size.width, 0)
-                                        duration:.2];
-   moveSettingsLeft.timingMode = SKActionTimingEaseInEaseOut;
-   PageCollectionLayerCompletionBlock primaryCompletionBlock = ^
-   {
-      [_aboutLayer removeFromParent];
-      [_settingsLayer runAction:moveSettingsLeft];
-      _aboutButton.alpha = 1.0;
-      _aboutButton.hidden = NO;
-   };
+   PageCollectionLayerCompletionBlock primaryCompletionBlock = ^{[self moveSettingsBackIn];};
    _aboutLayer.primaryButtonCompletionBlock = primaryCompletionBlock;
 
-   PageCollectionLayerCompletionBlock secondaryCompletionBlock = ^
-   {
-       [_aboutLayer removeFromParent];
-       [_settingsLayer runAction:moveSettingsLeft];
-       _aboutButton.alpha = 1.0;
-       _aboutButton.hidden = NO;
-   };
+   PageCollectionLayerCompletionBlock secondaryCompletionBlock = ^{[self moveSettingsBackIn];};
    _aboutLayer.secondaryButtonCompletionBlock = secondaryCompletionBlock;
 
    SKAction *moveAboutLayerOut = [SKAction moveToX:_backgroundLayer.size.width duration:.2];
