@@ -52,7 +52,10 @@
 
    BOOL _shouldRunSplashButtonColorChangingAnimation;
    NSArray *_splashButtonColors;
+   NSArray *_rainbowColors;
    NSUInteger _splashButtonColorIndex;
+
+   BOOL _lockedColorMode;
 
    SKEmitterNode *_splashParticleEmitter;
 }
@@ -64,6 +67,12 @@
 {
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
    [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
+
+- (void)observeLockedColorMode
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"LockedColorMode"];
 }
 
 - (id)init
@@ -82,6 +91,7 @@
       [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
       [self runSplashButtonColorChangeAnimation];
       [self observeSoundFxChanges];
+      [self observeLockedColorMode];
       [self setupParticleEmitter];
    }
    return self;
@@ -181,14 +191,16 @@
 {
    _shouldRunSplashButtonColorChangingAnimation = YES;
    _splashButtonColorIndex = 0;
-   _splashButtonColors = @[[SKColor crayolaFreshAirColor], [SKColor crayolaCeruleanColor], [SKColor crayolaBlueColor],
-                           [SKColor crayolaIndigoColor], [SKColor crayolaOceanBluePearlColor], [SKColor crayolaGrannySmithAppleColor],
-                           [SKColor crayolaScreaminGreenColor], [SKColor crayolaMagicMintColor] , [SKColor crayolaCaribbeanGreenColor],
-                           [SKColor crayolaMetallicSeaweedColor], [SKColor crayolaPeachColor], [SKColor crayolaKeyLimePearlColor],
-                           [SKColor crayolaLimeColor], [SKColor crayolaChocolateColor], [SKColor crayolaDandelionColor],
-                           [SKColor crayolaSunglowColor], [SKColor crayolaMangoTangoColor], [SKColor crayolaOrangeRedColor],
-                           [SKColor crayolaBigDipORubyColor], [SKColor crayolaMelonColor], [SKColor crayolaMauvelousColor],
-                           [SKColor crayolaOrchidColor], [SKColor crayolaPinkFlamingoColor], [SKColor crayolaWinterSkyColor]];
+   _rainbowColors = @[[SKColor crayolaFreshAirColor], [SKColor crayolaCeruleanColor], [SKColor crayolaBlueColor],
+                      [SKColor crayolaIndigoColor], [SKColor crayolaOceanBluePearlColor], [SKColor crayolaGrannySmithAppleColor],
+                      [SKColor crayolaScreaminGreenColor], [SKColor crayolaMagicMintColor] , [SKColor crayolaCaribbeanGreenColor],
+                      [SKColor crayolaMetallicSeaweedColor], [SKColor crayolaPeachColor], [SKColor crayolaKeyLimePearlColor],
+                      [SKColor crayolaLimeColor], [SKColor crayolaChocolateColor], [SKColor crayolaDandelionColor],
+                      [SKColor crayolaSunglowColor], [SKColor crayolaMangoTangoColor], [SKColor crayolaOrangeRedColor],
+                      [SKColor crayolaBigDipORubyColor], [SKColor crayolaMelonColor], [SKColor crayolaMauvelousColor],
+                      [SKColor crayolaOrchidColor], [SKColor crayolaPinkFlamingoColor], [SKColor crayolaWinterSkyColor]];
+   
+   _splashButtonColors = _rainbowColors;
 }
 
 - (void)runSplashButtonColorChangeAnimation
@@ -349,6 +361,9 @@
          _splashParticleEmitter.position = CGPointMake(_currentColorDrop.position.x - 260, 40);
          _splashParticleEmitter.particleColor = [UIColor colorForCrayolaColorName:_currentColorName];
       }
+
+      if (!_lockedColorMode)
+         [self updateSplashButtonColors];
 
       [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
    }
@@ -684,14 +699,38 @@
    }
    
    [self updateCurrentColorName:colorName];
+   [self updateSplashButtonColors];
 }
 
+- (NSArray *)triColorArrayForColorName:(CrayolaColorName)colorName
+{
+   return @[[SKColor colorForCrayolaColorName:[SKColor getColorNameForIndex:colorName]],
+            [SKColor colorForCrayolaColorName:[SKColor getColorNameForIndex:colorName + 1]],
+            [SKColor colorForCrayolaColorName:[SKColor getColorNameForIndex:colorName - 1]]];
+}
+
+- (void)updateSplashButtonColors
+{
+   _splashButtonColorIndex = 0;
+   if (_lockedColorMode)
+      _splashButtonColors = _rainbowColors;
+   else
+      _splashButtonColors = [self triColorArrayForColorName:_currentColorName];
+}
+
+#pragma mark - GLSettingsObserver Methods
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
 {
    if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
    {
       assert(type == HVT_BOOL);
       _shouldPlaySound = [value boolValue];
+   }
+   else if ([keyPath compare:@"LockedColorMode"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _lockedColorMode = [value boolValue];
+      [self updateSplashButtonColors];
    }
 }
 

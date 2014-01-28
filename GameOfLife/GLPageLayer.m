@@ -36,7 +36,6 @@
       _lines = [NSMutableArray new];
       [self addLine];
    }
-
    return self;
 }
 
