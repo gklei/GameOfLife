@@ -262,7 +262,19 @@
    _settingsButton = [self buttonWithFilename:@"cog" buttonName:@"settings"];
    
    ActionBlock settingsButtonActionBlock =
-      ^(NSTimeInterval holdTime) {if (!self.isAnimating) [self toggleSettingsWithCompletion:nil];};
+   ^(NSTimeInterval holdTime)
+   {
+      if (!self.isAnimating)
+      {
+         if (!_aboutLayer.hidden)
+         {
+            _aboutLayer.position = CGPointMake(_backgroundLayer.size.width,
+                                               _aboutLayer.position.y);
+            _settingsLayer.position = CGPointZero;
+         }
+         [self toggleSettingsWithCompletion:nil];
+      }
+   };
    
    _settingsButton.actionBlock = settingsButtonActionBlock;
 
@@ -438,6 +450,7 @@
 
 - (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
 {
+   _aboutLayer.hidden = YES;
    _settingsButton.persistGlow = NO;
    self.animating = YES;
    _settingsAreExpanded = NO;
@@ -489,21 +502,26 @@
           _settingsButton.color = [SKColor whiteColor];
           _settingsLayer.hidden = YES;
           _aboutButton.hidden = YES;
+          if (_aboutLayer.parent) [_aboutLayer removeFromParent];
           if (completion)
              completion();
        }];
    }
    else
+   {
+      _settingsLayer.position = CGPointZero;
       [self expandSettingsWithCompletionBlock:^
        {
+          _aboutButton.hidden = NO;
+          _aboutButton.alpha = 1.0;
           if (_settingsAreExpanded)
           {
              _settingsLayer.hidden = NO;
-             _aboutButton.hidden = NO;
           }
           if (completion)
              completion();
        }];
+   }
 }
 
 - (void)expandBottomBar
@@ -642,6 +660,10 @@
       [_settingsButton loseFocus];
       [self collapseSettingsWithCompletionBlock:^
       {
+         if (_aboutLayer.parent) [_aboutLayer removeFromParent];
+         _aboutLayer.position = CGPointMake(_backgroundLayer.size.width,
+                                            _aboutLayer.position.y);
+         _settingsLayer.position = CGPointZero;
          [self collapseBottomBar];
       }];
    }
