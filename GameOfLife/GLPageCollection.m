@@ -29,9 +29,11 @@
 + (instancetype)pageCollectionWithPages:(NSArray *)pages
 {
    GLPageCollection *pageCollection = [[GLPageCollection alloc] init];
-   for (NSObject *page in pages)
-      NSAssert(page.class == [GLPageLayer class],
-               @"must instantiate GLPageCollection with GLPageLayer objects");
+
+// TODO: need to figure out a way to assert that objects passed in INHERIT from GLPageLayer
+//   for (GLPageLayer *page in pages)
+//      NSAssert(page.class == [GLPageLayer class],
+//               @"must instantiate GLPageCollection with GLPageLayer objects");
 
    if (pages) pageCollection.pages = pages;
    return pageCollection;

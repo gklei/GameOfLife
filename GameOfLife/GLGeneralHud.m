@@ -17,7 +17,7 @@
 
 #import "GLPageCollectionLayer.h"
 #import "GLPageCollection.h"
-#import "GLPageLayer.h"
+#import "GLInformativePage.h"
 
 #include <AssetsLibrary/AssetsLibrary.h>
 
@@ -333,27 +333,9 @@
 
 - (void)setupAboutLayer
 {
-   GLPageLayer *page1 = [GLPageLayer new];
-   [page1 addHeaderText:@"HOW TO PLAY"];
-   [page1 addNewLines:1];
-   [page1 addBodyText:@"1. The Game of Life was orginally created by a British mathematician named John Conway."];
-   [page1 addBodyText:@"2. The second thing that you really have to realize about this game is that it is actually very pointless and there is a good chance that you will waste a fair amount of time playing it."];
-   [page1 addBodyText:@"3. This is another line that is really important."];
-   [page1 addBodyText:@"4. The last thing that that you should really be aware of is that Leif Alton is the best programmer EVER."];
-
-   GLPageLayer *page2 = [GLPageLayer new];
-   [page2 addHeaderText:@"CREDITS"];
-   [page2 addNewLines:1];
-   [page2 addBodyText:@"This game was created by:"];
-   [page2 addNewLines:1];
-   [page2 addBodyText:@"- Leif A. (Developer)"];
-   [page2 addBodyText:@"- Gregory K. (Developer)"];
-   [page2 addBodyText:@"- Nico G. (Sound FX + Creative Work)"];
-   [page2 addBodyText:@"- John Conway (Algorithm)"];
-   [page2 addNewLines:1];
-   [page2 addBodyText:@"If you hate this game and think that the algorithm sucks, please contact John Conway.  Thank you for trying out LiFE!"];
-
-   GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[page1, page2]];
+   GLInformativePage *aboutPage = [GLInformativePage aboutPage];
+   GLInformativePage *creditsPage = [GLInformativePage creditsPage];
+   GLPageCollection *pageCollection = [GLPageCollection pageCollectionWithPages:@[aboutPage, creditsPage]];
    _aboutLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
                                                                         _settingsLayer.size.height - 30)
                                                  anchorPoint:_backgroundLayer.anchorPoint
