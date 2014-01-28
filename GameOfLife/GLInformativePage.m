@@ -26,7 +26,7 @@
 
 + (GLInformativePage *)creditsPage
 {
-   GLPageLayer *creditsPage = [GLPageLayer new];
+   GLInformativePage *creditsPage = [GLInformativePage new];
    [creditsPage addHeaderText:@"CREDITS"];
    [creditsPage addNewLines:1];
    [creditsPage addBodyText:@"This game was created by:"];
