@@ -39,7 +39,8 @@
        anchorPoint:(CGPoint)anchorPoint
     pageCollection:(GLPageCollection *)pageCollection
 {
-   if (self = [super initWithSize:size anchorPoint:anchorPoint])
+   if (self = [super initWithSize:size
+                      anchorPoint:anchorPoint])
    {
       _pageCollection = (pageCollection)? pageCollection : [GLPageCollection new];
       _currentPage = _pageCollection.firstPage;
@@ -55,14 +56,12 @@
    return self;
 }
 
-- (id)initWithSize:(CGSize)size pageCollection:(GLPageCollection *)pageCollection
+- (id)initWithSize:(CGSize)size
+    pageCollection:(GLPageCollection *)pageCollection
 {
-   if (self = [self initWithSize:size
-                     anchorPoint:CGPointMake(0, 1)
-                  pageCollection:pageCollection])
-   {
-   }
-   return self;
+   return [self initWithSize:size
+                 anchorPoint:CGPointMake(0, 1)
+              pageCollection:pageCollection];
 }
 
 #pragma mark - Setup Methods
@@ -83,8 +82,7 @@
       [_pageContainter runAction:nextPageAnimation
                       completion:^
       {
-         [self setButtonTitlesAndBlocksForCurrentPage];
-         _previousPage.hidden = YES;
+         [self postPageMovementWork];
       }];
       _previousPage = _currentPage;
       _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] + 1)];
@@ -100,8 +98,7 @@
       [_pageContainter runAction:previousPageAnimation
                       completion:^
        {
-          [self setButtonTitlesAndBlocksForCurrentPage];
-          _previousPage.hidden = YES;
+          [self postPageMovementWork];
        }];
       _previousPage = _currentPage;
       _currentPage = [_pageCollection pageAtIndex:([_pageCollection indexOfPage:_currentPage] - 1)];
@@ -112,40 +109,26 @@
    ^(NSTimeInterval interval)
    {
       if (_preDismissalAction)
-      {
-         [self runAction:_preDismissalAction completion:^
+         [self runAction:_preDismissalAction
+              completion:^
          {
-            [self resetPagePositionsAndCurrentPage];
-             if (_primaryButtonCompletionBlock)
-                _primaryButtonCompletionBlock();
+            [self resetPagePositionsAndExecuteBlock:_primaryButtonCompletionBlock];
          }];
-      }
       else
-      {
-         [self resetPagePositionsAndCurrentPage];
-          if (_primaryButtonCompletionBlock)
-             _primaryButtonCompletionBlock();
-      }
+         [self resetPagePositionsAndExecuteBlock:_primaryButtonCompletionBlock];
    };
 
    ActionBlock secondaryButtonCompletionBlock =
    ^(NSTimeInterval interval)
    {
       if (_preDismissalAction)
-      {
-         [self runAction:_preDismissalAction completion:^
+         [self runAction:_preDismissalAction
+              completion:^
           {
-             [self resetPagePositionsAndCurrentPage];
-              if (_secondaryButtonCompletionBlock)
-                 _secondaryButtonCompletionBlock();
+             [self resetPagePositionsAndExecuteBlock:_secondaryButtonCompletionBlock];
           }];
-      }
       else
-      {
-         [self resetPagePositionsAndCurrentPage];
-         if (_secondaryButtonCompletionBlock)
-            _secondaryButtonCompletionBlock();
-      }
+         [self resetPagePositionsAndExecuteBlock:_secondaryButtonCompletionBlock];
    };
 
    _nextPageActionBlock = nextPageBlock;
@@ -210,7 +193,7 @@
 #pragma mark - Page Setup and Helper Methods
 - (void)setPageSizesAndPositions
 {
-   NSAssert(self.size.height - PAGE_NAVIGATION_AREA_HEIGHT > 0,
+   NSAssert(self.size.height - PAGE_NAVIGATION_AREA_HEIGHT > _primaryButton.controlHeight,
             @"Page collection layer size not large enough for navigation buttons");
 
    CGPoint nextPagePosition = CGPointZero;
@@ -234,18 +217,24 @@
    [self addChild:_pageContainter];
 }
 
-- (void)removeFromParent
-{
-   [self resetPagePositionsAndCurrentPage];
-   [super removeFromParent];
-}
-
 - (void)resetPagePositionsAndCurrentPage
 {
    self.hidden = YES;
    _pageContainter.position = CGPointZero;
    _currentPage = _pageCollection.firstPage;
    [self setButtonTitlesAndBlocksForCurrentPage];
+}
+
+- (void)postPageMovementWork
+{
+   [self setButtonTitlesAndBlocksForCurrentPage];
+   _previousPage.hidden = YES;
+}
+
+- (void)resetPagePositionsAndExecuteBlock:(PageCollectionLayerCompletionBlock)block
+{
+   [self resetPagePositionsAndCurrentPage];
+   if (block) block();
 }
 
 - (void)addPagesToContainer
@@ -255,4 +244,12 @@
 
    _pageCollection.firstPage.hidden = NO;
 }
+
+#pragma mark - Overridden Methods
+- (void)removeFromParent
+{
+   [self resetPagePositionsAndCurrentPage];
+   [super removeFromParent];
+}
+
 @end

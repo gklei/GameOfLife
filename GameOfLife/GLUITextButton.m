@@ -112,4 +112,9 @@
 
    [super handleTouchEnded:touch];
 }
+
+- (NSUInteger)controlHeight
+{
+   return (NSUInteger)_buttonRing.size.height + 8;
+}
 @end
