@@ -73,12 +73,6 @@
 
 @implementation GLGeneralHud
 
-- (void)observeSoundFxChanges
-{
-   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
-   [hudManager addObserver:self forKeyPath:@"SoundFX"];
-}
-
 - (id)init
 {
    if (self = [super init])
@@ -106,6 +100,13 @@
    return self;
 }
 
+#pragma mark Setup Methods
+- (void)observeSoundFxChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
+
 - (void)setupSoundFX
 {
    _expandSettingsSound = [SKAction playSoundFileNamed:@"settings.expand.2.wav" waitForCompletion:NO];
@@ -119,33 +120,6 @@
    [super setupSoundFX];
 }
 
-- (NSArray *)coreFunctionButtons
-{
-   return _coreFunctionButtons;
-}
-
-- (BOOL)usingRetinaDisplay
-{
-   return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-           ([UIScreen mainScreen].scale == 2.0));
-}
-
-- (GLUIActionButton *)buttonWithFilename:(NSString *)fileName
-                              buttonName:(NSString *)buttonName
-{
-   if ([self usingRetinaDisplay])
-      fileName = [fileName stringByAppendingString:@"@2x"];
-
-   GLUIActionButton *button = [GLUIActionButton spriteNodeWithImageNamed:fileName];
-   button.color = [SKColor whiteColor];
-   button.colorBlendFactor = 1.0;
-   [button setScale:.85];
-   button.name = buttonName;
-
-   return button;
-}
-
-#pragma mark Setup Methods
 - (void)setupBackgroundWithSize:(CGSize)size
 {
    _backgroundLayer = [SKSpriteNode spriteNodeWithColor:[SKColor clearColor]
@@ -342,16 +316,6 @@
    _aboutButton.actionBlock = aboutActionBlock;
    [_backgroundLayer addChild:_aboutButton];
 }
-- (void)moveSettingsBackIn
-{
-   SKAction *moveSettingsLeft = [SKAction moveBy:CGVectorMake(-_settingsLayer.size.width, 0)
-                                        duration:.2];
-   moveSettingsLeft.timingMode = SKActionTimingEaseInEaseOut;
-   [_aboutLayer removeFromParent];
-   [_settingsLayer runAction:moveSettingsLeft];
-   _aboutButton.alpha = 1.0;
-   _aboutButton.hidden = NO;
-}
 
 - (void)setupAboutLayer
 {
@@ -378,6 +342,50 @@
    _aboutLayer.preDismissalAction = moveAboutLayerOut;
 }
 
+#pragma mark - Helper Methods
+- (NSArray *)coreFunctionButtons
+{
+   return _coreFunctionButtons;
+}
+
+- (BOOL)usingRetinaDisplay
+{
+   return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+           ([UIScreen mainScreen].scale == 2.0));
+}
+
+- (GLUIActionButton *)buttonWithFilename:(NSString *)fileName
+                              buttonName:(NSString *)buttonName
+{
+   if ([self usingRetinaDisplay])
+      fileName = [fileName stringByAppendingString:@"@2x"];
+
+   GLUIActionButton *button = [GLUIActionButton spriteNodeWithImageNamed:fileName];
+   button.color = [SKColor whiteColor];
+   button.colorBlendFactor = 1.0;
+   [button setScale:.85];
+   button.name = buttonName;
+
+   return button;
+}
+
+- (void)moveSettingsBackIn
+{
+   SKAction *moveSettingsLeft = [SKAction moveBy:CGVectorMake(-_settingsLayer.size.width, 0)
+                                        duration:.2];
+   moveSettingsLeft.timingMode = SKActionTimingEaseInEaseOut;
+   [_aboutLayer removeFromParent];
+   [_settingsLayer runAction:moveSettingsLeft];
+   _aboutButton.alpha = 1.0;
+   _aboutButton.hidden = NO;
+}
+
+- (void)setCoreFunctionButtonsHidden:(BOOL)hidden
+{
+   for (GLUIActionButton *button in _coreFunctionButtons)
+      button.hidden = hidden;
+}
+
 - (void)updateStartStopButtonForState:(GL_GAME_STATE)state
                             withSound:(BOOL)sound
 {
@@ -396,12 +404,6 @@
       default:
          break;
    }
-}
-
-- (void)setCoreFunctionButtonsHidden:(BOOL)hidden
-{
-   for (GLUIActionButton *button in _coreFunctionButtons)
-      button.hidden = hidden;
 }
 
 #pragma mark HUD Toggling Methods
@@ -697,6 +699,7 @@
    _expandCollapseButton.hidden = NO;
 }
 
+#pragma mark - GLSettingsObserver Method
 - (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
 {
    if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
