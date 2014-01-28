@@ -13,6 +13,7 @@
 #import "GLUITextButton.h"
 
 #define PAGE_NAVIGATION_AREA_HEIGHT 50
+#define PAGE_HORIZONTAL_OFFSET CGRectGetWidth([UIScreen mainScreen].bounds)
 
 @interface GLPageCollectionLayer()
 {
@@ -28,8 +29,6 @@
 
    ActionBlock _primaryButtonPreCompletionBlock;
    ActionBlock _secondaryButtonPreCompletionBlock;
-
-   CGFloat _pageHorizontalPadding;
 }
 @end
 
@@ -69,10 +68,8 @@
 #pragma mark - Setup Methods
 - (void)setupVariables
 {
-   _pageHorizontalPadding = CGRectGetWidth([UIScreen mainScreen].bounds);
-
-   SKAction *nextPageAnimation = [SKAction moveByX:-_pageHorizontalPadding y:0 duration:.2];
-   SKAction *previousPageAnimation = [SKAction moveByX:_pageHorizontalPadding y:0 duration:.2];
+   SKAction *nextPageAnimation = [SKAction moveByX:-PAGE_HORIZONTAL_OFFSET y:0 duration:.2];
+   SKAction *previousPageAnimation = [SKAction moveByX:PAGE_HORIZONTAL_OFFSET y:0 duration:.2];
 
    nextPageAnimation.timingMode = SKActionTimingEaseInEaseOut;
    previousPageAnimation.timingMode = SKActionTimingEaseInEaseOut;
@@ -118,7 +115,6 @@
       {
          [self runAction:_preDismissalAction completion:^
          {
-
             [self resetPagePositionsAndCurrentPage];
              if (_primaryButtonCompletionBlock)
                 _primaryButtonCompletionBlock();
@@ -224,7 +220,7 @@
                              self.size.height - PAGE_NAVIGATION_AREA_HEIGHT);
 
       page.position = nextPagePosition;
-      nextPagePosition = CGPointMake(page.position.x + _pageHorizontalPadding,
+      nextPagePosition = CGPointMake(page.position.x + PAGE_HORIZONTAL_OFFSET,
                                      page.position.y);
    }
 }
@@ -236,6 +232,12 @@
                                                                   _pageCollection.firstPage.size.height)
                                            anchorPoint:self.anchorPoint];
    [self addChild:_pageContainter];
+}
+
+- (void)removeFromParent
+{
+   [self resetPagePositionsAndCurrentPage];
+   [super removeFromParent];
 }
 
 - (void)resetPagePositionsAndCurrentPage
