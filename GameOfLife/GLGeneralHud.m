@@ -54,7 +54,7 @@
    GLUIActionButton *_cameraButton;
    GLUIActionButton *_settingsButton;
 
-   GLUIActionButton *_aboutButton;
+   GLUIActionButton *_questionMarkButton;
 
    BOOL _shouldPlaySound;
    SKAction *_expandSettingsSound;
@@ -66,7 +66,8 @@
    SKAction *_aboutButtonSound;
 
    SKEmitterNode *_particleGenerator;
-   GLPageCollectionLayer *_aboutLayer;
+
+   GLPageCollectionLayer *_informationLayer;
    BOOL _aboutLayerIsAnimatingIn;
 }
 @end
@@ -240,10 +241,10 @@
    {
       if (!self.isAnimating)
       {
-         if (!_aboutLayer.hidden)
+         if (!_informationLayer.hidden)
          {
-            _aboutLayer.position = CGPointMake(_backgroundLayer.size.width,
-                                               _aboutLayer.position.y);
+            _informationLayer.position = CGPointMake(_backgroundLayer.size.width,
+                                               _informationLayer.position.y);
             _settingsLayer.position = CGPointZero;
          }
          [self toggleSettingsWithCompletion:nil];
@@ -269,14 +270,14 @@
 
 - (void)setupAboutButton
 {
-   _aboutButton = [GLUIActionButton spriteNodeWithImageNamed:@"question.png"];
+   _questionMarkButton = [GLUIActionButton spriteNodeWithImageNamed:@"question.png"];
 
-   _aboutButton.color = [SKColor whiteColor];
-   _aboutButton.colorBlendFactor = 1.0;
-   [_aboutButton setScale:.70];
+   _questionMarkButton.color = [SKColor whiteColor];
+   _questionMarkButton.colorBlendFactor = 1.0;
+   [_questionMarkButton setScale:.70];
 
-   _aboutButton.position = CGPointMake(22, -30);
-   _aboutButton.hidden = YES;
+   _questionMarkButton.position = CGPointMake(22, -30);
+   _questionMarkButton.hidden = YES;
 
    ActionBlock aboutActionBlock =
    ^(NSTimeInterval interval)
@@ -292,29 +293,29 @@
          [_settingsLayer runAction:moveSettingsRight
                         completion:^
          {
-            [_backgroundLayer addChild:_aboutLayer];
-            _aboutLayer.hidden = NO;
+            [_backgroundLayer addChild:_informationLayer];
+            _informationLayer.hidden = NO;
 
             SKAction *moveAboutLayerIn = [SKAction moveToX:(_backgroundLayer.size.width -
-                                                            _aboutLayer.size.width) * .5
+                                                            _informationLayer.size.width) * .5
                                                   duration:.2];
             SKAction *fadeOut = [SKAction fadeOutWithDuration:.2];
             
             moveAboutLayerIn.timingMode = SKActionTimingEaseInEaseOut;
             fadeOut.timingMode = SKActionTimingEaseInEaseOut;
 
-            [_aboutLayer runAction:moveAboutLayerIn];
-            [_aboutButton runAction:fadeOut
+            [_informationLayer runAction:moveAboutLayerIn];
+            [_questionMarkButton runAction:fadeOut
                          completion:^
             {
-               _aboutButton.hidden = YES;
+               _questionMarkButton.hidden = YES;
                _aboutLayerIsAnimatingIn = NO;
             }];
          }];
       }
    };
-   _aboutButton.actionBlock = aboutActionBlock;
-   [_backgroundLayer addChild:_aboutButton];
+   _questionMarkButton.actionBlock = aboutActionBlock;
+   [_backgroundLayer addChild:_questionMarkButton];
 }
 
 - (void)setupAboutLayer
@@ -323,23 +324,23 @@
       [GLPageCollection pageCollectionWithPages:@[[GLInformativePage aboutPage],
                                                   [GLInformativePage creditsPage]]];
 
-   _aboutLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
+   _informationLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,
                                                                         _settingsLayer.size.height - 30)
                                                  anchorPoint:_backgroundLayer.anchorPoint
                                               pageCollection:pageCollection];
 
-   _aboutLayer.position = CGPointMake(_backgroundLayer.size.width,
+   _informationLayer.position = CGPointMake(_backgroundLayer.size.width,
                                       -HEADING_FONT_SIZE*.5);
 
    PageCollectionLayerCompletionBlock primaryCompletionBlock = ^{[self moveSettingsBackIn];};
-   _aboutLayer.primaryButtonCompletionBlock = primaryCompletionBlock;
+   _informationLayer.primaryButtonCompletionBlock = primaryCompletionBlock;
 
    PageCollectionLayerCompletionBlock secondaryCompletionBlock = ^{[self moveSettingsBackIn];};
-   _aboutLayer.secondaryButtonCompletionBlock = secondaryCompletionBlock;
+   _informationLayer.secondaryButtonCompletionBlock = secondaryCompletionBlock;
 
    SKAction *moveAboutLayerOut = [SKAction moveToX:_backgroundLayer.size.width duration:.2];
    moveAboutLayerOut.timingMode = SKActionTimingEaseInEaseOut;
-   _aboutLayer.preDismissalAction = moveAboutLayerOut;
+   _informationLayer.preDismissalAction = moveAboutLayerOut;
 }
 
 #pragma mark - Helper Methods
@@ -374,10 +375,10 @@
    SKAction *moveSettingsLeft = [SKAction moveBy:CGVectorMake(-_settingsLayer.size.width, 0)
                                         duration:.2];
    moveSettingsLeft.timingMode = SKActionTimingEaseInEaseOut;
-   [_aboutLayer removeFromParent];
+   [_informationLayer removeFromParent];
    [_settingsLayer runAction:moveSettingsLeft];
-   _aboutButton.alpha = 1.0;
-   _aboutButton.hidden = NO;
+   _questionMarkButton.alpha = 1.0;
+   _questionMarkButton.hidden = NO;
 }
 
 - (void)setCoreFunctionButtonsHidden:(BOOL)hidden
@@ -448,12 +449,12 @@
 
 - (void)collapseSettingsWithCompletionBlock:(void (^)())completionBlock
 {
-   _aboutLayer.hidden = YES;
+   _informationLayer.hidden = YES;
    _settingsButton.persistGlow = NO;
    self.animating = YES;
    _settingsAreExpanded = NO;
    _settingsLayer.hidden = YES;
-   _aboutButton.hidden = YES;
+   _questionMarkButton.hidden = YES;
 
    SKAction *collapse = [SKAction moveByX:0
                                         y:-(_settingsHeight)
@@ -499,8 +500,8 @@
        {
           _settingsButton.color = [SKColor whiteColor];
           _settingsLayer.hidden = YES;
-          _aboutButton.hidden = YES;
-          if (_aboutLayer.parent) [_aboutLayer removeFromParent];
+          _questionMarkButton.hidden = YES;
+          if (_informationLayer.parent) [_informationLayer removeFromParent];
           if (completion)
              completion();
        }];
@@ -510,8 +511,8 @@
       _settingsLayer.position = CGPointZero;
       [self expandSettingsWithCompletionBlock:^
        {
-          _aboutButton.hidden = NO;
-          _aboutButton.alpha = 1.0;
+          _questionMarkButton.hidden = NO;
+          _questionMarkButton.alpha = 1.0;
           if (_settingsAreExpanded)
           {
              _settingsLayer.hidden = NO;
@@ -658,9 +659,9 @@
       [_settingsButton loseFocus];
       [self collapseSettingsWithCompletionBlock:^
       {
-         if (_aboutLayer.parent) [_aboutLayer removeFromParent];
-         _aboutLayer.position = CGPointMake(_backgroundLayer.size.width,
-                                            _aboutLayer.position.y);
+         if (_informationLayer.parent) [_informationLayer removeFromParent];
+         _informationLayer.position = CGPointMake(_backgroundLayer.size.width,
+                                            _informationLayer.position.y);
          _settingsLayer.position = CGPointZero;
          [self collapseBottomBar];
       }];
