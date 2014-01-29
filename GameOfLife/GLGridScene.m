@@ -306,11 +306,11 @@ typedef void (^PhotoWorkBlock)();
       _gridImagePairs = @[@"",                   @"tile.square.png",
                           @"",                   @"tile.ring.png",
                           @"",                   @"tile.circle.png",
-                          @"tile.smiley.png",    @"tile.frowny.png",
-                          @"",                   @"tile.square3d.png",
-                          @"",                   @"tile.ring3d.png",
-                          @"",                   @"tile.cylinder.png",
-                          @"",                   @"tile.buldge.png"];
+                          @"",                   @"tile.heart.png",
+                          @"",                   @"tile.blam.png",
+                          @"",                   @"tile.diamonds.png",
+                          @"",                   @"tile.stripes.png",
+                          @"",                   @"tile.amoeba.png"];
       
       _highScore = [self getHighScore];
 
