@@ -537,8 +537,6 @@
 		8ECA898B182371AE009D906F /* GameOfLife */ = {
 			isa = PBXGroup;
 			children = (
-				8E3BAB1A1897453000A56812 /* GLInformativePage.h */,
-				8E3BAB1B1897453000A56812 /* GLInformativePage.m */,
 				8ECA8994182371AE009D906F /* GLAppDelegate.h */,
 				8ECA8995182371AE009D906F /* GLAppDelegate.m */,
 				8E2FA2AC1869E3ED0021A471 /* GLColorGrid.h */,
@@ -551,6 +549,10 @@
 				8E75B04D18490C0A000AEEB8 /* GLGrid.m */,
 				8E99B29D182BFE7600C7AEDB /* GLGridScene.h */,
 				8E99B29E182BFE7600C7AEDB /* GLGridScene.m */,
+				8E3BAB1A1897453000A56812 /* GLInformativePage.h */,
+				8E3BAB1B1897453000A56812 /* GLInformativePage.m */,
+				8E3BAB1D18987CC100A56812 /* GLScannerAnimation.h */,
+				8E3BAB1E18987CC100A56812 /* GLScannerAnimation.m */,
 				8E99B2A0182C013D00C7AEDB /* GLTileNode.h */,
 				8E99B2A1182C013D00C7AEDB /* GLTileNode.m */,
 				8EAA38AC185D787A00DA5CED /* GLTouchHandler.h */,
@@ -568,8 +570,6 @@
 				8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */,
 				8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */,
 				8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */,
-				8E3BAB1D18987CC100A56812 /* GLScannerAnimation.h */,
-				8E3BAB1E18987CC100A56812 /* GLScannerAnimation.m */,
 			);
 			path = GameOfLife;
 			sourceTree = "<group>";

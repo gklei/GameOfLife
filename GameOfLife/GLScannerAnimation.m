@@ -7,7 +7,7 @@
 //
 
 #import "GLScannerAnimation.h"
-#import <SpriteKit/SpriteKit.h>
+#import "UIColor+Crayola.h"
 
 @interface GLScannerAnimation()
 {
@@ -80,12 +80,13 @@
    _scannerBeam = [SKSpriteNode spriteNodeWithImageNamed:@"slider-middle"];
    _scannerBeam.xScale = CGRectGetWidth([UIScreen mainScreen].bounds) * 2.0;
    _scannerBeam.colorBlendFactor = 1.0;
-   _scannerBeam.alpha = .5;
-   _scannerBeam.color = [SKColor whiteColor];
+   _scannerBeam.alpha = .8;
+   _scannerBeam.color = [SKColor crayolaSizzlingRedColor];
    _scannerBeam.position = CGPointMake(self.size.width * .5,
                                        self.size.height);
 }
 
+#pragma mark - Instance Methods
 - (void)runAnimationOnParent:(SKNode *)parent
 {
    [parent addChild:self];
