@@ -148,7 +148,7 @@ typedef void (^PhotoWorkBlock)();
    
    HUDPickerItemDescription * hudItem = [[HUDPickerItemDescription alloc] init];
    hudItem.keyPath = @"GridImageIndex";
-   hudItem.label = @"IMAGES";
+   hudItem.label = @"TILES";
    hudItem.type = HIT_PICKER;
    hudItem.valueType = HVT_ULONG;
    hudItem.imagePairs = imagePairs;
