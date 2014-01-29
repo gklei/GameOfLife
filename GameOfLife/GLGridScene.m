@@ -9,10 +9,11 @@
 #import "GLGridScene.h"
 
 #import "GLAlertLayer.h"
-#import "GLGrid.h"
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
+#import "GLGrid.h"
 #import "GLUIButton.h"
+#import "GLScannerAnimation.h"
 #import "GLSettingsLayer.h"
 #import "GLTileNode.h"
 #import "GLViewController.h"
@@ -741,7 +742,13 @@ typedef void (^PhotoWorkBlock)();
 - (void)scanImageForGameBoard:(UIImage *)image
 {
    if (_grid && image)
+   {
       [_grid scanImageForGameBoard:image];
+
+//      GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] init];
+//      scannerAnimation.duration = 3;
+//      [scannerAnimation runAnimationOnParent:self];
+   }
 }
 
 - (void)beginCameraImportAtPosition:(CGPoint)position
