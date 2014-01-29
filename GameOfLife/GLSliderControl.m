@@ -159,9 +159,9 @@
 - (void)setupHitBox
 {
    CGRect sliderRect = [self largestPossibleAccumulatedFrame];
-   self.hitBox.size = CGSizeMake(_sliderLength - _knob.size.width, _knob.size.height + 30);
+   self.hitBox.size = CGSizeMake(_sliderLength, _knob.size.height + 30);
    self.hitBox.anchorPoint = CGPointMake(0, 0.5);
-   self.hitBox.position = CGPointMake(sliderRect.origin.x + _knob.size.width * 0.5, _knob.position.y);
+   self.hitBox.position = CGPointMake(sliderRect.origin.x, _knob.position.y);
    [self addChild:self.hitBox];
 }
 
@@ -224,6 +224,24 @@
 
 - (void)moveKnobByDeltaX:(float)deltaX
 {
+   // test and handle the edge cases
+   if (_knob.position.x + deltaX <= _leftXBound)
+   {
+      [self updateKnobPositionX:_leftXBound];
+      _leftTrack.xScale = 0;
+      _rightTrack.xScale = _rightXBound * FULLY_EXTENDED_TRACK_SCALE_FACTOR;
+      return;
+   }
+   
+   if (_knob.position.x + deltaX >= _rightXBound)
+   {
+      [self updateKnobPositionX:_rightXBound];
+      _leftTrack.xScale = fabs(_leftXBound * FULLY_EXTENDED_TRACK_SCALE_FACTOR);
+      _rightTrack.xScale = 0;
+      return;
+   }
+   
+   // handle all other cases
    float scaleAddition = deltaX * .25;
    if (_leftTrack.xScale + scaleAddition > 0)
       _leftTrack.xScale += scaleAddition;
@@ -255,23 +273,6 @@
    float convertedX = [touch locationInNode:self].x;
    float convertedPreviousX = [touch previousLocationInNode:self].x;
    float deltaX = convertedX - convertedPreviousX;
-
-   if (_knob.position.x + deltaX <= _leftXBound)
-   {
-      [self updateKnobPositionX:_leftXBound];
-      _leftTrack.xScale = 0;
-      _rightTrack.xScale = _rightXBound * FULLY_EXTENDED_TRACK_SCALE_FACTOR;
-      return;
-   }
-
-   if (_knob.position.x + deltaX >= _rightXBound)
-   {
-      [self updateKnobPositionX:_rightXBound];
-      _leftTrack.xScale = fabs(_leftXBound * FULLY_EXTENDED_TRACK_SCALE_FACTOR);
-      _rightTrack.xScale = 0;
-      return;
-   }
-
    [self moveKnobByDeltaX:deltaX];
 
 // Currently this does not need to be called
