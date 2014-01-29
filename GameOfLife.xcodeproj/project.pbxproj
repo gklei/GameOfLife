@@ -36,6 +36,7 @@
 		8E3BAB161893971F00A56812 /* GLPageLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB151893971F00A56812 /* GLPageLayer.m */; };
 		8E3BAB191894CC7D00A56812 /* GLPageCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB181894CC7D00A56812 /* GLPageCollection.m */; };
 		8E3BAB1C1897453000A56812 /* GLInformativePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB1B1897453000A56812 /* GLInformativePage.m */; };
+		8E3BAB1F18987CC100A56812 /* GLScannerAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E3BAB1E18987CC100A56812 /* GLScannerAnimation.m */; };
 		8E5A5554187D005800483158 /* tile.leaf.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E5A5553187D005800483158 /* tile.leaf.png */; };
 		8E67648A1886544800084589 /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E6764881886544800084589 /* lock.png */; };
 		8E67648B1886544800084589 /* unlock.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E6764891886544800084589 /* unlock.png */; };
@@ -204,6 +205,8 @@
 		8E3BAB181894CC7D00A56812 /* GLPageCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLPageCollection.m; sourceTree = "<group>"; };
 		8E3BAB1A1897453000A56812 /* GLInformativePage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLInformativePage.h; sourceTree = "<group>"; };
 		8E3BAB1B1897453000A56812 /* GLInformativePage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLInformativePage.m; sourceTree = "<group>"; };
+		8E3BAB1D18987CC100A56812 /* GLScannerAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLScannerAnimation.h; sourceTree = "<group>"; };
+		8E3BAB1E18987CC100A56812 /* GLScannerAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLScannerAnimation.m; sourceTree = "<group>"; };
 		8E5A5553187D005800483158 /* tile.leaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.leaf.png; path = Images/tile.leaf.png; sourceTree = SOURCE_ROOT; };
 		8E6764881886544800084589 /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lock.png; path = Images/lock.png; sourceTree = SOURCE_ROOT; };
 		8E6764891886544800084589 /* unlock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = unlock.png; path = Images/unlock.png; sourceTree = SOURCE_ROOT; };
@@ -550,6 +553,8 @@
 				8E99B2A4182C14E300C7AEDB /* UIColor+Crayola.m */,
 				8EB738C918709E5300BB58C0 /* UIColor+CrossFade.h */,
 				8EB738CA18709E5300BB58C0 /* UIColor+CrossFade.m */,
+				8E3BAB1D18987CC100A56812 /* GLScannerAnimation.h */,
+				8E3BAB1E18987CC100A56812 /* GLScannerAnimation.m */,
 			);
 			path = GameOfLife;
 			sourceTree = "<group>";
@@ -853,6 +858,7 @@
 				8EB738CE1874B56600BB58C0 /* GLColorPaletteManager.m in Sources */,
 				8E676491188654F700084589 /* GLLockControl.m in Sources */,
 				8E75B031184169BF000AEEB8 /* GLColorHud.m in Sources */,
+				8E3BAB1F18987CC100A56812 /* GLScannerAnimation.m in Sources */,
 				8E3BAB161893971F00A56812 /* GLPageLayer.m in Sources */,
 				8E3BAB13189389C300A56812 /* GLUITextButton.m in Sources */,
 				8E2FA28A186567B50021A471 /* GLUIActionButton.m in Sources */,
