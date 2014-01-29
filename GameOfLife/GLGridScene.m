@@ -45,8 +45,9 @@ typedef void (^PhotoWorkBlock)();
    BOOL _autoShowHideHudForStartStop;
    BOOL _generalHudShouldExpand;
    BOOL _gameFinished;
-   
    BOOL _shouldPlaySound;
+   BOOL _dismissedAlert;
+   
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;
    SKAction *_flashSound;
@@ -850,12 +851,20 @@ typedef void (^PhotoWorkBlock)();
    }
 
    for (SKNode *node in [self nodesAtPoint:_locationOfFirstTouch])
+   {
       if ([node.name isEqualToString:@"ui_button_hit_box"] && !node.parent.parent.hidden)
       {
          _focusedButton = (GLUIButton *)node.parent.parent;
          [_focusedButton handleTouchBegan:touch];
          return;
       }
+      else if ([node isKindOfClass:[GLAlertLayer class]])
+      {
+         [node removeFromParent];
+         _dismissedAlert = YES;
+         return;
+      }
+   }
 
    if (!_running)
    {
@@ -874,7 +883,8 @@ typedef void (^PhotoWorkBlock)();
        ![_generalHudLayer containsPoint:_locationOfFirstTouch] &&
        ![_colorHudLayer containsPoint:_locationOfFirstTouch])
    {
-      [self toggleLivingForTileAtTouch:touch withSoundFX:_fingerUpSoundFX];
+      if (_dismissedAlert == NO)
+         [self toggleLivingForTileAtTouch:touch withSoundFX:_fingerUpSoundFX];
    }
 }
 
@@ -896,6 +906,7 @@ typedef void (^PhotoWorkBlock)();
 
    [_currentTileBeingTouched handleTouchEnded:touch];
    _currentTileBeingTouched = nil;
+   _dismissedAlert = NO;
 }
 
 #pragma mark GLHud Delegate Methods
