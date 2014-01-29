@@ -538,6 +538,7 @@ typedef void (^PhotoWorkBlock)();
       [self removeAllAlertsForcefully:NO];
    
    [_grid clearGrid];
+   [self runScannerAnimation];
 }
 
 - (void)restoreButtonPressed:(NSTimeInterval)holdTime
@@ -655,6 +656,13 @@ typedef void (^PhotoWorkBlock)();
     }];
 }
 
+- (void)runScannerAnimation
+{
+   GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] init];
+   scannerAnimation.duration = 3;
+   [scannerAnimation runAnimationOnParent:self];
+}
+
 - (void)doScreenShot:(CGPoint)buttonPosition
 {
    if (_shouldPlaySound) [self runAction:_flashSound];
@@ -745,10 +753,6 @@ typedef void (^PhotoWorkBlock)();
    if (_grid && image)
    {
       [_grid scanImageForGameBoard:image];
-
-//      GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] init];
-//      scannerAnimation.duration = 3;
-//      [scannerAnimation runAnimationOnParent:self];
    }
 }
 
