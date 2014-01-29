@@ -38,7 +38,7 @@
 
    float _sliderPosition;
    
-   int _sliderLength;
+   int   _sliderLength;
    float _knobSlidingRange;
    float _knobOffsetInAccumulatedFrame;
 
@@ -71,8 +71,8 @@
       [self setupLeftTrack];
       [self setupRightTrack];
       [self setupKnob];
-      [self setupHitBox];
       [self setupVariables];
+      [self setupHitBox];
       [self setupSoundFX];
       [self observeSoundFxChanges];
    }
@@ -124,7 +124,7 @@
 {
    _leftTrack = [SKSpriteNode spriteNodeWithImageNamed:@"slider-end-left.png"];
    _leftTrack.anchorPoint = CGPointMake(0, .5);
-   _leftTrack.position = CGPointMake((_sliderLength) ? -_sliderLength / 2.0 : -DEFAULT_LENGTH / 2.0, 0);
+   _leftTrack.position = CGPointMake((_sliderLength) ? -_sliderLength * 0.5 : -DEFAULT_LENGTH * 0.5, 0);
 
    _leftTrack.centerRect = LEFT_TRACK_CENTER_RECT;
    _leftTrack.xScale = fabs(_leftTrack.position.x * HALF_EXTENDED_TRACK_SCALE_FACTOR);
@@ -138,7 +138,7 @@
    _rightTrack.colorBlendFactor = 1.0;
    _rightTrack.color = [SKColor crayolaCadetBlueColor];
    _rightTrack.anchorPoint = CGPointMake(1, .5);
-   _rightTrack.position = CGPointMake((_sliderLength)? _sliderLength / 2.0 : DEFAULT_LENGTH / 2.0, 0);
+   _rightTrack.position = CGPointMake((_sliderLength)? _sliderLength * 0.5 : DEFAULT_LENGTH * 0.5, 0);
 
    _rightTrack.centerRect = RIGHT_TRACK_CENTER_RECT;
    _rightTrack.xScale = _rightTrack.position.x * HALF_EXTENDED_TRACK_SCALE_FACTOR;
@@ -158,8 +158,10 @@
 
 - (void)setupHitBox
 {
-   self.hitBox.size = CGSizeMake(_knob.size.width + 30, _knob.size.height + 30);
-   self.hitBox.position = _knob.position;
+   CGRect sliderRect = [self largestPossibleAccumulatedFrame];
+   self.hitBox.size = CGSizeMake(_sliderLength - _knob.size.width, _knob.size.height + 30);
+   self.hitBox.anchorPoint = CGPointMake(0, 0.5);
+   self.hitBox.position = CGPointMake(sliderRect.origin.x + _knob.size.width * 0.5, _knob.position.y);
    [self addChild:self.hitBox];
 }
 
@@ -167,14 +169,14 @@
 {
    _leftXBound = _leftTrack.position.x + CGRectGetWidth(_knob.frame) / 2;
    _rightXBound = _rightTrack.position.x - CGRectGetWidth(_knob.frame) / 2;
-
+   
    _knobSlidingRange = CGRectGetWidth(self.calculateAccumulatedFrame) - CGRectGetWidth(_knob.frame);
    _knobOffsetInAccumulatedFrame = CGRectGetWidth(self.calculateAccumulatedFrame) / 2 -
                                    CGRectGetWidth(_knob.frame) / 2;
-
+   
    _grow = [SKAction scaleTo:SELECTED_KNOB_SCALE duration:.1];
    _grow.timingMode = SKActionTimingEaseInEaseOut;
-
+   
    _shrink = [SKAction scaleTo:DEFAULT_KNOB_SCALE duration:.1];
    _shrink.timingMode = SKActionTimingEaseInEaseOut;
 }
@@ -214,7 +216,6 @@
 - (void)updateKnobPositionX:(float)x
 {
    _knob.position = CGPointMake(x, _knob.position.y);
-   self.hitBox.position = _knob.position;
    _sliderPosition = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
    
    [self.delegate controlValueChangedForKey:_preferenceKey];
@@ -241,6 +242,11 @@
 {
    if (_shouldPlaySound) [self runAction:_pressReleaseSoundFX];
    [_knob runAction:_grow];
+   
+   CGPoint position = [touch locationInNode:self];
+   if (_knob.position.x != position.x)
+      [self moveKnobByDeltaX:position.x - _knob.position.x];
+   
    [super handleTouchBegan:touch];
 }
 
@@ -275,7 +281,6 @@
 - (void)handleTouchEnded:(UITouch *)touch
 {
    if (_shouldPlaySound) [self runAction:_pressReleaseSoundFX];
-   self.hitBox.position = _knob.position;
 
    [_knob runAction:_shrink];
    _knob.texture = [SKTexture textureWithImageNamed:@"radio-unchecked@2x.png"];
