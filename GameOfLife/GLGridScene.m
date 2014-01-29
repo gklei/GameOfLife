@@ -659,7 +659,7 @@ typedef void (^PhotoWorkBlock)();
 - (void)runScannerAnimation
 {
    GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] init];
-   scannerAnimation.duration = 3;
+   scannerAnimation.duration = 1;
    [scannerAnimation runAnimationOnParent:self];
 }
 

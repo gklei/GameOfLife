@@ -78,7 +78,8 @@
 - (void)setupScannerBeam
 {
    _scannerBeam = [SKSpriteNode spriteNodeWithImageNamed:@"slider-middle"];
-   _scannerBeam.xScale = CGRectGetWidth([UIScreen mainScreen].bounds) * 2.0;
+   _scannerBeam.xScale = CGRectGetWidth([UIScreen mainScreen].bounds) * 2.5;
+   _scannerBeam.yScale = .75;
    _scannerBeam.colorBlendFactor = 1.0;
    _scannerBeam.alpha = .8;
    _scannerBeam.color = [SKColor crayolaSizzlingRedColor];
@@ -95,14 +96,9 @@
    ^(SKNode *node, CGFloat elapsedTime)
    {
       NSNumber *inputRadius = [((SKEffectNode *)node).filter valueForKey:@"inputRadius"];
-      CGFloat newInputRadius = inputRadius.floatValue + sin(elapsedTime * 5);
+      CGFloat newInputRadius = inputRadius.floatValue + .5*sin(elapsedTime * 5);
       [((SKEffectNode *)node).filter setValue:[NSNumber numberWithFloat:newInputRadius]
                                        forKey:@"inputRadius"];
-
-//      NSNumber *inputIntensity = [((SKEffectNode *)node).filter valueForKey:@"inputIntensity"];
-//      CGFloat newInputIntensity = inputIntensity.floatValue + sin(elapsedTime);
-//      [((SKEffectNode *)node).filter setValue:[NSNumber numberWithFloat:newInputIntensity]
-//                                       forKey:@"inputIntensity"];
    }];
 
    [_glowEffect runAction:pulsate];
