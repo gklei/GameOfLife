@@ -115,16 +115,18 @@
 
    CGFloat __block lastY = _scannerBeam.position.y;
    CGFloat __block currentY = _scannerBeam.position.y;
+   CGFloat __block distance = 0;
+   int __block callbackCount = 0;
    SKAction *callDelegate = [SKAction customActionWithDuration:moveScanner.duration
                                                    actionBlock:
    ^(SKNode *node, CGFloat elapsedTime)
    {
       currentY = node.position.y;
-      CGFloat distance = lastY - currentY;
+      distance = lastY - currentY;
       if (distance >= _updateIncrement)
       {
+         lastY = self.size.height - (++callbackCount * _updateIncrement);
          [_scannerDelegate distanceScanned:distance];
-         lastY = currentY;
       }
    }];
 
