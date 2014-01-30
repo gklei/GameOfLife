@@ -38,6 +38,15 @@
    return self;
 }
 
+- (id)initWithScannerDelegate:(NSObject<GLScannerDelegate> *)delegate
+{
+   if (self = [self init])
+   {
+      _scannerDelegate = delegate;
+   }
+   return self;
+}
+
 - (id)initWithSize:(CGSize)size
 {
    if (self = [self init])
@@ -82,7 +91,7 @@
    _scannerBeam.yScale = .75;
    _scannerBeam.colorBlendFactor = 1.0;
    _scannerBeam.alpha = .8;
-   _scannerBeam.color = [SKColor crayolaSizzlingRedColor];
+   _scannerBeam.color = [SKColor crayolaPeriwinkleColor];
    _scannerBeam.position = CGPointMake(self.size.width * .5,
                                        self.size.height);
 }
@@ -96,13 +105,33 @@
    ^(SKNode *node, CGFloat elapsedTime)
    {
       NSNumber *inputRadius = [((SKEffectNode *)node).filter valueForKey:@"inputRadius"];
-      CGFloat newInputRadius = inputRadius.floatValue + .5*sin(elapsedTime * 5);
+      CGFloat newInputRadius = inputRadius.floatValue + .25*sin(elapsedTime * 5);
       [((SKEffectNode *)node).filter setValue:[NSNumber numberWithFloat:newInputRadius]
                                        forKey:@"inputRadius"];
    }];
 
+   SKAction *moveScanner = [SKAction moveToY:_endY duration:_duration];
+   moveScanner.timingMode = SKActionTimingEaseInEaseOut;
+
+   CGFloat __block lastY = _scannerBeam.position.y;
+   CGFloat __block currentY = _scannerBeam.position.y;
+   SKAction *callDelegate = [SKAction customActionWithDuration:moveScanner.duration
+                                                   actionBlock:
+   ^(SKNode *node, CGFloat elapsedTime)
+   {
+      currentY = node.position.y;
+      CGFloat distance = lastY - currentY;
+      if (distance >= _updateIncrement)
+      {
+         [_scannerDelegate distanceScanned:distance];
+         lastY = currentY;
+      }
+   }];
+
+   SKAction *scan = [SKAction group:@[moveScanner, callDelegate]];
+
    [_glowEffect runAction:pulsate];
-   [_scannerBeam runAction:[SKAction moveToY:_endY duration:_duration]
+   [_scannerBeam runAction:scan
                 completion:^
    {
       [self removeFromParent];

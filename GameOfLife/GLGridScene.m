@@ -31,7 +31,7 @@ typedef void (^PhotoWorkBlock)();
 @class ScreenShotPerformer;
 
 #pragma mark - GLGridScene private interface
-@interface GLGridScene() <GLGeneralHudDelegate, GLColorHudDelegate>
+@interface GLGridScene() <GLGeneralHudDelegate, GLColorHudDelegate, GLScannerDelegate>
 {
    GLGrid *_grid;
    
@@ -658,9 +658,16 @@ typedef void (^PhotoWorkBlock)();
 
 - (void)runScannerAnimation
 {
-   GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] init];
+   GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] initWithScannerDelegate:self];
+   scannerAnimation.updateIncrement = 14.15;
    scannerAnimation.duration = 1;
    [scannerAnimation runAnimationOnParent:self];
+}
+
+- (void)distanceScanned:(CGFloat)distance
+{
+   static int callback = 0;
+   NSLog(@"callback: %d", ++callback);
 }
 
 - (void)doScreenShot:(CGPoint)buttonPosition
