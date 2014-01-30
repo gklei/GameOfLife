@@ -754,7 +754,7 @@ typedef void (^PhotoWorkBlock)();
    {
       [_grid scanImageForGameBoard:image];
 
-      [self runAction:[SKAction waitForDuration:.4]
+      [self runAction:[SKAction waitForDuration:.45]
            completion:^{[self runScannerAnimation];}];
    }
 }
