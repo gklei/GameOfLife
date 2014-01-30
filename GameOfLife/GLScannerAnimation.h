@@ -10,7 +10,8 @@
 
 @class GLScannerAnimation;
 @protocol GLScannerDelegate <NSObject>
-   - (void)scanner:(GLScannerAnimation *)scanner scannedOverDistance:(CGFloat)distance;
+   - (void)scannerAnimation:(GLScannerAnimation *)animation
+        scannedOverDistance:(CGFloat)distance;
 @end
 
 @interface GLScannerAnimation : SKSpriteNode

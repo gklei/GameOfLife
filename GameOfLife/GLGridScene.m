@@ -664,7 +664,7 @@ typedef void (^PhotoWorkBlock)();
    [scannerAnimation runAnimationOnParent:self];
 }
 
-- (void)scanner:(GLScannerAnimation *)scanner scannedOverDistance:(CGFloat)distance
+- (void)scannerAnimation:(GLScannerAnimation *)animation scannedOverDistance:(CGFloat)distance
 {
    NSLog(@"callback: %f", distance);
 }

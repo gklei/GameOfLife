@@ -23,17 +23,17 @@
 {
    if (self = [super init])
    {
-      // default size and property values
+      // default size
       self.size = [UIScreen mainScreen].bounds.size;
 
       [self setupScannerBeam];
       [self setupGlowEffect];
+      [_glowEffect addChild:_scannerBeam];
 
+      // default property values
       _duration = 1;
       _startY = self.size.height + (_scannerBeam.size.height * .5);
       _endY = -_scannerBeam.size.height * .5;
-
-      [_glowEffect addChild:_scannerBeam];
    }
    return self;
 }
@@ -100,6 +100,8 @@
 - (void)runAnimationOnParent:(SKNode *)parent
 {
    [parent addChild:self];
+
+   // an action to run on the glow effect node
    SKAction *pulsate = [SKAction customActionWithDuration:_duration
                                               actionBlock:
    ^(SKNode *node, CGFloat elapsedTime)
@@ -110,6 +112,7 @@
                                        forKey:@"inputRadius"];
    }];
 
+   // an action to move the scaner beam
    SKAction *moveScanner = [SKAction moveToY:_endY duration:_duration];
    moveScanner.timingMode = SKActionTimingEaseInEaseOut;
 
@@ -117,6 +120,8 @@
    CGFloat __block currentY = _scannerBeam.position.y;
    CGFloat __block distance = 0;
    int __block callbackCount = 0;
+
+   // an action to callback the delegate during the scanner movement
    SKAction *callDelegate = [SKAction customActionWithDuration:moveScanner.duration
                                                    actionBlock:
    ^(SKNode *node, CGFloat elapsedTime)
@@ -126,16 +131,20 @@
       if (distance >= _updateIncrement)
       {
          lastY = self.size.height - (++callbackCount * _updateIncrement);
-         [_scannerDelegate scanner:self scannedOverDistance:(_updateIncrement * callbackCount)];
+         [_scannerDelegate scannerAnimation:self
+                        scannedOverDistance:(_updateIncrement * callbackCount)];
       }
    }];
 
+   // group the scanner movement and callback actions together
    SKAction *scan = [SKAction group:@[moveScanner, callDelegate]];
 
+   // now run these at the same time
    [_glowEffect runAction:pulsate];
    [_scannerBeam runAction:scan
                 completion:^
    {
+      // remove this class from the parent because it's done scanning
       [self removeFromParent];
    }];
 }
