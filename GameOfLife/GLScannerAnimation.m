@@ -88,9 +88,9 @@
 {
    _scannerBeam = [SKSpriteNode spriteNodeWithImageNamed:@"slider-middle"];
    _scannerBeam.xScale = CGRectGetWidth([UIScreen mainScreen].bounds) * 2.5;
-   _scannerBeam.yScale = .75;
+   _scannerBeam.yScale = .85;
    _scannerBeam.colorBlendFactor = 1.0;
-   _scannerBeam.alpha = .8;
+   _scannerBeam.alpha = 1;
    _scannerBeam.color = [SKColor crayolaPeriwinkleColor];
    _scannerBeam.position = CGPointMake(self.size.width * .5,
                                        self.size.height);

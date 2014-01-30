@@ -977,9 +977,6 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
 #pragma mark GLScannerDelegate protocol
 - (void)scannerAnimation:(GLScannerAnimation *)animation scannedOverDistance:(CGFloat)distance
 {
-   NSLog(@"distance: %d", (int)distance);
-   NSLog(@"row for distance: %d", [self rowForDistanceFromTop:(int)distance]);
-
    [self loadRow:[self rowForDistanceFromTop:(int)distance]
    withGameState:_scannedStates
           colors:_scannedColors];
