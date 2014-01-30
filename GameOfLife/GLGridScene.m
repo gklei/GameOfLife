@@ -666,8 +666,7 @@ typedef void (^PhotoWorkBlock)();
 
 - (void)distanceScanned:(CGFloat)distance
 {
-   static int callback = 0;
-   NSLog(@"callback: %d", ++callback);
+   NSLog(@"callback: %f", distance);
 }
 
 - (void)doScreenShot:(CGPoint)buttonPosition
