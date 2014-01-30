@@ -10,6 +10,7 @@
 #import "GLAlertLayer.h"
 #import "GLAppDelegate.h"
 #import "GLHUDSettingsManager.h"
+#import "GLScannerAnimation.h"
 #import "GLTileNode.h"
 #import "UIColor+CrossFade.h"
 
@@ -236,7 +237,7 @@
       _generationLoops.pop_back();
 }
 
-- (CrayolaColorName) calculateColorNameForTile:(GLTileNode *)node
+- (CrayolaColorName)calculateColorNameForTile:(GLTileNode *)node
 {
    if (!_lockedColorMode)
    {
@@ -654,7 +655,7 @@
    [self storeGridState];
 }
 
-#pragma mark - image scanning code
+#pragma mark - Image Scanning Code
 - (int)alphaTypeForImage:(CGImageRef)imageRef
 {
    int result = -1;
@@ -947,6 +948,12 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
       
       [self scanPreScaledImageForGameBoard:[image CGImage] flipped:flipped];
    }
+}
+
+#pragma mark GLScannerDelegate protocol
+- (void)scannerAnimation:(GLScannerAnimation *)animation scannedOverDistance:(CGFloat)distance
+{
+   NSLog(@"distance: %d", (int)distance);
 }
 
 #pragma mark - HUDSettingsObserver protocol

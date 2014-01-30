@@ -31,7 +31,7 @@ typedef void (^PhotoWorkBlock)();
 @class ScreenShotPerformer;
 
 #pragma mark - GLGridScene private interface
-@interface GLGridScene() <GLGeneralHudDelegate, GLColorHudDelegate, GLScannerDelegate>
+@interface GLGridScene() <GLGeneralHudDelegate, GLColorHudDelegate>
 {
    GLGrid *_grid;
    
@@ -538,7 +538,6 @@ typedef void (^PhotoWorkBlock)();
       [self removeAllAlertsForcefully:NO];
    
    [_grid clearGrid];
-   [self runScannerAnimation];
 }
 
 - (void)restoreButtonPressed:(NSTimeInterval)holdTime
@@ -658,15 +657,10 @@ typedef void (^PhotoWorkBlock)();
 
 - (void)runScannerAnimation
 {
-   GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] initWithScannerDelegate:self];
+   GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] initWithScannerDelegate:_grid];
    scannerAnimation.updateIncrement = 20;
    scannerAnimation.duration = 1;
    [scannerAnimation runAnimationOnParent:self];
-}
-
-- (void)scannerAnimation:(GLScannerAnimation *)animation scannedOverDistance:(CGFloat)distance
-{
-   NSLog(@"callback: %f", distance);
 }
 
 - (void)doScreenShot:(CGPoint)buttonPosition
@@ -759,6 +753,9 @@ typedef void (^PhotoWorkBlock)();
    if (_grid && image)
    {
       [_grid scanImageForGameBoard:image];
+
+      [self runAction:[SKAction waitForDuration:.4]
+           completion:^{[self runScannerAnimation];}];
    }
 }
 
