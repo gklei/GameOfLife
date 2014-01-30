@@ -7,6 +7,7 @@
 //
 
 #import <SpriteKit/SpriteKit.h>
+#import "GLScannerAnimation.h"
 #import "UIColor+Crayola.h"
 
 typedef struct {
@@ -15,7 +16,7 @@ typedef struct {
 } GridDimensions;
 
 @class GLTileNode;
-@interface GLGrid : SKNode
+@interface GLGrid : SKNode <GLScannerDelegate>
 
 @property (nonatomic, readonly) unsigned long long generationCount;
 @property (nonatomic, assign) GridDimensions dimensions;

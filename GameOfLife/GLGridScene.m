@@ -9,10 +9,11 @@
 #import "GLGridScene.h"
 
 #import "GLAlertLayer.h"
-#import "GLGrid.h"
 #import "GLColorHud.h"
 #import "GLGeneralHud.h"
+#import "GLGrid.h"
 #import "GLUIButton.h"
+#import "GLScannerAnimation.h"
 #import "GLSettingsLayer.h"
 #import "GLTileNode.h"
 #import "GLViewController.h"
@@ -78,7 +79,7 @@ typedef void (^PhotoWorkBlock)();
 
 
 #pragma mark - ScreenShotPerformer
-#pragma mark ScreenShotPerformer interface
+#pragma mark - ScreenShotPerformer interface
 @interface ScreenShotPerformer : NSObject
 {
 @private
@@ -90,7 +91,7 @@ typedef void (^PhotoWorkBlock)();
 - (void)performScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay;
 @end
 
-#pragma mark ScreenShotPerformer implementation
+#pragma mark - ScreenShotPerformer implementation
 @implementation ScreenShotPerformer
 
 - (id)initWithGridScene:(GLGridScene *)scene
@@ -111,7 +112,6 @@ typedef void (^PhotoWorkBlock)();
 {
    [_gridScene doScreenShot:_buttonPosition];
 }
-
 @end
 
 
@@ -147,7 +147,7 @@ typedef void (^PhotoWorkBlock)();
    
    HUDPickerItemDescription * hudItem = [[HUDPickerItemDescription alloc] init];
    hudItem.keyPath = @"GridImageIndex";
-   hudItem.label = @"IMAGES";
+   hudItem.label = @"TILES";
    hudItem.type = HIT_PICKER;
    hudItem.valueType = HVT_ULONG;
    hudItem.imagePairs = imagePairs;
@@ -654,6 +654,14 @@ typedef void (^PhotoWorkBlock)();
     }];
 }
 
+- (void)runScannerAnimation
+{
+   GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] initWithScannerDelegate:_grid];
+   scannerAnimation.updateIncrement = 20;
+   scannerAnimation.duration = 1.5;
+   [scannerAnimation runAnimationOnParent:self];
+}
+
 - (void)doScreenShot:(CGPoint)buttonPosition
 {
    if (_shouldPlaySound) [self runAction:_flashSound];
@@ -742,7 +750,17 @@ typedef void (^PhotoWorkBlock)();
 - (void)scanImageForGameBoard:(UIImage *)image
 {
    if (_grid && image)
+   {
       [_grid scanImageForGameBoard:image];
+
+      // for some reason, when we return back to our app from the image
+      // picker, there is a slight delay before the UI updates... this
+      // hack will make it look a little more smooth
+      [_grid clearGrid];
+      [_grid storeGridState];
+      [self runAction:[SKAction waitForDuration:.45]
+           completion:^{[self runScannerAnimation];}];
+   }
 }
 
 - (void)beginCameraImportAtPosition:(CGPoint)position
