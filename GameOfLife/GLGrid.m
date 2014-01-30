@@ -34,6 +34,9 @@
    std::vector<char> _nextGenerationTileStates;
    std::vector<CrayolaColorName> _storedTileColorNames;
    std::vector<CrayolaColorName> _currentTileColorNames;
+
+   std::vector<char> _scannedStates;
+   std::vector<CrayolaColorName> _scannedColors;
    
    BOOL _running;
    BOOL _startedWithLife;
@@ -177,7 +180,10 @@
    
    _storedTileColorNames = std::vector<CrayolaColorName>(count, CCN_INVALID_CrayolaColor);
    _currentTileColorNames = std::vector<CrayolaColorName>(count, CCN_INVALID_CrayolaColor);
-   
+
+   _scannedStates = std::vector<char>(_tiles.count, DEAD);
+   _scannedColors = std::vector<CrayolaColorName>(_tiles.count, CCN_INVALID_CrayolaColor);
+
    [self buildLiFE];
 }
 
@@ -437,6 +443,12 @@
 }
 
 #pragma mark Helper Methods
+- (int)rowForDistanceFromTop:(int)distance
+{
+   int row = _dimensions.rows - (distance/TILESIZE.height);
+   return row;
+}
+
 - (NSArray *)geLiveNeighborTilesForTile:(GLTileNode *)tile
 {
    int tileIndex = (int)[_tiles indexOfObject:tile];
@@ -834,23 +846,35 @@
    [self restoreGrid];
 }
 
+- (void)loadRow:(int)row
+  withGameState:(std::vector<char> &)states
+         colors:(std::vector<CrayolaColorName> &)colors
+{
+   int startTileIndex = row * _dimensions.columns;
+   for (int i = startTileIndex; i < startTileIndex + _dimensions.columns; ++ i)
+   {
+      _storedTileStates[i] = states[i];
+      _storedTileColorNames[i] = colors[i];
+   }
+   [self restoreGrid];
+}
+
 - (void)scanPreScaledImageForGameBoard:(CGImageRef)imageRef flipped:(BOOL)flipped
 {
-   std::vector<CrayolaColorName> scannedColors =
-      std::vector<CrayolaColorName>(_tiles.count, CCN_INVALID_CrayolaColor);
-   
-   if (![self scanImage:imageRef colors:scannedColors flipped:flipped])
+   _scannedColors.clear();
+   _scannedColors = std::vector<CrayolaColorName>(_tiles.count, CCN_INVALID_CrayolaColor);
+
+   _scannedStates.clear();
+   _scannedStates = std::vector<char>(_tiles.count, DEAD);
+
+   if (![self scanImage:imageRef colors:_scannedColors flipped:flipped])
       return;
    
-   CrayolaColorName bgrndColor = [self calculateBackgroundColor:scannedColors];
-   
-   std::vector<char> scannedStates = std::vector<char>(_tiles.count, DEAD);
-   
-   [self updateTileState:scannedStates
-                andColor:scannedColors
+   CrayolaColorName bgrndColor = [self calculateBackgroundColor:_scannedColors];
+
+   [self updateTileState:_scannedStates
+                andColor:_scannedColors
       forBackgroundColor:bgrndColor];
-   
-   [self loadGameWithState:scannedStates andColor:scannedColors];
 }
 
 //UIImageOrientationUp,            // default orientation
@@ -954,6 +978,11 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
 - (void)scannerAnimation:(GLScannerAnimation *)animation scannedOverDistance:(CGFloat)distance
 {
    NSLog(@"distance: %d", (int)distance);
+   NSLog(@"row for distance: %d", [self rowForDistanceFromTop:(int)distance]);
+
+   [self loadRow:[self rowForDistanceFromTop:(int)distance]
+   withGameState:_scannedStates
+          colors:_scannedColors];
 }
 
 #pragma mark - HUDSettingsObserver protocol

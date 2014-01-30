@@ -79,7 +79,7 @@ typedef void (^PhotoWorkBlock)();
 
 
 #pragma mark - ScreenShotPerformer
-#pragma mark ScreenShotPerformer interface
+#pragma mark - ScreenShotPerformer interface
 @interface ScreenShotPerformer : NSObject
 {
 @private
@@ -91,7 +91,7 @@ typedef void (^PhotoWorkBlock)();
 - (void)performScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay;
 @end
 
-#pragma mark ScreenShotPerformer implementation
+#pragma mark - ScreenShotPerformer implementation
 @implementation ScreenShotPerformer
 
 - (id)initWithGridScene:(GLGridScene *)scene
@@ -112,7 +112,6 @@ typedef void (^PhotoWorkBlock)();
 {
    [_gridScene doScreenShot:_buttonPosition];
 }
-
 @end
 
 
@@ -754,6 +753,11 @@ typedef void (^PhotoWorkBlock)();
    {
       [_grid scanImageForGameBoard:image];
 
+      // for some reason, when we return back to our app from the image
+      // picker, there is a slight delay before the UI updates... this
+      // hack will make it look a little more smooth
+      [_grid clearGrid];
+      [_grid storeGridState];
       [self runAction:[SKAction waitForDuration:.45]
            completion:^{[self runScannerAnimation];}];
    }
