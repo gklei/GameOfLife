@@ -126,7 +126,7 @@
       if (distance >= _updateIncrement)
       {
          lastY = self.size.height - (++callbackCount * _updateIncrement);
-         [_scannerDelegate distanceScanned:(_updateIncrement * callbackCount)];
+         [_scannerDelegate scanner:self scannedOverDistance:(_updateIncrement * callbackCount)];
       }
    }];
 

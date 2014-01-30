@@ -8,8 +8,9 @@
 
 #import <SpriteKit/SpriteKit.h>
 
+@class GLScannerAnimation;
 @protocol GLScannerDelegate <NSObject>
-   - (void)distanceScanned:(CGFloat)distance;
+   - (void)scanner:(GLScannerAnimation *)scanner scannedOverDistance:(CGFloat)distance;
 @end
 
 @interface GLScannerAnimation : SKSpriteNode
