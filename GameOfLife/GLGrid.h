@@ -51,5 +51,6 @@ typedef struct {
 
 - (void)toggleTileLiving:(GLTileNode *)tile;
 - (void)scanImageForGameBoard:(UIImage *)image;
+- (void)scanAnimationFinished;
 
 @end

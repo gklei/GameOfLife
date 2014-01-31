@@ -32,5 +32,5 @@
             startY:(CGFloat)start
               endY:(CGFloat)end;
 
-- (void)runAnimationOnParent:(SKNode *)parent;
+- (void)runAnimationOnParent:(SKNode *)parent withCompletionBlock:(void (^)())completionBlock;
 @end

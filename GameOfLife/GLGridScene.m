@@ -48,6 +48,7 @@ typedef void (^PhotoWorkBlock)();
    BOOL _gameFinished;
    BOOL _shouldPlaySound;
    BOOL _dismissedAlert;
+   BOOL _gameNeedsSaving;
    
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;
@@ -579,6 +580,12 @@ typedef void (^PhotoWorkBlock)();
    
    [self updateGenerationDuration:_generationDuration];
 
+   if (_gameNeedsSaving)
+   {
+      [_grid storeGridState];
+      _gameNeedsSaving = NO;
+   }
+   
    [_grid toggleRunning:!_running];
    self.running = !_running;
    
@@ -659,7 +666,11 @@ typedef void (^PhotoWorkBlock)();
    GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] initWithScannerDelegate:_grid];
    scannerAnimation.updateIncrement = 20;
    scannerAnimation.duration = 1.5;
-   [scannerAnimation runAnimationOnParent:self];
+   [scannerAnimation runAnimationOnParent:self withCompletionBlock:^
+    {
+       [_grid scanAnimationFinished];
+    }
+    ];
 }
 
 - (void)doScreenShot:(CGPoint)buttonPosition
@@ -1102,6 +1113,7 @@ typedef void (^PhotoWorkBlock)();
       _currentTileBeingTouched = tile;
       if (_shouldPlaySound) [self runAction:soundFX];
       [_grid toggleTileLiving:tile];
+      _gameNeedsSaving = YES;
    }
 }
 

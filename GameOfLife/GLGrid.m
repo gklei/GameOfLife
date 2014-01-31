@@ -664,7 +664,6 @@
       _currentTileColorNames[index] = CCN_INVALID_CrayolaColor;
    
    [tile setIsLiving:![tile isLiving]];
-   [self storeGridState];
 }
 
 #pragma mark - Image Scanning Code
@@ -972,6 +971,20 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
       
       [self scanPreScaledImageForGameBoard:[image CGImage] flipped:flipped];
    }
+}
+
+- (void)scanAnimationFinished
+{
+   // scan animation is done,  ensure game is fully loaded
+   size_t count = _scannedStates.size();
+   for (size_t i = 0; i < count; ++ i)
+   {
+      _storedTileStates[i] = _scannedStates[i];
+      _storedTileColorNames[i] = _scannedColors[i];
+   }
+   
+   [self restoreGrid];
+   [self storeGridState];
 }
 
 #pragma mark GLScannerDelegate protocol

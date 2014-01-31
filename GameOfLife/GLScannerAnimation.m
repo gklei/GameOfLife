@@ -97,7 +97,7 @@
 }
 
 #pragma mark - Instance Methods
-- (void)runAnimationOnParent:(SKNode *)parent
+- (void)runAnimationOnParent:(SKNode *)parent withCompletionBlock:(void (^)())completionBlock
 {
    [parent addChild:self];
 
@@ -146,6 +146,8 @@
    {
       // remove this class from the parent because it's done scanning
       [self removeFromParent];
+      if (completionBlock)
+         completionBlock();
    }];
 }
 
