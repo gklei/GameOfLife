@@ -521,6 +521,15 @@ typedef void (^PhotoWorkBlock)();
    }
 }
 
+- (void)storeGridIfDirtyAndClearFlag
+{
+   if (_gameNeedsSaving)
+   {
+      [_grid storeGridState];
+      _gameNeedsSaving = NO;
+   }
+}
+
 #pragma mark - GLGeneralHud Delegate Methods
 - (void)clearButtonPressed
 {
@@ -537,6 +546,7 @@ typedef void (^PhotoWorkBlock)();
    else
       [self removeAllAlertsForcefully:NO];
    
+   [self storeGridIfDirtyAndClearFlag];
    [_grid clearGrid];
 }
 
@@ -578,13 +588,9 @@ typedef void (^PhotoWorkBlock)();
    if (![_grid currentStateIsRunnable] && !_running)
       return;
    
+   [self storeGridIfDirtyAndClearFlag];
+   
    [self updateGenerationDuration:_generationDuration];
-
-   if (_gameNeedsSaving)
-   {
-      [_grid storeGridState];
-      _gameNeedsSaving = NO;
-   }
    
    [_grid toggleRunning:!_running];
    self.running = !_running;
