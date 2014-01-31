@@ -44,10 +44,10 @@
 
          [tile runAction:[SKAction group:@[rotateRight, scaleUp]]
               completion:^
-                        {
-                           [tile setScale:TILE_SCALE_FOCUSED];
-                           tile.zRotation = tile.liveRotation;
-                        }];
+         {
+            [tile setScale:TILE_SCALE_FOCUSED];
+            tile.zRotation = tile.liveRotation;
+         }];
       }
    };
 
