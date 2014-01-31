@@ -110,16 +110,18 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 - (void)acquireImageFromSource:(NSInteger)sourceType
            withCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
-{
-   self.photoCompletionBlock = completionBlock;
-   
-   // TODO:LEA: test for iPad and put the image picker in a popover
-   UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-   imagePicker.delegate = self;
-   imagePicker.sourceType = sourceType;
-   imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];
-   imagePicker.allowsEditing = NO;
-   [self presentViewController:imagePicker animated:YES completion:nil];
+{  
+   if ([UIImagePickerController isSourceTypeAvailable:sourceType])
+   {
+      self.photoCompletionBlock = completionBlock;
+      
+      UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+      imagePicker.delegate = self;
+      imagePicker.sourceType = sourceType;
+      imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];
+      imagePicker.allowsEditing = NO;
+      [self presentViewController:imagePicker animated:YES completion:nil];
+   }
 }
 
 @end
