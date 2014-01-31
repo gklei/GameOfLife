@@ -773,10 +773,17 @@ typedef void (^PhotoWorkBlock)();
       // for some reason, when we return back to our app from the image
       // picker, there is a slight delay before the UI updates... this
       // hack will make it look a little more smooth
+      
       [_grid clearGrid];
       [_grid storeGridState];
       [self runAction:[SKAction waitForDuration:.45]
-           completion:^{[self runScannerAnimation];}];
+           completion:^
+      {
+         if (_generalHudLayer.settingsAreExpanded)
+            [_generalHudLayer toggleSettingsWithCompletion:^{[self runScannerAnimation];}];
+         else
+            [self runScannerAnimation];
+      }];
    }
 }
 
