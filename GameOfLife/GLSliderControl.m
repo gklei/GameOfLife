@@ -219,7 +219,7 @@
    _sliderPosition = (_knob.position.x + _knobOffsetInAccumulatedFrame) / _knobSlidingRange;
    
    [self.delegate controlValueChangedForKey:_preferenceKey];
-   [self updateUserDefaults:_sliderPosition];
+//   [self updateUserDefaults:_sliderPosition];
 }
 
 - (void)moveKnobByDeltaX:(float)deltaX
