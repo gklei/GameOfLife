@@ -322,6 +322,7 @@
 {
    GLPageCollection *pageCollection =
       [GLPageCollection pageCollectionWithPages:@[[GLInformativePage aboutPage],
+                                                  [GLInformativePage importPhotoPage],
                                                   [GLInformativePage creditsPage]]];
 
    _informationLayer = [[GLPageCollectionLayer alloc] initWithSize:CGSizeMake(_settingsLayer.size.width - 30,

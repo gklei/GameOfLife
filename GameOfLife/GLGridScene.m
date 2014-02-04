@@ -672,7 +672,8 @@ typedef void (^PhotoWorkBlock)();
    GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] initWithScannerDelegate:_grid];
    scannerAnimation.updateIncrement = 20;
    scannerAnimation.duration = 1.0;
-   [scannerAnimation runAnimationOnParent:self withCompletionBlock:^
+   [scannerAnimation runAnimationOnParent:self
+                      withCompletionBlock:^
     {
        [_grid scanAnimationFinished];
     }

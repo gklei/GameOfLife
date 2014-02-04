@@ -42,4 +42,17 @@
    return creditsPage;
 }
 
++ (GLInformativePage *)importPhotoPage
+{
+   GLInformativePage *importPhotoPage = [GLInformativePage new];
+
+   [importPhotoPage addHeaderText:@"IMPORT PHOTO"];
+   [importPhotoPage addNewLines:1];
+   [importPhotoPage addBodyText:@"Try loading a previously captured LiFE state by pressing and holding the camera button!  You will be taken to your Photo Library where you can access whichever photo you would like to turn to LiFE."];
+   [importPhotoPage addNewLines:1];
+   [importPhotoPage addBodyText:@"This feature may be used with any picture in your Photo Library, but it will work the best with a picture that was taken by pressing the camera button at the bottom."];
+
+   return importPhotoPage;
+}
+
 @end

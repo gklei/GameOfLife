@@ -12,4 +12,5 @@
 
 + (GLInformativePage *)aboutPage;
 + (GLInformativePage *)creditsPage;
++ (GLInformativePage *)importPhotoPage;
 @end

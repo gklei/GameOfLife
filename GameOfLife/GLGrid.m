@@ -21,7 +21,7 @@
 #define LIVING YES
 #define DEAD   NO
 
-#define MAX_LOOP_DETECT_DEPTH  4096
+#define MAX_LOOP_DETECT_DEPTH 4096
 
 #define TILESIZE CGSizeMake(20, 20)
 
