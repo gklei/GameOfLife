@@ -188,6 +188,21 @@
    }
 }
 
+- (void)executeRestoreActionBlock
+{
+   if (_shouldPlaySound) [self runAction:_restoreSound];
+   [self.delegate restoreButtonPressed:0 buttonPosition:_restoreButton.position];
+}
+
+- (void)setRestoreActionBlock
+{
+   ActionBlock restoreButtonActionBlock = ^(NSTimeInterval holdTime)
+   {
+      [self executeRestoreActionBlock];
+   };
+   _restoreButton.actionBlock = restoreButtonActionBlock;
+}
+
 - (void)setupCoreFunctionButtons
 {
    _clearButton = [self buttonWithFilename:@"cancel-circle" buttonName:@"clear"];
@@ -201,10 +216,18 @@
    _restoreButton = [self buttonWithFilename:@"undo2" buttonName:@"restore"];
    ActionBlock restoreButtonActionBlock = ^(NSTimeInterval holdTime)
    {
-      if (_shouldPlaySound) [self runAction:_restoreSound];
-      [self.delegate restoreButtonPressed:holdTime buttonPosition:_restoreButton.position];
+      [self executeRestoreActionBlock];
    };
+
+   DelayedFocusActionBlock restoreDelayedFocusActionBlock =
+   ^{
+      [self.delegate restoreButtonPressed:3 buttonPosition:_restoreButton.position];
+      ActionBlock newRestoreActionBlock = ^(NSTimeInterval interval){[self setRestoreActionBlock];};
+      _restoreButton.actionBlock = newRestoreActionBlock;
+   };
+
    _restoreButton.actionBlock = restoreButtonActionBlock;
+   _restoreButton.delayedFocusActionBlock = restoreDelayedFocusActionBlock;
 
    _startStopButton = [self buttonWithFilename:@"play2" buttonName:@"start_stop"];
    _startStopButton.color = [SKColor crayolaLimeColor];
