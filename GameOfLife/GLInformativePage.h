@@ -10,7 +10,7 @@
 
 @interface GLInformativePage : GLPageLayer
 
-+ (GLInformativePage *)aboutPage;
++ (GLInformativePage *)howToPlayPage;
 + (GLInformativePage *)creditsPage;
 + (GLInformativePage *)importPhotoPage;
 + (GLInformativePage *)sharePhotoPage;

@@ -10,18 +10,18 @@
 
 @implementation GLInformativePage
 
-+ (GLInformativePage *)aboutPage
++ (GLInformativePage *)howToPlayPage
 {
-   GLInformativePage *aboutPage = [GLInformativePage new];
+   GLInformativePage *howToPlayPage = [GLInformativePage new];
 
-   [aboutPage addHeaderText:@"HOW TO PLAY"];
-   [aboutPage addNewLines:1];
-   [aboutPage addBodyText:@"1. The Game of Life was orginally created by a British mathematician named John Conway."];
-   [aboutPage addBodyText:@"2. The second thing that you really have to realize about this game is that it is actually very pointless and there is a good chance that you will waste a fair amount of time playing it."];
-   [aboutPage addBodyText:@"3. This is another line that is really important."];
-   [aboutPage addBodyText:@"4. The last thing that that you should really be aware of is that Leif Alton is the best programmer EVER."];
+   [howToPlayPage addHeaderText:@"HOW TO PLAY"];
+   [howToPlayPage addNewLines:1];
+   [howToPlayPage addBodyText:@"1. The Game of Life was orginally created by a British mathematician named John Conway."];
+   [howToPlayPage addBodyText:@"2. The second thing that you really have to realize about this game is that it is actually very pointless and there is a good chance that you will waste a fair amount of time playing it."];
+   [howToPlayPage addBodyText:@"3. This is another line that is really important."];
+   [howToPlayPage addBodyText:@"4. The last thing that that you should really be aware of is that Leif Alton is the best programmer EVER."];
 
-   return aboutPage;
+   return howToPlayPage;
 }
 
 + (GLInformativePage *)creditsPage

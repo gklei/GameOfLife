@@ -346,7 +346,7 @@
 - (void)setupAboutLayer
 {
    GLPageCollection *pageCollection =
-      [GLPageCollection pageCollectionWithPages:@[[GLInformativePage aboutPage],
+      [GLPageCollection pageCollectionWithPages:@[[GLInformativePage howToPlayPage],
                                                   [GLInformativePage sharePhotoPage],
                                                   [GLInformativePage importPhotoPage],
                                                   [GLInformativePage creditsPage]]];
