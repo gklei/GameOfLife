@@ -8,15 +8,26 @@
 
 #import "GLScannerAnimation.h"
 #import "UIColor+Crayola.h"
+#import "GLHUDSettingsManager.h"
 
-@interface GLScannerAnimation()
+@interface GLScannerAnimation() <HUDSettingsObserver>
 {
    SKSpriteNode *_scannerBeam;
    SKEffectNode *_glowEffect;
+
+   SKAction *_playScannerSound;
+
+   BOOL _shouldPlaySound;
 }
 @end
 
 @implementation GLScannerAnimation
+
+- (void)observeSoundFxChanges
+{
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addObserver:self forKeyPath:@"SoundFX"];
+}
 
 #pragma mark - Init Methods
 - (id)init
@@ -34,6 +45,9 @@
       _duration = 1;
       _startY = self.size.height + (_scannerBeam.size.height * .5);
       _endY = -_scannerBeam.size.height * .5;
+
+      _playScannerSound = [SKAction playSoundFileNamed:@"scanner.wav" waitForCompletion:NO];
+      [self observeSoundFxChanges];
    }
    return self;
 }
@@ -139,6 +153,8 @@
    // group the scanner movement and callback actions together
    SKAction *scan = [SKAction group:@[moveScanner, callDelegate]];
 
+   if (_shouldPlaySound) [self runAction:_playScannerSound];
+
    // now run these at the same time
    [_glowEffect runAction:pulsate];
    [_scannerBeam runAction:scan
@@ -151,4 +167,14 @@
    }];
 }
 
+#pragma mark - HUD Settings Observer Methods
+
+- (void)settingChanged:(NSNumber *)value ofType:(HUDValueType)type forKeyPath:(NSString *)keyPath
+{
+   if ([keyPath compare:@"SoundFX"] == NSOrderedSame)
+   {
+      assert(type == HVT_BOOL);
+      _shouldPlaySound = [value boolValue];
+   }
+}
 @end

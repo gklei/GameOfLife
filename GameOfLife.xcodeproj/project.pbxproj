@@ -65,6 +65,7 @@
 		8E99B2BE182F7A1200C7AEDB /* start.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B2BA182F7A1200C7AEDB /* start.png */; };
 		8E99B2BF182F7A1200C7AEDB /* start@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B2BB182F7A1200C7AEDB /* start@2x.png */; };
 		8E99B82A18A06A51005E97F8 /* GLSoundFXToggle.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E99B82918A06A51005E97F8 /* GLSoundFXToggle.m */; };
+		8E99B82C18A0ABA1005E97F8 /* scanner.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E99B82B18A0ABA1005E97F8 /* scanner.wav */; };
 		8E9EDE48188F843B005C66BB /* Splash.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8E9EDE47188F843B005C66BB /* Splash.sks */; };
 		8E9EDE4B1890EB04005C66BB /* lock.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E9EDE491890EB04005C66BB /* lock.wav */; };
 		8E9EDE4C1890EB04005C66BB /* unlock.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8E9EDE4A1890EB04005C66BB /* unlock.wav */; };
@@ -251,6 +252,7 @@
 		8E99B2BB182F7A1200C7AEDB /* start@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "start@2x.png"; path = "Images/start@2x.png"; sourceTree = SOURCE_ROOT; };
 		8E99B82818A06A51005E97F8 /* GLSoundFXToggle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLSoundFXToggle.h; sourceTree = "<group>"; };
 		8E99B82918A06A51005E97F8 /* GLSoundFXToggle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLSoundFXToggle.m; sourceTree = "<group>"; };
+		8E99B82B18A0ABA1005E97F8 /* scanner.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = scanner.wav; path = "GL Sound FX/scanner.wav"; sourceTree = SOURCE_ROOT; };
 		8E9EDE47188F843B005C66BB /* Splash.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Splash.sks; path = GameOfLife/Splash.sks; sourceTree = "<group>"; };
 		8E9EDE491890EB04005C66BB /* lock.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = lock.wav; path = "GL Sound FX/lock.wav"; sourceTree = SOURCE_ROOT; };
 		8E9EDE4A1890EB04005C66BB /* unlock.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = unlock.wav; path = "GL Sound FX/unlock.wav"; sourceTree = SOURCE_ROOT; };
@@ -474,6 +476,7 @@
 		8EAA59BB184B0218008E34D9 /* SoundFX */ = {
 			isa = PBXGroup;
 			children = (
+				8E99B82B18A0ABA1005E97F8 /* scanner.wav */,
 				8E9EDE491890EB04005C66BB /* lock.wav */,
 				8E9EDE4A1890EB04005C66BB /* unlock.wav */,
 				8ED7BE641887A19F00CA1CDD /* color.grid.down.wav */,
@@ -755,6 +758,7 @@
 				ED2CB967185C090100319DE5 /* tile.cylinder.png in Resources */,
 				8EA265091858033A00351F5E /* stop.algorithm.2.wav in Resources */,
 				8ECA89A3182371AE009D906F /* Images.xcassets in Resources */,
+				8E99B82C18A0ABA1005E97F8 /* scanner.wav in Resources */,
 				ED2CB965185C01BE00319DE5 /* tile.ring.png in Resources */,
 				8EA2652918596C4E00351F5E /* play2.png in Resources */,
 				8EA2653E1859841F00351F5E /* close@2x.png in Resources */,
