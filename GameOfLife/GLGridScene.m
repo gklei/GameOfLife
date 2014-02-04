@@ -673,7 +673,7 @@ typedef void (^PhotoWorkBlock)();
 
 - (void)animateNode:(SKSpriteNode *)node
          toPosition:(CGPoint)position
-       andSendImage:(UIImage *)image
+withCompletionBlock:(void (^)())completionBlock
 {
    // set the animation end position
    CGPoint point = position;
@@ -698,8 +698,8 @@ typedef void (^PhotoWorkBlock)();
        NSArray * toRemove = @[node];
        [self removeChildrenInArray:toRemove];
        
-       if (image && _viewController)
-           [_viewController sendMessageWithImage:image];
+       if (completionBlock)
+          completionBlock();
     }];
 }
 
@@ -741,17 +741,55 @@ typedef void (^PhotoWorkBlock)();
          // create and animate the screenshot
          SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
          if (node)
-            [self animateNode:node toPosition:buttonPosition andSendImage:nil];
+            [self animateNode:node toPosition:buttonPosition withCompletionBlock:nil];
       }
       else
       {
          // send the screenshot
          if (_viewController)
          {
-            // create and animate the screenshot, then send the image
+            // create and animate the screenshot, and send the image
             SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
             if (node)
-               [self animateNode:node toPosition:buttonPosition andSendImage:viewImage];
+            {
+               MessagingCompletionBlock msgBlock = ^(MessageComposeResult msgResult)
+               {
+                  CGPoint position = CGPointMake(0, self.size.height - 20);
+                  switch (msgResult)
+                  {
+                     case MessageComposeResultCancelled:
+                        // you know you cancelled, don't show anything
+                        break;
+                     case MessageComposeResultFailed:
+                     {
+                        // report error case
+                        [GLAlertLayer alertWithHeader:@"SMS Failed"
+                                                 body:@"Failed to send message :("
+                                             position:position
+                                            andParent:self];
+                        break;
+                     }
+                     case MessageComposeResultSent:
+                     {
+                        // just for fun, let them know they sent LiFE!!
+                        [GLAlertLayer alertWithHeader:@"Success"
+                                                 body:@"Sent your friends LiFE!"
+                                             position:position
+                                            andParent:self];
+                        break;
+                     }
+                     default:
+                        // WTF???
+                        break;
+                  }
+               };
+               
+               [self animateNode:node toPosition:buttonPosition withCompletionBlock:^
+                {
+                   [_viewController sendMessageWithImage:viewImage
+                                      andCompletionBlock:msgBlock];
+                }];
+            }
          }
       }
    }

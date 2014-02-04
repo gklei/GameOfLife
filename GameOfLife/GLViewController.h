@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 #import <SpriteKit/SpriteKit.h>
 
 typedef void (^PhotoPickingCompletionBlock)(UIImage * image);
+typedef void (^MessagingCompletionBlock)(MessageComposeResult msgResult);
 
 @interface GLViewController : UIViewController
 
@@ -17,6 +19,5 @@ typedef void (^PhotoPickingCompletionBlock)(UIImage * image);
            withCompletionBlock:(PhotoPickingCompletionBlock)completionBlock;
 
 - (void)sendMessageWithImage:(UIImage *)image
-//          andCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
-                                                                           ;
+          andCompletionBlock:(MessagingCompletionBlock)completionBlock;
 @end

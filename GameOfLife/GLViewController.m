@@ -10,7 +10,6 @@
 #import "GLGridScene.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
-#import <MessageUI/MessageUI.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @interface GLViewController()<UINavigationControllerDelegate,
@@ -21,6 +20,7 @@
 }
 
 @property (readwrite, copy) PhotoPickingCompletionBlock photoCompletionBlock;
+@property (readwrite, copy) MessagingCompletionBlock  messageCompletionBlock;
 
 @end
 
@@ -94,8 +94,7 @@
 
 - (void)callPhotoPickingCompletionBlock:(UIImage *)image
 {
-   if (_photoCompletionBlock)
-      _photoCompletionBlock(image);
+   if (_photoCompletionBlock) _photoCompletionBlock(image);
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker
@@ -115,67 +114,44 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 - (void)acquireImageFromSource:(NSInteger)sourceType
            withCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
 {  
-   if ([UIImagePickerController isSourceTypeAvailable:sourceType])
-   {
-      self.photoCompletionBlock = completionBlock;
-      
-      UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-      imagePicker.delegate = self;
-      imagePicker.sourceType = sourceType;
-      imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];
-      imagePicker.allowsEditing = NO;
-      [self presentViewController:imagePicker animated:YES completion:nil];
-   }
+   if (![UIImagePickerController isSourceTypeAvailable:sourceType]) return;
+
+   self.photoCompletionBlock = completionBlock;
+   
+   UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+   imagePicker.delegate = self;
+   imagePicker.sourceType = sourceType;
+   imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];
+   imagePicker.allowsEditing = NO;
+   [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
-#pragma mark - UIImagePickerController and delagate methods
+#pragma mark - MFMessageComposeViewController and delagate methods
+
+- (void)callMessagingCompletionBlock:(MessageComposeResult)result
+{
+   if (_messageCompletionBlock) _messageCompletionBlock(result);
+}
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
-                 didFinishWithResult:(MessageComposeResult)result
+                 didFinishWithResult:(MessageComposeResult)msgResult
 {
-   switch (result)
-   {
-      case MessageComposeResultCancelled:
-         break;
-      case MessageComposeResultFailed:
-      {
-//         UIAlertView *warningAlert =
-//            [[UIAlertView alloc] initWithTitle:@"Error"
-//                                       message:@"Failed to send SMS!"
-//                                      delegate:nil
-//                             cancelButtonTitle:@"OK"
-//                             otherButtonTitles:nil];
-//         [warningAlert show];
-         break;
-      }
-      case MessageComposeResultSent:
-//         GLAlertLayer * alert = [GLAlertLayer alertWithHeader:@""
-//                                                         body:@""
-//                                                     position:0
-//                                                    andParent:nil;
-         break;
-      default:
-         break;
-   }
-   
    [self dismissViewControllerAnimated:YES completion:nil];
+   [self callMessagingCompletionBlock:msgResult];
 }
 
 - (void)sendMessageWithImage:(UIImage *)image
-//          andCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
+          andCompletionBlock:(MessagingCompletionBlock)completionBlock;
 {
-   if (![MFMessageComposeViewController canSendText])
-      return;
+   if (![MFMessageComposeViewController canSendText]) return;
+   if (![MFMessageComposeViewController respondsToSelector:@selector(canSendAttachments)]) return;
+   if (![MFMessageComposeViewController canSendAttachments]) return;
    
-   if (![MFMessageComposeViewController respondsToSelector:@selector(canSendAttachments)])
-       return;
-   
-   if (![MFMessageComposeViewController canSendAttachments])
-      return;
+   self.messageCompletionBlock = completionBlock;
    
    MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
    composer.messageComposeDelegate = self;
-   [composer setBody:@"My high flying LiFE!!"];
+   [composer setBody:@"Here's some LiFE for you...because you can never have too much LiFE!"];
    
    NSData* attachment = UIImageJPEGRepresentation(image, 0.5);
    NSString* uti = (NSString*)kUTTypeMessage;
