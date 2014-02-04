@@ -347,6 +347,7 @@
 {
    GLPageCollection *pageCollection =
       [GLPageCollection pageCollectionWithPages:@[[GLInformativePage aboutPage],
+                                                  [GLInformativePage sharePhotoPage],
                                                   [GLInformativePage importPhotoPage],
                                                   [GLInformativePage creditsPage]]];
 

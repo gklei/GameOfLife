@@ -13,4 +13,6 @@
 + (GLInformativePage *)aboutPage;
 + (GLInformativePage *)creditsPage;
 + (GLInformativePage *)importPhotoPage;
++ (GLInformativePage *)sharePhotoPage;
+
 @end
