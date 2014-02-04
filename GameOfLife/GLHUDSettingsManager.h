@@ -13,8 +13,9 @@ typedef enum
    HIT_NO_UI   = 0,
    HIT_LABEL   = 1,
    HIT_TOGGLER = 2,
-   HIT_SLIDER  = 3,
-   HIT_PICKER  = 4,
+   HIT_SOUND_FX_TOGGLER = 3,
+   HIT_SLIDER  = 4,
+   HIT_PICKER  = 5,
 } HUDItemType;
 
 typedef enum

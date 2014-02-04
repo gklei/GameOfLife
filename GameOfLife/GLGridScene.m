@@ -173,9 +173,23 @@ typedef void (^PhotoWorkBlock)();
    [hudManager addHudItem:hudItem];
 }
 
+- (void)registerSoundFXToggleItemWithLabel:(NSString *)label andKeyPath:(NSString *)keyPath
+{
+   HUDItemDescription * hudItem = [[HUDItemDescription alloc] init];
+   hudItem.keyPath = keyPath;
+   hudItem.label = label;
+   hudItem.range = HUDItemRangeMake(0, 1);
+   hudItem.type = HIT_SOUND_FX_TOGGLER;
+   hudItem.defaultvalue = [NSNumber numberWithBool:YES];
+   hudItem.valueType = HVT_BOOL;
+
+   GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
+   [hudManager addHudItem:hudItem];
+}
+
 - (void)registerSoundFxHUD
 {
-   [self registerToggleItemWithLabel:@"SOUND FX" andKeyPath:@"SoundFX"];
+   [self registerSoundFXToggleItemWithLabel:@"SOUND FX" andKeyPath:@"SoundFX"];
 }
 
 - (void)registerSmartMenuHUD

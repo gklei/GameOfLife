@@ -14,6 +14,7 @@
 #import "GLSettingsItem.h"
 #import "GLSliderControl.h"
 #import "GLToggleControl.h"
+#import "GLSoundFXToggle.h"
 #import "GLUIActionButton.h"
 #import "UIColor+Crayola.h"
 
@@ -52,6 +53,19 @@
 - (void)addToggleControl:(HUDItemDescription *)item
 {
    GLToggleControl * toggleControl = [[GLToggleControl alloc] initWithPreferenceKey:item.keyPath];
+   GLSettingsItem * toggleItem = [[GLSettingsItem alloc] initWithTitle:item.label
+                                                               control:toggleControl];
+   _nextControlPosition.y -= ([self controlIsStartOfGroup:toggleControl])? 5 : 0;
+   toggleItem.position = _nextControlPosition;
+   _nextControlPosition.y -= toggleControl.controlHeight;
+
+   _lastControl = toggleControl;
+   [self addChild:toggleItem];
+}
+
+- (void)addSoundFXToggleControl:(HUDItemDescription *)item
+{
+   GLToggleControl * toggleControl = [[GLSoundFXToggle alloc] initWithPreferenceKey:item.keyPath];
    GLSettingsItem * toggleItem = [[GLSettingsItem alloc] initWithTitle:item.label
                                                                control:toggleControl];
    _nextControlPosition.y -= ([self controlIsStartOfGroup:toggleControl])? 5 : 0;
@@ -105,6 +119,9 @@
          break;
       case HIT_TOGGLER:
          [self addToggleControl:item];
+         break;
+      case HIT_SOUND_FX_TOGGLER:
+         [self addSoundFXToggleControl:item];
          break;
       case HIT_SLIDER:
          [self addSliderControl:item];

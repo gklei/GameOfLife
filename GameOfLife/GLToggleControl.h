@@ -18,6 +18,7 @@ typedef NS_ENUM(int, GL_TOGGLE_CONTROL_STATE)
 @interface GLToggleControl : GLUIButton
 
 @property (nonatomic, readonly) GL_TOGGLE_CONTROL_STATE state;
+@property (nonatomic, assign) BOOL shouldPlaySound;
 
 - (id)initWithPreferenceKey:(NSString *)key;
 - (void)toggle:(BOOL)switchState;

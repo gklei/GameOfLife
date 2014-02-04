@@ -36,7 +36,6 @@
    BOOL _animating;
    BOOL _stateSetFromSlide;
 
-   BOOL _shouldPlaySound;
    SKAction * _toggleSound;
    NSString * _preferenceKey;
 }
