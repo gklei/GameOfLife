@@ -10,10 +10,10 @@
 
 @implementation GLSoundFXToggle
 
-- (void)toggle:(BOOL)switchState
+- (void)setState:(GL_TOGGLE_CONTROL_STATE)state
 {
-   self.shouldPlaySound = !self.shouldPlaySound;
-   [super toggle:switchState];
+   self.shouldPlaySound = (state != e_TOGGLE_CONTROL_DISABLED);
+   [super setState:state];
 }
 
 @end

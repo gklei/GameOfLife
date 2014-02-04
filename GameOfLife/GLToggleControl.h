@@ -21,6 +21,6 @@ typedef NS_ENUM(int, GL_TOGGLE_CONTROL_STATE)
 @property (nonatomic, assign) BOOL shouldPlaySound;
 
 - (id)initWithPreferenceKey:(NSString *)key;
-- (void)toggle:(BOOL)switchState;
+- (void)setState:(GL_TOGGLE_CONTROL_STATE)state;
 
 @end

@@ -104,7 +104,7 @@
    [defaults synchronize];
 }
 
-- (void)setState:(BOOL)state
+- (void)setState:(GL_TOGGLE_CONTROL_STATE)state
 {
    if (_state != state)
    {
