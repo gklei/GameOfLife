@@ -17,9 +17,9 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
 
 @protocol GLGeneralHudDelegate <GLHudDelegate>
    - (void)clearButtonPressed;
-   - (void)restoreButtonPressed:(NSTimeInterval)holdTime;
-   - (void)toggleRunningButtonPressed;
-   - (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)buttonPosition;
+   - (void)restoreButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position;
+   - (void)toggleRunningButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position;
+   - (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position;
 
    - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action;
    - (void)settingsDidExpand;

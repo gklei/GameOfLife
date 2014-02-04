@@ -74,7 +74,7 @@ typedef void (^PhotoWorkBlock)();
 @property (nonatomic, assign, setter = setRunning:) BOOL running;
 @property (nonatomic, assign) GLViewController * viewController;
 
--(void)doScreenShot:(CGPoint)buttonPosition;
+-(void)doScreenShot:(CGPoint)buttonPosition andSave:(BOOL)saveNotSend;
 
 @end
 
@@ -86,10 +86,13 @@ typedef void (^PhotoWorkBlock)();
 @private
    GLGridScene * _gridScene;
    CGPoint  _buttonPosition;
+   BOOL     _saveScreenshot;
 }
 
 - (id)initWithGridScene:(GLGridScene *)scene;
-- (void)performScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay;
+- (void)performSaveScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay;
+- (void)performSendScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay;
+
 @end
 
 #pragma mark - ScreenShotPerformer implementation
@@ -103,15 +106,23 @@ typedef void (^PhotoWorkBlock)();
    return self;
 }
 
-- (void)performScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay
+- (void)performSaveScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay
 {
+   _saveScreenshot = YES;
+   _buttonPosition = buttonPosition;
+   [self performSelector:@selector(doScreenShot) withObject:nil afterDelay:delay];
+}
+
+- (void)performSendScreenShot:(CGPoint)buttonPosition afterDelay:(NSTimeInterval)delay
+{
+   _saveScreenshot = NO;
    _buttonPosition = buttonPosition;
    [self performSelector:@selector(doScreenShot) withObject:nil afterDelay:delay];
 }
 
 - (void)doScreenShot
 {
-   [_gridScene doScreenShot:_buttonPosition];
+   [_gridScene doScreenShot:_buttonPosition andSave:_saveScreenshot];
 }
 @end
 
@@ -443,7 +454,7 @@ typedef void (^PhotoWorkBlock)();
 - (void)loadLife
 {
    [_grid loadLifeTileStates];
-   [self restoreButtonPressed:0];
+   [self restoreButtonPressed:0 buttonPosition:CGPointZero];
    [_grid storeGridState];
    [[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -451,7 +462,7 @@ typedef void (^PhotoWorkBlock)();
 - (void)loadLastGrid
 {
    [_grid loadStoredTileStates];
-   [self restoreButtonPressed:0];
+   [self restoreButtonPressed:0 buttonPosition:CGPointZero];
 }
 
 - (BOOL)firstTimeRunning
@@ -564,14 +575,8 @@ typedef void (^PhotoWorkBlock)();
    [_grid clearGrid];
 }
 
-- (void)restoreButtonPressed:(NSTimeInterval)holdTime
+- (void)restoreButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position;
 {
-   if (holdTime > 2)
-   {
-      [self beginCameraImportAtPosition:CGPointZero];
-      return;
-   }
-   
    if (_running)
    {
       [self updateGenerationDuration:_generationDuration];
@@ -586,6 +591,12 @@ typedef void (^PhotoWorkBlock)();
       [self removeAllAlertsForcefully:NO];
    
    [_grid restoreGrid];
+   
+   if (holdTime > 2)
+   {
+      [self beginMessagingAtPosition:position];
+      return;
+   }
 }
 
 - (void)updateGenerationDuration:(float)duration
@@ -597,8 +608,14 @@ typedef void (^PhotoWorkBlock)();
    _generationDuration = duration;
 }
 
-- (void)toggleRunningButtonPressed
+- (void)toggleRunningButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position;
 {
+   if (holdTime > 2)
+   {
+      [self beginCameraImportAtPosition:position];
+      return;
+   }
+   
    if (![_grid currentStateIsRunnable] && !_running)
       return;
    
@@ -654,7 +671,9 @@ typedef void (^PhotoWorkBlock)();
    return node;
 }
 
-- (void)animateNode:(SKSpriteNode *)node toPosition:(CGPoint)position
+- (void)animateNode:(SKSpriteNode *)node
+         toPosition:(CGPoint)position
+       andSendImage:(UIImage *)image
 {
    // set the animation end position
    CGPoint point = position;
@@ -678,6 +697,9 @@ typedef void (^PhotoWorkBlock)();
        // remove the node now that we're done with it
        NSArray * toRemove = @[node];
        [self removeChildrenInArray:toRemove];
+       
+       if (image && _viewController)
+           [_viewController sendMessageWithImage:image];
     }];
 }
 
@@ -694,7 +716,7 @@ typedef void (^PhotoWorkBlock)();
     ];
 }
 
-- (void)doScreenShot:(CGPoint)buttonPosition
+- (void)doScreenShot:(CGPoint)buttonPosition andSave:(BOOL)save
 {
    if (_shouldPlaySound) [self runAction:_flashSound];
 
@@ -711,13 +733,27 @@ typedef void (^PhotoWorkBlock)();
    
    if (viewImage)
    {
-      // save the screenshot
-      UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
-      
-      // create and animate the screenshot
-      SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
-      if (node)
-         [self animateNode:node toPosition:buttonPosition];
+      if (save)
+      {
+         // save the screenshot
+         UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+         
+         // create and animate the screenshot
+         SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
+         if (node)
+            [self animateNode:node toPosition:buttonPosition andSendImage:nil];
+      }
+      else
+      {
+         // send the screenshot
+         if (_viewController)
+         {
+            // create and animate the screenshot, then send the image
+            SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
+            if (node)
+               [self animateNode:node toPosition:buttonPosition andSendImage:viewImage];
+         }
+      }
    }
    [_flashLayer runAction:_flashAnimation];
 }
@@ -773,7 +809,7 @@ typedef void (^PhotoWorkBlock)();
    {
       [_generalHudLayer setHidden:YES];
       [_colorHudLayer setHidden:YES];
-      [_screenShotPerformer performScreenShot:buttonPosition afterDelay:0.02];
+      [_screenShotPerformer performSaveScreenShot:buttonPosition afterDelay:0.02];
    };
    
    [self doPhotoAccessWithBlock:work];
@@ -842,6 +878,17 @@ typedef void (^PhotoWorkBlock)();
       [self beginPhotoImportAtPosition:position];
    else
       [self beginScreenShotAtPosition:position];
+}
+
+#pragma mark - messaging related functions
+- (void)beginMessagingAtPosition:(CGPoint)position
+{
+   // hack to get the HUD hidden when taking a screenshot
+   // we hide the HUD, set up a delayed callback and exit
+   // When the delay expires, the screen shot is taken and the HUD restored (see doScreenShot:)
+   [_generalHudLayer setHidden:YES];
+   [_colorHudLayer setHidden:YES];
+   [_screenShotPerformer performSendScreenShot:position afterDelay:0.02];
 }
 
 #pragma mark -
@@ -1179,7 +1226,7 @@ typedef void (^PhotoWorkBlock)();
       else
       {
          _gameFinished = YES;
-         [self toggleRunningButtonPressed];
+         [self toggleRunningButtonPressed:0 buttonPosition:CGPointZero];
       }
    }
 }

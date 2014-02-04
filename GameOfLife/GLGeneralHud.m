@@ -202,14 +202,16 @@
    ActionBlock restoreButtonActionBlock = ^(NSTimeInterval holdTime)
    {
       if (_shouldPlaySound) [self runAction:_restoreSound];
-      [self.delegate restoreButtonPressed:holdTime];
+      [self.delegate restoreButtonPressed:holdTime buttonPosition:_restoreButton.position];
    };
    _restoreButton.actionBlock = restoreButtonActionBlock;
 
    _startStopButton = [self buttonWithFilename:@"play2" buttonName:@"start_stop"];
    _startStopButton.color = [SKColor crayolaLimeColor];
-   ActionBlock startStopButtonActionBlock =
-      ^(NSTimeInterval holdTime) { [self.delegate toggleRunningButtonPressed]; };
+   ActionBlock startStopButtonActionBlock = ^(NSTimeInterval holdTime)
+   {
+      [self.delegate toggleRunningButtonPressed:holdTime buttonPosition:_startStopButton.position];
+   };
    
    _startStopButton.actionBlock = startStopButtonActionBlock;
 

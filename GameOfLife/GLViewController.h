@@ -16,4 +16,7 @@ typedef void (^PhotoPickingCompletionBlock)(UIImage * image);
 - (void)acquireImageFromSource:(NSInteger)sourceType
            withCompletionBlock:(PhotoPickingCompletionBlock)completionBlock;
 
+- (void)sendMessageWithImage:(UIImage *)image
+//          andCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
+                                                                           ;
 @end

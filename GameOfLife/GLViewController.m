@@ -10,10 +10,12 @@
 #import "GLGridScene.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <MessageUI/MessageUI.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-
-@interface GLViewController()<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface GLViewController()<UINavigationControllerDelegate,
+                              UIImagePickerControllerDelegate,
+                              MFMessageComposeViewControllerDelegate>
 {
    GLGridScene * _gridScene;
 }
@@ -88,6 +90,8 @@
    // Release any cached data, images, etc that aren't in use.
 }
 
+#pragma mark - UIImagePickerController and delagate methods
+
 - (void)callPhotoPickingCompletionBlock:(UIImage *)image
 {
    if (_photoCompletionBlock)
@@ -122,6 +126,62 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
       imagePicker.allowsEditing = NO;
       [self presentViewController:imagePicker animated:YES completion:nil];
    }
+}
+
+#pragma mark - UIImagePickerController and delagate methods
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult)result
+{
+   switch (result)
+   {
+      case MessageComposeResultCancelled:
+         break;
+      case MessageComposeResultFailed:
+      {
+//         UIAlertView *warningAlert =
+//            [[UIAlertView alloc] initWithTitle:@"Error"
+//                                       message:@"Failed to send SMS!"
+//                                      delegate:nil
+//                             cancelButtonTitle:@"OK"
+//                             otherButtonTitles:nil];
+//         [warningAlert show];
+         break;
+      }
+      case MessageComposeResultSent:
+//         GLAlertLayer * alert = [GLAlertLayer alertWithHeader:@""
+//                                                         body:@""
+//                                                     position:0
+//                                                    andParent:nil;
+         break;
+      default:
+         break;
+   }
+   
+   [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)sendMessageWithImage:(UIImage *)image
+//          andCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
+{
+   if (![MFMessageComposeViewController canSendText])
+      return;
+   
+   if (![MFMessageComposeViewController respondsToSelector:@selector(canSendAttachments)])
+       return;
+   
+   if (![MFMessageComposeViewController canSendAttachments])
+      return;
+   
+   MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
+   composer.messageComposeDelegate = self;
+   [composer setBody:@"My high flying LiFE!!"];
+   
+   NSData* attachment = UIImageJPEGRepresentation(image, 0.5);
+   NSString* uti = (NSString*)kUTTypeMessage;
+   [composer addAttachmentData:attachment typeIdentifier:uti filename:@"LiFE.jpg"];
+   
+   [self presentViewController:composer animated:YES completion:nil];
 }
 
 @end
