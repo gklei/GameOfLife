@@ -66,8 +66,8 @@
 {
    if (self = [self init])
    {
-      [self addHeaderText:[NSString futurizedString:header].uppercaseString];
-      [self addBodyText:[NSString futurizedString:body]];
+      [self addHeaderText:header];
+      [self addBodyText:body];
    }
    return self;
 }
