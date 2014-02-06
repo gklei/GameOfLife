@@ -46,7 +46,7 @@
       _startY = self.size.height + (_scannerBeam.size.height * .5);
       _endY = -_scannerBeam.size.height * .5;
 
-      _playScannerSound = [SKAction playSoundFileNamed:@"scanner.wav" waitForCompletion:NO];
+      _playScannerSound = [SKAction playSoundFileNamed:@"scanner.2.wav" waitForCompletion:NO];
       [self observeSoundFxChanges];
    }
    return self;
