@@ -1784,9 +1784,9 @@
 //      case CCN_crayolaMagentaColor:
 //         result = [UIColor crayolaMagentaColor];
 //         break;
-//      case CCN_crayolaMagicMintColor:
-//         result = [UIColor crayolaMagicMintColor];
-//         break;
+      case CCN_crayolaMagicMintColor:
+         result = [UIColor crayolaMagicMintColor];
+         break;
 //      case CCN_crayolaMagicPotionColor:
 //         result = [UIColor crayolaMagicPotionColor];
 //         break;

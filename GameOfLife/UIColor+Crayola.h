@@ -312,6 +312,7 @@ typedef enum
    CCN_crayolaGrannySmithAppleColor,
    CCN_crayolaElectricLimeColor,
    CCN_crayolaScreaminGreenColor,
+   CCN_crayolaMagicMintColor,
    CCN_crayolaForestGreenColor,
    CCN_crayolaGreenColor,
    CCN_crayolaMountainMeadowColor,
