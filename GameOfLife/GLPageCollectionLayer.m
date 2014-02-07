@@ -50,7 +50,8 @@
       _currentPage = _pageCollection.firstPage;
 
       _currentPageIndicator = [[GLCurrentPageIndicator alloc] initWithPageCount:_pageCollection.pages.count
-                                                               currentPageIndex:[_pageCollection.pages indexOfObject:_currentPage]];
+                                                               currentPageIndex:[_pageCollection.pages indexOfObject:_currentPage]
+                                                                  indicatorType:e_CUURENT_PAGE_INDICATOR_FRACTION];
 
       [self setupVariables];
       [self setupNavigationButtons];
