@@ -10,11 +10,16 @@
 
 #define PAGE_DOT_SIZE CGSizeMake(10, 10)
 #define HORIZONTAL_DOT_PADDING 5
+#define LABEL_FONT_SIZE 10;
 
 @interface GLCurrentPageIndicator()
 {
    NSMutableArray *_pageDotArray;
    SKSpriteNode *_currentPageDot;
+   SKLabelNode *_numerator;
+   SKLabelNode *_denominator;
+   SKLabelNode *_slash;
+   NSUInteger _totalPages;
 }
 @end
 
@@ -24,11 +29,13 @@
 {
    if (self = [super init])
    {
-      self.size = CGSizeMake(count * (PAGE_DOT_SIZE.width + HORIZONTAL_DOT_PADDING) -
-                             (PAGE_DOT_SIZE.width * .5),
-                             PAGE_DOT_SIZE.height);
-      self.anchorPoint = CGPointMake(0, .5);
-      [self setupPageDots:count currentPageIndex:index];
+      _totalPages = count;
+      _numerator = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
+      _numerator.text = [NSString stringWithFormat:@"%@   /   %@",
+                         @(index + 1).stringValue,
+                         @(count).stringValue];
+      _numerator.fontSize = LABEL_FONT_SIZE;
+      [self addChild:_numerator];
    }
    return self;
 }
@@ -59,11 +66,9 @@
 
 - (void)setCurrentPageIndicatorWithIndex:(NSUInteger)index
 {
-   NSAssert(index < _pageDotArray.count, @"page index out of bounds");
-   
-   _currentPageDot.alpha = .5;
-   _currentPageDot = _pageDotArray[index];
-   _currentPageDot.alpha = 5.;
+   _numerator.text = [NSString stringWithFormat:@"%@   /   %@",
+                      @(index + 1).stringValue,
+                      @(_totalPages).stringValue];
 }
 
 @end
