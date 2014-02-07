@@ -8,6 +8,10 @@
 
 #import "GLUIButton.h"
 
-@interface GLCurrentPageIndicator : GLUIButton
+@interface GLCurrentPageIndicator : SKSpriteNode
+
+- (id)initWithPageCount:(NSUInteger)count currentPageIndex:(NSUInteger)index;
+
+- (void)setCurrentPageIndicatorWithIndex:(NSUInteger)index;
 
 @end
