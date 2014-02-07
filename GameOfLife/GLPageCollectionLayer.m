@@ -7,13 +7,15 @@
 //
 
 #import "GLPageCollectionLayer.h"
+
+#import "GLCurrentPageIndicator.h"
 #import "GLPageCollection.h"
 #import "GLPageLayer.h"
-
 #import "GLUITextButton.h"
 
 #define PAGE_NAVIGATION_AREA_HEIGHT 50
 #define PAGE_HORIZONTAL_OFFSET CGRectGetWidth([UIScreen mainScreen].bounds)
+#define NAVIGATION_BUTTON_Y_OFFSET 20
 
 @interface GLPageCollectionLayer()
 {
@@ -23,6 +25,8 @@
    GLMenuLayer *_pageContainter;
    GLPageLayer *_currentPage;
    GLPageLayer *_previousPage;
+
+   GLCurrentPageIndicator *_currentPageIndicator;
 
    ActionBlock _nextPageActionBlock;
    ActionBlock _previousPageActionBlock;
@@ -45,8 +49,15 @@
       _pageCollection = (pageCollection)? pageCollection : [GLPageCollection new];
       _currentPage = _pageCollection.firstPage;
 
+      _currentPageIndicator = [[GLCurrentPageIndicator alloc] initWithPageCount:_pageCollection.pages.count
+                                                               currentPageIndex:[_pageCollection.pages indexOfObject:_currentPage]];
+
       [self setupVariables];
       [self setupNavigationButtons];
+
+      [self addChild:_currentPageIndicator];
+      _currentPageIndicator.position = CGPointMake(self.size.width * .5 - (_currentPageIndicator.size.width * .5),
+                                                   -self.size.height + (_currentPageIndicator.size.height * .5));
 
       [self setPageSizesAndPositions];
       [self setupPageContainer];
@@ -156,7 +167,7 @@
 {
    CGFloat primaryX = (self.size.width * .5) + (_primaryButton.size.width * .5) + 10;
    CGFloat secondaryX = (self.size.width * .5) - (_primaryButton.size.width * .5) - 10;
-   CGFloat yPos = -self.size.height + (_primaryButton.size.height * .5);
+   CGFloat yPos = -self.size.height + (_primaryButton.size.height * .5) + NAVIGATION_BUTTON_Y_OFFSET;
 
    _primaryButton.position = CGPointMake(primaryX, yPos);
    _secondaryButton.position = CGPointMake(secondaryX, yPos);
@@ -222,12 +233,14 @@
    self.hidden = YES;
    _pageContainter.position = CGPointZero;
    _currentPage = _pageCollection.firstPage;
+   [_currentPageIndicator setCurrentPageIndicatorWithIndex:0];
    [self setButtonTitlesAndBlocksForCurrentPage];
 }
 
 - (void)postPageMovementWork
 {
    [self setButtonTitlesAndBlocksForCurrentPage];
+   [_currentPageIndicator setCurrentPageIndicatorWithIndex:[_pageCollection.pages indexOfObject:_currentPage]];
    _previousPage.hidden = YES;
 }
 
