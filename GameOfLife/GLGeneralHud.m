@@ -19,6 +19,8 @@
 #import "GLPageCollection.h"
 #import "GLInformativePage.h"
 
+#include <float.h>
+
 #include <AssetsLibrary/AssetsLibrary.h>
 
 #define CORE_FUNCTION_BUTTON_PADDING 52
