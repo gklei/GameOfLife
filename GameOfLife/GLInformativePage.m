@@ -37,7 +37,7 @@
    [creditsPage addBodyText:@"- Nico G. (Sound FX + Creative Work)"];
    [creditsPage addBodyText:@"- John Conway (Algorithm)"];
    [creditsPage addNewLines:1];
-   [creditsPage addBodyText:@"We hope that you enjoy LiFE, and that LiFE is a pleasant experience for you.  Thank you for trying out LiFE!"];
+   [creditsPage addBodyText:@"We hope that you enjoy LiFE and that it is a pleasant experience for you.  Thank you for trying out LiFE!"];
 
    return creditsPage;
 }
@@ -63,7 +63,7 @@
    [sharePhotoPage addNewLines:1];
    [sharePhotoPage addBodyText:@"Share a saved LiFE state with your friends by pressing and holding the Restore button!"];
    [sharePhotoPage addNewLines:1];
-   [sharePhotoPage addBodyText:@"You will be taken to your messages app where you can add the repient(s) who you wish to see and potentially try out your LiFE."];
+   [sharePhotoPage addBodyText:@"You will be taken to your messages app where you can add the repient(s) who you wish to share your LiFE State with."];
 
    return sharePhotoPage;
 }
