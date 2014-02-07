@@ -40,8 +40,9 @@
             break;
          case e_CUURENT_PAGE_INDICATOR_FRACTION:
             [self setupLabelWithIndex:index];
+            break;
          default:
-            NSLog(@"Unsupported current page indicator type: %d", type);
+            NSLog(@"Unsupported current page indicator type: %ud", type);
             break;
       }
    }
