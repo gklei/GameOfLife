@@ -9,7 +9,7 @@
 #import "GLCurrentPageIndicator.h"
 
 #define PAGE_DOT_SIZE CGSizeMake(10, 10)
-#define HORIZONTAL_PADDING 5
+#define HORIZONTAL_DOT_PADDING 5
 
 @interface GLCurrentPageIndicator()
 {
@@ -24,7 +24,9 @@
 {
    if (self = [super init])
    {
-      self.size = CGSizeMake(count * (PAGE_DOT_SIZE.width + HORIZONTAL_PADDING) - (PAGE_DOT_SIZE.width * .5), PAGE_DOT_SIZE.height);
+      self.size = CGSizeMake(count * (PAGE_DOT_SIZE.width + HORIZONTAL_DOT_PADDING) -
+                             (PAGE_DOT_SIZE.width * .5),
+                             PAGE_DOT_SIZE.height);
       self.anchorPoint = CGPointMake(0, .5);
       [self setupPageDots:count currentPageIndex:index];
    }
@@ -37,7 +39,7 @@
    for (int i = 0; i < count; ++i)
    {
       SKSpriteNode *pageDot = [SKSpriteNode spriteNodeWithImageNamed:@"page.dot.png"];
-      pageDot.position = CGPointMake(i * (PAGE_DOT_SIZE.width + HORIZONTAL_PADDING) +
+      pageDot.position = CGPointMake(i * (PAGE_DOT_SIZE.width + HORIZONTAL_DOT_PADDING) +
                                      (PAGE_DOT_SIZE.width * .5),
                                      0);
       if (i == index)

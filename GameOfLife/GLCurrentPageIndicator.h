@@ -11,7 +11,6 @@
 @interface GLCurrentPageIndicator : SKSpriteNode
 
 - (id)initWithPageCount:(NSUInteger)count currentPageIndex:(NSUInteger)index;
-
 - (void)setCurrentPageIndicatorWithIndex:(NSUInteger)index;
 
 @end
