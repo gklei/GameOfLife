@@ -17,9 +17,9 @@
    [howToPlayPage addHeaderText:@"HOW TO PLAY"];
    [howToPlayPage addNewLines:1];
    [howToPlayPage addBodyText:@"1. The Game of Life was orginally created by a British mathematician named John Conway."];
-   [howToPlayPage addBodyText:@"2. The second thing that you really have to realize about this game is that it is actually very pointless and there is a good chance that you will waste a fair amount of time playing it."];
-   [howToPlayPage addBodyText:@"3. This is another line that is really important."];
-   [howToPlayPage addBodyText:@"4. The last thing that that you should really be aware of is that Leif Alton is the best programmer EVER."];
+   [howToPlayPage addBodyText:@"2. If you don't read anything else, it's great that your read this line."];
+   [howToPlayPage addBodyText:@"3. The second thing you should know is that all of the time you spend playing this game is certainly not time wasted."];
+   [howToPlayPage addBodyText:@"4. This is another line that is really important."];
 
    return howToPlayPage;
 }
@@ -37,7 +37,7 @@
    [creditsPage addBodyText:@"- Nico G. (Sound FX + Creative Work)"];
    [creditsPage addBodyText:@"- John Conway (Algorithm)"];
    [creditsPage addNewLines:1];
-   [creditsPage addBodyText:@"If you hate this game and think that the algorithm sucks, please contact John Conway.  Thank you for trying out LiFE!"];
+   [creditsPage addBodyText:@"We hope that you enjoy LiFE, and that LiFE is a pleasant experience for you.  Thank you for trying out LiFE!"];
 
    return creditsPage;
 }
