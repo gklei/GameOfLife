@@ -135,6 +135,9 @@
 		8ED7BE671887A19F00CA1CDD /* color.grid.down.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8ED7BE641887A19F00CA1CDD /* color.grid.down.wav */; };
 		8ED7BE681887A19F00CA1CDD /* color.grid.single.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8ED7BE651887A19F00CA1CDD /* color.grid.single.wav */; };
 		8ED7BE691887A19F00CA1CDD /* color.grid.up.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8ED7BE661887A19F00CA1CDD /* color.grid.up.wav */; };
+		8EE2690918A4840F00ABBF07 /* GLCurrentPageIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE2690818A4840F00ABBF07 /* GLCurrentPageIndicator.m */; };
+		8EE2690B18A4859F00ABBF07 /* page.dot.png in Resources */ = {isa = PBXBuildFile; fileRef = 8EE2690A18A4859F00ABBF07 /* page.dot.png */; };
+		8EE2690D18A4909E00ABBF07 /* scanner.3.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8EE2690C18A4909E00ABBF07 /* scanner.3.wav */; };
 		8EF02CB51877DFF800E15705 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EF02CB41877DFF800E15705 /* AssetsLibrary.framework */; };
 		ED292D1A185C90650031696D /* tile.frowny.png in Resources */ = {isa = PBXBuildFile; fileRef = ED292D18185C90650031696D /* tile.frowny.png */; };
 		ED292D1B185C90650031696D /* tile.smiley.png in Resources */ = {isa = PBXBuildFile; fileRef = ED292D19185C90650031696D /* tile.smiley.png */; };
@@ -335,6 +338,10 @@
 		8ED7BE641887A19F00CA1CDD /* color.grid.down.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = color.grid.down.wav; path = "GL Sound FX/color.grid.down.wav"; sourceTree = SOURCE_ROOT; };
 		8ED7BE651887A19F00CA1CDD /* color.grid.single.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = color.grid.single.wav; path = "GL Sound FX/color.grid.single.wav"; sourceTree = SOURCE_ROOT; };
 		8ED7BE661887A19F00CA1CDD /* color.grid.up.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = color.grid.up.wav; path = "GL Sound FX/color.grid.up.wav"; sourceTree = SOURCE_ROOT; };
+		8EE2690718A4840F00ABBF07 /* GLCurrentPageIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLCurrentPageIndicator.h; sourceTree = "<group>"; };
+		8EE2690818A4840F00ABBF07 /* GLCurrentPageIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLCurrentPageIndicator.m; sourceTree = "<group>"; };
+		8EE2690A18A4859F00ABBF07 /* page.dot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = page.dot.png; path = Images/page.dot.png; sourceTree = SOURCE_ROOT; };
+		8EE2690C18A4909E00ABBF07 /* scanner.3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = scanner.3.wav; path = "GL Sound FX/scanner.3.wav"; sourceTree = SOURCE_ROOT; };
 		8EF02CB41877DFF800E15705 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		ED292D18185C90650031696D /* tile.frowny.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.frowny.png; path = Images/tile.frowny.png; sourceTree = SOURCE_ROOT; };
 		ED292D19185C90650031696D /* tile.smiley.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = tile.smiley.png; path = Images/tile.smiley.png; sourceTree = SOURCE_ROOT; };
@@ -398,6 +405,7 @@
 		8E99B2A6182E098800C7AEDB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8EE2690A18A4859F00ABBF07 /* page.dot.png */,
 				8E3BAB0C1893555E00A56812 /* question.png */,
 				8E3BAB0A1893507100A56812 /* stop2.png */,
 				8E6764881886544800084589 /* lock.png */,
@@ -478,6 +486,7 @@
 		8EAA59BB184B0218008E34D9 /* SoundFX */ = {
 			isa = PBXGroup;
 			children = (
+				8EE2690C18A4909E00ABBF07 /* scanner.3.wav */,
 				8E99B82D18A34E24005E97F8 /* scanner.2.wav */,
 				8E99B82B18A0ABA1005E97F8 /* scanner.wav */,
 				8E9EDE491890EB04005C66BB /* lock.wav */,
@@ -640,6 +649,8 @@
 				8EAA59C5184B1E99008E34D9 /* GLSettingsLayer.m */,
 				8E3BAB0E189386F500A56812 /* GLPageCollectionLayer.h */,
 				8E3BAB0F189386F500A56812 /* GLPageCollectionLayer.m */,
+				8EE2690718A4840F00ABBF07 /* GLCurrentPageIndicator.h */,
+				8EE2690818A4840F00ABBF07 /* GLCurrentPageIndicator.m */,
 				8E3BAB141893971F00A56812 /* GLPageLayer.h */,
 				8E3BAB151893971F00A56812 /* GLPageLayer.m */,
 				8E3BAB171894CC7D00A56812 /* GLPageCollection.h */,
@@ -775,6 +786,7 @@
 				8E75B04B1846CB23000AEEB8 /* restore@2x.png in Resources */,
 				8EA2652618596BBF00351F5E /* undo2@2x.png in Resources */,
 				8EA264FA1850229100351F5E /* menu.close.wav in Resources */,
+				8EE2690B18A4859F00ABBF07 /* page.dot.png in Resources */,
 				8EA2650B1858045800351F5E /* start.algorithm.2.wav in Resources */,
 				EDBA06C918988055009C9C37 /* tile.heart.png in Resources */,
 				8E99B2BF182F7A1200C7AEDB /* start@2x.png in Resources */,
@@ -855,6 +867,7 @@
 				8EA2653218596F3E00351F5E /* pause@2x.png in Resources */,
 				EDBA06D5189895A2009C9C37 /* tile.blam.png in Resources */,
 				8E99B82E18A34E24005E97F8 /* scanner.2.wav in Resources */,
+				8EE2690D18A4909E00ABBF07 /* scanner.3.wav in Resources */,
 				8EA264F1184EEB1B00351F5E /* color.change.wav in Resources */,
 				8E5A5554187D005800483158 /* tile.leaf.png in Resources */,
 			);
@@ -886,6 +899,7 @@
 				8E254A86185BBD600068A3F9 /* GLSliderControl.m in Sources */,
 				8E75B0401842FFE3000AEEB8 /* GLGeneralHud.m in Sources */,
 				8EAA59C6184B1E99008E34D9 /* GLSettingsLayer.m in Sources */,
+				8EE2690918A4840F00ABBF07 /* GLCurrentPageIndicator.m in Sources */,
 				8EB738CB18709E5300BB58C0 /* UIColor+CrossFade.m in Sources */,
 				8E2FA2AE1869E3ED0021A471 /* GLColorGrid.m in Sources */,
 				ED820542187E471300BF7CD6 /* GLColorDropButton.m in Sources */,
