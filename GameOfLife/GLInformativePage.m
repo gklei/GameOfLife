@@ -63,7 +63,7 @@
    [sharePhotoPage addNewLines:1];
    [sharePhotoPage addBodyText:@"Share a saved LiFE state with your friends by pressing and holding the Restore button!"];
    [sharePhotoPage addNewLines:1];
-   [sharePhotoPage addBodyText:@"You will be taken to your messages app where you can add the repient(s) who you wish to share your LiFE State with."];
+   [sharePhotoPage addBodyText:@"You will be taken to your messages app where you can add the repient(s) who you wish to share your LiFE state with."];
 
    return sharePhotoPage;
 }
