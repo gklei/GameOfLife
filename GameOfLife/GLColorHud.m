@@ -367,6 +367,12 @@
 
       [_colorSelectionLayer.colorGrid updateSelectedColorName:_currentColorName];
    }
+   else if (touch)
+   {
+      [_splashParticleEmitter resetSimulation];
+      _splashParticleEmitter.position = CGPointMake(_currentColorDrop.position.x - 260, 40);
+      _splashParticleEmitter.particleColor = [UIColor colorForCrayolaColorName:_currentColorName];
+   }
 }
 
 - (void)expandColorGridWithCompletionBlock:(void (^)())completionBlock
@@ -680,24 +686,9 @@
 
 - (void)colorGridColorNameChanged:(CrayolaColorName)colorName
 {
-   BOOL colorExistsInCurrentPalette = NO;
-   for (GLColorDropButton *drop in _colorDrops)
-   {
-      if (drop.colorName == colorName)
-      {
-         colorExistsInCurrentPalette = YES;
-         [self updateCurrentColorDrop:drop fromTouch:NO];
-         break;
-      }
-   }
-   
-   if (!colorExistsInCurrentPalette)
-   {
-      // these two things must happen in this order!
-      _currentColorDrop.colorName = colorName;
-      [GLColorPaletteManager sharedManager].storedColorPalette = [self getCurrentDropColorNames];
-   }
-   
+   _currentColorDrop.colorName = colorName;
+   [GLColorPaletteManager sharedManager].storedColorPalette = [self getCurrentDropColorNames];
+
    [self updateCurrentColorName:colorName];
    [self updateSplashButtonColors];
 }
