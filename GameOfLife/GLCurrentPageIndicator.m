@@ -16,28 +16,47 @@
 {
    NSMutableArray *_pageDotArray;
    SKSpriteNode *_currentPageDot;
-   SKLabelNode *_numerator;
-   SKLabelNode *_denominator;
-   SKLabelNode *_slash;
+   SKLabelNode *_currentPageLabel;
    NSUInteger _totalPages;
+   CurrentPageIndicatorType _type;
 }
 @end
 
 @implementation GLCurrentPageIndicator
 
-- (id)initWithPageCount:(NSUInteger)count currentPageIndex:(NSUInteger)index
+- (id)initWithPageCount:(NSUInteger)count
+       currentPageIndex:(NSUInteger)index
+          indicatorType:(CurrentPageIndicatorType)type
 {
    if (self = [super init])
    {
       _totalPages = count;
-      _numerator = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
-      _numerator.text = [NSString stringWithFormat:@"%@   /   %@",
-                         @(index + 1).stringValue,
-                         @(count).stringValue];
-      _numerator.fontSize = LABEL_FONT_SIZE;
-      [self addChild:_numerator];
+      _type = type;
+
+      switch (type)
+      {
+         case e_CURRENT_PAGE_INDICATOR_DOTS:
+            [self setupPageDots:_totalPages currentPageIndex:index];
+            break;
+         case e_CUURENT_PAGE_INDICATOR_FRACTION:
+            [self setupLabelWithIndex:index];
+         default:
+            NSLog(@"Unsupported current page indicator type: %d", type);
+            break;
+      }
    }
    return self;
+}
+
+- (void)setupLabelWithIndex:(NSUInteger)index
+{
+   _currentPageLabel = [SKLabelNode labelNodeWithFontNamed:@"Futura-CondensedExtraBold"];
+   _currentPageLabel.text = [NSString stringWithFormat:@"%@   /   %@",
+                             @(index + 1).stringValue,
+                             @(_totalPages).stringValue];
+   _currentPageLabel.fontSize = LABEL_FONT_SIZE;
+
+   [self addChild:_currentPageLabel];
 }
 
 - (void)setupPageDots:(NSUInteger)count currentPageIndex:(NSUInteger)index
@@ -62,13 +81,43 @@
       [_pageDotArray addObject:pageDot];
       [self addChild:pageDot];
    }
+
+   self.anchorPoint = CGPointMake(0, .5);
+   self.size = CGSizeMake(count * (PAGE_DOT_SIZE.width + HORIZONTAL_DOT_PADDING) -
+                          (PAGE_DOT_SIZE.width * .5),
+                          PAGE_DOT_SIZE.height);
+}
+
+- (void)adjustCurrentDotWithIndex:(NSUInteger)index
+{
+   NSAssert(index < _pageDotArray.count, @"page index out of bounds");
+
+   _currentPageDot.alpha = .5;
+   _currentPageDot = _pageDotArray[index];
+   _currentPageDot.alpha = 5.;
+}
+
+- (void)adjustLabelWithIndex:(NSUInteger)index
+{
+   _currentPageLabel.text = [NSString stringWithFormat:@"%@   /   %@",
+                             @(index + 1).stringValue,
+                             @(_totalPages).stringValue];
 }
 
 - (void)setCurrentPageIndicatorWithIndex:(NSUInteger)index
 {
-   _numerator.text = [NSString stringWithFormat:@"%@   /   %@",
-                      @(index + 1).stringValue,
-                      @(_totalPages).stringValue];
+   switch (_type)
+   {
+      case e_CURRENT_PAGE_INDICATOR_DOTS:
+         [self adjustCurrentDotWithIndex:index];
+         break;
+      case e_CUURENT_PAGE_INDICATOR_FRACTION:
+         [self adjustLabelWithIndex:index];
+         break;
+      default:
+         NSLog(@"Unsupported type: %d", _type);
+         break;
+   }
 }
 
 @end
