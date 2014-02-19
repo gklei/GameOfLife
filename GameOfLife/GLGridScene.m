@@ -21,6 +21,7 @@
 
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <OpenGLES/ES1/glext.h>
+#import <ImageIO/ImageIO.h>
 
 
 #define DEFAULT_GENERATION_DURATION 0.8
@@ -49,6 +50,7 @@ typedef void (^PhotoWorkBlock)();
    BOOL _shouldPlaySound;
    BOOL _dismissedAlert;
    BOOL _gameNeedsSaving;
+   BOOL _pausedForSceenShot;
    
    SKAction *_fingerDownSoundFX;
    SKAction *_fingerUpSoundFX;
@@ -640,6 +642,17 @@ typedef void (^PhotoWorkBlock)();
 }
 
 #pragma mark - sceenshot related functions
+- (NSDictionary *)generateMetaDataForImage
+{
+   NSAssert(_pausedForSceenShot == YES, "Should pause while grabbing metadata");
+   NSDictionary * result = nil;
+   
+//   kCGImagePropertyExifAuxDictionary;
+//   result = [NSDictionary dictionaryWithObjectsAndKeys:
+   
+   return result;
+}
+
 - (void)addNodeBehindFlashNode:(SKSpriteNode *)node
 {
    // add the node
@@ -718,8 +731,11 @@ withCompletionBlock:(void (^)())completionBlock
 
 - (void)doScreenShot:(CGPoint)buttonPosition andSave:(BOOL)save
 {
+   _pausedForSceenShot = YES;
+   
    if (_shouldPlaySound) [self runAction:_flashSound];
-
+   
+   // grab the image
    CGFloat scale = self.view.contentScaleFactor;
    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, scale);
    [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:NO];
@@ -727,12 +743,23 @@ withCompletionBlock:(void (^)())completionBlock
    UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
    UIGraphicsEndImageContext();
    
+   // grab the metadata
+   NSDictionary * metaData = [self generateMetaDataForImage];
+   
    // make certain the HUDs are restored
    [_generalHudLayer setHidden:NO];
    [_colorHudLayer setHidden:NO];
    
+   _pausedForSceenShot = NO;
+   
    if (viewImage)
    {
+      // add metadata to image??
+      if (metaData)
+      {
+         
+      }
+      
       if (save)
       {
          // save the screenshot
@@ -1255,7 +1282,7 @@ withCompletionBlock:(void (^)())completionBlock
 #pragma mark - SKScene Overridden Method
 -(void)update:(CFTimeInterval)currentTime
 {
-   if (_running && currentTime - _lastGenerationTime > _generationDuration)
+   if (_running && !_pausedForSceenShot && currentTime - _lastGenerationTime > _generationDuration)
    {
       _lastGenerationTime = currentTime;
       
