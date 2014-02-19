@@ -42,7 +42,7 @@
             [self setupLabelWithIndex:index];
             break;
          default:
-            NSLog(@"Unsupported current page indicator type: %ud", type);
+            NSLog(@"Unsupported current page indicator type: %u", (unsigned)type);
             break;
       }
    }
@@ -116,7 +116,7 @@
          [self adjustLabelWithIndex:index];
          break;
       default:
-         NSLog(@"Unsupported type: %d", _type);
+         NSLog(@"Unsupported type: %u", (unsigned)_type);
          break;
    }
 }
