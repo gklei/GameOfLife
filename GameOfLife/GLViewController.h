@@ -18,7 +18,6 @@ typedef void (^MessagingCompletionBlock)(MessageComposeResult msgResult);
 - (void)acquireImageFromSource:(NSInteger)sourceType
            withCompletionBlock:(PhotoPickingCompletionBlock)completionBlock;
 
-- (void)sendMessageWithImage:(UIImage *)image
-                withMetaData:(NSDictionary *)metaData
-          andCompletionBlock:(MessagingCompletionBlock)completionBlock;
+- (void)sendMessageWithImageData:(NSData *)imageData
+              andCompletionBlock:(MessagingCompletionBlock)completionBlock;
 @end

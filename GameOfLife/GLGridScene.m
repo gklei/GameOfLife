@@ -20,8 +20,8 @@
 #import "UIColor+Crayola.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
-#import <OpenGLES/ES1/glext.h>
 #import <ImageIO/ImageIO.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 #define DEFAULT_GENERATION_DURATION 0.8
 #define BONUS_FOR_CLEARING_GRID     50
@@ -771,19 +771,134 @@ withCompletionBlock:(void (^)())completionBlock
     ];
 }
 
-- (void)doScreenShot:(CGPoint)buttonPosition andSave:(BOOL)save
+- (UIImage *)generateImageOfView
 {
-   _pausedForSceenShot = YES;
+   UIImage * result = nil;
    
-   if (_shouldPlaySound) [self runAction:_flashSound];
-   
-   // grab the image
    CGFloat scale = self.view.contentScaleFactor;
    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, scale);
    [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:NO];
-   
-   UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+   result = UIGraphicsGetImageFromCurrentImageContext();
    UIGraphicsEndImageContext();
+   
+   return result;
+}
+
+#pragma mark - helper function to generate NSData with image and metadata
+- (NSData *)jpegImageRepforImage:(UIImage *)image andMetaData:(NSDictionary *)metaData
+{
+   if (image == nil) return nil;
+   if (metaData == nil) return UIImageJPEGRepresentation(image, 0.5);
+   
+   // add the jpeg compression information to our meta data
+   NSMutableDictionary * mutableMetadata = [metaData mutableCopy];
+   [mutableMetadata setObject:@(0.5)
+                       forKey:(__bridge NSString *)kCGImageDestinationLossyCompressionQuality];
+   
+   // Create an image destination
+   NSMutableData * jpegDataRep = [NSMutableData data];
+   CGImageDestinationRef destination =
+      CGImageDestinationCreateWithData((__bridge CFMutableDataRef)jpegDataRep,
+                                       kUTTypeJPEG,
+                                       1,
+                                       NULL);
+   if (destination == nil)
+      return UIImageJPEGRepresentation(image, 0.5);
+   
+   // add the image data
+   CGImageDestinationAddImage(destination,
+                              image.CGImage,
+                              (__bridge CFDictionaryRef)mutableMetadata);
+   
+   // write the image data and mutableMetadata
+   BOOL success = CGImageDestinationFinalize(destination);
+   
+   // clean up
+   CFRelease(destination);
+   
+      return (success)? jpegDataRep : UIImageJPEGRepresentation(image, 0.5);
+}
+
+- (void)saveScreenshotDataToPhotoLibrary:(NSData *)imageData
+                    withNodeForAnimation:(SKSpriteNode *)node
+                              toPosition:(CGPoint)position
+{
+   if (node)
+   {
+      ALAssetsLibraryWriteImageCompletionBlock compBlock =
+         ^(NSURL * assetURL, NSError * error)
+         {
+            if (error == nil)
+               [self animateNode:node toPosition:position withCompletionBlock:nil];
+            else
+               NSLog(@"writeImageToSavedPhotosAlbum ERROR:%@", error);
+         };
+      
+      ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
+      [library writeImageDataToSavedPhotosAlbum:(NSData *)imageData
+                                       metadata:nil
+                                completionBlock:compBlock];
+   }
+}
+
+- (void)sendScreenshotDataToMessageApp:(NSData *)imageData
+                  withNodeForAnimation:(SKSpriteNode *)node
+                            toPosition:(CGPoint)position
+{
+   if (_viewController)
+   {
+      if (node)
+      {
+         // define the message handling completion block
+         MessagingCompletionBlock msgBlock = ^(MessageComposeResult msgResult)
+         {
+            CGPoint position = CGPointMake(0, self.size.height - 20);
+            switch (msgResult)
+            {
+               case MessageComposeResultCancelled:
+                  // you know you cancelled, don't show anything
+                  break;
+               case MessageComposeResultFailed:
+               {
+                  // report error case
+                  [GLAlertLayer alertWithHeader:@"SMS Failed"
+                                           body:@"Failed to send message :("
+                                       position:position
+                                      andParent:self];
+                  break;
+               }
+               case MessageComposeResultSent:
+               {
+                  // just for fun, let them know they sent LiFE!!
+                  [GLAlertLayer alertWithHeader:@"Success"
+                                           body:@"Sent your friends LiFE!"
+                                       position:position
+                                      andParent:self];
+                  break;
+               }
+               default:
+                  // WTF???
+                  break;
+            }
+         };
+      
+         // animate the screenshot then call up the messaging UI
+         [self animateNode:node toPosition:position withCompletionBlock:^
+          {
+             [_viewController sendMessageWithImageData:imageData
+                                    andCompletionBlock:msgBlock];
+          }];
+      }
+   }
+}
+
+- (void)doScreenShot:(CGPoint)buttonPosition andSave:(BOOL)save
+{
+   // pause while we grab the image and the metadata to ensure they are in sync
+   _pausedForSceenShot = YES;
+   
+   // grab the image
+   UIImage * viewImage = [self generateImageOfView];
    
    // grab the metadata
    NSDictionary * exifMetaData = [self generateExifMetaDataForImage:viewImage];
@@ -794,77 +909,32 @@ withCompletionBlock:(void (^)())completionBlock
    
    _pausedForSceenShot = NO;
    
-   if (viewImage)
+   NSData * imageData = [self jpegImageRepforImage:viewImage andMetaData:exifMetaData];
+   if (imageData == nil)
    {
-      if (save)
-      {
-         // save the screenshot
-         ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
-         [library writeImageToSavedPhotosAlbum:viewImage.CGImage
-                                      metadata:exifMetaData
-                               completionBlock:
-            ^(NSURL * assetURL, NSError * error)
-            {
-               if (error)
-                  NSLog(@"writeImageToSavedPhotosAlbum ERROR:%@", error);
-            }];
-         
-         // create and animate the screenshot
-         SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
-         if (node)
-            [self animateNode:node toPosition:buttonPosition withCompletionBlock:nil];
-      }
-      else
-      {
-         // send the screenshot
-         if (_viewController)
-         {
-            // create and animate the screenshot, and send the image
-            SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
-            if (node)
-            {
-               MessagingCompletionBlock msgBlock = ^(MessageComposeResult msgResult)
-               {
-                  CGPoint position = CGPointMake(0, self.size.height - 20);
-                  switch (msgResult)
-                  {
-                     case MessageComposeResultCancelled:
-                        // you know you cancelled, don't show anything
-                        break;
-                     case MessageComposeResultFailed:
-                     {
-                        // report error case
-                        [GLAlertLayer alertWithHeader:@"SMS Failed"
-                                                 body:@"Failed to send message :("
-                                             position:position
-                                            andParent:self];
-                        break;
-                     }
-                     case MessageComposeResultSent:
-                     {
-                        // just for fun, let them know they sent LiFE!!
-                        [GLAlertLayer alertWithHeader:@"Success"
-                                                 body:@"Sent your friends LiFE!"
-                                             position:position
-                                            andParent:self];
-                        break;
-                     }
-                     default:
-                        // WTF???
-                        break;
-                  }
-               };
-               
-               [self animateNode:node toPosition:buttonPosition withCompletionBlock:^
-                {
-                   [_viewController sendMessageWithImage:viewImage
-                                            withMetaData:exifMetaData
-                                      andCompletionBlock:msgBlock];
-                }];
-            }
-         }
-      }
+      NSLog(@"failed to generate image data from image and metadata!");
+      return;
    }
+   
+   // we're good to go, so do all the fun stuff
+   if (_shouldPlaySound) [self runAction:_flashSound];
+   
+   SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
+   if (save)
+   {
+      // save the screenshot
+      [self saveScreenshotDataToPhotoLibrary:imageData
+                        withNodeForAnimation:node
+                                  toPosition:buttonPosition];
+   }
+   else
+   {
+      // send the screenshot
+      [self sendScreenshotDataToMessageApp:imageData
+                      withNodeForAnimation:node
+                                toPosition:buttonPosition];
+   }
+   
    [_flashLayer runAction:_flashAnimation];
 }
 

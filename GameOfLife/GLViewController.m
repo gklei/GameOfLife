@@ -92,42 +92,6 @@
    // Release any cached data, images, etc that aren't in use.
 }
 
-#pragma mark - helper function to generate NSData with image and metadatav
-- (NSData *)jpegImageRepforImage:(UIImage *)image
-                     andMetaData:(NSDictionary *)metaData
-{
-   if (metaData == nil)
-      return UIImageJPEGRepresentation(image, 0.5);
-   
-   // add the jpeg compression information to our meta data
-   NSMutableDictionary * mutableMetadata = [metaData mutableCopy];
-   [mutableMetadata setObject:@(0.5)
-                       forKey:(__bridge NSString *)kCGImageDestinationLossyCompressionQuality];
-
-   // Create an image destination
-   NSMutableData * jpegDataRep = [NSMutableData data];
-   CGImageDestinationRef destination =
-      CGImageDestinationCreateWithData((__bridge CFMutableDataRef)jpegDataRep,
-                                       kUTTypeJPEG,
-                                       1,
-                                       NULL);
-   if (destination == nil)
-      return UIImageJPEGRepresentation(image, 0.5);
-   
-   // add the image data
-   CGImageDestinationAddImage(destination,
-                              image.CGImage,
-                              (__bridge CFDictionaryRef)mutableMetadata);
-
-   // write the image data and mutableMetadata
-   BOOL success = CGImageDestinationFinalize(destination);
-   
-   // clean up
-   CFRelease(destination);
-   
-   return (success)? jpegDataRep : UIImageJPEGRepresentation(image, 0.5);
-}
-
 #pragma mark - UIImagePickerController and delagate methods
 
 - (void)callPhotoPickingCompletionBlock:(NSDictionary *) imageData
@@ -140,6 +104,8 @@
    ALAssetsLibraryAssetForURLResultBlock successBlock =
       ^(ALAsset *asset)
       {
+         // we grab the metadata but also save the image
+         // in case scanning the metadata fails
          NSMutableDictionary * imageData = [[NSMutableDictionary alloc] init];
          
          NSDictionary * metaData = [[asset defaultRepresentation] metadata];
@@ -175,6 +141,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
    }
    else
    {
+      // we can only grab the image
       UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
       NSDictionary * imageData = [NSDictionary dictionaryWithObject:image forKey:@"UIImage"];
       [self dismissViewControllerAnimated:YES completion:nil];
@@ -217,9 +184,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
    [self callMessagingCompletionBlock:msgResult];
 }
 
-- (void)sendMessageWithImage:(UIImage *)image
-                withMetaData:(NSDictionary *)metaData
-          andCompletionBlock:(MessagingCompletionBlock)completionBlock;
+- (void)sendMessageWithImageData:(NSData *)imageData
+              andCompletionBlock:(MessagingCompletionBlock)completionBlock;
 {
    if (![MFMessageComposeViewController canSendText]) return;
    if (![MFMessageComposeViewController respondsToSelector:@selector(canSendAttachments)]) return;
@@ -231,9 +197,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
    composer.messageComposeDelegate = self;
    [composer setBody:@"Here's some LiFE for you...because you can never have too much LiFE!"];
    
-   NSData * attachment = [self jpegImageRepforImage:image andMetaData:metaData];
    NSString* uti = (NSString*)kUTTypeMessage;
-   [composer addAttachmentData:attachment typeIdentifier:uti filename:@"LiFE.jpg"];
+   [composer addAttachmentData:imageData typeIdentifier:uti filename:@"LiFE.jpg"];
    
    [self presentViewController:composer animated:YES completion:nil];
 }
