@@ -591,13 +591,18 @@ typedef void (^PhotoWorkBlock)();
    else
       [self removeAllAlertsForcefully:NO];
    
-   [_grid restoreGrid];
-   
    if (holdTime > 2)
    {
+      // If the game hasn't been saved send what you see
+      // If the game has been saved, send the saved game by restoring the grid
+      if (_gameNeedsSaving == NO)
+         [_grid restoreGrid];
+      
       [self beginMessagingAtPosition:position];
       return;
    }
+
+   [_grid restoreGrid];
 }
 
 - (void)updateGenerationDuration:(float)duration
