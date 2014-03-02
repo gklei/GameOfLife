@@ -763,7 +763,7 @@ withCompletionBlock:(void (^)())completionBlock
    GLScannerAnimation *scannerAnimation = [[GLScannerAnimation alloc] initWithScannerDelegate:_grid];
    scannerAnimation.updateIncrement = 20;
    scannerAnimation.duration = 1.0;
-   [scannerAnimation runAnimationOnParent:self
+   [scannerAnimation runAnimationOnParent:_grid
                       withCompletionBlock:^
     {
        [_grid scanAnimationFinished];
