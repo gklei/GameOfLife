@@ -796,7 +796,6 @@ withCompletionBlock:(void (^)())completionBlock
    
    if (viewImage)
    {
-      // add metadata to image??
       if (save)
       {
          // save the screenshot
@@ -859,6 +858,7 @@ withCompletionBlock:(void (^)())completionBlock
                [self animateNode:node toPosition:buttonPosition withCompletionBlock:^
                 {
                    [_viewController sendMessageWithImage:viewImage
+                                            withMetaData:exifMetaData
                                       andCompletionBlock:msgBlock];
                 }];
             }

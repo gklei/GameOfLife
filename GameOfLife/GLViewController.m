@@ -13,6 +13,7 @@
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
+
 @interface GLViewController()<UINavigationControllerDelegate,
                               UIImagePickerControllerDelegate,
                               MFMessageComposeViewControllerDelegate>
@@ -91,11 +92,77 @@
    // Release any cached data, images, etc that aren't in use.
 }
 
+#pragma mark - helper function to generate NSData with image and metadatav
+- (NSData *)jpegImageRepforImage:(UIImage *)image
+                     andMetaData:(NSDictionary *)metaData
+{
+   if (metaData == nil)
+      return UIImageJPEGRepresentation(image, 0.5);
+   
+   // add the jpeg compression information to our meta data
+   NSMutableDictionary * mutableMetadata = [metaData mutableCopy];
+   [mutableMetadata setObject:@(0.5)
+                       forKey:(__bridge NSString *)kCGImageDestinationLossyCompressionQuality];
+
+   // Create an image destination
+   NSMutableData * jpegDataRep = [NSMutableData data];
+   CGImageDestinationRef destination =
+      CGImageDestinationCreateWithData((__bridge CFMutableDataRef)jpegDataRep,
+                                       kUTTypeJPEG,
+                                       1,
+                                       NULL);
+   if (destination == nil)
+      return UIImageJPEGRepresentation(image, 0.5);
+   
+   // add the image data
+   CGImageDestinationAddImage(destination,
+                              image.CGImage,
+                              (__bridge CFDictionaryRef)mutableMetadata);
+
+   // write the image data and mutableMetadata
+   BOOL success = CGImageDestinationFinalize(destination);
+   
+   // clean up
+   CFRelease(destination);
+   
+   return (success)? jpegDataRep : UIImageJPEGRepresentation(image, 0.5);
+}
+
 #pragma mark - UIImagePickerController and delagate methods
 
 - (void)callPhotoPickingCompletionBlock:(NSDictionary *) imageData
 {
    if (_photoCompletionBlock) _photoCompletionBlock(imageData);
+}
+
+- (void)grabImageDataFromUrl:(NSURL *)url
+{
+   ALAssetsLibraryAssetForURLResultBlock successBlock =
+      ^(ALAsset *asset)
+      {
+         NSMutableDictionary * imageData = [[NSMutableDictionary alloc] init];
+         
+         NSDictionary * metaData = [[asset defaultRepresentation] metadata];
+         NSDictionary * exif = [metaData objectForKey:(NSString *)kCGImagePropertyExifDictionary];
+         NSString * comment = [exif objectForKey:(NSString*)kCGImagePropertyExifUserComment];
+         if (comment) [imageData setObject:comment forKey:@"GridRep"];
+         
+         UIImage * image = [UIImage imageWithCGImage:[[asset defaultRepresentation]
+                                                      fullResolutionImage]];
+         [imageData setObject:image forKey:@"UIImage"];
+         [self callPhotoPickingCompletionBlock:imageData];
+      };
+
+   ALAssetsLibraryAccessFailureBlock errorBlock =
+      ^(NSError *error)
+      {
+         NSLog(@"error = %@", error);
+      };
+   
+   ALAssetsLibrary * assetLib = [[ALAssetsLibrary alloc] init];
+   [assetLib assetForURL:url resultBlock:successBlock failureBlock:errorBlock];
+   
+   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker
@@ -104,41 +171,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
    NSURL * url = [info objectForKey:UIImagePickerControllerReferenceURL];
    if (url)
    {
-      ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-      [library assetForURL:url
-               resultBlock:
-                ^(ALAsset *asset)
-                {
-                   NSMutableDictionary * imageData = [[NSMutableDictionary alloc] init];
-                   NSDictionary * metaData = [[asset defaultRepresentation] metadata];
-                   if (metaData)
-                   {
-                      NSDictionary * exifData =
-                        [metaData objectForKey:(NSString *)kCGImagePropertyExifDictionary];
-                      
-                      if (exifData)
-                      {
-                         NSString * comment =
-                           [exifData objectForKey:(NSString*)kCGImagePropertyExifUserComment];
-                         
-                         if (comment)
-                            [imageData setObject:comment forKey:@"GridRep"];
-                      }
-                   }
-                   
-                   UIImage * image =
-                     [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
-                   
-                   [imageData setObject:image forKey:@"UIImage"];
-                   [self callPhotoPickingCompletionBlock:imageData];
-                }
-              failureBlock:
-                ^(NSError *error)
-                {
-                   NSLog(@"error = %@", error);
-                }];
-      
-      [self dismissViewControllerAnimated:YES completion:nil];
+      [self grabImageDataFromUrl:url];
    }
    else
    {
@@ -185,6 +218,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 }
 
 - (void)sendMessageWithImage:(UIImage *)image
+                withMetaData:(NSDictionary *)metaData
           andCompletionBlock:(MessagingCompletionBlock)completionBlock;
 {
    if (![MFMessageComposeViewController canSendText]) return;
@@ -197,7 +231,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
    composer.messageComposeDelegate = self;
    [composer setBody:@"Here's some LiFE for you...because you can never have too much LiFE!"];
    
-   NSData* attachment = UIImageJPEGRepresentation(image, 0.5);
+   NSData * attachment = [self jpegImageRepforImage:image andMetaData:metaData];
    NSString* uti = (NSString*)kUTTypeMessage;
    [composer addAttachmentData:attachment typeIdentifier:uti filename:@"LiFE.jpg"];
    

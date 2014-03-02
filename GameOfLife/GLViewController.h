@@ -19,5 +19,6 @@ typedef void (^MessagingCompletionBlock)(MessageComposeResult msgResult);
            withCompletionBlock:(PhotoPickingCompletionBlock)completionBlock;
 
 - (void)sendMessageWithImage:(UIImage *)image
+                withMetaData:(NSDictionary *)metaData
           andCompletionBlock:(MessagingCompletionBlock)completionBlock;
 @end
