@@ -58,6 +58,11 @@
 
 @implementation GLGrid
 
++ (int)currentVersion
+{
+   return 1;
+}
+
 - (void)observeGridLiveColorNameChanges
 {
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
@@ -682,116 +687,92 @@
    return (info & kCGBitmapAlphaInfoMask);
 }
 
-- (CrayolaColorName)colorFromData:(const UInt8 *)data
-                        forRegion:(CGRect)region
-                    withScanWidth:(int)scanWidth
-                           andRed:(int)offsetR
-                    andBlueOffset:(int)offsetB
+- (BOOL)canScanPreScaledImage:(CGImageRef)imageRef
+                 getRedOffset:(int &)redOffset
+                getBlueOffset:(int &)blueOffet
 {
-   static CGFloat scaleForOffset = 0.05;
-   int lastWhiteness = 0;
-   CGFloat fRed = 0, fGreen = 0, fBlue = 0, fAlpha = 0;
+   // make sure the image was prescaled properly
+   size_t pixelWidth = CGImageGetWidth(imageRef);
+   size_t pixelHeight = CGImageGetHeight(imageRef);
    
-   // four point scan for brightest color
-   CGFloat xPos = region.origin.x + region.size.width * 0.50;  // region center x
-   CGFloat yPos = region.origin.y + region.size.height * 0.50; // region center y
-   
-   CGFloat xOffset = region.size.width * scaleForOffset;
-   CGFloat yOffset = region.size.height * scaleForOffset;
-   xPos -= xOffset;
-   yPos -= yOffset;
-   
-   for (int i = 0; i < 4; ++i)
-   {
-      if (i == 1) xPos += xOffset * 2;
-      if (i == 2) yPos += yOffset * 2;
-      if (i == 3) xPos -= xOffset * 2;
-      
-      int pixelPos = ((scanWidth  * yPos) + xPos) * 4;
-      int red   = data[pixelPos + offsetR];
-      int green = data[pixelPos + 1];
-      int blue  = data[pixelPos + offsetB];
-      int alpha = data[pixelPos + 2];
-      
-      if (alpha != 0)
-      {
-         int whiteness = red + green + blue;
-         if (whiteness > lastWhiteness)
-         {
-            lastWhiteness = whiteness;
-            fRed = red;
-            fGreen = green;
-            fBlue = blue;
-            fAlpha = alpha;
-         }
-      }
-   }
-   
-   return [UIColor nearestCrayolaColorNameForR:fRed/255 g:fGreen/255 b:fBlue/255 a:fAlpha/255];
-}
-
-- (BOOL)scanImage:(CGImageRef)imageRef
-           colors:(std::vector<CrayolaColorName> &)colors
-          flipped:(BOOL)flipped
-{
-   // verify we can scan the image and the color offsets
-   int offsetR, offsetB;
-   switch ([self alphaTypeForImage:imageRef])
-   {
-      case -1:
-         NSLog(@"Unsupported image format");
-         return false;
-      case kCGImageAlphaPremultipliedFirst:  // fall through
-      case kCGImageAlphaFirst:               // fall through
-      case kCGImageAlphaNoneSkipFirst:
-         offsetR = 2; // BGRA
-         offsetB = 0;
-         break;
-      default:
-         offsetR = 0; // RGBA
-         offsetB = 2;
-   }
-   
-   CFDataRef pixelData = CGDataProviderCopyData(CGImageGetDataProvider(imageRef));
-   const UInt8 * data = CFDataGetBytePtr(pixelData);
-   
-   float imageWidth = CGImageGetWidth(imageRef);
-   float imageHeight = CGImageGetHeight(imageRef);
-   
-   if (imageWidth != _viewSize.width || imageHeight != _viewSize.height)
+   if (pixelWidth != _gridSize.width || pixelHeight != _gridSize.height)
    {
       NSLog(@"Image not pre-scaled properly");
       return NO;
    }
    
-   float scanWidth  = _gridSize.width  / _dimensions.columns;
-   float scanHeight = _gridSize.height / _dimensions.rows;
+   // verify we can scan the image and if so, set the color offsets
+   switch ([self alphaTypeForImage:imageRef])
+   {
+      case -1:
+         NSLog(@"Unsupported image format");
+         return NO;
+      case kCGImageAlphaPremultipliedFirst:  // fall through
+      case kCGImageAlphaFirst:               // fall through
+      case kCGImageAlphaNoneSkipFirst:
+         redOffset = 2; // BGRA
+         blueOffet = 0;
+         break;
+      default:
+         redOffset = 0; // RGBA
+         blueOffet = 2;
+   }
    
-   for (int row = 0;
-        row < _dimensions.rows && (((row + 1) * scanHeight) < imageHeight);
-        ++row)
+   return YES;
+}
+
+- (BOOL)scanPreScaledImage:(CGImageRef)imageRef
+                    colors:(std::vector<CrayolaColorName> &)colors
+                   flipped:(BOOL)flipped
+{
+   int offsetR, offsetB;
+   if (![self canScanPreScaledImage:imageRef getRedOffset:offsetR getBlueOffset:offsetB])
+      return NO;
+   
+   CFDataRef pixelData = CGDataProviderCopyData(CGImageGetDataProvider(imageRef));
+   if (pixelData == NULL)
+      return NO;
+      
+   const UInt8 * data = CFDataGetBytePtr(pixelData);
+   
+   size_t pixelWidth = CGImageGetWidth(imageRef);
+   size_t pixelHeight = CGImageGetHeight(imageRef);
+   
+   int scanWidth  = (int)((float)pixelWidth  / _dimensions.columns);
+   int scanHeight = (int)((float)pixelHeight / _dimensions.rows);
+   
+   int scanWidthOffset  = scanWidth * 0.5;
+   int scanHeightOffset = scanHeight * 0.5;
+   
+   for (int row = 0; row < _dimensions.rows; ++row)
    {
       for (int col = 0; col < _dimensions.columns; ++col)
       {
-         int xPos = col * scanWidth;
-         int yPos = row * scanHeight;
+         int xPos = col * scanWidth + scanWidthOffset;
+         int yPos = row * scanHeight + scanHeightOffset;
          
-         CGRect region = CGRectMake(xPos, yPos, scanWidth, scanHeight);
+         unsigned long pixelPos = ((pixelWidth  * yPos) + xPos) * 4;
          
-         CrayolaColorName name = [self colorFromData:data
-                                           forRegion:region
-                                       withScanWidth:imageWidth
-                                              andRed:offsetR
-                                       andBlueOffset:offsetB];
+         CGFloat red   = data[pixelPos + offsetR] / 255.0;
+         CGFloat green = data[(pixelPos + 1)]     / 255.0;
+         CGFloat blue  = data[pixelPos + offsetB] / 255.0;
+         CGFloat alpha = data[pixelPos + 3]       / 255.0;
          
-//         int index = ((flipped)? ((_dimensions.rows - 1) - row) : row) * _dimensions.columns + col;
-         int index = ((_dimensions.rows - 1) - row) * _dimensions.columns + col;
+         CrayolaColorName name = [UIColor nearestCrayolaColorNameForR:red g:green b:blue a:alpha];
+         
+         // if the image is already flipped, then it is in the same orientation
+         // as OpenGL, so just set the calculate index normally
+         // if the image is not flipped, then we must flip the index to  compensate
+         // for the fact that OpenGl is flipped compared to cocoa
+         int index = flipped? row * _dimensions.columns + col:
+                              ((_dimensions.rows - 1) - row) * _dimensions.columns + col;
+         
          colors[index] = name;
       }
    }
    
    CFRelease(pixelData);
-   return true;
+   return YES;
 }
 
 - (CrayolaColorName)calculateBackgroundColor:(std::vector<CrayolaColorName> &)colors
@@ -867,7 +848,7 @@
    _scannedStates.clear();
    _scannedStates = std::vector<char>(_tiles.count, DEAD);
 
-   if (![self scanImage:imageRef colors:_scannedColors flipped:flipped])
+   if (![self scanPreScaledImage:imageRef colors:_scannedColors flipped:flipped])
       return;
    
    CrayolaColorName bgrndColor = [self calculateBackgroundColor:_scannedColors];
@@ -877,100 +858,26 @@
       forBackgroundColor:bgrndColor];
 }
 
-//UIImageOrientationUp,            // default orientation
-//UIImageOrientationDown,          // 180 deg rotation
-//UIImageOrientationLeft,          // 90 deg CCW
-//UIImageOrientationRight,         // 90 deg CW
-//UIImageOrientationUpMirrored,    // as above but image mirrored along other axis. horizontal flip
-//UIImageOrientationDownMirrored,  // horizontal flip
-//UIImageOrientationLeftMirrored,  // vertical flip
-//UIImageOrientationRightMirrored,
-
 static inline double radians(double degrees) {return degrees * M_PI/180;}
 
 - (void)scanImageForGameBoard:(UIImage *)image
 {
    if (image)
    {
-      BOOL flipped = NO;
-      BOOL rotate90 = NO;
-      
-//UIImageOrientationUp,
-//UIImageOrientationDown,
-//UIImageOrientationLeft,
-//UIImageOrientationRight,
-//UIImageOrientationUpMirrored,
-//UIImageOrientationDownMirrored,
-//UIImageOrientationLeftMirrored,
-//UIImageOrientationRightMirrored
-      
-//      UIImageOrientation orientation = image.imageOrientation;
-//      switch (orientation)
-//      {
-//         case UIImageOrientationLeftMirrored:   // fall through
-//         case UIImageOrientationRightMirrored:
-//            flipped = YES;                      // keep falling through
-//         case UIImageOrientationLeft:           // fall through
-//         case UIImageOrientationRight:          // fall through
-//            rotate90 = YES;
-//            break;
-//         case UIImageOrientationDown:           // fall through
-//         case UIImageOrientationDownMirrored:
-//            flipped = YES;
-//            break;
-//         default:
-//            break;
-//      }
-      
-      if (image.size.width > _viewSize.height)
-         rotate90 = YES;
-      
-      BOOL resize = NO;
-      if (rotate90)
-         resize = (image.size.width != _viewSize.height || image.size.height != _viewSize.width);
-      else
-         resize = (image.size.width != _viewSize.width || image.size.height != _viewSize.height);
-      
-//     [GLAlertLayer debugAlert:[NSString stringWithFormat:@"rotate90 = %d, resize = %d",
-//                                                         rotate90, resize]
-//                   withParent:self
-//                  andDuration:20];
-      
-      if (resize)
+      if (image.size.width != _gridSize.width || image.size.height != _gridSize.height)
       {
-//         if (rotate90)
-//         {
-//            UIGraphicsBeginImageContext(image.size);
-//            CGContextRef context = UIGraphicsGetCurrentContext();
-//            CGContextTranslateCTM(context, image.size.width * 0.5, image.size.height * 0.5);
-//            CGContextRotateCTM(context, radians(-90));
-//            [image drawAtPoint:CGPointMake(0, 0)];
-//            image = UIGraphicsGetImageFromCurrentImageContext();
-//            UIGraphicsEndImageContext();
-//         }
-//         if (rotate90)
-//         {
-//            CGRect imageRect = CGRectMake(0, 0, image.size.height, image.size.width);
-//            UIGraphicsBeginImageContext(imageRect.size);
-//            CGContextRef context = UIGraphicsGetCurrentContext();
-//            CGContextTranslateCTM(context,
-//                                  imageRect.size.width * 0.5,
-//                                  imageRect.size.height * 0.5);
-//            CGContextRotateCTM(context, M_PI_2);   // rotate 90˚
-//            [image drawInRect:imageRect];
-//            image = UIGraphicsGetImageFromCurrentImageContext();
-//            UIGraphicsEndImageContext();
-//         }
-         
-         CGRect imageRect = CGRectMake(0, 0, _viewSize.width, _viewSize.height);
-         
-         UIGraphicsBeginImageContext(imageRect.size);
+         CGRect imageRect = CGRectMake(0, 0, _gridSize.width, _gridSize.height);
+         UIGraphicsBeginImageContextWithOptions(imageRect.size, NO, 1.0);
+         CGContextRef context = UIGraphicsGetCurrentContext();
+         CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
+         CGContextSetShouldAntialias(context, NO);
          [image drawInRect:imageRect];
          image = UIGraphicsGetImageFromCurrentImageContext();
          UIGraphicsEndImageContext();
       }
       
-      [self scanPreScaledImageForGameBoard:[image CGImage] flipped:flipped];
+      BOOL imageIsFlipped = (image.imageOrientation == UIImageOrientationDown);
+      [self scanPreScaledImageForGameBoard:[image CGImage] flipped:imageIsFlipped];
    }
 }
 
@@ -979,19 +886,22 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
    if (gridRep)
    {
       NSArray * data = [gridRep componentsSeparatedByString:@","];
-      if (data.count < 7) return NO;
+      int headerFields = 8;
+      if (data.count < headerFields) return NO;
       if ([(NSString *)[data objectAtIndex:0] compare:@"GRID"] != NSOrderedSame) return NO;
-      if ([(NSString *)[data objectAtIndex:1] compare:@"IMAGE"] != NSOrderedSame) return NO;
-      int imageIndex = [(NSString *)[data objectAtIndex:2] intValue];
-      if ([(NSString *)[data objectAtIndex:3] compare:@"WIDTH"] != NSOrderedSame) return NO;
-      int columns = [(NSString *)[data objectAtIndex:4] intValue];
+      int version = [(NSString *)[data objectAtIndex:1] intValue];
+      if (version != GLGrid.currentVersion) return NO;
+      if ([(NSString *)[data objectAtIndex:2] compare:@"IMAGE"] != NSOrderedSame) return NO;
+      int imageIndex = [(NSString *)[data objectAtIndex:3] intValue];
+      if ([(NSString *)[data objectAtIndex:4] compare:@"WIDTH"] != NSOrderedSame) return NO;
+      int columns = [(NSString *)[data objectAtIndex:5] intValue];
       if (columns != _dimensions.columns) return NO;
-      if ([(NSString *)[data objectAtIndex:5] compare:@"HEIGHT"] != NSOrderedSame) return NO;
-      int rows = [(NSString *)[data objectAtIndex:6] intValue];
+      if ([(NSString *)[data objectAtIndex:6] compare:@"HEIGHT"] != NSOrderedSame) return NO;
+      int rows = [(NSString *)[data objectAtIndex:7] intValue];
       if (rows == 0) return NO;
       if (data.count < rows * columns * 2) return NO;
       
-      int startIndex = 7;
+      int startIndex = headerFields;
       int girdDataEnd = rows * columns + startIndex;
       
       // verify the data looks correct
@@ -1068,13 +978,14 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
 - (NSString *)generateMetaData
 {
    unsigned long count = _tiles.count;
-   NSUInteger capacity = count * (2 + 3) + 30;  // 2 chars per tile for state + 3 for color
-                                                // plus 30 for the headers
+   NSUInteger capacity = count * (2 + 3) + 34;  // 2 chars per tile for state + 3 for color
+                                                // plus 34 for the various header fields
    NSMutableString * result = [NSMutableString stringWithCapacity:capacity];
    
    // add the grid state
-   [result appendString:[NSString stringWithFormat:@"GRID,IMAGE,%lu,WIDTH,%d,HEIGHT,%d,",
-                         (unsigned long)_gridImageIndex, _dimensions.columns, _dimensions.rows]];
+   [result appendString:[NSString stringWithFormat:@"GRID,%d,IMAGE,%lu,WIDTH,%d,HEIGHT,%d,",
+                         GLGrid.currentVersion, (unsigned long)_gridImageIndex,
+                         _dimensions.columns, _dimensions.rows]];
    
    for (GLTileNode * node in _tiles)
    {

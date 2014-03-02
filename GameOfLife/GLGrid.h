@@ -16,6 +16,7 @@ typedef struct {
 } GridDimensions;
 
 
+// forward declarations
 @class GLTileNode;
 
 
@@ -27,6 +28,8 @@ typedef struct {
 @property (nonatomic, readwrite, getter = isInContinuousLoop) BOOL inContinuousLoop;
 @property (nonatomic, readwrite) BOOL considerDeeperLoops;
 @property (nonatomic, readwrite) BOOL usesMultiColors;
+
++ (int)currentVersion;
 
 - (id)initWithSize:(CGSize)size;
 
