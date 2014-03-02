@@ -16,11 +16,15 @@
 
    [howToPlayPage addHeaderText:@"HOW TO PLAY"];
    [howToPlayPage addNewLines:1];
-   [howToPlayPage addBodyText:@"1. The Game of Life was orginally created by a British mathematician named John Conway."];
-   [howToPlayPage addBodyText:@"2. If you don't read anything else, it's great that your read this line."];
-   [howToPlayPage addBodyText:@"3. The second thing you should know is that all of the time you spend playing this game is certainly not time wasted."];
-   [howToPlayPage addBodyText:@"4. This is another line that is really important."];
-
+   [howToPlayPage addBodyText:@"5. The Life algorithm was created by British mathematician "
+                               "John Conway. Without John, we couldn't have brought you LiFE!"];
+   [howToPlayPage addBodyText:@"4. If you don't read anything else, it's important that you "
+                               "read this line."];
+   [howToPlayPage addBodyText:@"3. The third thing you should know is that all the time "
+                               "you spend playing LiFE is most certainly not time wasted."];
+   [howToPlayPage addBodyText:@"2. What you get out of LiFE depends on what you put into it."];
+   [howToPlayPage addBodyText:@"1. The \"Really Usefull Stuff\" is on the following pages."];
+   
    return howToPlayPage;
 }
 
@@ -30,14 +34,15 @@
    
    [creditsPage addHeaderText:@"CREDITS"];
    [creditsPage addNewLines:1];
-   [creditsPage addBodyText:@"This game was created by:"];
+   [creditsPage addBodyText:@"This game was made possible by:"];
    [creditsPage addNewLines:1];
-   [creditsPage addBodyText:@"- Leif A. (Developer)"];
-   [creditsPage addBodyText:@"- Gregory K. (Developer)"];
-   [creditsPage addBodyText:@"- Nico G. (Sound FX + Creative Work)"];
-   [creditsPage addBodyText:@"- John Conway (Algorithm)"];
+   [creditsPage addBodyText:@"- Greg (Developer)"];
+   [creditsPage addBodyText:@"- John (Algorithm)"];
+   [creditsPage addBodyText:@"- Leif (Developer)"];
+   [creditsPage addBodyText:@"- Nico (Sound FX + Creative Work)"];
    [creditsPage addNewLines:1];
-   [creditsPage addBodyText:@"We hope that you enjoy LiFE and that it is a pleasant experience for you.  Thank you for trying out LiFE!"];
+   [creditsPage addBodyText:@"We hope that LiFE is a great experience for you...and we "
+                             "thank you with our undying gratitude for trying out LiFE!"];
 
    return creditsPage;
 }
@@ -48,10 +53,12 @@
 
    [importPhotoPage addHeaderText:@"IMPORT PHOTO"];
    [importPhotoPage addNewLines:1];
-   [importPhotoPage addBodyText:@"Try loading a previously captured LiFE state by pressing and holding the Camera button.  You will be taken to your Photo Library where you can access whichever photo you would like to turn to LiFE."];
+   [importPhotoPage addBodyText:@"Try loading a previously captured LiFE game by pressing and "
+                                 "holding the Camera button.  You will be shown your Photos "
+                                 "where you can pick a photo to bring to LiFE."];
    [importPhotoPage addNewLines:1];
-   [importPhotoPage addBodyText:@"This feature may be used with any picture in your Photo Library, but it will work the best with a picture that was captured from this app."];
-
+   [importPhotoPage addBodyText:@"LiFE will scan any picture in your Library, but will work best "
+                                 "with a picture saved with LiFE."];
    return importPhotoPage;
 }
 
@@ -61,9 +68,11 @@
 
    [sharePhotoPage addHeaderText:@"SHARE PHOTO"];
    [sharePhotoPage addNewLines:1];
-   [sharePhotoPage addBodyText:@"Share a saved LiFE state with your friends by pressing and holding the Restore button."];
+   [sharePhotoPage addBodyText:@"Share LiFE with your friends and family by pressing "
+                                "and holding the Restore button."];
    [sharePhotoPage addNewLines:1];
-   [sharePhotoPage addBodyText:@"You will be taken to your messages app where you can add the repient(s) who you wish to share your LiFE state with."];
+   [sharePhotoPage addBodyText:@"You will be shown your Messages app where you can add "
+                                "people you wish to share LiFE with."];
 
    return sharePhotoPage;
 }

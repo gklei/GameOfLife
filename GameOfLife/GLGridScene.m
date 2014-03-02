@@ -23,7 +23,7 @@
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-#define DEFAULT_GENERATION_DURATION 0.8
+#define DEFAULT_GENERATION_DURATION 0.4
 #define BONUS_FOR_CLEARING_GRID     50
 
 typedef void (^PhotoWorkBlock)();
