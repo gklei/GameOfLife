@@ -290,6 +290,7 @@
 
 typedef enum
 {
+   CCN_BACKGROUND_CrayolaColor  = -2,
    CCN_INVALID_CrayolaColor     = -1,
    CCN_crayolaMahoganyColor,
    CCN_crayolaRedOrangeColor,

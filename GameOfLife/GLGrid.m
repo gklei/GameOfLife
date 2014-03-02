@@ -50,6 +50,8 @@
    CGSize  _viewSize;
    CGSize  _gridSize;  // may be smaller than _viewSize
    
+   NSUInteger _gridImageIndex;
+   
    CrayolaColorName _currentColorName;
 }
 @end
@@ -276,7 +278,6 @@
 
 - (void)updateNextGeneration
 {
-   // currently, we only track back four generations to track looping
    for (int i = 0; i < _tiles.count; ++i)
       _nextGenerationTileStates[i] = [self getIsLivingForNextGenerationAtIndex:i];
    
@@ -973,6 +974,78 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
    }
 }
 
+- (BOOL)readGridRepresentation:(NSString *)gridRep
+{
+   if (gridRep)
+   {
+      NSArray * data = [gridRep componentsSeparatedByString:@","];
+      if (data.count < 7) return NO;
+      if ([(NSString *)[data objectAtIndex:0] compare:@"GRID"] != NSOrderedSame) return NO;
+      if ([(NSString *)[data objectAtIndex:1] compare:@"IMAGE"] != NSOrderedSame) return NO;
+      int imageIndex = [(NSString *)[data objectAtIndex:2] intValue];
+      if ([(NSString *)[data objectAtIndex:3] compare:@"WIDTH"] != NSOrderedSame) return NO;
+      int columns = [(NSString *)[data objectAtIndex:4] intValue];
+      if (columns != _dimensions.columns) return NO;
+      if ([(NSString *)[data objectAtIndex:5] compare:@"HEIGHT"] != NSOrderedSame) return NO;
+      int rows = [(NSString *)[data objectAtIndex:6] intValue];
+      if (rows == 0) return NO;
+      if (data.count < rows * columns * 2) return NO;
+      
+      int startIndex = 7;
+      int girdDataEnd = rows * columns + startIndex;
+      
+      // verify the data looks correct
+      if ([(NSString *)[data objectAtIndex:girdDataEnd] compare:@"COLOR"] != NSOrderedSame) return NO;
+      
+      // scan the state
+      _scannedStates.clear();
+      _scannedStates = std::vector<char>(_tiles.count, DEAD);
+      
+      int loopEnd = std::min(_dimensions.rows, rows) * columns + startIndex;
+      for (int index = startIndex; index < loopEnd; ++index)
+         if ([(NSString *)[data objectAtIndex:index] intValue] != 0)
+            _scannedStates[index - startIndex] = LIVING;
+      
+      // scan the color
+      startIndex = girdDataEnd + 1;
+      girdDataEnd = rows * columns + startIndex;
+      loopEnd = std::min(_dimensions.rows, rows) * columns + startIndex;
+      
+      _scannedColors.clear();
+      _scannedColors = std::vector<CrayolaColorName>(_tiles.count, CCN_INVALID_CrayolaColor);
+      for (int index = startIndex; index < loopEnd; ++index)
+      {
+         CrayolaColorName name =
+            (CrayolaColorName)[(NSString *)[data objectAtIndex:index] intValue];
+         
+         if (name < CCN_INVALID_CrayolaColor ||  name >= CCN_MAXIMUM_CrayolaColor)
+            _scannedColors[index - startIndex] = CCN_INVALID_CrayolaColor;
+         else
+            _scannedColors[index - startIndex] = name;
+      }
+      
+      NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+      [defaults setObject:[NSNumber numberWithUnsignedLong:imageIndex]
+                   forKey:@"GridImageIndex"];
+      
+      return YES;
+   }
+   
+   return NO;
+}
+
+- (void)scanImageDataForGameBoard:(NSDictionary *) imageData
+{
+   NSString * gridRep = [imageData objectForKey:@"GridRep"];
+   
+   if (gridRep)
+      if ([self readGridRepresentation:gridRep])
+         return;
+   
+   UIImage * image = [imageData objectForKey:@"UIImage"];
+   [self scanImageForGameBoard:image];
+}
+
 - (void)scanAnimationFinished
 {
    // scan animation is done,  ensure game is fully loaded
@@ -985,6 +1058,42 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
    
    [self restoreGrid];
    [self storeGridState];
+}
+
+- (void)setGridImageIndex:(NSUInteger)gridIndex
+{
+   _gridImageIndex = gridIndex;
+}
+
+- (NSString *)generateMetaData
+{
+   unsigned long count = _tiles.count;
+   NSUInteger capacity = count * (2 + 3) + 30;  // 2 chars per tile for state + 3 for color
+                                                // plus 30 for the headers
+   NSMutableString * result = [NSMutableString stringWithCapacity:capacity];
+   
+   // add the grid state
+   [result appendString:[NSString stringWithFormat:@"GRID,IMAGE,%lu,WIDTH,%d,HEIGHT,%d,",
+                         (unsigned long)_gridImageIndex, _dimensions.columns, _dimensions.rows]];
+   
+   for (GLTileNode * node in _tiles)
+   {
+      if (node.isLiving)
+         [result appendString:@"1,"];
+      else
+         [result appendString:@"0,"];
+   }
+   
+   // add the grid color
+   [result appendString:@"COLOR,"];
+   
+   for (GLTileNode * node in _tiles)
+   {
+      CrayolaColorName color = [self colorNameForNode:node];
+      [result appendString:[NSString stringWithFormat:@"%d,", color]];
+   }
+
+   return result;
 }
 
 #pragma mark GLScannerDelegate protocol
@@ -1040,6 +1149,34 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
    CGFloat dist = [self calcDistanceFromStart:_currentColorCenter toEnd:tile.position];
    dist /= _boardMaxDistance;
    return 1.0 - dist;
+}
+
+- (SKColor *)deadColor
+{
+   return [SKColor crayolaCoconutColor];
+}
+
+- (CrayolaColorName)colorNameForNode:(GLTileNode *)node
+{
+   if (_lockedColorMode) return _currentColorName;
+   
+   if (node && node.isLiving)
+   {
+      NSUInteger index = [self indexOfTile:node];
+      if (index >= _tiles.count)
+      {
+         NSLog(@"indexOfTile returned invalid index (%lu)", (unsigned long)index);
+         return _currentColorName;
+      }
+      
+      CrayolaColorName colorName = _currentTileColorNames[index];
+      if (colorName == CCN_INVALID_CrayolaColor)
+         colorName = _currentColorName;
+      
+      return colorName;
+   }
+   
+   return CCN_BACKGROUND_CrayolaColor;
 }
 
 - (SKColor *)colorForNode:(GLTileNode *)node withColorName:(CrayolaColorName)colorName
@@ -1102,7 +1239,7 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
 
 - (SKColor *)deadColorForNode:(GLTileNode *)node
 {
-   return [SKColor crayolaCoconutColor];
+   return [self deadColor];
 }
 
 

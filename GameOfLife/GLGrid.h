@@ -15,7 +15,10 @@ typedef struct {
    int columns;
 } GridDimensions;
 
+
 @class GLTileNode;
+
+
 @interface GLGrid : SKNode <GLScannerDelegate>
 
 @property (nonatomic, readonly) unsigned long long generationCount;
@@ -50,7 +53,11 @@ typedef struct {
 - (BOOL)startedWithLife;
 
 - (void)toggleTileLiving:(GLTileNode *)tile;
-- (void)scanImageForGameBoard:(UIImage *)image;
+- (void)scanImageDataForGameBoard:(NSDictionary *) imageData;
 - (void)scanAnimationFinished;
+
+- (void)setGridImageIndex:(NSUInteger)gridIndex;
+
+- (NSString *)generateMetaData;
 
 @end

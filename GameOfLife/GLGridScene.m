@@ -23,7 +23,6 @@
 #import <OpenGLES/ES1/glext.h>
 #import <ImageIO/ImageIO.h>
 
-
 #define DEFAULT_GENERATION_DURATION 0.8
 #define BONUS_FOR_CLEARING_GRID     50
 
@@ -166,7 +165,7 @@ typedef void (^PhotoWorkBlock)();
    hudItem.valueType = HVT_ULONG;
    hudItem.imagePairs = imagePairs;
    hudItem.range = HUDItemRangeMake(0, imagePairs.count - 1);
-   hudItem.defaultvalue = [NSNumber numberWithUnsignedInteger:0];
+   hudItem.defaultvalue = [NSNumber numberWithUnsignedLong:0];
    
    GLHUDSettingsManager * hudManager = [GLHUDSettingsManager sharedSettingsManager];
    [hudManager addHudItem:hudItem];
@@ -641,14 +640,57 @@ typedef void (^PhotoWorkBlock)();
    }
 }
 
-#pragma mark - sceenshot related functions
-- (NSDictionary *)generateMetaDataForImage
+#pragma mark - sceenshot related functionsv
+- (NSMutableDictionary *)exifDataFromImage:(UIImage *)image
 {
-   NSAssert(_pausedForSceenShot == YES, "Should pause while grabbing metadata");
-   NSDictionary * result = nil;
+   // get exif data in the image (if any)
+   NSMutableDictionary * result = nil;
+   NSData * pngData = UIImagePNGRepresentation(image);
    
-//   kCGImagePropertyExifAuxDictionary;
-//   result = [NSDictionary dictionaryWithObjectsAndKeys:
+   CGImageSourceRef source =
+      CGImageSourceCreateWithData((__bridge CFDataRef)pngData, NULL);
+   
+   if (source)
+   {
+      NSDictionary * metadata =
+         (__bridge NSDictionary *)CGImageSourceCopyPropertiesAtIndex(source, 0, NULL);
+      
+      if (metadata)
+      {
+         NSDictionary * exif = [metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary];
+         if (exif)
+         {
+            result = [NSMutableDictionary dictionaryWithObject:[exif mutableCopy]
+                                                        forKey:@"{Exif}"];
+         }
+         
+         if (source) CFRelease(source);
+      }
+   }
+   
+   return result;
+}
+
+- (NSDictionary *)generateExifMetaDataForImage:(UIImage *)image
+{
+   NSAssert(_pausedForSceenShot == YES, @"Should pause while grabbing metadata");
+   
+   NSMutableDictionary * result = nil;
+   
+   NSString * metaDataStr = [_grid generateMetaData];
+   if (metaDataStr)
+   {
+      result = [self exifDataFromImage:image];
+      
+      if (!result)
+      {
+         result = [NSMutableDictionary dictionaryWithObject:[NSMutableDictionary dictionary]
+                                                     forKey:@"{Exif}"];
+      }
+      
+      NSMutableDictionary * exif = [result objectForKey:@"{Exif}"];
+      [exif setObject:metaDataStr forKey:(NSString*)kCGImagePropertyExifUserComment];
+   }
    
    return result;
 }
@@ -744,7 +786,7 @@ withCompletionBlock:(void (^)())completionBlock
    UIGraphicsEndImageContext();
    
    // grab the metadata
-   NSDictionary * metaData = [self generateMetaDataForImage];
+   NSDictionary * exifMetaData = [self generateExifMetaDataForImage:viewImage];
    
    // make certain the HUDs are restored
    [_generalHudLayer setHidden:NO];
@@ -755,15 +797,18 @@ withCompletionBlock:(void (^)())completionBlock
    if (viewImage)
    {
       // add metadata to image??
-      if (metaData)
-      {
-         
-      }
-      
       if (save)
       {
          // save the screenshot
-         UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+         ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
+         [library writeImageToSavedPhotosAlbum:viewImage.CGImage
+                                      metadata:exifMetaData
+                               completionBlock:
+            ^(NSURL * assetURL, NSError * error)
+            {
+               if (error)
+                  NSLog(@"writeImageToSavedPhotosAlbum ERROR:%@", error);
+            }];
          
          // create and animate the screenshot
          SKSpriteNode * node = [self addNodeForScreenShot:viewImage];
@@ -880,11 +925,11 @@ withCompletionBlock:(void (^)())completionBlock
    [self doPhotoAccessWithBlock:work];
 }
 
-- (void)scanImageForGameBoard:(UIImage *)image
+- (void)scanImageDataForGameBoard:(NSDictionary *) imageData
 {
-   if (_grid && image)
+   if (_grid && imageData)
    {
-      [_grid scanImageForGameBoard:image];
+      [_grid scanImageDataForGameBoard:imageData];
 
       // for some reason, when we return back to our app from the image
       // picker, there is a slight delay before the UI updates... this
@@ -910,7 +955,7 @@ withCompletionBlock:(void (^)())completionBlock
       if (_viewController)
       {
          PhotoPickingCompletionBlock completionBlock =
-         ^(UIImage * image) { [self scanImageForGameBoard:image]; };
+         ^(NSDictionary * imageData) { [self scanImageDataForGameBoard:imageData]; };
          
         [_viewController acquireImageFromSource:UIImagePickerControllerSourceTypeCamera
                             withCompletionBlock:completionBlock];
@@ -927,7 +972,7 @@ withCompletionBlock:(void (^)())completionBlock
       if (_viewController)
       {
          PhotoPickingCompletionBlock completionBlock =
-            ^(UIImage * image) { [self scanImageForGameBoard:image]; };
+            ^(NSDictionary * imageData) { [self scanImageDataForGameBoard:imageData]; };
       
          [_viewController acquireImageFromSource:UIImagePickerControllerSourceTypePhotoLibrary
                              withCompletionBlock:completionBlock];
@@ -1326,6 +1371,8 @@ withCompletionBlock:(void (^)())completionBlock
       NSUInteger imageIndex = [value unsignedLongValue];
       if (imageIndex + 1 >= _gridImagePairs.count)
          return;
+      
+      [_grid setGridImageIndex:imageIndex];
       
       [_grid setDeadImage:[_gridImagePairs objectAtIndex:imageIndex + 1]];
       [_grid setDeadRotation:0];

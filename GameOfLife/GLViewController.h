@@ -10,7 +10,7 @@
 #import <MessageUI/MessageUI.h>
 #import <SpriteKit/SpriteKit.h>
 
-typedef void (^PhotoPickingCompletionBlock)(UIImage * image);
+typedef void (^PhotoPickingCompletionBlock)(NSDictionary * data);
 typedef void (^MessagingCompletionBlock)(MessageComposeResult msgResult);
 
 @interface GLViewController : UIViewController

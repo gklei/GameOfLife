@@ -10,6 +10,7 @@
 #import "GLGridScene.h"
 
 #import <AssetsLibrary/AssetsLibrary.h>
+#import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @interface GLViewController()<UINavigationControllerDelegate,
@@ -92,17 +93,60 @@
 
 #pragma mark - UIImagePickerController and delagate methods
 
-- (void)callPhotoPickingCompletionBlock:(UIImage *)image
+- (void)callPhotoPickingCompletionBlock:(NSDictionary *) imageData
 {
-   if (_photoCompletionBlock) _photoCompletionBlock(image);
+   if (_photoCompletionBlock) _photoCompletionBlock(imageData);
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-   UIImage *image = info[UIImagePickerControllerOriginalImage];
-   [self dismissViewControllerAnimated:YES completion:nil];
-   [self callPhotoPickingCompletionBlock:image];
+   NSURL * url = [info objectForKey:UIImagePickerControllerReferenceURL];
+   if (url)
+   {
+      ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+      [library assetForURL:url
+               resultBlock:
+                ^(ALAsset *asset)
+                {
+                   NSMutableDictionary * imageData = [[NSMutableDictionary alloc] init];
+                   NSDictionary * metaData = [[asset defaultRepresentation] metadata];
+                   if (metaData)
+                   {
+                      NSDictionary * exifData =
+                        [metaData objectForKey:(NSString *)kCGImagePropertyExifDictionary];
+                      
+                      if (exifData)
+                      {
+                         NSString * comment =
+                           [exifData objectForKey:(NSString*)kCGImagePropertyExifUserComment];
+                         
+                         if (comment)
+                            [imageData setObject:comment forKey:@"GridRep"];
+                      }
+                   }
+                   
+                   UIImage * image =
+                     [UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]];
+                   
+                   [imageData setObject:image forKey:@"UIImage"];
+                   [self callPhotoPickingCompletionBlock:imageData];
+                }
+              failureBlock:
+                ^(NSError *error)
+                {
+                   NSLog(@"error = %@", error);
+                }];
+      
+      [self dismissViewControllerAnimated:YES completion:nil];
+   }
+   else
+   {
+      UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+      NSDictionary * imageData = [NSDictionary dictionaryWithObject:image forKey:@"UIImage"];
+      [self dismissViewControllerAnimated:YES completion:nil];
+      [self callPhotoPickingCompletionBlock:imageData];
+   }
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
