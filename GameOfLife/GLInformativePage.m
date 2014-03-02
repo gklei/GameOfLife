@@ -35,7 +35,6 @@
    [creditsPage addHeaderText:@"CREDITS"];
    [creditsPage addNewLines:1];
    [creditsPage addBodyText:@"This game was made possible by:"];
-   [creditsPage addNewLines:1];
    [creditsPage addBodyText:@"- Greg (Developer)"];
    [creditsPage addBodyText:@"- John (Algorithm)"];
    [creditsPage addBodyText:@"- Leif (Developer)"];
@@ -43,7 +42,8 @@
    [creditsPage addNewLines:1];
    [creditsPage addBodyText:@"We hope that LiFE is a great experience for you...and we "
                              "thank you with our undying gratitude for trying out LiFE!"];
-
+   [creditsPage addBodyText:@"LiFE started out as a learning experiment using Apple's sprite "
+                             "kit for iOS. Everything in LiFE is made using sprite kit."];
    return creditsPage;
 }
 
