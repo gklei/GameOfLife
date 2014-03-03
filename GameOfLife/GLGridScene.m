@@ -1006,13 +1006,14 @@ withCompletionBlock:(void (^)())completionBlock
    else
    {
       // send the screenshot
-      if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-      {
-         [self sendScreenshotDataToMailApp:imageData
-                      withNodeForAnimation:node
-                                toPosition:buttonPosition];
-      }
-      else
+//      UIUserInterfaceIdiom idiom = [[UIDevice currentDevice] userInterfaceIdiom];
+//      if (idiom != UIUserInterfaceIdiomPad)
+//      {
+//         [self sendScreenshotDataToMailApp:imageData
+//                      withNodeForAnimation:node
+//                                toPosition:buttonPosition];
+//      }
+//      else
       {
          [self sendScreenshotDataToMessageApp:imageData
                          withNodeForAnimation:node

@@ -522,6 +522,7 @@
 		8ECA8977182371AE009D906F = {
 			isa = PBXGroup;
 			children = (
+				ED9276F618C42781009D5234 /* iPad */,
 				8E9EDE47188F843B005C66BB /* Splash.sks */,
 				8ECA898B182371AE009D906F /* GameOfLife */,
 				8EAA59BB184B0218008E34D9 /* SoundFX */,
@@ -684,6 +685,13 @@
 				8E3BAB12189389C300A56812 /* GLUITextButton.m */,
 			);
 			name = Controls;
+			sourceTree = "<group>";
+		};
+		ED9276F618C42781009D5234 /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = iPad;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1057,6 +1065,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1072,6 +1081,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
