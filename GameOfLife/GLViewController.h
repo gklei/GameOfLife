@@ -12,12 +12,16 @@
 
 typedef void (^PhotoPickingCompletionBlock)(NSDictionary * data);
 typedef void (^MessagingCompletionBlock)(MessageComposeResult msgResult);
+typedef void (^MailCompletionBlock)(MFMailComposeResult mailResult);
 
 @interface GLViewController : UIViewController
 
-- (void)acquireImageFromSource:(NSInteger)sourceType
+- (BOOL)acquireImageFromSource:(NSInteger)sourceType
            withCompletionBlock:(PhotoPickingCompletionBlock)completionBlock;
 
-- (void)sendMessageWithImageData:(NSData *)imageData
+- (BOOL)sendMessageWithImageData:(NSData *)imageData
               andCompletionBlock:(MessagingCompletionBlock)completionBlock;
+
+- (BOOL)sendMailWithImageData:(NSData *)imageData
+           andCompletionBlock:(MailCompletionBlock)completionBlock;
 @end

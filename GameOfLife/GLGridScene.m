@@ -785,6 +785,22 @@ withCompletionBlock:(void (^)())completionBlock
    [self.view drawViewHierarchyInRect:self.view.bounds afterScreenUpdates:NO];
    result = UIGraphicsGetImageFromCurrentImageContext();
    UIGraphicsEndImageContext();
+
+   return result;
+}
+
+- (UIImage *)generateHalfSizeImage:(UIImage *)image
+{
+   UIImage * result = nil;
+   
+   int width = image.size.width * 0.5;
+   int height = image.size.height * 0.5;
+   
+   CGRect rect = CGRectMake(0, 0, width, height);
+   UIGraphicsBeginImageContextWithOptions(rect.size, YES, 1);
+   [image drawInRect:rect];
+   result = UIGraphicsGetImageFromCurrentImageContext();
+   UIGraphicsEndImageContext();
    
    return result;
 }
@@ -793,11 +809,11 @@ withCompletionBlock:(void (^)())completionBlock
 - (NSData *)jpegImageRepforImage:(UIImage *)image andMetaData:(NSDictionary *)metaData
 {
    if (image == nil) return nil;
-   if (metaData == nil) return UIImageJPEGRepresentation(image, 0.5);
+   if (metaData == nil) return UIImageJPEGRepresentation(image, 0.2);
    
    // add the jpeg compression information to our meta data
    NSMutableDictionary * mutableMetadata = [metaData mutableCopy];
-   [mutableMetadata setObject:@(0.5)
+   [mutableMetadata setObject:@(0.2)
                        forKey:(__bridge NSString *)kCGImageDestinationLossyCompressionQuality];
    
    // Create an image destination
@@ -808,7 +824,7 @@ withCompletionBlock:(void (^)())completionBlock
                                        1,
                                        NULL);
    if (destination == nil)
-      return UIImageJPEGRepresentation(image, 0.5);
+      return UIImageJPEGRepresentation(image, 0.2);
    
    // add the image data
    CGImageDestinationAddImage(destination,
@@ -821,7 +837,7 @@ withCompletionBlock:(void (^)())completionBlock
    // clean up
    CFRelease(destination);
    
-      return (success)? jpegDataRep : UIImageJPEGRepresentation(image, 0.5);
+   return (success)? jpegDataRep : UIImageJPEGRepresentation(image, 0.2);
 }
 
 - (void)saveScreenshotDataToPhotoLibrary:(NSData *)imageData
@@ -846,54 +862,108 @@ withCompletionBlock:(void (^)())completionBlock
    }
 }
 
+- (void)sendScreenshotDataToMailApp:(NSData *)imageData
+               withNodeForAnimation:(SKSpriteNode *)node
+                         toPosition:(CGPoint)position
+{
+   if (_viewController && node)
+   {
+      // define the message handling completion block
+      MailCompletionBlock mailBlock = ^(MFMailComposeResult mailResult)
+      {
+         CGPoint position = CGPointMake(0, self.size.height - 20);
+         switch (mailResult)
+         {
+            case MFMailComposeResultCancelled:
+               // you know you cancelled, don't show anything
+               break;
+            case MFMailComposeResultFailed:
+            {
+               // report error case
+               [GLAlertLayer alertWithHeader:@"Mail Failed"
+                                        body:@"Failed to mail a message :("
+                                    position:position
+                                   andParent:self];
+               break;
+            }
+            case MFMailComposeResultSent:
+            {
+               // just for fun, let them know they sent LiFE!!
+               [GLAlertLayer alertWithHeader:@"Success"
+                                        body:@"Mailed LiFE to your friends!"
+                                    position:position
+                                   andParent:self];
+               break;
+            }
+            case MFMailComposeResultSaved:
+            {
+               // just for fun, let them know they sent LiFE!!
+               [GLAlertLayer alertWithHeader:@"Success"
+                                        body:@"Saved LiFE for your friends!"
+                                    position:position
+                                   andParent:self];
+               break;
+            }
+            default:
+               // WTF???
+               break;
+         }
+      };
+      
+      // animate the screenshot then call up the messaging UI
+      [self animateNode:node toPosition:position withCompletionBlock:^
+       {
+          [_viewController sendMailWithImageData:imageData
+                              andCompletionBlock:mailBlock];
+       }];
+   }
+}
+
 - (void)sendScreenshotDataToMessageApp:(NSData *)imageData
                   withNodeForAnimation:(SKSpriteNode *)node
                             toPosition:(CGPoint)position
 {
-   if (_viewController)
+   if (_viewController && node)
    {
-      if (node)
+      // define the message handling completion block
+      MessagingCompletionBlock msgBlock = ^(MessageComposeResult msgResult)
       {
-         // define the message handling completion block
-         MessagingCompletionBlock msgBlock = ^(MessageComposeResult msgResult)
+         CGPoint position = CGPointMake(0, self.size.height - 20);
+         switch (msgResult)
          {
-            CGPoint position = CGPointMake(0, self.size.height - 20);
-            switch (msgResult)
+            case MessageComposeResultCancelled:
+               // you know you cancelled, don't show anything
+               break;
+            case MessageComposeResultFailed:
             {
-               case MessageComposeResultCancelled:
-                  // you know you cancelled, don't show anything
-                  break;
-               case MessageComposeResultFailed:
-               {
-                  // report error case
-                  [GLAlertLayer alertWithHeader:@"SMS Failed"
-                                           body:@"Failed to send message :("
-                                       position:position
-                                      andParent:self];
-                  break;
-               }
-               case MessageComposeResultSent:
-               {
-                  // just for fun, let them know they sent LiFE!!
-                  [GLAlertLayer alertWithHeader:@"Success"
-                                           body:@"Sent your friends LiFE!"
-                                       position:position
-                                      andParent:self];
-                  break;
-               }
-               default:
-                  // WTF???
-                  break;
+               // report error case
+               [GLAlertLayer alertWithHeader:@"SMS Failed"
+                                        body:@"Failed to send message :("
+                                    position:position
+                                   andParent:self];
+               break;
             }
-         };
-      
-         // animate the screenshot then call up the messaging UI
-         [self animateNode:node toPosition:position withCompletionBlock:^
-          {
-             [_viewController sendMessageWithImageData:imageData
-                                    andCompletionBlock:msgBlock];
-          }];
-      }
+            case MessageComposeResultSent:
+            {
+               // just for fun, let them know they sent LiFE!!
+               [GLAlertLayer alertWithHeader:@"Success"
+                                        body:@"Sent your friends LiFE!"
+                                    position:position
+                                   andParent:self];
+               break;
+            }
+            default:
+               // WTF???
+               break;
+         }
+      };
+   
+      // animate the screenshot then call up the messaging UI
+      [self animateNode:node toPosition:position withCompletionBlock:^
+       {
+          [_viewController sendMessageWithImageData:imageData
+                                 andCompletionBlock:msgBlock];
+       }];
    }
 }
 
@@ -904,9 +974,10 @@ withCompletionBlock:(void (^)())completionBlock
    
    // grab the image
    UIImage * viewImage = [self generateImageOfView];
+   UIImage * imageForMetaData = (save)? viewImage : [self generateHalfSizeImage:viewImage];
    
    // grab the metadata
-   NSDictionary * exifMetaData = [self generateExifMetaDataForImage:viewImage];
+   NSDictionary * exifMetaData = [self generateExifMetaDataForImage:imageForMetaData];
    
    // make certain the HUDs are restored
    [_generalHudLayer setHidden:NO];
@@ -914,7 +985,7 @@ withCompletionBlock:(void (^)())completionBlock
    
    _pausedForSceenShot = NO;
    
-   NSData * imageData = [self jpegImageRepforImage:viewImage andMetaData:exifMetaData];
+   NSData * imageData = [self jpegImageRepforImage:imageForMetaData andMetaData:exifMetaData];
    if (imageData == nil)
    {
       NSLog(@"failed to generate image data from image and metadata!");
@@ -935,9 +1006,18 @@ withCompletionBlock:(void (^)())completionBlock
    else
    {
       // send the screenshot
-      [self sendScreenshotDataToMessageApp:imageData
+      if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+      {
+         [self sendScreenshotDataToMailApp:imageData
                       withNodeForAnimation:node
                                 toPosition:buttonPosition];
+      }
+      else
+      {
+         [self sendScreenshotDataToMessageApp:imageData
+                         withNodeForAnimation:node
+                                   toPosition:buttonPosition];
+      }
    }
    
    [_flashLayer runAction:_flashAnimation];

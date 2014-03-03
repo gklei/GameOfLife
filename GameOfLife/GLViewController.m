@@ -16,13 +16,16 @@
 
 @interface GLViewController()<UINavigationControllerDelegate,
                               UIImagePickerControllerDelegate,
-                              MFMessageComposeViewControllerDelegate>
+                              MFMessageComposeViewControllerDelegate,
+                              MFMailComposeViewControllerDelegate>
 {
    GLGridScene * _gridScene;
+   MFMessageComposeViewController * _messageComposer;
 }
 
 @property (readwrite, copy) PhotoPickingCompletionBlock photoCompletionBlock;
 @property (readwrite, copy) MessagingCompletionBlock  messageCompletionBlock;
+@property (readwrite, copy) MailCompletionBlock  mailCompletionBlock;
 
 @end
 
@@ -38,6 +41,8 @@
       [[UIApplication sharedApplication] setStatusBarHidden:YES
                                               withAnimation:UIStatusBarAnimationSlide]; // iOS 6
 
+   _messageComposer = [[MFMessageComposeViewController alloc] init];
+   
    // Configure the view.
    SKView * skView = (SKView *)self.view;
 //    skView.showsFPS = YES;
@@ -155,10 +160,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
    [self callPhotoPickingCompletionBlock:nil];
 }
 
-- (void)acquireImageFromSource:(NSInteger)sourceType
+- (BOOL)acquireImageFromSource:(NSInteger)sourceType
            withCompletionBlock:(PhotoPickingCompletionBlock)completionBlock
 {  
-   if (![UIImagePickerController isSourceTypeAvailable:sourceType]) return;
+   if (![UIImagePickerController isSourceTypeAvailable:sourceType]) return NO;
 
    self.photoCompletionBlock = completionBlock;
    
@@ -168,39 +173,72 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
    imagePicker.mediaTypes = @[(NSString *)kUTTypeImage];
    imagePicker.allowsEditing = NO;
    [self presentViewController:imagePicker animated:YES completion:nil];
+   
+   return YES;
+}
+
+#pragma mark - MFMailComposeViewController and delagate methods
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError *)error
+{
+   [self dismissViewControllerAnimated:YES completion:nil];
+   if (_mailCompletionBlock) _mailCompletionBlock(result);
+}
+
+- (BOOL)sendMailWithImageData:(NSData *)imageData
+           andCompletionBlock:(MailCompletionBlock)completionBlock
+{
+   if (![MFMailComposeViewController canSendMail])
+      return NO;
+   
+   self.mailCompletionBlock = completionBlock;
+   
+   NSString* uti = (NSString*)kUTTypeImage;
+   MFMailComposeViewController * mailer = [[MFMailComposeViewController alloc] init];
+   mailer.mailComposeDelegate = self;
+   [mailer setSubject:@"Here's some LiFE for you..."];
+   [mailer setMessageBody:@"..because you can never have too much LiFE!" isHTML:NO];
+   [mailer addAttachmentData:imageData mimeType:uti fileName:@"LiFE.jpg"];
+   [self presentViewController:mailer animated:YES completion:nil];
+   
+   return YES;
 }
 
 #pragma mark - MFMessageComposeViewController and delagate methods
 
-- (void)callMessagingCompletionBlock:(MessageComposeResult)result
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult)result;
 {
+   [self dismissViewControllerAnimated:YES completion:nil];
    if (_messageCompletionBlock) _messageCompletionBlock(result);
 }
 
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
-                 didFinishWithResult:(MessageComposeResult)msgResult
-{
-   [self dismissViewControllerAnimated:YES completion:nil];
-   [self callMessagingCompletionBlock:msgResult];
-}
-
-- (void)sendMessageWithImageData:(NSData *)imageData
+- (BOOL)sendMessageWithImageData:(NSData *)imageData
               andCompletionBlock:(MessagingCompletionBlock)completionBlock;
 {
-   if (![MFMessageComposeViewController canSendText]) return;
-   if (![MFMessageComposeViewController respondsToSelector:@selector(canSendAttachments)]) return;
-   if (![MFMessageComposeViewController canSendAttachments]) return;
+   if (_messageComposer == nil) return NO;
+   
+   if (![MFMessageComposeViewController canSendText]) return NO;
+   if (![MFMessageComposeViewController respondsToSelector:@selector(canSendAttachments)]) return NO;
+   if (![MFMessageComposeViewController canSendAttachments]) return NO;
+   
+   NSString* uti = (NSString*)kUTTypeImage;
+   if (![MFMessageComposeViewController isSupportedAttachmentUTI:uti]) return NO;
    
    self.messageCompletionBlock = completionBlock;
    
-   MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
-   composer.messageComposeDelegate = self;
-   [composer setBody:@"Here's some LiFE for you...because you can never have too much LiFE!"];
+   _messageComposer.messageComposeDelegate = self;
+   [_messageComposer setBody:@"Here's some LiFE for you...because you can never have too much LiFE!"];
    
-   NSString* uti = (NSString*)kUTTypeMessage;
-   [composer addAttachmentData:imageData typeIdentifier:uti filename:@"LiFE.jpg"];
+   if (![_messageComposer addAttachmentData:imageData
+                             typeIdentifier:uti
+                                   filename:@"LiFE.jpg"]) return NO;
    
-   [self presentViewController:composer animated:YES completion:nil];
+   [self presentViewController:_messageComposer animated:YES completion:nil];
+   
+   return YES;
 }
 
 @end
