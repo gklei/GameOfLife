@@ -14,16 +14,16 @@
 {
    GLInformativePage *howToPlayPage = [GLInformativePage new];
 
-   [howToPlayPage addHeaderText:@"HOW TO PLAY"];
+   [howToPlayPage addHeaderText:@"LiFE FACTS"];
    [howToPlayPage addNewLines:1];
-   [howToPlayPage addBodyText:@"5. The Life algorithm was created by British mathematician "
+   [howToPlayPage addBodyText:@"1. The Life algorithm was created by British mathematician "
                                "John Conway. Without John, we couldn't have brought you LiFE!"];
-   [howToPlayPage addBodyText:@"4. If you don't read anything else, it's important that you "
+   [howToPlayPage addBodyText:@"2. If you don't read anything else, it's important that you "
                                "read this line."];
    [howToPlayPage addBodyText:@"3. The third thing you should know is that all the time "
                                "you spend playing LiFE is most certainly not time wasted."];
-   [howToPlayPage addBodyText:@"2. What you get out of LiFE depends on what you put into it."];
-   [howToPlayPage addBodyText:@"1. The \"Really Usefull Stuff\" is on the following pages."];
+   [howToPlayPage addBodyText:@"4. What you get out of LiFE depends on what you put into it."];
+   [howToPlayPage addBodyText:@"5. The \"Really Useful Stuff\" is on the following pages."];
    
    return howToPlayPage;
 }
