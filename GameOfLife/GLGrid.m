@@ -880,8 +880,6 @@
       forBackgroundColor:bgrndColor];
 }
 
-static inline double radians(double degrees) {return degrees * M_PI/180;}
-
 - (void)scanImageForGameBoard:(UIImage *)image
 {
    if (image)

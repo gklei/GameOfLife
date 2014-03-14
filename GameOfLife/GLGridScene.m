@@ -662,7 +662,8 @@ typedef void (^PhotoWorkBlock)();
       
       if (metadata)
       {
-         NSDictionary * exif = [metadata objectForKey:(NSString *)kCGImagePropertyExifDictionary];
+         NSDictionary * exif =
+            [metadata objectForKey:(__bridge NSString *)kCGImagePropertyExifDictionary];
          if (exif)
          {
             result = [NSMutableDictionary dictionaryWithObject:[exif mutableCopy]
@@ -694,7 +695,7 @@ typedef void (^PhotoWorkBlock)();
       }
       
       NSMutableDictionary * exif = [result objectForKey:@"{Exif}"];
-      [exif setObject:metaDataStr forKey:(NSString*)kCGImagePropertyExifUserComment];
+      [exif setObject:metaDataStr forKey:(__bridge NSString*)kCGImagePropertyExifUserComment];
    }
    
    return result;
