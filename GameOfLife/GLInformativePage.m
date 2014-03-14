@@ -14,7 +14,7 @@
 {
    GLInformativePage *howToPlayPage = [GLInformativePage new];
 
-   [howToPlayPage addHeaderText:@"LiFE FACTS"];
+   [howToPlayPage addHeaderText:@"FACTS of LiFE"];
    [howToPlayPage addNewLines:1];
    [howToPlayPage addBodyText:@"1. The Life algorithm was created by British mathematician "
                                "John Conway. Without John, we couldn't have brought you LiFE!"];

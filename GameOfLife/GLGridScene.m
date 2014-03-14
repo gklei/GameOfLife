@@ -1006,14 +1006,27 @@ withCompletionBlock:(void (^)())completionBlock
    else
    {
       // send the screenshot
+      
+      // sending messages with attatchments on an iphone app running on an ipad locks up the app
+      // with a black screen (true through ios 7.1 at least).
+      // if we make the app an ipad app as well, then sending messages with attachments will work
+      // and we can remove this check and always send a messages
+      
+      // UIUserInterfaceIdiom won't work here - since we are currently build only as an iphone app
+      // the idiom is always returned as UIUserInterfaceIdiomPhone no matter what the device
+      // so we fall back on checking for iPad in the device name
+      
 //      UIUserInterfaceIdiom idiom = [[UIDevice currentDevice] userInterfaceIdiom];
-//      if (idiom != UIUserInterfaceIdiomPad)
-//      {
-//         [self sendScreenshotDataToMailApp:imageData
-//                      withNodeForAnimation:node
-//                                toPosition:buttonPosition];
-//      }
-//      else
+//      if (idiom == UIUserInterfaceIdiomPad)
+      
+      NSString * model = [UIDevice currentDevice].model;
+      if ([model hasPrefix:@"iPad"])
+      {
+         [self sendScreenshotDataToMailApp:imageData
+                      withNodeForAnimation:node
+                                toPosition:buttonPosition];
+      }
+      else
       {
          [self sendScreenshotDataToMessageApp:imageData
                          withNodeForAnimation:node

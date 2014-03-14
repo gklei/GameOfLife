@@ -18,7 +18,7 @@
 #include <map>
 #include <vector>
 
-#define LIVING YES
+#define LiVING YES
 #define DEAD   NO
 
 #define MAX_LOOP_DETECT_DEPTH 4096
@@ -138,13 +138,35 @@
       return;
    }
    
-   _LiFE[st+1]   = _LiFE[st+2]   = _LiFE[st+3]   = _LiFE[st+5]   = _LiFE[st+7]   = _LiFE[st+11]  =
-   _LiFE[st+12]  = _LiFE[st+13]  = _LiFE[st+17]  = _LiFE[st+21]  = _LiFE[st+23]  = _LiFE[st+27]  =
-   _LiFE[st+33]  = _LiFE[st+37]  = _LiFE[st+39]  = _LiFE[st+43]  = _LiFE[st+49]  = _LiFE[st+53]  =
-   _LiFE[st+55]  = _LiFE[st+56]  = _LiFE[st+57]  = _LiFE[st+59]  = _LiFE[st+60]  = _LiFE[st+61]  =
-   _LiFE[st+65]  = _LiFE[st+71]  = _LiFE[st+75]  = _LiFE[st+81]  = _LiFE[st+85]  = _LiFE[st+87]  =
-   _LiFE[st+91]  = _LiFE[st+97]  = _LiFE[st+103] = _LiFE[st+104] = _LiFE[st+105] = _LiFE[st+107] =
-   _LiFE[st+108] = _LiFE[st+109] = LIVING;
+   // 1st row of LiFE
+   _LiFE[st+1] = _LiFE[st+2]  = _LiFE[st+3]  = _LiFE[st+5]  =
+   _LiFE[st+7] = _LiFE[st+11] = _LiFE[st+12] = _LiFE[st+13] = LiVING;
+   
+   // 2nd row of LiFE
+   st += _dimensions.columns;
+   _LiFE[st+1] = _LiFE[st+5] = _LiFE[st+7] = _LiFE[st+11] = LiVING;
+
+   // 3rd row of LiFE
+   st += _dimensions.columns;
+   _LiFE[st+1] = _LiFE[st+5] = _LiFE[st+7] = _LiFE[st+11] = LiVING;
+   
+   // 4th row of LiFE
+   st += _dimensions.columns;
+   _LiFE[st+1] = _LiFE[st+5]  = _LiFE[st+7]  = _LiFE[st+8]  =
+   _LiFE[st+9] = _LiFE[st+11] = _LiFE[st+12] = _LiFE[st+13] = LiVING;
+   
+   // 5th row of LiFE
+   st += _dimensions.columns;
+   _LiFE[st+1] = _LiFE[st+7] = _LiFE[st+11] = LiVING;
+   
+   // 6th row of LiFE
+   st += _dimensions.columns;
+   _LiFE[st+1] = _LiFE[st+5] = _LiFE[st+7] = _LiFE[st+11] = LiVING;
+   
+   // 7th row of LiFE
+   st += _dimensions.columns;
+   _LiFE[st+1] = _LiFE[st+7]  = _LiFE[st+8]  =
+   _LiFE[st+9] = _LiFE[st+11] = _LiFE[st+12] = _LiFE[st+13] = LiVING;
 }
 
 - (void)setupGridWithSize:(CGSize)size
@@ -611,7 +633,7 @@
    GLTileNode * tile = [_tiles objectAtIndex:index];
 
    // behold, the meaning of life (all in one statement)
-   return ((tile.isLiving && liveCount == 2) || (liveCount == 3)) ? LIVING : DEAD;
+   return ((tile.isLiving && liveCount == 2) || (liveCount == 3)) ? LiVING : DEAD;
 }
 
 - (void)updateColorCenter
@@ -810,7 +832,7 @@
       if (colors[i] == bkgrndColor)
          colors[i] = CCN_INVALID_CrayolaColor;
       else if (colors[i] != CCN_INVALID_CrayolaColor)
-         states[i] = LIVING;
+         states[i] = LiVING;
 }
 
 - (void)loadGameWithState:(std::vector<char> &)states
@@ -914,7 +936,7 @@ static inline double radians(double degrees) {return degrees * M_PI/180;}
       int loopEnd = std::min(_dimensions.rows, rows) * columns + startIndex;
       for (int index = startIndex; index < loopEnd; ++index)
          if ([(NSString *)[data objectAtIndex:index] intValue] != 0)
-            _scannedStates[index - startIndex] = LIVING;
+            _scannedStates[index - startIndex] = LiVING;
       
       // scan the color
       startIndex = girdDataEnd + 1;

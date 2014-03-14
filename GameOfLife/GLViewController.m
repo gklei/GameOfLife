@@ -20,7 +20,6 @@
                               MFMailComposeViewControllerDelegate>
 {
    GLGridScene * _gridScene;
-   MFMessageComposeViewController * _messageComposer;
 }
 
 @property (readwrite, copy) PhotoPickingCompletionBlock photoCompletionBlock;
@@ -40,8 +39,6 @@
    else
       [[UIApplication sharedApplication] setStatusBarHidden:YES
                                               withAnimation:UIStatusBarAnimationSlide]; // iOS 6
-
-   _messageComposer = [[MFMessageComposeViewController alloc] init];
    
    // Configure the view.
    SKView * skView = (SKView *)self.view;
@@ -218,7 +215,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 - (BOOL)sendMessageWithImageData:(NSData *)imageData
               andCompletionBlock:(MessagingCompletionBlock)completionBlock;
 {
-   if (_messageComposer == nil) return NO;
+   MFMessageComposeViewController * messageComposer = [[MFMessageComposeViewController alloc] init];
+   if (messageComposer == nil) return NO;
    
    if (![MFMessageComposeViewController canSendText]) return NO;
    if (![MFMessageComposeViewController respondsToSelector:@selector(canSendAttachments)]) return NO;
@@ -229,14 +227,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
    
    self.messageCompletionBlock = completionBlock;
    
-   _messageComposer.messageComposeDelegate = self;
-   [_messageComposer setBody:@"Here's some LiFE for you...because you can never have too much LiFE!"];
+   messageComposer.messageComposeDelegate = self;
+   [messageComposer setBody:@"Here's some LiFE for you...because you can never have too much LiFE!"];
    
-   if (![_messageComposer addAttachmentData:imageData
+   if (![messageComposer addAttachmentData:imageData
                              typeIdentifier:uti
                                    filename:@"LiFE.jpg"]) return NO;
    
-   [self presentViewController:_messageComposer animated:YES completion:nil];
+   [self presentViewController:messageComposer animated:YES completion:nil];
    
    return YES;
 }
