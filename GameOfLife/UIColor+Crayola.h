@@ -333,6 +333,7 @@ typedef enum
    CCN_crayolaRoyalPurpleColor,
    CCN_crayolaVividVioletColor,
    CCN_crayolaFuchsiaColor,
+   CCN_crayolaGrayColor,
    CCN_crayolaPinkFlamingoColor,
    CCN_crayolaHotMagentaColor,
    CCN_crayolaWinterSkyColor,

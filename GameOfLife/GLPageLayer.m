@@ -113,7 +113,7 @@
    bodyLabelNode.colorBlendFactor = 1.0;
    bodyLabelNode.color = [SKColor whiteColor];
    bodyLabelNode.alpha = 5;
-   bodyLabelNode.fontSize = BODY_FONT_SIZE;
+   bodyLabelNode.fontSize = BODY_FONT_SIZE_SMALL;
    bodyLabelNode.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
 
    return bodyLabelNode;

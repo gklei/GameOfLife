@@ -80,11 +80,11 @@
    // a 5x5 color grid
    _colorGridColors =
    {
-      CCN_crayolaGoldenrodColor,   CCN_crayolaBittersweetColor,      CCN_crayolaTurquoiseBlueColor,    CCN_crayolaMagicMintColor,        CCN_crayolaTanColor,
-      CCN_crayolaSunglowColor,     CCN_crayolaWildWatermelonColor,   CCN_crayolaCeruleanColor,     CCN_crayolaGrannySmithAppleColor, CCN_crayolaYellowColor,
-      CCN_crayolaMangoTangoColor,  CCN_crayolaFuchsiaColor,          CCN_crayolaBlueColor,     CCN_crayolaCaribbeanGreenColor,   CCN_crayolaElectricLimeColor,
-      CCN_crayolaRedOrangeColor,   CCN_crayolaPinkFlamingoColor,     CCN_crayolaIndigoColor,   CCN_crayolaGreenColor,            CCN_crayolaScreaminGreenColor,
-      CCN_crayolaBrickRedColor,    CCN_crayolaWinterSkyColor,        CCN_crayolaPurpleHeartColor,    CCN_crayolaPineGreenColor,        CCN_crayolaCaribbeanGreenColor
+      CCN_crayolaGoldenrodColor,  CCN_crayolaBittersweetColor,    CCN_crayolaTurquoiseBlueColor, CCN_crayolaMagicMintColor,        CCN_crayolaTanColor,
+      CCN_crayolaSunglowColor,    CCN_crayolaWildWatermelonColor, CCN_crayolaCeruleanColor,      CCN_crayolaGrannySmithAppleColor, CCN_crayolaYellowColor,
+      CCN_crayolaMangoTangoColor, CCN_crayolaFuchsiaColor,        CCN_crayolaBlueColor,          CCN_crayolaCaribbeanGreenColor,   CCN_crayolaElectricLimeColor,
+      CCN_crayolaRedOrangeColor,  CCN_crayolaPinkFlamingoColor,   CCN_crayolaIndigoColor,        CCN_crayolaGreenColor,            CCN_crayolaScreaminGreenColor,
+      CCN_crayolaBrickRedColor,   CCN_crayolaWinterSkyColor,      CCN_crayolaPurpleHeartColor,   CCN_crayolaPineGreenColor,        CCN_crayolaGrayColor
    };
 }
 
