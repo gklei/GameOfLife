@@ -10,6 +10,8 @@
 #import "GLHud.h"
 #import "GLHUDSettingsManager.h"
 
+#import <AssetsLibrary/AssetsLibrary.h>
+
 typedef NS_ENUM(int, GL_GAME_STATE) {
    GL_RUNNING,
    GL_STOPPED
@@ -20,6 +22,7 @@ typedef NS_ENUM(int, GL_GAME_STATE) {
    - (void)restoreButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position;
    - (void)toggleRunningButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position;
    - (void)screenShotButtonPressed:(NSTimeInterval)holdTime buttonPosition:(CGPoint)position;
+   - (void)updatePhotoAuthorizationStatus:(ALAuthorizationStatus)status;
 
    - (void)settingsWillExpandWithRepositioningAction:(SKAction *)action;
    - (void)settingsDidExpand;

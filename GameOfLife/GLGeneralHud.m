@@ -21,8 +21,6 @@
 
 #include <float.h>
 
-#include <AssetsLibrary/AssetsLibrary.h>
-
 #define CORE_FUNCTION_BUTTON_PADDING 52
 #define HUD_BUTTON_EDGE_PADDING 48
 #define HUD_BUTTON_PADDING 50
@@ -241,8 +239,32 @@
    _startStopButton.actionBlock = startStopButtonActionBlock;
 
    _cameraButton = [self buttonWithFilename:@"camera2" buttonName:@"camera"];
-   _cameraButton.alpha =
-      ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized)? 1 : .5;
+   ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+   if (status == ALAuthorizationStatusNotDetermined)
+   {
+      ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
+      [assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll
+                                   usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+         if (*stop)
+         {
+            // INSERT CODE TO PERFORM WHEN USER TAPS OK eg. :
+            _cameraButton.alpha = 1;
+            [self.delegate updatePhotoAuthorizationStatus:ALAuthorizationStatusAuthorized];
+            return;
+         }
+         *stop = TRUE;
+      }
+                                 failureBlock:^(NSError *error) {
+         // INSERT CODE TO PERFORM WHEN USER TAPS DONT ALLOW, eg. :
+         _cameraButton.alpha = .5;
+         [self.delegate updatePhotoAuthorizationStatus:ALAuthorizationStatusDenied];
+      }];
+   }
+   else
+   {
+      _cameraButton.alpha =
+         (status == ALAuthorizationStatusAuthorized)? 1 : .5;
+   }
 
    DelayedFocusActionBlock cameraDelayedFocusActionBlock =
    ^{

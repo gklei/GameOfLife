@@ -645,7 +645,7 @@ typedef void (^PhotoWorkBlock)();
    }
 }
 
-#pragma mark - sceenshot related functionsv
+#pragma mark - sceenshot related function
 - (NSMutableDictionary *)exifDataFromImage:(UIImage *)image
 {
    // get exif data in the image (if any)
@@ -1158,6 +1158,11 @@ withCompletionBlock:(void (^)())completionBlock
       [self beginPhotoImportAtPosition:position];
    else
       [self beginScreenShotAtPosition:position];
+}
+
+- (void)updatePhotoAuthorizationStatus:(ALAuthorizationStatus)status
+{
+   _photoLibraryAuthorizationStatus = status;
 }
 
 #pragma mark - messaging related functions
