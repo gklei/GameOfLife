@@ -247,15 +247,14 @@
                                    usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
          if (*stop)
          {
-            // INSERT CODE TO PERFORM WHEN USER TAPS OK eg. :
+            // user taps Allow
             _cameraButton.alpha = 1;
             [self.delegate updatePhotoAuthorizationStatus:ALAuthorizationStatusAuthorized];
             return;
          }
          *stop = TRUE;
-      }
-                                 failureBlock:^(NSError *error) {
-         // INSERT CODE TO PERFORM WHEN USER TAPS DONT ALLOW, eg. :
+      } failureBlock:^(NSError *error) {
+         // user taps Don't Allow
          _cameraButton.alpha = .5;
          [self.delegate updatePhotoAuthorizationStatus:ALAuthorizationStatusDenied];
       }];

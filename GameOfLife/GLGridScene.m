@@ -1095,7 +1095,7 @@ withCompletionBlock:(void (^)())completionBlock
    [self doPhotoAccessWithBlock:work];
 }
 
-- (void)scanImageDataForGameBoard:(NSDictionary *) imageData
+- (void)scanImageDataForGameBoard:(NSDictionary *)imageData
 {
    if (_grid && imageData)
    {
