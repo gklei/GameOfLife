@@ -9,6 +9,7 @@
 #import "GLToggleControl.h"
 #import "UIColor+Crayola.h"
 #import "GLHUDSettingsManager.h"
+#import "GLViewController.h"
 
 #define TOGGLE_ANIMATION_DURATION .1
 #define TOGGLE_COLOR_ANIMATION_DURATION .2
@@ -119,9 +120,10 @@
    _outerRing = [SKSpriteNode spriteNodeWithImageNamed:@"toggle-ring-outer@2x.png"];
    _outerRing.colorBlendFactor = 1.0;
    _outerRing.color = _outerRingDisabledColor;
+   [_outerRing setScale:[GLViewController getScaleForOS:1]];
 
    _innerRing = [SKSpriteNode spriteNodeWithImageNamed:@"radio-unchecked@2x.png"];
-   [_innerRing setScale:.6];
+   [_innerRing setScale:[GLViewController getScaleForOS:.6]];
    _innerRing.colorBlendFactor = 1.0;
    _innerRing.color = _innerRingDisabledColor;
    _innerRing.position = CGPointMake(_outerRing.position.x - INNER_RING_OFFSET_FROM_CENTER,

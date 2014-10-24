@@ -13,7 +13,6 @@
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-
 @interface GLViewController()<UINavigationControllerDelegate,
                               UIImagePickerControllerDelegate,
                               MFMessageComposeViewControllerDelegate,
@@ -50,6 +49,36 @@
    _gridScene.scaleMode = SKSceneScaleModeAspectFill;
    // Present the scene.
    [skView presentScene:_gridScene];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+   [super touchesBegan:touches withEvent:event];
+
+   if ([GLViewController currentVersionIsLaterThanIOS7])
+   {
+      [_gridScene touchesBegan:touches withEvent:event];
+   }
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+   [super touchesMoved:touches withEvent:event];
+   
+   if ([GLViewController currentVersionIsLaterThanIOS7])
+   {
+      [_gridScene touchesMoved:touches withEvent:event];
+   }
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+   [super touchesEnded:touches withEvent:event];
+   
+   if ([GLViewController currentVersionIsLaterThanIOS7])
+   {
+      [_gridScene touchesEnded:touches withEvent:event];
+   }
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -237,6 +266,21 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
    [self presentViewController:messageComposer animated:YES completion:nil];
    
    return YES;
+}
+
++ (BOOL)currentVersionIsLaterThanIOS7
+{
+   static int flag = -1;
+   if (flag == -1)
+   {
+      flag = [[[UIDevice currentDevice] systemVersion] characterAtIndex:0] > '7' ? 1 : 0;
+   }
+   return flag;
+}
+
++ (CGFloat)getScaleForOS:(CGFloat)scale
+{
+   return [GLViewController currentVersionIsLaterThanIOS7]? scale*2 : scale;
 }
 
 @end
