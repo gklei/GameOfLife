@@ -10,7 +10,7 @@
 
 #import "GLSliderControl.h"
 #import "UIColor+Crayola.h"
-
+#import "GLViewController.h"
 
 #define DEFAULT_LENGTH 180
 
@@ -151,7 +151,7 @@
    _knob = [SKSpriteNode spriteNodeWithImageNamed:@"radio-unchecked@2x.png"];
    _knob.colorBlendFactor = 1;
    _knob.color = [SKColor crayolaRobinsEggBlueColor];
-   [_knob setScale:.6];
+   [_knob setScale:[GLViewController getScaleForOS:DEFAULT_KNOB_SCALE]];
 
    [self addChild:_knob];
 }
@@ -174,10 +174,10 @@
    _knobOffsetInAccumulatedFrame = CGRectGetWidth(self.calculateAccumulatedFrame) / 2 -
                                    CGRectGetWidth(_knob.frame) / 2;
    
-   _grow = [SKAction scaleTo:SELECTED_KNOB_SCALE duration:.1];
+   _grow = [SKAction scaleTo:[GLViewController getScaleForOS:SELECTED_KNOB_SCALE] duration:.1];
    _grow.timingMode = SKActionTimingEaseInEaseOut;
    
-   _shrink = [SKAction scaleTo:DEFAULT_KNOB_SCALE duration:.1];
+   _shrink = [SKAction scaleTo:[GLViewController getScaleForOS:DEFAULT_KNOB_SCALE] duration:.1];
    _shrink.timingMode = SKActionTimingEaseInEaseOut;
 }
 

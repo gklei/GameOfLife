@@ -24,4 +24,7 @@ typedef void (^MailCompletionBlock)(MFMailComposeResult mailResult);
 
 - (BOOL)sendMailWithImageData:(NSData *)imageData
            andCompletionBlock:(MailCompletionBlock)completionBlock;
+
++ (BOOL)currentVersionIsLaterThanIOS7;
++ (CGFloat)getScaleForOS:(CGFloat)scale;
 @end

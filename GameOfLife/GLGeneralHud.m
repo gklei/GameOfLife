@@ -19,6 +19,8 @@
 #import "GLPageCollection.h"
 #import "GLInformativePage.h"
 
+#import "GLViewController.h"
+
 #include <float.h>
 
 #define CORE_FUNCTION_BUTTON_PADDING 52
@@ -162,7 +164,8 @@
 
    _expandCollapseButton.color = [SKColor crayolaBlackCoralPearlColor];
    _expandCollapseButton.colorBlendFactor = 1.0;
-   [_expandCollapseButton setScale:.85];
+   
+   [_expandCollapseButton setScale:[GLViewController getScaleForOS:.85]];
 
    _expandCollapseButton.position =
       CGPointMake(_defaultSize.width - _expandCollapseButton.size.width/2 - 15,
@@ -322,7 +325,7 @@
 
    _questionMarkButton.color = [SKColor whiteColor];
    _questionMarkButton.colorBlendFactor = 1.0;
-   [_questionMarkButton setScale:.70];
+   [_questionMarkButton setScale:.7]; // doesn't seem to need the scale adjusted
 
    _questionMarkButton.position = CGPointMake(22, -30);
    _questionMarkButton.hidden = YES;
@@ -414,7 +417,7 @@
    GLUIActionButton *button = [GLUIActionButton spriteNodeWithImageNamed:fileName];
    button.color = [SKColor whiteColor];
    button.colorBlendFactor = 1.0;
-   [button setScale:.85];
+   [button setScale:[GLViewController getScaleForOS:.85]];
    button.name = buttonName;
 
    return button;
