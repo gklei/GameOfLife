@@ -13,6 +13,7 @@
 #import "GLColorSelectionLayer.h"
 #import "GLColorPaletteManager.h"
 #import "GLLockControl.h"
+#import "GLViewController.h"
 
 #define HUD_BUTTON_EDGE_PADDING 48
 #define COLOR_DROP_PADDING 42
@@ -303,7 +304,7 @@
          [GLColorDropButton spriteNodeWithImageNamed:@"droplet@2x.png"] :
          [GLColorDropButton spriteNodeWithImageNamed:@"droplet.png"];
       
-      [drop setScale:COLOR_DROP_SCALE];
+      [drop setScale:[GLViewController getScaleForOS:COLOR_DROP_SCALE]];
       drop.position = CGPointMake(i*COLOR_DROP_PADDING + 78, -drop.size.height/2.0 - 5);
       drop.colorBlendFactor = 1.0;
       drop.colorName = [((NSNumber *)[colorDropColors objectAtIndex:i]) unsignedIntValue];
@@ -340,8 +341,8 @@
          [self runAction:_colorDropButtonSound];
       }
       
-      SKAction *selectScaleAction = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
-      SKAction *deselectScaleAction = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
+      SKAction *selectScaleAction = [SKAction scaleTo:[GLViewController getScaleForOS:SELECTED_COLOR_DROP_SCALE] duration:.15];
+      SKAction *deselectScaleAction = [SKAction scaleTo:[GLViewController getScaleForOS:COLOR_DROP_SCALE] duration:.15];
 
       SKAction *selectAlphaAction = [SKAction fadeAlphaTo:1.0 duration:.15];
       SKAction *deselectAlphaAction = [SKAction fadeAlphaTo:.75 duration:.15];
@@ -532,7 +533,7 @@
          if (_currentColorDrop)
          {
             SKAction *wait = [SKAction waitForDuration:.2];
-            SKAction *rescaleSelectedDrop = [SKAction scaleTo:SELECTED_COLOR_DROP_SCALE duration:.15];
+            SKAction *rescaleSelectedDrop = [SKAction scaleTo:[GLViewController getScaleForOS:SELECTED_COLOR_DROP_SCALE] duration:.15];
             SKAction *scaleSequence = [SKAction sequence:@[wait, rescaleSelectedDrop]];
             [_currentColorDrop runAction:scaleSequence
                               completion:
@@ -598,7 +599,7 @@
    [_backgroundLayer runAction:hudBackgroundActions
                     completion:^
    {
-      [_currentColorDrop setScale:COLOR_DROP_SCALE];
+      [_currentColorDrop setScale:[GLViewController getScaleForOS:COLOR_DROP_SCALE]];
       SKAction *moveDrop = [SKAction moveByX:0 y:-HUD_BUTTON_EDGE_PADDING duration:.25];
       for (GLUIButton *drop in _colorDrops)
       {
@@ -622,7 +623,7 @@
    if (_colorGridIsExpanded)
    {
       [_paletteButton loseFocus];
-      SKAction *scaleDown = [SKAction scaleTo:COLOR_DROP_SCALE duration:.15];
+      SKAction *scaleDown = [SKAction scaleTo:[GLViewController getScaleForOS:COLOR_DROP_SCALE] duration:.15];
       scaleDown.timingMode = SKActionTimingEaseInEaseOut;
       [_currentColorDrop runAction:scaleDown];
       [self collapseColorGridWithCompletionBlock:^
